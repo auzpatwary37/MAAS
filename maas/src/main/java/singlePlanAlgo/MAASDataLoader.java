@@ -1,23 +1,34 @@
 package singlePlanAlgo;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import org.matsim.core.config.Config;
 import org.matsim.core.controler.AbstractModule;
+import org.matsim.core.utils.collections.Tuple;
+
 import com.google.inject.name.Names;
+
+import optimizerAgent.PlanTranslator;
+import optimizerAgent.SimpleTranslatedPlan;
+import optimizerAgent.VariableDetails;
 
 public class MAASDataLoader extends AbstractModule{
 	
 	private final MAASPackages maasPacakges;
+	private Map<String,Tuple<Double,Double>> timeBeans;
 
 	public MAASDataLoader() {
 		this.maasPacakges = null;
 	}
 
-	public MAASDataLoader(MAASPackages packages) {
+	public MAASDataLoader(MAASPackages packages, Map<String,Tuple<Double,Double>> timeBeans) {
 		this.maasPacakges = packages;
+		this.timeBeans = timeBeans;
 	}
 
 	@Override
@@ -27,7 +38,9 @@ public class MAASDataLoader extends AbstractModule{
 		} else {
 			bind(MAASPackages.class).annotatedWith(Names.named("MAASPackages")).toProvider(MAASPackagesProvider.class).in(Singleton.class);
 		}
-		//Bind any other controller listener needed
+		
+		
+		
 	}
 	
 	private static class MAASPackagesProvider implements Provider<MAASPackages> {

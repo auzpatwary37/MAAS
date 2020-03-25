@@ -54,7 +54,7 @@ public class MAASPackagesWriter extends DefaultHandler{
 				String tlId="";
 				String seperator= "";
 				for(Id<TransitLine> tl:mm.getTransitLines()) {
-					tlId=tlId+tl.toString()+seperator;
+					tlId=tlId+seperator+tl.toString();
 					seperator=",";
 				}
 				maas.setAttribute("TransitLines", tlId);

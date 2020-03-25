@@ -22,28 +22,40 @@ public class PlanTranslator implements PersonEntersVehicleEventHandler{
 	private Set<Id<Person>> personHandled = Collections.synchronizedSet(new HashSet<Id<Person>>());
 	private Map<String,Tuple<Double,Double>> timeBean;
 	
-	@Inject
+	
 	private Scenario scenario;
 	
-	@Inject
-	public PlanTranslator(Map<String,Tuple<Double,Double>> timeBean) {
+	
+	public PlanTranslator(Map<String,Tuple<Double,Double>> timeBean, Scenario scenario) {
 		this.timeBean=timeBean;
+		this.scenario = scenario;
 	}
 
 	@Override
 	public void handleEvent(PersonEntersVehicleEvent event) {
+		
 		Id<Person> id = event.getPersonId();
 		if(!personHandled.contains(id)){
+			
+			Person person;
+			if((person = scenario.getPopulation().getPersons().get(id))!=null) {
 			personHandled.add(id);
 			Plan plan = scenario.getPopulation().getPersons().get(id).getSelectedPlan();
+			
 			if(plan.getAttributes().getAsMap().get(SimpleTranslatedPlan.SimplePlanAttributeName)==null) {//never before seen plan
 				SimpleTranslatedPlan delegate = new SimpleTranslatedPlan(timeBean, plan, scenario);//translate the plan
 				plan.getAttributes().putAttribute(SimpleTranslatedPlan.SimplePlanAttributeName, delegate);//put the translation inside the plan's attribute
+				
+				
+			}
 			}
 		}
 		
 	}
-
+	
+	public void reset() {
+		this.personHandled.clear();
+	}
 	
 
 }

@@ -14,24 +14,28 @@ import org.matsim.contrib.signals.data.SignalsData;
 import org.matsim.contrib.signals.data.SignalsDataLoader;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigGroup;
+import org.matsim.core.config.ConfigWriter;
 import org.matsim.core.config.groups.StrategyConfigGroup.StrategySettings;
 import org.matsim.core.controler.Controler;
 import org.matsim.core.controler.OutputDirectoryHierarchy;
 import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.lanes.Lane;
 import org.matsim.lanes.LanesToLinkAssignment;
+import org.matsim.utils.objectattributes.ObjectAttributes;
+import org.matsim.utils.objectattributes.ObjectAttributesXmlReader;
 import org.xml.sax.SAXException;
 
 import dynamicTransitRouter.DynamicRoutingModule;
 import dynamicTransitRouter.TransitRouterFareDynamicImpl;
 import dynamicTransitRouter.fareCalculators.ZonalFareXMLParserV2;
+import optimizerAgent.MetamodelModule;
 import singlePlanAlgo.MAASPlanStrategy;
 
 public class NormRun {
 public static void main(String[] args) {
 	
 	
-	PropertyConfigurator.configure("src/main/resources/log4j.properties");
+	//PropertyConfigurator.configure("src/main/resources/log4j.properties");
 	
 	
 	final String writeFileLoc="toyScenarioLargeOct19/";
@@ -41,7 +45,15 @@ public static void main(String[] args) {
 //	ConfigUtils.loadConfig(initialConfig, "data/toyScenarioLargeData/configToyLargeMod.xml");
 	
 	Config initialConfig = RunTCS.setupConfig();
-	//initialConfig.plans().setInsistingOnUsingDeprecatedPersonAttributeFile(true);
+	initialConfig.plans().setInputPersonAttributeFile("new Data/data/personAttributesHKI.xml");
+	
+	initialConfig.global().setInsistingOnDeprecatedConfigVersion(false);
+	
+	ObjectAttributes att = new ObjectAttributes();
+	new ObjectAttributesXmlReader(att).readFile("new Data/data/personAttributesHKI.xml");
+	
+	
+	
 	initialConfig.plans().setInputFile("new Data/data/populationHKI.xml");
 	initialConfig.network().setInputFile("new Data/cal/output_network.xml.gz");
 	initialConfig.vehicles().setVehiclesFile("new Data/data/VehiclesHKI.xml");
@@ -73,14 +85,14 @@ public static void main(String[] args) {
 	
 	//SimRun simRun=new SimRunImplToyLarge(100);
 	Config config = initialConfig;
-	config.controler().setLastIteration(50);
+	config.controler().setLastIteration(6);
 	config.controler().setOutputDirectory("toyScenarioLarge/output"+1222);
 	config.transit().setUseTransit(true);
 	config.plansCalcRoute().setInsertingAccessEgressWalk(false);
 	config.qsim().setUsePersonIdForMissingVehicleId(true);
 	//config.controler().setLastIteration(50);
 	config.parallelEventHandling().setNumberOfThreads(7);
-	config.controler().setWritePlansInterval(50);
+	config.controler().setWritePlansInterval(2);
 	config.qsim().setStartTime(0.0);
 	config.qsim().setEndTime(28*3600);
 	config.qsim().setStorageCapFactor(.14);
@@ -89,7 +101,7 @@ public static void main(String[] args) {
 	//config.plans().setInsistingOnUsingDeprecatedPersonAttributeFile(true);
 	TransitRouterFareDynamicImpl.aStarSetting='c';
 	TransitRouterFareDynamicImpl.distanceFactor=.01;
-	Scenario scenario = ScenarioUtils.loadScenario(config);
+	
 	//config.removeModule("signalsystems");
 	
 //	ConfigGeneratorLargeToy.reducePTCapacity(scenario.getTransitVehicles(),.15);
@@ -102,8 +114,11 @@ public static void main(String[] args) {
 	stratSets.setSubpopulation("person_TCSwithCar");
 	config.strategy().addStrategySettings(stratSets);
 	config.addModule(new MAASConfigGroup());
-	config.getModules().get(MAASConfigGroup.GROUP_NAME).addParam(MAASConfigGroup.INPUT_FILE,"packages.xml");
 	
+	config.getModules().get(MAASConfigGroup.GROUP_NAME).addParam(MAASConfigGroup.INPUT_FILE,"test/packages.xml");
+	
+	new ConfigWriter(config).write("test/config.xml");
+	Scenario scenario = ScenarioUtils.loadScenario(config);
 	for(LanesToLinkAssignment l2l:scenario.getLanes().getLanesToLinkAssignments().values()) {
 		for(Lane l: l2l.getLanes().values()) {
 			
@@ -120,6 +135,8 @@ public static void main(String[] args) {
 	
 	scenario.addScenarioElement(SignalsData.ELEMENT_NAME, new SignalsDataLoader(config).loadSignalsData());	
 	Controler controler = new Controler(scenario);
+	controler.addOverridingModule(new MAASDataLoader());
+	controler.addOverridingModule(new MetamodelModule());
 	ZonalFareXMLParserV2 busFareGetter = new ZonalFareXMLParserV2(scenario.getTransitSchedule());
 	SAXParser saxParser;
 	

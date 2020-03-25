@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.Plan;
+import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.population.PopulationUtils;
 import org.matsim.core.utils.collections.Tuple;
 
@@ -19,7 +20,7 @@ public abstract class OptimizingAgent implements Person{
 		this.type = type;	
 		this.variableIntialValue = variableIntialValue;
 		this.variableRange = variableRange;
-		
+		this.createAttributedPlan();
 		}
 	
 	
@@ -54,6 +55,7 @@ public abstract class OptimizingAgent implements Person{
 		}
 		this.person.addPlan(plan);
 		this.person.setSelectedPlan(plan);
+		this.person.getAttributes().putAttribute(ConfigUtils.createConfig().plans().getSubpopulationAttributeName(), this.type);
 		return plan;
 	}
 	

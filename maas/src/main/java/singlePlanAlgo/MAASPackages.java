@@ -1,5 +1,6 @@
 package singlePlanAlgo;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,7 +13,7 @@ import org.matsim.api.core.v01.Id;
 import org.matsim.pt.transitSchedule.api.TransitLine;
 import org.matsim.pt.transitSchedule.api.TransitSchedule;
 
-public class MAASPackages {
+public class MAASPackages{
 	
 	private Map<String,MAASPackage> massPackages=new HashMap<>();
 	private Map<String,Set<MAASPackage>> massPackagesPerOperator=new HashMap<>();
@@ -26,19 +27,26 @@ public class MAASPackages {
 	public MAASPackages() {
 		
 	}
-	
+	/**
+	 * This is an easy method to create MAAS packages per mode in transit
+	 * @param ts transitSchedule
+	 * @param freePerMode if the mode is discounted then false if fully free then true
+	 * @param defaultCost Price per packages
+	 * @param freeTaxiTrip How many taxi trip to give away
+	 */
 	public MAASPackages(TransitSchedule ts,boolean freePerMode, double defaultCost, int freeTaxiTrip) {
 		Map<String, MAASPackage> packages = new HashMap<>();
+		int operatorId = 1;
 		for(Entry<Id<TransitLine>, TransitLine> d:ts.getTransitLines().entrySet()) {
 			String mode = d.getValue().getRoutes().get(new ArrayList<>(d.getValue().getRoutes().keySet()).get(0)).getTransportMode();
-			if(packages.containsKey(mode)) {
-				
-			}else {
-				packages.put(mode, new MAASPackage(mode,"1"));
+			if(!packages.containsKey(mode)){
+				packages.put(mode, new MAASPackage(mode,Double.toString(operatorId)));
 				packages.get(mode).setMaxTaxiTrip(freeTaxiTrip);
 				packages.get(mode).setPackageCost(defaultCost);
 				packages.get(mode).setPackageExpairyTime(24*3600.);
+				operatorId++;
 			}
+			packages.get(mode).addTransitLine(d.getKey(), true, 0);
 		}
 		this.massPackages=packages;
 	}

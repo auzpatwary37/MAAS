@@ -13,6 +13,7 @@ import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Activity;
 import org.matsim.api.core.v01.population.Plan;
 import org.matsim.core.utils.collections.Tuple;
+import org.matsim.utils.objectattributes.AttributeConverter;
 
 import ust.hk.praisehk.metamodelcalibration.analyticalModel.AnalyticalModelTransitRoute;
 import ust.hk.praisehk.metamodelcalibration.analyticalModel.TimeUtils;
@@ -56,6 +57,11 @@ public class SimpleTranslatedPlan {
 		this.activities=tripchain.getActivitylist();
 		for(Trip trip:tripchain.getTrips()) {
 			String timeId = TimeUtils.getTimeId(timeBean, trip.getStartTime());
+			
+			if(timeId == null) {
+				System.out.println();
+			}
+			
 			if(trip.getRoute()!=null) {
 				CNLRoute route = (CNLRoute) trip.getRoute();
 				this.carUsage.get(timeId).addAll(route.getLinkIds());
@@ -102,4 +108,24 @@ public class SimpleTranslatedPlan {
 		return activities;
 	}
 	
+	public static AttributeConverter<SimpleTranslatedPlan> getAttributeConverter(){
+		return new AttributeConverter<SimpleTranslatedPlan>() {
+
+			@Override
+			public SimpleTranslatedPlan convert(String value) {
+				//String[] part = value.split("___"); 
+				return null;
+			}
+
+			@Override
+			public String convertToString(Object o) {
+			SimpleTranslatedPlan v = (SimpleTranslatedPlan)o;
+				
+				return "This Plan Contains a plan Translator Attrubute";
+			}
+			
+		};
+	}
 }
+
+

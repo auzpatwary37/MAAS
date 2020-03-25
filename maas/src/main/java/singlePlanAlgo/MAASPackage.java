@@ -9,6 +9,13 @@ import org.matsim.api.core.v01.Id;
 import org.matsim.pt.transitSchedule.api.TransitLine;
 import org.matsim.pt.transitSchedule.api.TransitSchedule;
 
+
+/**
+ * 
+ * @author Ashraf
+ *TODO:Should add specific time per package as well
+ *
+ */
 public class MAASPackage {
 	
 	private final String operatorId;
@@ -41,9 +48,9 @@ public class MAASPackage {
 		}
 	}
 	
-	public void addTransitLine() {
-		
-	}
+//	public void addTransitLine() {
+//		
+//	}
 	
 	public void addALLTransitLine(TransitSchedule ts, double defaultDiscount ) {
 		this.transitLines.addAll(ts.getTransitLines().keySet());
