@@ -45,6 +45,11 @@ public class MAASFareHandler implements FareCalculator{
 			int fromOccurence, Id<TransitStopFacility> toStopId, int toOccurence) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+	@Override
+	public void setFareFactor(double fareFactor) {
+		// TODO Auto-generated method stub
+		
 	} 
 	
 	

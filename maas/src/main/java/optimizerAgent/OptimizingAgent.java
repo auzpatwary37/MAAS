@@ -15,6 +15,13 @@ public abstract class OptimizingAgent implements Person{
 	protected Person person;
 	protected final String type;
 	
+	/**
+	 * The type will be set as the subpopulation name for the agents
+	 * @param person
+	 * @param type
+	 * @param variableIntialValue
+	 * @param variableRange
+	 */
 	public OptimizingAgent(Person person, String type, Map<String, Double> variableIntialValue, Map<String, Tuple<Double,Double>> variableRange) {
 		this.person = person;
 		this.type = type;	
