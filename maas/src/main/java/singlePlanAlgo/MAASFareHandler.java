@@ -46,7 +46,6 @@ public class MAASFareHandler implements FareCalculator{
 		// TODO Auto-generated method stub
 		return 0;
 	}
-	@Override
 	public void setFareFactor(double fareFactor) {
 		// TODO Auto-generated method stub
 		
