@@ -43,7 +43,7 @@ public class RunTCS {
 			for(PlanElement pe: plan.getPlanElements()) {
 				if(pe instanceof Leg) {
 					Leg leg = (Leg) pe;
-					double depTime = leg.getDepartureTime();
+					double depTime = leg.getDepartureTime().seconds();
 					if(swifted|| (depTime <= 2 * 3600 && depTime >= 0)) {
 						leg.setDepartureTime(depTime + 24 * 3600);
 						//swifted = true;
@@ -54,8 +54,8 @@ public class RunTCS {
 					
 				}else if (pe instanceof Activity) {
 					Activity act = (Activity) pe;
-					double startTime = act.getStartTime();
-					double endTime = act.getEndTime();
+					double startTime = act.getStartTime().seconds();
+					double endTime = act.getEndTime().seconds();
 					if(swifted || (endTime <= 2 * 3600 && endTime >= 0)) {
 						act.setEndTime(endTime + 24 * 3600);
 						act.setStartTime(startTime + 24 * 3600);

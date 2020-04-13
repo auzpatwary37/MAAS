@@ -1,21 +1,20 @@
 package singlePlanAlgo;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
+import org.matsim.api.core.v01.Scenario;
+import org.matsim.api.core.v01.population.Population;
 import org.matsim.core.config.Config;
 import org.matsim.core.controler.AbstractModule;
+import org.matsim.core.gbl.MatsimRandom;
 import org.matsim.core.utils.collections.Tuple;
 
 import com.google.inject.name.Names;
-
-import optimizerAgent.PlanTranslator;
-import optimizerAgent.SimpleTranslatedPlan;
-import optimizerAgent.VariableDetails;
 
 public class MAASDataLoader extends AbstractModule{
 	
@@ -46,13 +45,26 @@ public class MAASDataLoader extends AbstractModule{
 	private static class MAASPackagesProvider implements Provider<MAASPackages> {
 		@Inject MAASConfigGroup config;
 		@Inject Config matsimConfig;
+		@Inject Scenario scenario;
 		@Override
 		public MAASPackages get() {
 			String path = config.getPackagesFileURL(matsimConfig.getContext()).toString();
-			return new MAASPackagesReader().readPackagesFile(path);
+			MAASPackages packages = new MAASPackagesReader().readPackagesFile(path);
+			insertRandomMAASPackage(scenario.getPopulation(),packages);
+			return packages;
 			
 		}
+		private static void insertRandomMAASPackage(Population population, MAASPackages packages) {
+			Random rnd = MatsimRandom.getRandom();
+			population.getPersons().values().forEach((p)->{
+				p.getPlans().forEach((plan)->{
+					int index = rnd.nextInt(packages.getMassPackages().size());
+					plan.getAttributes().putAttribute(MaasStrategyModule.StrategyAttributeName, packages.getMassPackages().keySet().toArray()[index]);
+				});
+			});
+		}
 	}
-
+	
+	
 
 }

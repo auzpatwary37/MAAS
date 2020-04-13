@@ -17,6 +17,7 @@ import org.matsim.api.core.v01.population.Population;
 import org.matsim.api.core.v01.population.PopulationFactory;
 import org.matsim.api.core.v01.population.PopulationWriter;
 import org.matsim.core.config.ConfigUtils;
+import org.matsim.core.population.PopulationUtils;
 import org.matsim.core.scenario.CustomizableUtils;
 import org.matsim.core.utils.collections.Tuple;
 import org.matsim.utils.objectattributes.attributable.Attributes;
@@ -50,7 +51,9 @@ public class OptimizerAgentCreator {
 			
 			MAASOperator agent = new MAASOperator(person, variable, variableLimit);
 			population.addPerson(agent);
-			population.getPersonAttributes().putAttribute(person.getId().toString(), ConfigUtils.createConfig().plans().getSubpopulationAttributeName(),MAASOperator.type);
+
+			
+			
 			//plan.getAttributes().putAttribute("variableName", value)
 			
 		}

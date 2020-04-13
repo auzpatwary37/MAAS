@@ -16,6 +16,8 @@ import com.google.inject.Inject;
  * Bind this class as event handler in the module
  * @author Ashraf
  *
+ *This is currently a very poor implementation (using existing code)
+ *Write some handler to create a plan rather than using the existing code to translate. (April 2020)
  */
 public class PlanTranslator implements PersonEntersVehicleEventHandler{
 	
@@ -32,7 +34,7 @@ public class PlanTranslator implements PersonEntersVehicleEventHandler{
 	}
 
 	@Override
-	public void handleEvent(PersonEntersVehicleEvent event) {
+	public void handleEvent(PersonEntersVehicleEvent event) {// tap into the plan
 		
 		Id<Person> id = event.getPersonId();
 		if(!personHandled.contains(id)){

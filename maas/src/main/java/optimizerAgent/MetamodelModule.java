@@ -51,8 +51,8 @@ public class MetamodelModule extends AbstractModule{
 		@Inject Config matsimConfig;
 		@Override
 		public timeBeansWrapped get() {
-			double startTime = matsimConfig.qsim().getStartTime();
-			double endTime = matsimConfig.qsim().getEndTime();
+			double startTime = matsimConfig.qsim().getStartTime().seconds();
+			double endTime = matsimConfig.qsim().getEndTime().seconds();
 			Map<String,Tuple<Double,Double>> timeBeans = new HashMap<>();
 			int hour = ((int)startTime/3600)+1;
 			for(double i = 0; i < endTime; i = i+3600) {
