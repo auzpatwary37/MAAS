@@ -2,11 +2,6 @@ package optimizerAgent;
 
 import java.util.Map;
 
-import org.matsim.api.core.v01.Id;
-import org.matsim.pt.transitSchedule.api.TransitLine;
-import org.matsim.pt.transitSchedule.api.TransitRoute;
-import org.matsim.pt.transitSchedule.api.TransitStopFacility;
-
 import dynamicTransitRouter.fareCalculators.FareCalculator;
 import singlePlanAlgo.MAASPackages;
 

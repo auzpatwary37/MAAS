@@ -13,7 +13,7 @@ import org.matsim.core.replanning.ReplanningContext;
 
 public class MassSelectorModule implements   ActivityEndEventHandler,PlanStrategyModule{
 
-	
+	public static final String StrategyAttributeName = "MAAS_Plan";
 	public LinkedHashMap<String,MAASPackage> maasPackages= new LinkedHashMap<>();
 	private Random rnd;
 	
@@ -34,7 +34,7 @@ public class MassSelectorModule implements   ActivityEndEventHandler,PlanStrateg
 	@Override
 	public void handlePlan(Plan plan) {
 		List<String> MAASKeys=new ArrayList<>(this.maasPackages.keySet());
-		plan.getAttributes().putAttribute("MAAS_Plan",rnd.nextInt(MAASKeys.size()));
+		plan.getAttributes().putAttribute(StrategyAttributeName,rnd.nextInt(MAASKeys.size()));
 		
 	}
 

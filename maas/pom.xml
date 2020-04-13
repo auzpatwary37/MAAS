@@ -4,18 +4,33 @@
   <artifactId>maas</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>maas</name>
-  
+  <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <geotools.version>24-SNAPSHOT</geotools.version>
+   </properties>
   <build>
     <plugins>
+<!--       <plugin> -->
+<!--         <artifactId>maven-compiler-plugin</artifactId> -->
+<!--         <version>3.5.1</version> -->
+<!--         <configuration> -->
+<!--           <source>1.8</source> -->
+<!--           <target>1.8</target> -->
+<!--         </configuration> -->
+<!--       </plugin> -->
+      
       <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.5.1</version>
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-        </configuration>
-      </plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-compiler-plugin</artifactId>
+    <version>3.8.0</version>
+    <configuration>
+        <release>13</release>  or <release>10</release>
+    </configuration>
+</plugin>
     </plugins>
+    
+    
+    
   </build>
   
  <repositories>
@@ -24,31 +39,122 @@
     <name>MATSim release repository</name>
     <url>http://dl.bintray.com/matsim/matsim</url>
   </repository>
+  
+  <repository>
+    <id>ojo-snapshots</id>
+    <name>MATSim snapshot repository</name>
+    <url>http://oss.jfrog.org/libs-snapshot</url>
+    <snapshots>
+      <enabled>true</enabled>
+    </snapshots>
+  </repository>
+  
+<repository>
+      <id>osgeo</id>
+      <name>OSGeo Release Repository</name>
+      <url>https://repo.osgeo.org/repository/release/</url>
+      <snapshots><enabled>false</enabled></snapshots>
+      <releases><enabled>true</enabled></releases>
+    </repository>
+    <repository>
+      <id>osgeo-snapshot</id>
+      <name>OSGeo Snapshot Repository</name>
+      <url>https://repo.osgeo.org/repository/snapshot/</url>
+      <snapshots><enabled>true</enabled></snapshots>
+      <releases><enabled>false</enabled></releases>
+    </repository>
+
 </repositories>
+<!-- https://mvnrepository.com/artifact/org.geotools/gt-main -->
 
 
 <dependencies>
+<!--   <dependency> -->
+<!--     <groupId>org.matsim</groupId> -->
+<!--     <artifactId>matsim</artifactId> -->
+<!--     <version>11.0</version> -->
+<!--   </dependency> -->
+  
   <dependency>
     <groupId>org.matsim</groupId>
     <artifactId>matsim</artifactId>
-    <version>11.0</version>
+    <version>12.0-SNAPSHOT</version>
   </dependency>
   
-  <dependency>
-		    <groupId>org.matsim.contrib</groupId>
-		    <artifactId>roadpricing</artifactId>
-		    <version>11.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.matsim.contrib</groupId>
-			<artifactId>signals</artifactId>
- 			<version>11.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.matsim.contrib</groupId>
-			<artifactId>emissions</artifactId>
-			<version>11.0</version>
-		</dependency>
+
+<dependency>
+    <groupId>org.matsim.contrib</groupId>
+    <artifactId>roadpricing</artifactId>
+    <version>12.0-2019w45-SBB</version>
+</dependency>
+  
+
+<dependency>
+    <groupId>org.matsim.contrib</groupId>
+    <artifactId>signals</artifactId>
+    <version>12.0-2019w45-SBB</version>
+</dependency>
+
+
+<dependency>
+    <groupId>org.matsim.contrib</groupId>
+    <artifactId>emissions</artifactId>
+    <version>12.0-2019w45-SBB</version>
+</dependency>
+
+<!-- <dependency> -->
+<!-- 		    <groupId>org.matsim.contrib</groupId> -->
+<!-- 		    <artifactId>roadpricing</artifactId> -->
+<!-- 		    <version>11.0</version> -->
+<!-- 		    <exclusions> -->
+<!-- 		    	<exclusion> -->
+<!-- 		    		<groupId>org.matsim</groupId> -->
+<!-- 		    		<artifactId>matsim</artifactId> -->
+<!-- 		    	</exclusion> -->
+<!-- 		    </exclusions> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.matsim.contrib</groupId> -->
+<!-- 			<artifactId>signals</artifactId> -->
+<!--  			<version>11.0</version> -->
+<!--  			<exclusions> -->
+<!--  				<exclusion> -->
+<!--  					<groupId>org.matsim</groupId> -->
+<!--  					<artifactId>matsim</artifactId> -->
+<!--  				</exclusion> -->
+<!--  			</exclusions> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.matsim.contrib</groupId> -->
+<!-- 			<artifactId>emissions</artifactId> -->
+<!-- 			<version>11.0</version> -->
+<!-- 			<exclusions> -->
+<!-- 				<exclusion> -->
+<!-- 					<groupId>org.matsim</groupId> -->
+<!-- 					<artifactId>matsim</artifactId> -->
+<!-- 				</exclusion> -->
+<!-- 			</exclusions> -->
+<!-- 		</dependency> -->
+
+<dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.geotools</groupId>
+            <artifactId>gt-shapefile</artifactId>
+            <version>${geotools.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.geotools</groupId>
+            <artifactId>gt-swing</artifactId>
+            <version>${geotools.version}</version>
+        </dependency>
+
+
+
 		<dependency>
 		  <groupId>com.google.code.gson</groupId>
 		  <artifactId>gson</artifactId>
@@ -56,11 +162,13 @@
 		</dependency>
 		
 		
-		<dependency>
-			<groupId>com.google.inject</groupId>
-			<artifactId>guice</artifactId>
-			<version>4.1.0</version>
-		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.inject/guice -->
+<dependency>
+    <groupId>com.google.inject</groupId>
+    <artifactId>guice</artifactId>
+    <version>4.2.3</version>
+</dependency>
+		
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>

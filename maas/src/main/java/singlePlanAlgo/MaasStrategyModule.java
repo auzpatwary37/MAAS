@@ -15,7 +15,7 @@ import com.google.inject.Inject;
 
 public class MaasStrategyModule implements   ActivityEndEventHandler,PlanStrategyModule{
 
-	
+	public static final String StrategyAttributeName = "MAAS_Plan";
 	public LinkedHashMap<String,MAASPackage> maasPackages= new LinkedHashMap<>();
 	private Random rnd;
 		
@@ -39,9 +39,9 @@ public class MaasStrategyModule implements   ActivityEndEventHandler,PlanStrateg
 	@Override
 	public void handlePlan(Plan plan) {
 		List<String> MAASKeys=new ArrayList<>(this.maasPackages.keySet());
-		String currentPlan = (String) plan.getAttributes().getAttribute("MAAS_Plan");
+		String currentPlan = (String) plan.getAttributes().getAttribute(StrategyAttributeName);
 		if(currentPlan==null) {
-			plan.getAttributes().putAttribute("MAAS_Plan",MAASKeys.get(rnd.nextInt(MAASKeys.size())));
+			plan.getAttributes().putAttribute(StrategyAttributeName,MAASKeys.get(rnd.nextInt(MAASKeys.size())));
 		}else {
 			boolean repeat = true;
 			int ind=0;
@@ -52,11 +52,12 @@ public class MaasStrategyModule implements   ActivityEndEventHandler,PlanStrateg
 				}
 			}
 			if(ind == MAASKeys.size()) {
-				plan.getAttributes().removeAttribute("MAAS_Plan");
+				plan.getAttributes().removeAttribute(StrategyAttributeName);
 			}else {
-				plan.getAttributes().putAttribute("MAAS_Plan",MAASKeys.get(ind));
+				plan.getAttributes().putAttribute(StrategyAttributeName,MAASKeys.get(ind));
 			}
 		}
+		
 		
 	}
 
