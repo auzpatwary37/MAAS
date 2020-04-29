@@ -407,7 +407,6 @@ public class transitGenerator {
 			VehicleCapacity vc=vt.getCapacity();
 			vc.setSeats(50);
 			vc.setStandingRoom(120);
-			
 		}
 		Vehicle v=vsf.createVehicle(Id.createVehicleId(vehicleId), vt);
 		return v;
