@@ -20,7 +20,12 @@ import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.Plan;
 import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.api.core.v01.population.Population;
+import org.matsim.core.config.Config;
+import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.config.groups.PlanCalcScoreConfigGroup;
+import org.matsim.core.config.groups.PlanCalcScoreConfigGroup.ActivityParams;
+import org.matsim.core.scoring.functions.ActivityUtilityParameters;
+import org.matsim.core.scoring.functions.ScoringParameters;
 import org.matsim.core.utils.collections.Tuple;
 import org.matsim.pt.transitSchedule.api.Departure;
 import org.matsim.pt.transitSchedule.api.TransitLine;
@@ -41,6 +46,7 @@ import ust.hk.praisehk.metamodelcalibration.analyticalModel.TransitDirectLink;
 import ust.hk.praisehk.metamodelcalibration.analyticalModel.TransitLink;
 import ust.hk.praisehk.metamodelcalibration.analyticalModelImpl.CNLLink;
 import ust.hk.praisehk.metamodelcalibration.analyticalModelImpl.CNLNetwork;
+import ust.hk.praisehk.metamodelcalibration.analyticalModelImpl.CNLSUEModel;
 import ust.hk.praisehk.metamodelcalibration.analyticalModelImpl.CNLTransitDirectLink;
 import ust.hk.praisehk.metamodelcalibration.matsimIntegration.SignalFlowReductionGenerator;
 
@@ -124,8 +130,9 @@ public class PersonPlanSueModel {
 	private TransitSchedule ts;
 	private Map<String,AnalyticalModelNetwork> networks = new ConcurrentHashMap<>();;
 	private Map<String,Map<Id<TransitLink>,TransitLink>> transitLinks = new ConcurrentHashMap<>();
-	private Map<String,Double> defaultParameters;
-	private Map<String,Double> internalParamters;
+	private LinkedHashMap<String,Double> Params = new LinkedHashMap<>();
+	private LinkedHashMap<String,Double> AnalyticalModelInternalParams = new LinkedHashMap<>();
+	private LinkedHashMap<String,Tuple<Double,Double>> AnalyticalModelParamsLimit=new LinkedHashMap<>();
 	
 	private double alphaMSA=1.9;//parameter for decreasing MSA step size
 	private double gammaMSA=.1;//parameter for decreasing MSA step size
@@ -159,7 +166,7 @@ public class PersonPlanSueModel {
 	
 	//Constructor
 	@Inject
-	public PersonPlanSueModel(Map<String, Tuple<Double, Double>> timeBean) {
+	public PersonPlanSueModel(Map<String, Tuple<Double, Double>> timeBean,Config config) {
 		this.timeBeans=timeBean;
 		//this.defaultParameterInitiation(null);
 		for(String timeBeanId:this.timeBeans.keySet()) {
@@ -171,15 +178,68 @@ public class PersonPlanSueModel {
 			this.totalPtCapacityOnLink.put(timeBeanId, new HashMap<>());
 			this.MTRCount.put(timeBeanId, new ConcurrentHashMap<>());
 		}
+		if(config==null) config = ConfigUtils.createConfig();
+		this.defaultParameterInitiation(config);
 		logger.info("Model created.");
 	}
+	
+	
+	private void defaultParameterInitiation(Config config){
+		//Loads the Internal default parameters 
+		
+		this.AnalyticalModelInternalParams.put(CNLSUEModel.LinkMiuName, 0.008);
+		this.AnalyticalModelInternalParams.put(CNLSUEModel.ModeMiuName, 0.01);
+		this.AnalyticalModelInternalParams.put(CNLSUEModel.BPRalphaName, 0.15);
+		this.AnalyticalModelInternalParams.put(CNLSUEModel.BPRbetaName, 4.);
+		this.AnalyticalModelInternalParams.put(CNLSUEModel.TransferalphaName, 0.5);
+		this.AnalyticalModelInternalParams.put(CNLSUEModel.TransferbetaName, 1.);
+		this.loadAnalyticalModelInternalPamamsLimit();
+		
+		//Loads the External default Parameters
+		if(config==null) {
+			config=ConfigUtils.createConfig();
+		}
+		
+
+		this.Params.put(CNLSUEModel.MarginalUtilityofTravelCarName,config.planCalcScore().getOrCreateModeParams("car").getMarginalUtilityOfTraveling());
+		this.Params.put(CNLSUEModel.MarginalUtilityofDistanceCarName,config.planCalcScore().getOrCreateModeParams("car").getMarginalUtilityOfDistance());
+		this.Params.put(CNLSUEModel.MarginalUtilityofMoneyName,config.planCalcScore().getMarginalUtilityOfMoney());
+		this.Params.put(CNLSUEModel.DistanceBasedMoneyCostCarName,config.planCalcScore().getOrCreateModeParams("car").getMonetaryDistanceRate());
+		this.Params.put(CNLSUEModel.MarginalUtilityofTravelptName, config.planCalcScore().getOrCreateModeParams("pt").getMarginalUtilityOfTraveling());
+		this.Params.put(CNLSUEModel.MarginalUtilityOfDistancePtName, config.planCalcScore().getOrCreateModeParams("pt").getMarginalUtilityOfDistance());
+		this.Params.put(CNLSUEModel.MarginalUtilityofWaitingName,config.planCalcScore().getMarginalUtlOfWaitingPt_utils_hr());
+		this.Params.put(CNLSUEModel.UtilityOfLineSwitchName,config.planCalcScore().getUtilityOfLineSwitch());
+		this.Params.put(CNLSUEModel.MarginalUtilityOfWalkingName, config.planCalcScore().getOrCreateModeParams("walk").getMarginalUtilityOfTraveling());
+		this.Params.put(CNLSUEModel.DistanceBasedMoneyCostWalkName, config.planCalcScore().getOrCreateModeParams("walk").getMonetaryDistanceRate());
+		this.Params.put(CNLSUEModel.ModeConstantPtname,config.planCalcScore().getOrCreateModeParams("pt").getConstant());
+		this.Params.put(CNLSUEModel.ModeConstantCarName,config.planCalcScore().getOrCreateModeParams("car").getConstant());
+		this.Params.put(CNLSUEModel.MarginalUtilityofPerformName, config.planCalcScore().getPerforming_utils_hr());
+		this.Params.put(CNLSUEModel.CapacityMultiplierName, 1.0);
+	}
+	
+	public void setDefaultParameters(LinkedHashMap<String,Double> params) {
+		for(String s:params.keySet()) {
+			this.Params.put(s, params.get(s));
+		}
+	}
+	
+	
+	protected void loadAnalyticalModelInternalPamamsLimit() {
+		this.AnalyticalModelParamsLimit.put(CNLSUEModel.LinkMiuName, new Tuple<Double,Double>(0.0075,0.25));
+		this.AnalyticalModelParamsLimit.put(CNLSUEModel.ModeMiuName, new Tuple<Double,Double>(0.01,0.5));
+		this.AnalyticalModelParamsLimit.put(CNLSUEModel.BPRalphaName, new Tuple<Double,Double>(0.10,4.));
+		this.AnalyticalModelParamsLimit.put(CNLSUEModel.BPRbetaName, new Tuple<Double,Double>(1.,15.));
+		this.AnalyticalModelParamsLimit.put(CNLSUEModel.TransferalphaName, new Tuple<Double,Double>(0.25,5.));
+		this.AnalyticalModelParamsLimit.put(CNLSUEModel.TransferbetaName, new Tuple<Double,Double>(0.75,4.));
+	}
+	
 	
 	/**
 	 * This method overlays transit vehicles on the road network
 	 * @param network
 	 * @param Schedule
 	 */
-	public void performTransitVehicleOverlay(AnalyticalModelNetwork network, TransitSchedule schedule,Vehicles vehicles,String timeBeanId) {
+	private void performTransitVehicleOverlay(AnalyticalModelNetwork network, TransitSchedule schedule,Vehicles vehicles,String timeBeanId) {
 		for(TransitLine tl:schedule.getTransitLines().values()) {
 			for(TransitRoute tr:tl.getRoutes().values()) {
 				ArrayList<Id<Link>> links=new ArrayList<>(tr.getRoute().getLinkIds());
@@ -204,10 +264,12 @@ public class PersonPlanSueModel {
 	
 	/**
 	 * Running this method is mandatory to set up the initial population 
+	 * TODO: finish implementing this function, Done???
 	 * @param population
 	 */
 	public void populateModel(Scenario scenario, Map<String,FareCalculator> fareCalculator, MAASPackages packages) {
 		this.population = scenario.getPopulation();
+		this.scenario = scenario;
 		SignalFlowReductionGenerator sg=new SignalFlowReductionGenerator(scenario);
 		Network network = scenario.getNetwork();
 		for(String s:this.timeBeans.keySet()) {
@@ -239,8 +301,8 @@ public class PersonPlanSueModel {
 			double utility = 0;
 			SimpleTranslatedPlan trPlan = (SimpleTranslatedPlan) plan.getAttributes().getAttribute(SimpleTranslatedPlan.SimplePlanAttributeName);//extract the translated plan first
 			trPlans.put(plan.toString(), trPlan);
-			for(Activity ac:trPlan.getActivities()) {// for now this class is not implemented
-				utility += this.calcActivityUtility(ac, this.scenario.getConfig().planCalcScore());
+			for(Activity ac:trPlan.getActivities()) {// for now this class is not implemented: done may 2 2020
+				utility += this.calcActivityUtility(ac, this.scenario.getConfig(),person);
 			}
 			for(Entry<String, Map<Id<AnalyticalModelTransitRoute>, AnalyticalModelTransitRoute>> trRouteMap:trPlan.getTrroutes().entrySet()) {
 				for(AnalyticalModelTransitRoute trRoute : trRouteMap.getValue().values()) {
@@ -311,7 +373,7 @@ public class PersonPlanSueModel {
 		return new OutputFlow(linkFlow,transitLinkFlow);
 	}
 	
-	
+	//TODO: still do not take params in sub-population. We have to incorporate that 
 	private OutputFlow performNetworkLoading(Population population, LinkedHashMap<String,Double> params, LinkedHashMap<String,Double> anaParams) {
 		
 		List<Map<String,Map<Id<Link>, Double>>> linkVolumes=Collections.synchronizedList(new ArrayList<>());
@@ -433,7 +495,7 @@ public class PersonPlanSueModel {
 				link.getFirst().addPassanger(counterPart*link.getSecond(),this.networks.get(timeId));
 			}
 		}
-		
+		squareSum = error;
 		
 		//Return if should stop
 		if(squareSum < this.tollerance || linkAboveTol == 0 || linkAbove1== 0) {
@@ -445,7 +507,7 @@ public class PersonPlanSueModel {
 	
 	
 	
-	private void performAssignment(Population population, LinkedHashMap<String,Double> params, LinkedHashMap<String,Double> anaParams) {
+	public void performAssignment(Population population, LinkedHashMap<String,Double> params, LinkedHashMap<String,Double> anaParams) {
 		
 		for(int counter = 1; counter < this.maxIter; counter++) {
 			OutputFlow flow  = this.performNetworkLoading(population, params, anaParams);
@@ -463,12 +525,39 @@ public class PersonPlanSueModel {
 	 * @param config
 	 * @return
 	 */
-	private double calcActivityUtility(Activity activity, PlanCalcScoreConfigGroup config) {
+	private double calcActivityUtility(Activity activity, Config config, Person person) {
+		ScoringParameters scParam = new ScoringParameters.Builder(config.planCalcScore(), config.planCalcScore().getScoringParameters(null), config.scenario()).build();
 		//First find the duration. As for now we switch off the departure time choice, The duration 
 		//will only depend on the previous trip end time 
-		return 0;
+		ActivityUtilityParameters actParams = scParam.utilParams.get(activity.getType());
+		double startTime = 0;
+		double endTime = 24*3600;
+		if(activity.getEndTime().isDefined()) endTime = activity.getEndTime().seconds();
+		if(activity.getStartTime().isDefined()) startTime = activity.getStartTime().seconds();
+		double duration = endTime - startTime;
+		double typicalDuration = actParams.getTypicalDuration();
+		double minDuration = actParams.getZeroUtilityDuration_h();
+		/**
+		 * This is the bare-bone activity utility from matsim book; refer to page 25, Ch:3 A Closer Look at Scoring 
+		 */
+		double utility = scParam.marginalUtilityOfPerforming_s*typicalDuration*Math.log(duration/minDuration);
+		return utility;
 	}
 
+//----------------------getter setter------------------------
+	
+	public Map<String, Double> getDefaultParameters() {
+		return Params;
+	}
+
+	public LinkedHashMap<String, Double> getInternalParamters() {
+		return this.AnalyticalModelInternalParams;
+	}
+
+
+	public LinkedHashMap<String, Tuple<Double, Double>> getAnalyticalModelParamsLimit() {
+		return AnalyticalModelParamsLimit;
+	}
 	
 	
 }
@@ -489,6 +578,9 @@ class OutputFlow{
 		this.linkFlow = linkFlow;
 		this.transitLinkFlow = transitLinkFlow;
 	}
+	
+	
+	
 	
 }
 

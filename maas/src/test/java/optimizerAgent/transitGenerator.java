@@ -14,6 +14,7 @@ import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.network.Network;
 import org.matsim.core.population.routes.NetworkRoute;
 import org.matsim.core.population.routes.RouteUtils;
+import org.matsim.core.utils.collections.Tuple;
 import org.matsim.pt.transitSchedule.api.Departure;
 import org.matsim.pt.transitSchedule.api.TransitLine;
 import org.matsim.pt.transitSchedule.api.TransitRoute;
@@ -35,7 +36,7 @@ public class transitGenerator {
 	private static HashMap<Integer,String> AlphMat=new HashMap<>();
 	
 	
-	public static TransitSchedule createTransit(Scenario scenario, Network network) {
+	public static Tuple<TransitSchedule,Vehicles> createTransit(Scenario scenario, Network network) {
 		char p='A';
 		for(int q=1;q<8;q++) {
 			AlphMat.put(q, String.valueOf(p)+String.valueOf(p)+String.valueOf(p));
@@ -94,7 +95,7 @@ public class transitGenerator {
 		TransitRoute Route1=tsf.createTransitRoute(Id.create("From_1_to_4_bus1",TransitRoute.class), nrs[0],stops1, "bus");
 		TransitRoute Route2=tsf.createTransitRoute(Id.create("From_4_to_1_bus1",TransitRoute.class), nrs[1],stops1opp, "bus");
 		
-		for(int i=0;i<3600*24;i=i+600) {
+		for(int i=0;i<=3600*24;i=i+600) {
 			Departure d=tsf.createDeparture(Id.create(Route1.getId().toString()+"_"+i, Departure.class), i);
 			Vehicle v=createTransitVehicle(tsvf,d.getId().toString(),"bus");
 			d.setVehicleId(Id.createVehicleId(d.getId().toString()));
@@ -130,7 +131,7 @@ public class transitGenerator {
 		TransitRoute Route3=tsf.createTransitRoute(Id.create("From_2_to_3_bus2",TransitRoute.class), nrs[0],stops2, "bus");
 		TransitRoute Route4=tsf.createTransitRoute(Id.create("From_3_to_2_bus2",TransitRoute.class), nrs[1],stops2opp, "bus");
 		
-		for(int i=0;i<3600*24;i=i+900) {
+		for(int i=0;i<=3600*24;i=i+900) {
 			Departure d=tsf.createDeparture(Id.create(Route3.getId().toString()+"_"+i, Departure.class), i);
 			Vehicle v=createTransitVehicle(tsvf,d.getId().toString(),"bus");
 			d.setVehicleId(Id.createVehicleId(d.getId().toString()));
@@ -164,7 +165,7 @@ public class transitGenerator {
 		TransitRoute Route5=tsf.createTransitRoute(Id.create("From_1_to_4_MTR1",TransitRoute.class), nrs[0],stops3, "train");
 		TransitRoute Route6=tsf.createTransitRoute(Id.create("From_4_to_1_MTR1",TransitRoute.class), nrs[1],stops3opp, "train");
 		
-		for(int i=0;i<3600*24;i=i+360) {
+		for(int i=0;i<=3600*24;i=i+360) {
 			Departure d=tsf.createDeparture(Id.create(Route5.getId().toString()+"_"+i, Departure.class), i);
 			Vehicle v=createTransitVehicle(tsvf,d.getId().toString(),"MTR");
 			d.setVehicleId(Id.createVehicleId(d.getId().toString()));
@@ -173,7 +174,7 @@ public class transitGenerator {
 			}
 			tsv.addVehicle(v);
 			Route5.addDeparture(d);
-			
+			 
 			d=tsf.createDeparture(Id.create(Route6.getId().toString()+"_"+i, Departure.class), i);
 			v=createTransitVehicle(tsvf,d.getId().toString(),"MTR");
 			d.setVehicleId(Id.createVehicleId(d.getId().toString()));
@@ -203,7 +204,7 @@ public class transitGenerator {
 		TransitRoute Route7=tsf.createTransitRoute(Id.create("From_2_to_3_MTR2",TransitRoute.class), nrs[0],stops4, "train");
 		TransitRoute Route8=tsf.createTransitRoute(Id.create("From_3_to_2_MTR2",TransitRoute.class), nrs[1],stops4opp, "train");
 		
-		for(int i=0;i<3600*24;i=i+480) {
+		for(int i=0;i<=3600*24;i=i+480) {
 			Departure d=tsf.createDeparture(Id.create(Route7.getId().toString()+"_"+i, Departure.class), i);
 			Vehicle v=createTransitVehicle(tsvf,d.getId().toString(),"MTR");
 			d.setVehicleId(Id.createVehicleId(d.getId().toString()));
@@ -221,7 +222,7 @@ public class transitGenerator {
 		tl4.addRoute(Route8);
 		ts.addTransitLine(tl4);
 		
-		return ts;
+		return new Tuple<TransitSchedule,Vehicles>(ts,tsv);
 		
 	}
 	
@@ -299,7 +300,7 @@ public class transitGenerator {
 	
 	
 
-	public static ZonalFareCalculator createBusFareCalculator(TransitSchedule ts) throws IOException {
+	public static ZonalFareCalculator createBusFareCalculator(TransitSchedule ts,List<String> busFareFiles) throws IOException {
 		if(AlphMat.size()==0) {
 			char p='A';
 			for(int q=1;q<8;q++) {
@@ -309,8 +310,8 @@ public class transitGenerator {
 		}
 		
 		ZonalFareCalculator busFareCalc=new ZonalFareCalculator(ts);
-		BufferedReader bus1FareReader=new BufferedReader(new FileReader(new File("src/main/resources/toyScenarioData/Bus_1_fare_Test.csv")));
-		BufferedReader bus2FareReader=new BufferedReader(new FileReader(new File("src/main/resources/toyScenarioData/Bus_2_fare_Test.csv")));
+		BufferedReader bus1FareReader=new BufferedReader(new FileReader(new File(busFareFiles.get(0))));
+		BufferedReader bus2FareReader=new BufferedReader(new FileReader(new File(busFareFiles.get(1))));
 		bus1FareReader.readLine();
 		bus2FareReader.readLine();
 		String line;

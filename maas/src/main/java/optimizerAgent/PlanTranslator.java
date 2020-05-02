@@ -45,8 +45,8 @@ public class PlanTranslator implements PersonEntersVehicleEventHandler{
 			Plan plan = scenario.getPopulation().getPersons().get(id).getSelectedPlan();
 			
 			if(plan.getAttributes().getAsMap().get(SimpleTranslatedPlan.SimplePlanAttributeName)==null) {//never before seen plan
-				SimpleTranslatedPlan delegate = new SimpleTranslatedPlan(timeBean, plan, scenario);//translate the plan
-				plan.getAttributes().putAttribute(SimpleTranslatedPlan.SimplePlanAttributeName, delegate);//put the translation inside the plan's attribute
+				SimpleTranslatedPlan simpleplan = new SimpleTranslatedPlan(timeBean, plan, scenario);//translate the plan
+				plan.getAttributes().putAttribute(SimpleTranslatedPlan.SimplePlanAttributeName, simpleplan);//put the translation inside the plan's attribute
 				
 				
 			}

@@ -3,9 +3,11 @@
  */
 package optimizerAgent;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,7 +16,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
+import org.matsim.api.core.v01.network.Network;
 import org.matsim.api.core.v01.population.Population;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
@@ -27,13 +31,20 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.Key;
 import com.google.inject.Scopes;
 import com.google.inject.multibindings.MapBinder;
-import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 
+import dynamicTransitRouter.DynamicRoutingModule;
 import dynamicTransitRouter.fareCalculators.FareCalculator;
 import dynamicTransitRouter.fareCalculators.MTRFareCalculator;
+import singlePlanAlgo.MAASPackage;
+import singlePlanAlgo.MAASPackages;
+import ust.hk.praisehk.metamodelcalibration.analyticalModel.AnalyticalModelLink;
+import ust.hk.praisehk.metamodelcalibration.analyticalModel.AnalyticalModelNetwork;
+import ust.hk.praisehk.metamodelcalibration.analyticalModelImpl.CNLNetwork;
+import ust.hk.praisehk.metamodelcalibration.calibrator.ParamReader;
 
 /**
  * @author ashraf
@@ -42,38 +53,46 @@ import dynamicTransitRouter.fareCalculators.MTRFareCalculator;
 class PersonPlanSueModelTest {
 
 	
-	
 	public Injector createInjector() {
 		
 		Injector injector;
 		
 		Injector basicInjector = Guice.createInjector(new AbstractModule() {
+			@SuppressWarnings("deprecation")
 			@Override
 			protected void configure() {
 				//bind the config
 				Config config = ConfigUtils.createConfig();
 				ConfigUtils.loadConfig(config, "toyScenario/toyScenarioData/config.xml");
 				config.network().setInputFile("toyScenario/toyScenarioData/network.xml");
-				config.vehicles().setVehiclesFile("toyScenario/toyScenarioDatavehicles.xml");
+				config.vehicles().setVehiclesFile("toyScenario/toyScenarioData/vehicles.xml");
 				config.transit().setTransitScheduleFile("toyScenario/toyScenarioData/transitSchedule.xml");
 				config.transit().setVehiclesFile("toyScenario/toyScenarioData/transitVehicles.xml");
 				config.plans().setInputFile("toyScenario/output_plans.xml.gz");
-				Scenario scenario;
 				
+				config.scenario().setSimulationPeriodInDays(1.0);
+				Scenario scenario;
+				scenario = ScenarioUtils.loadScenario(config);
 				
 				bind(Config.class).toInstance(config);
-				bind(Scenario.class).toInstance(scenario = ScenarioUtils.loadScenario(config));
+				bind(Scenario.class).toInstance(scenario);
+				bind(Network.class).toInstance(scenario.getNetwork());
 				bind(TransitSchedule.class).toInstance(scenario.getTransitSchedule());
 				bind(Vehicles.class).annotatedWith(Names.named("Vehicles")).toInstance(scenario.getVehicles());
 				bind(Vehicles.class).annotatedWith(Names.named("TransitVehicles")).toInstance(scenario.getTransitVehicles());
 				bind(Population.class).toInstance(scenario.getPopulation());
-						
+				bind(double.class).annotatedWith(Names.named(DynamicRoutingModule.fareRateName)).toInstance(1.);
+				bind(ParamReader.class).toInstance(new ParamReader("toyScenario/toyScenarioData/paramReaderToy.csv"));
+				MAASPackages packages = new MAASPackages(scenario.getTransitSchedule(), true, 100, 0);
+				
+				bind(MAASPackages.class).toInstance(packages);
+				
 				MapBinder<String, FareCalculator> mapbinder = MapBinder.newMapBinder(binder(), String.class,
 						FareCalculator.class);
 				mapbinder.addBinding("train").to(MTRFareCalculator.class).in(Scopes.SINGLETON);
 				bind(String.class).annotatedWith(Names.named("trainFareInput")).toInstance("toyScenario/toyScenarioData/Mtr_fare.csv");// add train fare file input
 				try {
-					mapbinder.addBinding("bus").toInstance(transitGenerator.createBusFareCalculator(scenario.getTransitSchedule()));
+					mapbinder.addBinding("bus").toInstance(transitGenerator.createBusFareCalculator(scenario.getTransitSchedule(), Arrays.asList("toyScenario/toyScenarioData/Bus_1_fare_Test.csv","toyScenario/toyScenarioData/Bus_2_fare_Test.csv")));
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -92,6 +111,7 @@ class PersonPlanSueModelTest {
 		return basicInjector;
 	}
 	
+
 	
 	/**
 	 * @throws java.lang.Exception
@@ -130,30 +150,42 @@ class PersonPlanSueModelTest {
 	void testPersonPlanSueModel() {
 		
 		Injector injector = createInjector();
-		PersonPlanSueModel model = new PersonPlanSueModel(injector.getInstance(timeBeanWrapper.class).timeBean);
+		PersonPlanSueModel model = new PersonPlanSueModel(injector.getInstance(timeBeanWrapper.class).timeBean,injector.getInstance(Config.class));
+		assertNotNull(model);
 		
-		fail("Not yet implemented");
 	}
-
+	
 	/**
-	 * Test method for {@link optimizerAgent.PersonPlanSueModel#performTransitVehicleOverlay(ust.hk.praisehk.metamodelcalibration.analyticalModel.AnalyticalModelNetwork, org.matsim.pt.transitSchedule.api.TransitSchedule, org.matsim.vehicles.Vehicles, java.lang.String)}.
+	 * Test method for {@link optimizerAgent.PersonPlanSueModel#PerformAssignment()}.
 	 */
 	@Test
-	void testPerformTransitVehicleOverlay() {
-		fail("Not yet implemented");
+	void testPerformAssignement() {
+		
+		Injector injector = createInjector();
+		PersonPlanSueModel model = new PersonPlanSueModel(injector.getInstance(timeBeanWrapper.class).timeBean, injector.getInstance(Config.class));
+		Scenario scenario = injector.getInstance(Scenario.class);
+		model.populateModel(scenario, injector.getInstance(timeBeanWrapper.class).fareCalculators, injector.getInstance(MAASPackages.class));
+		ParamReader pReader = injector.getInstance(ParamReader.class);
+		
+		Population population = injector.getInstance(Population.class);
+		population.getPersons().entrySet().parallelStream().forEach((p)->{
+			p.getValue().getPlans().forEach((plan)->{
+				plan.getAttributes().putAttribute(SimpleTranslatedPlan.SimplePlanAttributeName, new SimpleTranslatedPlan(injector.getInstance(timeBeanWrapper.class).timeBean, plan, scenario));
+			});
+		});
+		
+		model.performAssignment(population,pReader.ScaleUp(pReader.getDefaultParam()), model.getInternalParamters());
+		//assertNotNull(model);
+		fail();
 	}
 
-	/**
-	 * Test method for {@link optimizerAgent.PersonPlanSueModel#populateModel(org.matsim.api.core.v01.Scenario, java.util.Map, singlePlanAlgo.MAASPackages)}.
-	 */
-	@Test
-	void testPopulateModel() {
-		fail("Not yet implemented");
-	}
+
 
 }
 
 class timeBeanWrapper{
+	@Inject
+	Map<String,FareCalculator> fareCalculators;
 	final Map<String,Tuple<Double,Double>>timeBean;
 	
 	public timeBeanWrapper(final Map<String,Tuple<Double,Double>>timeBean) {
