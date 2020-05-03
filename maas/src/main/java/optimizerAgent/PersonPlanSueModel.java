@@ -24,6 +24,7 @@ import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.config.groups.PlanCalcScoreConfigGroup;
 import org.matsim.core.config.groups.PlanCalcScoreConfigGroup.ActivityParams;
+import org.matsim.core.population.PopulationUtils;
 import org.matsim.core.scoring.functions.ActivityUtilityParameters;
 import org.matsim.core.scoring.functions.ScoringParameters;
 import org.matsim.core.utils.collections.Tuple;
@@ -36,8 +37,8 @@ import org.matsim.vehicles.Vehicles;
 
 import com.google.inject.Inject;
 
+import MaaSPackages.MaaSPackages;
 import dynamicTransitRouter.fareCalculators.FareCalculator;
-import singlePlanAlgo.MAASPackages;
 import ust.hk.praisehk.metamodelcalibration.analyticalModel.AnalyticalModelLink;
 import ust.hk.praisehk.metamodelcalibration.analyticalModel.AnalyticalModelNetwork;
 import ust.hk.praisehk.metamodelcalibration.analyticalModel.AnalyticalModelRoute;
@@ -112,6 +113,9 @@ import ust.hk.praisehk.metamodelcalibration.matsimIntegration.SignalFlowReductio
  *  CalcPlanLinkTransitLinkIncidece: this will calculate the incidence relation from plan. I this really necessary? This can calculated per plan
  *  
  *  updateLinkFlow: 
+ *  
+ *  TODO: add a measurements based assignment function : commencing operation, maybe I will just add it to the previous commit. Ashraf May2,2020.
+ *  Should be easier if we used the ScoringParameters from matsim group. 
  * 
  */
 public class PersonPlanSueModel {
@@ -125,7 +129,7 @@ public class PersonPlanSueModel {
 	private Population population;
 	private Map<String,Tuple<Double,Double>>timeBeans;
 	private Map<String,FareCalculator> farecalculators;
-	private MAASPackages maasPakages;
+	private MaaSPackages maasPakages;
 	private Scenario scenario; 
 	private TransitSchedule ts;
 	private Map<String,AnalyticalModelNetwork> networks = new ConcurrentHashMap<>();;
@@ -267,7 +271,7 @@ public class PersonPlanSueModel {
 	 * TODO: finish implementing this function, Done???
 	 * @param population
 	 */
-	public void populateModel(Scenario scenario, Map<String,FareCalculator> fareCalculator, MAASPackages packages) {
+	public void populateModel(Scenario scenario, Map<String,FareCalculator> fareCalculator, MaaSPackages packages) {
 		this.population = scenario.getPopulation();
 		this.scenario = scenario;
 		SignalFlowReductionGenerator sg=new SignalFlowReductionGenerator(scenario);
@@ -290,6 +294,9 @@ public class PersonPlanSueModel {
 	
 	private OutputFlow singlePersonNL(Person person, LinkedHashMap<String,Double> params, LinkedHashMap<String,Double> anaParams) {
 		
+		//get the subpopulation
+		String subpopulation = PopulationUtils.getSubpopulation(person);
+		
 		Map<String, Double> utilities = new HashMap<>();
 		Map<String, Double> planProb = new HashMap<>();
 		Map<String,Map<Id<Link>,Double>> linkFlow = new HashMap<>();
@@ -302,7 +309,7 @@ public class PersonPlanSueModel {
 			SimpleTranslatedPlan trPlan = (SimpleTranslatedPlan) plan.getAttributes().getAttribute(SimpleTranslatedPlan.SimplePlanAttributeName);//extract the translated plan first
 			trPlans.put(plan.toString(), trPlan);
 			for(Activity ac:trPlan.getActivities()) {// for now this class is not implemented: done may 2 2020
-				utility += this.calcActivityUtility(ac, this.scenario.getConfig(),person);
+				utility += this.calcActivityUtility(ac, this.scenario.getConfig(),subpopulation);
 			}
 			for(Entry<String, Map<Id<AnalyticalModelTransitRoute>, AnalyticalModelTransitRoute>> trRouteMap:trPlan.getTrroutes().entrySet()) {
 				for(AnalyticalModelTransitRoute trRoute : trRouteMap.getValue().values()) {
@@ -525,8 +532,8 @@ public class PersonPlanSueModel {
 	 * @param config
 	 * @return
 	 */
-	private double calcActivityUtility(Activity activity, Config config, Person person) {
-		ScoringParameters scParam = new ScoringParameters.Builder(config.planCalcScore(), config.planCalcScore().getScoringParameters(null), config.scenario()).build();
+	private double calcActivityUtility(Activity activity, Config config, String subPopulation) {
+		ScoringParameters scParam = new ScoringParameters.Builder(config.planCalcScore(), config.planCalcScore().getScoringParameters(subPopulation), config.scenario()).build();
 		//First find the duration. As for now we switch off the departure time choice, The duration 
 		//will only depend on the previous trip end time 
 		ActivityUtilityParameters actParams = scParam.utilParams.get(activity.getType());

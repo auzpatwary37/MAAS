@@ -36,11 +36,12 @@ import com.google.inject.Scopes;
 import com.google.inject.multibindings.MapBinder;
 import com.google.inject.name.Names;
 
+import MaaSPackages.FareCalculatorCreator;
+import MaaSPackages.MaaSPackages;
 import dynamicTransitRouter.DynamicRoutingModule;
 import dynamicTransitRouter.fareCalculators.FareCalculator;
 import dynamicTransitRouter.fareCalculators.MTRFareCalculator;
-import singlePlanAlgo.MAASPackage;
-import singlePlanAlgo.MAASPackages;
+
 import ust.hk.praisehk.metamodelcalibration.analyticalModel.AnalyticalModelLink;
 import ust.hk.praisehk.metamodelcalibration.analyticalModel.AnalyticalModelNetwork;
 import ust.hk.praisehk.metamodelcalibration.analyticalModelImpl.CNLNetwork;
@@ -83,9 +84,9 @@ class PersonPlanSueModelTest {
 				bind(Population.class).toInstance(scenario.getPopulation());
 				bind(double.class).annotatedWith(Names.named(DynamicRoutingModule.fareRateName)).toInstance(1.);
 				bind(ParamReader.class).toInstance(new ParamReader("toyScenario/toyScenarioData/paramReaderToy.csv"));
-				MAASPackages packages = new MAASPackages(scenario.getTransitSchedule(), true, 100, 0);
+				MaaSPackages packages = new MaaSPackages(scenario.getTransitSchedule(), true, 100, 0, FareCalculatorCreator.getToyScenarioFareCalculators(), 0, true);
 				
-				bind(MAASPackages.class).toInstance(packages);
+				bind(MaaSPackages.class).toInstance(packages);
 				
 				MapBinder<String, FareCalculator> mapbinder = MapBinder.newMapBinder(binder(), String.class,
 						FareCalculator.class);
@@ -164,7 +165,7 @@ class PersonPlanSueModelTest {
 		Injector injector = createInjector();
 		PersonPlanSueModel model = new PersonPlanSueModel(injector.getInstance(timeBeanWrapper.class).timeBean, injector.getInstance(Config.class));
 		Scenario scenario = injector.getInstance(Scenario.class);
-		model.populateModel(scenario, injector.getInstance(timeBeanWrapper.class).fareCalculators, injector.getInstance(MAASPackages.class));
+		model.populateModel(scenario, injector.getInstance(timeBeanWrapper.class).fareCalculators, injector.getInstance(MaaSPackages.class));
 		ParamReader pReader = injector.getInstance(ParamReader.class);
 		
 		Population population = injector.getInstance(Population.class);

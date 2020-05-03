@@ -10,13 +10,14 @@ import org.matsim.core.replanning.ReplanningContext;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-import singlePlanAlgo.MAASPackages;
+import MaaSPackages.MaaSPackages;
+
 
 public class MAASOperatorModule implements PlanStrategyModule{
 	
 	private Random rnd;
 	@Inject
-	private @Named("MAASPackages") MAASPackages packages;
+	private @Named("MaaSPackages") MaaSPackages packages;
 	
 	private double distanceScale = 1; 
 	

@@ -96,7 +96,8 @@ public class SimpleTranslatedPlan {
 				this.carUsage.get(timeId).addAll(route.getLinkIds());
 				this.routes.get(timeId).put(route.getRouteId(), route);
 			}else if(trip.getTrRoute()!=null){
-				CNLTransitRoute route = (CNLTransitRoute) trip.getTrRoute(); 
+				
+				CNLTransitRouteMaaS route = new CNLTransitRouteMaaS((CNLTransitRoute) trip.getTrRoute(), scenario, scenario.getTransitSchedule());
 				for(Entry<Id<TransitLink>,TransitLink>trLink:route.getTransitLinks().entrySet()) {
 					if(trLink.getValue() instanceof TransitDirectLink) {
 						CNLTransitDirectLink link = (CNLTransitDirectLink) trLink.getValue();
@@ -106,6 +107,7 @@ public class SimpleTranslatedPlan {
 					transitLinkMap.get(timeId).put(trLink.getKey(),trLink.getValue());
 				}
 				this.totalWalkDistance += route.getRouteWalkingDistance();
+				this.trroutes.get(timeId).put(route.getTrRouteId(), route);
 			}else {
 				//TODO: Calculate the walk distance and add it 
 				/*
