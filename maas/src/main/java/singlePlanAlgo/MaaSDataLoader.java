@@ -18,6 +18,7 @@ import com.google.inject.name.Names;
 
 import MaaSPackages.MaaSPackages;
 import MaaSPackages.MaaSPackagesReader;
+import optimizerAgent.MaaSUtil;
 
 public class MaaSDataLoader extends AbstractModule{
 	
@@ -36,9 +37,9 @@ public class MaaSDataLoader extends AbstractModule{
 	@Override
 	public void install() {
 		if (this.maasPacakges != null) {
-			bind(MaaSPackages.class).annotatedWith(Names.named("MaaSPackages")).toInstance(this.maasPacakges);
+			bind(MaaSPackages.class).annotatedWith(Names.named(MaaSUtil.MaaSPackagesAttributeName)).toInstance(this.maasPacakges);
 		} else {
-			bind(MaaSPackages.class).annotatedWith(Names.named("MaaSPackages")).toProvider(MaaSPackagesProvider.class).in(Singleton.class);
+			bind(MaaSPackages.class).annotatedWith(Names.named(MaaSUtil.MaaSPackagesAttributeName)).toProvider(MaaSPackagesProvider.class).in(Singleton.class);
 		}
 		
 		
@@ -62,7 +63,7 @@ public class MaaSDataLoader extends AbstractModule{
 			population.getPersons().values().forEach((p)->{
 				p.getPlans().forEach((plan)->{
 					int index = rnd.nextInt(packages.getMassPackages().size());
-					plan.getAttributes().putAttribute(MaaSStrategyModule.StrategyAttributeName, packages.getMassPackages().keySet().toArray()[index]);
+					plan.getAttributes().putAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName, packages.getMassPackages().keySet().toArray()[index]);
 				});
 			});
 		}

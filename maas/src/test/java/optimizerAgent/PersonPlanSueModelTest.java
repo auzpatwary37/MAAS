@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -44,8 +45,11 @@ import dynamicTransitRouter.fareCalculators.MTRFareCalculator;
 
 import ust.hk.praisehk.metamodelcalibration.analyticalModel.AnalyticalModelLink;
 import ust.hk.praisehk.metamodelcalibration.analyticalModel.AnalyticalModelNetwork;
+import ust.hk.praisehk.metamodelcalibration.analyticalModel.SUEModelOutput;
 import ust.hk.praisehk.metamodelcalibration.analyticalModelImpl.CNLNetwork;
 import ust.hk.praisehk.metamodelcalibration.calibrator.ParamReader;
+import ust.hk.praisehk.metamodelcalibration.measurements.Measurements;
+import ust.hk.praisehk.metamodelcalibration.measurements.MeasurementsWriter;
 
 /**
  * @author ashraf
@@ -167,15 +171,23 @@ class PersonPlanSueModelTest {
 		Scenario scenario = injector.getInstance(Scenario.class);
 		model.populateModel(scenario, injector.getInstance(timeBeanWrapper.class).fareCalculators, injector.getInstance(MaaSPackages.class));
 		ParamReader pReader = injector.getInstance(ParamReader.class);
+		MaaSPackages packages = injector.getInstance(MaaSPackages.class);
+		Random rnd = new Random();
+		
 		
 		Population population = injector.getInstance(Population.class);
 		population.getPersons().entrySet().parallelStream().forEach((p)->{
 			p.getValue().getPlans().forEach((plan)->{
 				plan.getAttributes().putAttribute(SimpleTranslatedPlan.SimplePlanAttributeName, new SimpleTranslatedPlan(injector.getInstance(timeBeanWrapper.class).timeBean, plan, scenario));
+				plan.getAttributes().putAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName, packages.getMassPackages().keySet().toArray()[rnd.nextInt(packages.getMassPackages().size())]);
 			});
 		});
 		
-		model.performAssignment(population,pReader.ScaleUp(pReader.getDefaultParam()), model.getInternalParamters());
+		SUEModelOutput flow = model.performAssignment(population,pReader.ScaleUp(pReader.getDefaultParam()));
+		Measurements m = model.performAssignment(population,pReader.ScaleUp(pReader.getDefaultParam()),null);
+		Measurements mm = model.performAssignment(population,pReader.ScaleUp(pReader.getDefaultParam()),m);
+		new MeasurementsWriter(m).write("test/testMeasurements_m.xml");
+		new MeasurementsWriter(mm).write("test/testMeasurements_mm.xml");
 		//assertNotNull(model);
 		fail();
 	}

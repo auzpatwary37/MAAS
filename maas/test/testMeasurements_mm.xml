@@ -1,0 +1,834 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Measurements>
+    <timeBeans>
+        <timeBean EndingTime="39600.0" StartingTime="36000.0" timeBeanId="11"/>
+        <timeBean EndingTime="79200.0" StartingTime="75600.0" timeBeanId="22"/>
+        <timeBean EndingTime="43200.0" StartingTime="39600.0" timeBeanId="12"/>
+        <timeBean EndingTime="82800.0" StartingTime="79200.0" timeBeanId="23"/>
+        <timeBean EndingTime="46800.0" StartingTime="43200.0" timeBeanId="13"/>
+        <timeBean EndingTime="86400.0" StartingTime="82800.0" timeBeanId="24"/>
+        <timeBean EndingTime="50400.0" StartingTime="46800.0" timeBeanId="14"/>
+        <timeBean EndingTime="54000.0" StartingTime="50400.0" timeBeanId="15"/>
+        <timeBean EndingTime="57600.0" StartingTime="54000.0" timeBeanId="16"/>
+        <timeBean EndingTime="61200.0" StartingTime="57600.0" timeBeanId="17"/>
+        <timeBean EndingTime="64800.0" StartingTime="61200.0" timeBeanId="18"/>
+        <timeBean EndingTime="68400.0" StartingTime="64800.0" timeBeanId="19"/>
+        <timeBean EndingTime="3600.0" StartingTime="0.0" timeBeanId="1"/>
+        <timeBean EndingTime="7200.0" StartingTime="3600.0" timeBeanId="2"/>
+        <timeBean EndingTime="10800.0" StartingTime="7200.0" timeBeanId="3"/>
+        <timeBean EndingTime="14400.0" StartingTime="10800.0" timeBeanId="4"/>
+        <timeBean EndingTime="18000.0" StartingTime="14400.0" timeBeanId="5"/>
+        <timeBean EndingTime="21600.0" StartingTime="18000.0" timeBeanId="6"/>
+        <timeBean EndingTime="25200.0" StartingTime="21600.0" timeBeanId="7"/>
+        <timeBean EndingTime="28800.0" StartingTime="25200.0" timeBeanId="8"/>
+        <timeBean EndingTime="32400.0" StartingTime="28800.0" timeBeanId="9"/>
+        <timeBean EndingTime="72000.0" StartingTime="68400.0" timeBeanId="20"/>
+        <timeBean EndingTime="36000.0" StartingTime="32400.0" timeBeanId="10"/>
+        <timeBean EndingTime="75600.0" StartingTime="72000.0" timeBeanId="21"/>
+    </timeBeans>
+    <Measurement LINK_LIST="[]" MeasurementId="InVehicleFare___bus2___From_2_to_3_bus2___2_2rBBB_stop___7_7rGGG_stop___bus" MeasurementType="fareLinkVolume" fareLink="InVehicleFare___bus2___From_2_to_3_bus2___2_2rBBB_stop___7_7rGGG_stop___bus">
+        <Volumes>
+            <Volume PCUVolume="17.490038636528883" TimeBeanId="11"/>
+            <Volume PCUVolume="1.0839751491132084" TimeBeanId="8"/>
+            <Volume PCUVolume="1.8728042102344344" TimeBeanId="9"/>
+            <Volume PCUVolume="36.05475133276113" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="InVehicleFare___bus1___From_1_to_4_bus1___1_1rAAA_stop___6_6rFFF_stop___bus" MeasurementType="fareLinkVolume" fareLink="InVehicleFare___bus1___From_1_to_4_bus1___1_1rAAA_stop___6_6rFFF_stop___bus">
+        <Volumes>
+            <Volume PCUVolume="2.369359511067875" TimeBeanId="11"/>
+            <Volume PCUVolume="0.8915698067900097" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="NetworkWideFare___5_5rEEE_stop_train___7r_7GGG_stop_train___train" MeasurementType="fareLinkVolume" fareLink="NetworkWideFare___5_5rEEE_stop_train___7r_7GGG_stop_train___train">
+        <Volumes>
+            <Volume PCUVolume="0.0011954668542791546" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[4r_4_stop]" MeasurementId="4r_4_stop" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="5.007208088116214E-7" TimeBeanId="15"/>
+            <Volume PCUVolume="45.255827203254135" TimeBeanId="16"/>
+            <Volume PCUVolume="1212.1901190734377" TimeBeanId="17"/>
+            <Volume PCUVolume="1247.0381876095132" TimeBeanId="18"/>
+            <Volume PCUVolume="178.03591191698078" TimeBeanId="19"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="4r_4_stop"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[7r_6]" MeasurementId="7r_6" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="53.54480330378535" TimeBeanId="16"/>
+            <Volume PCUVolume="2244.721023457599" TimeBeanId="17"/>
+            <Volume PCUVolume="1348.7531197848043" TimeBeanId="18"/>
+            <Volume PCUVolume="220.97297093489064" TimeBeanId="19"/>
+            <Volume PCUVolume="0.6463812877698722" TimeBeanId="20"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="7r_6"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="NetworkWideFare___1_1rAAA_stop_train___7r_7GGG_stop_train___train" MeasurementType="fareLinkVolume" fareLink="NetworkWideFare___1_1rAAA_stop_train___7r_7GGG_stop_train___train">
+        <Volumes>
+            <Volume PCUVolume="69.76235644510432" TimeBeanId="11"/>
+            <Volume PCUVolume="5.1829616384891" TimeBeanId="8"/>
+            <Volume PCUVolume="321.95586336382746" TimeBeanId="9"/>
+            <Volume PCUVolume="338.82292867289505" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="InVehicleFare___bus1___From_4_to_1_bus1___6r_6FFF_stop___5r_5EEE_stop___bus" MeasurementType="fareLinkVolume" fareLink="InVehicleFare___bus1___From_4_to_1_bus1___6r_6FFF_stop___5r_5EEE_stop___bus">
+        <Volumes>
+            <Volume PCUVolume="1.458089729650144" TimeBeanId="17"/>
+            <Volume PCUVolume="8.643572446486932" TimeBeanId="18"/>
+            <Volume PCUVolume="1.8732446159416636" TimeBeanId="19"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[2_2r_stop]" MeasurementId="2_2r_stop" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="799.3702358082561" TimeBeanId="11"/>
+            <Volume PCUVolume="7.795618955881438" TimeBeanId="12"/>
+            <Volume PCUVolume="0.01728631303612203" TimeBeanId="15"/>
+            <Volume PCUVolume="399.96466492847526" TimeBeanId="16"/>
+            <Volume PCUVolume="3281.3994589282893" TimeBeanId="17"/>
+            <Volume PCUVolume="1746.3765674926722" TimeBeanId="18"/>
+            <Volume PCUVolume="408.668386967806" TimeBeanId="19"/>
+            <Volume PCUVolume="2.7263101483004698E-5" TimeBeanId="7"/>
+            <Volume PCUVolume="549.4342304298748" TimeBeanId="8"/>
+            <Volume PCUVolume="4167.822759041604" TimeBeanId="9"/>
+            <Volume PCUVolume="3.9159593769334107" TimeBeanId="20"/>
+            <Volume PCUVolume="2908.1078311204947" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="2_2r_stop"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[3r_4]" MeasurementId="3r_4" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="286.67176651549494" TimeBeanId="11"/>
+            <Volume PCUVolume="1.7812948606938407E-5" TimeBeanId="7"/>
+            <Volume PCUVolume="234.74238045571857" TimeBeanId="8"/>
+            <Volume PCUVolume="987.493580825926" TimeBeanId="9"/>
+            <Volume PCUVolume="1027.6548991937855" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="3r_4"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="InVehicleFare___bus1___From_4_to_1_bus1___6r_6FFF_stop___1r_1AAA_stop___bus" MeasurementType="fareLinkVolume" fareLink="InVehicleFare___bus1___From_4_to_1_bus1___6r_6FFF_stop___1r_1AAA_stop___bus">
+        <Volumes>
+            <Volume PCUVolume="2.2202207358458717" TimeBeanId="16"/>
+            <Volume PCUVolume="23.352407796902998" TimeBeanId="17"/>
+            <Volume PCUVolume="9.721755632379457" TimeBeanId="18"/>
+            <Volume PCUVolume="1.9103423872926668" TimeBeanId="19"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="NetworkWideFare___7_7rGGG_stop_train___1r_1AAA_stop_train___train" MeasurementType="fareLinkVolume" fareLink="NetworkWideFare___7_7rGGG_stop_train___1r_1AAA_stop_train___train">
+        <Volumes>
+            <Volume PCUVolume="26.858019985348157" TimeBeanId="16"/>
+            <Volume PCUVolume="248.769754280672" TimeBeanId="17"/>
+            <Volume PCUVolume="412.00649134471576" TimeBeanId="18"/>
+            <Volume PCUVolume="94.33493340231077" TimeBeanId="19"/>
+            <Volume PCUVolume="0.3274498718319928" TimeBeanId="20"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[3_6r]" MeasurementId="3_6r" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="94.13298343031505" TimeBeanId="11"/>
+            <Volume PCUVolume="0.8779862418857209" TimeBeanId="12"/>
+            <Volume PCUVolume="6.951106239742397" TimeBeanId="8"/>
+            <Volume PCUVolume="1103.3961017037295" TimeBeanId="9"/>
+            <Volume PCUVolume="564.8081514748691" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="3_6r"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="NetworkWideFare___6_6rFFF_stop_train___4_4rDDD_stop_train___train" MeasurementType="fareLinkVolume" fareLink="NetworkWideFare___6_6rFFF_stop_train___4_4rDDD_stop_train___train">
+        <Volumes>
+            <Volume PCUVolume="0.12343791194008914" TimeBeanId="11"/>
+            <Volume PCUVolume="0.1435829327179991" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[4_3r]" MeasurementId="4_3r" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="5.007208088116214E-7" TimeBeanId="15"/>
+            <Volume PCUVolume="45.255827203254135" TimeBeanId="16"/>
+            <Volume PCUVolume="1212.1847821514523" TimeBeanId="17"/>
+            <Volume PCUVolume="1239.5312097116825" TimeBeanId="18"/>
+            <Volume PCUVolume="178.0342708370569" TimeBeanId="19"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="4_3r"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[3_2r]" MeasurementId="3_2r" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="5.007208088116214E-7" TimeBeanId="15"/>
+            <Volume PCUVolume="60.49799900264062" TimeBeanId="16"/>
+            <Volume PCUVolume="1798.2530111684066" TimeBeanId="17"/>
+            <Volume PCUVolume="1761.6829815298731" TimeBeanId="18"/>
+            <Volume PCUVolume="302.50828098624856" TimeBeanId="19"/>
+            <Volume PCUVolume="0.15571492382013372" TimeBeanId="20"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="3_2r"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="InVehicleFare___bus1___From_4_to_1_bus1___4r_4DDD_stop___5r_5EEE_stop___bus" MeasurementType="fareLinkVolume" fareLink="InVehicleFare___bus1___From_4_to_1_bus1___4r_4DDD_stop___5r_5EEE_stop___bus">
+        <Volumes>
+            <Volume PCUVolume="3.347561708351555" TimeBeanId="18"/>
+            <Volume PCUVolume="0.28300675169312495" TimeBeanId="19"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[2_1r]" MeasurementId="2_1r" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="5.007208088116214E-7" TimeBeanId="15"/>
+            <Volume PCUVolume="45.255827203254135" TimeBeanId="16"/>
+            <Volume PCUVolume="1212.1847821514523" TimeBeanId="17"/>
+            <Volume PCUVolume="1239.5312097116825" TimeBeanId="18"/>
+            <Volume PCUVolume="178.0342708370569" TimeBeanId="19"/>
+            <Volume PCUVolume="0.4364025230106897" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="2_1r"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="InVehicleFare___bus2___From_2_to_3_bus2___5_5rEEE_stop___7_7rGGG_stop___bus" MeasurementType="fareLinkVolume" fareLink="InVehicleFare___bus2___From_2_to_3_bus2___5_5rEEE_stop___7_7rGGG_stop___bus">
+        <Volumes>
+            <Volume PCUVolume="21.399937631974854" TimeBeanId="11"/>
+            <Volume PCUVolume="0.2487539021704965" TimeBeanId="12"/>
+            <Volume PCUVolume="4.992841644474877" TimeBeanId="8"/>
+            <Volume PCUVolume="7.850713217877055" TimeBeanId="9"/>
+            <Volume PCUVolume="43.234412240311386" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[7r_7_stop]" MeasurementId="7r_7_stop" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="263.35783846634376" TimeBeanId="11"/>
+            <Volume PCUVolume="0.8779862418857209" TimeBeanId="12"/>
+            <Volume PCUVolume="0.0173005452689251" TimeBeanId="15"/>
+            <Volume PCUVolume="617.1286261275734" TimeBeanId="16"/>
+            <Volume PCUVolume="2932.441629488085" TimeBeanId="17"/>
+            <Volume PCUVolume="1494.2516095283374" TimeBeanId="18"/>
+            <Volume PCUVolume="431.2710669141861" TimeBeanId="19"/>
+            <Volume PCUVolume="15.782884446996873" TimeBeanId="8"/>
+            <Volume PCUVolume="2134.7489208036027" TimeBeanId="9"/>
+            <Volume PCUVolume="7.482088344779435" TimeBeanId="20"/>
+            <Volume PCUVolume="1458.6042643164894" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="7r_7_stop"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="NetworkWideFare___7r_7GGG_stop_train___1r_1AAA_stop_train___train" MeasurementType="fareLinkVolume" fareLink="NetworkWideFare___7r_7GGG_stop_train___1r_1AAA_stop_train___train">
+        <Volumes>
+            <Volume PCUVolume="32.60640261189049" TimeBeanId="16"/>
+            <Volume PCUVolume="21.454294398545294" TimeBeanId="17"/>
+            <Volume PCUVolume="8.168919137036392" TimeBeanId="18"/>
+            <Volume PCUVolume="39.025788586932585" TimeBeanId="19"/>
+            <Volume PCUVolume="1.8737882086784512" TimeBeanId="20"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="NetworkWideFare___7_7rGGG_stop_train___6_6rFFF_stop_train___train" MeasurementType="fareLinkVolume" fareLink="NetworkWideFare___7_7rGGG_stop_train___6_6rFFF_stop_train___train">
+        <Volumes>
+            <Volume PCUVolume="23.218845864119107" TimeBeanId="16"/>
+            <Volume PCUVolume="389.36268017444195" TimeBeanId="17"/>
+            <Volume PCUVolume="139.5125161062656" TimeBeanId="18"/>
+            <Volume PCUVolume="26.09825660990222" TimeBeanId="19"/>
+            <Volume PCUVolume="0.1240833875592835" TimeBeanId="20"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[3_3r_stop]" MeasurementId="3_3r_stop" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="286.67176651549494" TimeBeanId="11"/>
+            <Volume PCUVolume="1.7812948606938407E-5" TimeBeanId="7"/>
+            <Volume PCUVolume="234.74238045571857" TimeBeanId="8"/>
+            <Volume PCUVolume="987.493580825926" TimeBeanId="9"/>
+            <Volume PCUVolume="1027.6548991937855" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="3_3r_stop"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="NetworkWideFare___1_1rAAA_stop_train___7_7rGGG_stop_train___train" MeasurementType="fareLinkVolume" fareLink="NetworkWideFare___1_1rAAA_stop_train___7_7rGGG_stop_train___train">
+        <Volumes>
+            <Volume PCUVolume="59.08560798742554" TimeBeanId="11"/>
+            <Volume PCUVolume="1.3616943004043645" TimeBeanId="12"/>
+            <Volume PCUVolume="0.0010045033463313524" TimeBeanId="7"/>
+            <Volume PCUVolume="6.949298119389899" TimeBeanId="8"/>
+            <Volume PCUVolume="2.2047531566012886" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[6_5r]" MeasurementId="6_5r" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="38.30263150439881" TimeBeanId="16"/>
+            <Volume PCUVolume="1658.6581313626325" TimeBeanId="17"/>
+            <Volume PCUVolume="834.1083258644394" TimeBeanId="18"/>
+            <Volume PCUVolume="96.50060186562266" TimeBeanId="19"/>
+            <Volume PCUVolume="0.49066636394973856" TimeBeanId="20"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="6_5r"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="InVehicleFare___bus1___From_4_to_1_bus1___4r_4DDD_stop___1r_1AAA_stop___bus" MeasurementType="fareLinkVolume" fareLink="InVehicleFare___bus1___From_4_to_1_bus1___4r_4DDD_stop___1r_1AAA_stop___bus">
+        <Volumes>
+            <Volume PCUVolume="0.4462302871933845" TimeBeanId="16"/>
+            <Volume PCUVolume="5.0327090403780455" TimeBeanId="17"/>
+            <Volume PCUVolume="20.650898121495352" TimeBeanId="18"/>
+            <Volume PCUVolume="1.1546945837941822" TimeBeanId="19"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[1_1r_stop]" MeasurementId="1_1r_stop" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="680.10809203871" TimeBeanId="11"/>
+            <Volume PCUVolume="6.6202331420153895" TimeBeanId="12"/>
+            <Volume PCUVolume="1.473295361188354E-5" TimeBeanId="15"/>
+            <Volume PCUVolume="315.9645917061378" TimeBeanId="16"/>
+            <Volume PCUVolume="3107.953313090822" TimeBeanId="17"/>
+            <Volume PCUVolume="2343.6663494299805" TimeBeanId="18"/>
+            <Volume PCUVolume="421.6115627982506" TimeBeanId="19"/>
+            <Volume PCUVolume="6.464255094942268E-4" TimeBeanId="7"/>
+            <Volume PCUVolume="353.94240127564143" TimeBeanId="8"/>
+            <Volume PCUVolume="2844.7386423479043" TimeBeanId="9"/>
+            <Volume PCUVolume="4.212510255615899" TimeBeanId="20"/>
+            <Volume PCUVolume="2307.998326783978" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="1_1r_stop"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="NetworkWideFare___7_7rGGG_stop_train___2r_2BBB_stop_train___train" MeasurementType="fareLinkVolume" fareLink="NetworkWideFare___7_7rGGG_stop_train___2r_2BBB_stop_train___train">
+        <Volumes>
+            <Volume PCUVolume="8.676458427115" TimeBeanId="16"/>
+            <Volume PCUVolume="93.0108975142689" TimeBeanId="17"/>
+            <Volume PCUVolume="141.39008294771355" TimeBeanId="18"/>
+            <Volume PCUVolume="69.90481545123363" TimeBeanId="19"/>
+            <Volume PCUVolume="0.9649855808539688" TimeBeanId="20"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[6r_3]" MeasurementId="6r_3" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="15.242171799386497" TimeBeanId="16"/>
+            <Volume PCUVolume="586.0682290169567" TimeBeanId="17"/>
+            <Volume PCUVolume="522.1517718181934" TimeBeanId="18"/>
+            <Volume PCUVolume="124.47401014919183" TimeBeanId="19"/>
+            <Volume PCUVolume="0.15571492382013372" TimeBeanId="20"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="6r_3"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[6r_4]" MeasurementId="6r_4" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="0.1603693874397423" TimeBeanId="11"/>
+            <Volume PCUVolume="2.360125790871558" TimeBeanId="8"/>
+            <Volume PCUVolume="106.24882879736806" TimeBeanId="9"/>
+            <Volume PCUVolume="37.18807752435284" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="6r_4"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[2r_3]" MeasurementId="2r_3" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="380.80474994580953" TimeBeanId="11"/>
+            <Volume PCUVolume="0.8779862418857209" TimeBeanId="12"/>
+            <Volume PCUVolume="1.7812948606938407E-5" TimeBeanId="7"/>
+            <Volume PCUVolume="241.69348669546108" TimeBeanId="8"/>
+            <Volume PCUVolume="2090.8896825296606" TimeBeanId="9"/>
+            <Volume PCUVolume="1592.463050668652" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="2r_3"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[5r_5_stop]" MeasurementId="5r_5_stop" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="0.0173005452689251" TimeBeanId="15"/>
+            <Volume PCUVolume="655.4312576319726" TimeBeanId="16"/>
+            <Volume PCUVolume="4591.099760850693" TimeBeanId="17"/>
+            <Volume PCUVolume="2328.359935392775" TimeBeanId="18"/>
+            <Volume PCUVolume="527.7716687798085" TimeBeanId="19"/>
+            <Volume PCUVolume="7.972754708729174" TimeBeanId="20"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="5r_5_stop"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[7_7r_stop]" MeasurementId="7_7r_stop" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="882.2777343264993" TimeBeanId="11"/>
+            <Volume PCUVolume="14.415852097896828" TimeBeanId="12"/>
+            <Volume PCUVolume="0.0173005452689251" TimeBeanId="15"/>
+            <Volume PCUVolume="670.6734294313588" TimeBeanId="16"/>
+            <Volume PCUVolume="5177.162652945659" TimeBeanId="17"/>
+            <Volume PCUVolume="2843.004729313131" TimeBeanId="18"/>
+            <Volume PCUVolume="652.2440378490772" TimeBeanId="19"/>
+            <Volume PCUVolume="6.380627137633547E-4" TimeBeanId="7"/>
+            <Volume PCUVolume="431.5317254180343" TimeBeanId="8"/>
+            <Volume PCUVolume="4930.299505083921" TimeBeanId="9"/>
+            <Volume PCUVolume="8.12846963254931" TimeBeanId="20"/>
+            <Volume PCUVolume="3092.705164727997" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="7_7r_stop"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="NetworkWideFare___7r_7GGG_stop_train___2r_2BBB_stop_train___train" MeasurementType="fareLinkVolume" fareLink="NetworkWideFare___7r_7GGG_stop_train___2r_2BBB_stop_train___train">
+        <Volumes>
+            <Volume PCUVolume="1.0" TimeBeanId="15"/>
+            <Volume PCUVolume="201.73218447876042" TimeBeanId="16"/>
+            <Volume PCUVolume="574.6799622839571" TimeBeanId="17"/>
+            <Volume PCUVolume="684.3320918603375" TimeBeanId="18"/>
+            <Volume PCUVolume="154.1543144636368" TimeBeanId="19"/>
+            <Volume PCUVolume="0.026436419299242807" TimeBeanId="20"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="InVehicleFare___bus1___From_4_to_1_bus1___6r_6FFF_stop___2r_2BBB_stop___bus" MeasurementType="fareLinkVolume" fareLink="InVehicleFare___bus1___From_4_to_1_bus1___6r_6FFF_stop___2r_2BBB_stop___bus">
+        <Volumes>
+            <Volume PCUVolume="21.017547764869295" TimeBeanId="16"/>
+            <Volume PCUVolume="378.6002745616153" TimeBeanId="17"/>
+            <Volume PCUVolume="127.47557555315628" TimeBeanId="18"/>
+            <Volume PCUVolume="28.35681687560916" TimeBeanId="19"/>
+            <Volume PCUVolume="0.1240833875592835" TimeBeanId="20"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[2r_5]" MeasurementId="2r_5" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="418.5654858624445" TimeBeanId="11"/>
+            <Volume PCUVolume="6.917632713995717" TimeBeanId="12"/>
+            <Volume PCUVolume="9.450152876066289E-6" TimeBeanId="7"/>
+            <Volume PCUVolume="307.740743734414" TimeBeanId="8"/>
+            <Volume PCUVolume="2076.933076511934" TimeBeanId="9"/>
+            <Volume PCUVolume="1315.2083779288432" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="2r_5"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[5_1r]" MeasurementId="5_1r" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="1.4232232803071919E-5" TimeBeanId="15"/>
+            <Volume PCUVolume="270.70876450288387" TimeBeanId="16"/>
+            <Volume PCUVolume="1895.7685309393614" TimeBeanId="17"/>
+            <Volume PCUVolume="1104.135139718294" TimeBeanId="18"/>
+            <Volume PCUVolume="243.5772919611938" TimeBeanId="19"/>
+            <Volume PCUVolume="4.212510255615899" TimeBeanId="20"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="5_1r"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[1r_1_stop]" MeasurementId="1r_1_stop" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="1.473295361188354E-5" TimeBeanId="15"/>
+            <Volume PCUVolume="315.9645917061378" TimeBeanId="16"/>
+            <Volume PCUVolume="3107.953313090822" TimeBeanId="17"/>
+            <Volume PCUVolume="2343.6663494299805" TimeBeanId="18"/>
+            <Volume PCUVolume="421.6115627982506" TimeBeanId="19"/>
+            <Volume PCUVolume="4.212510255615899" TimeBeanId="20"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="1r_1_stop"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[6r_6_stop]" MeasurementId="6r_6_stop" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="94.13298343031505" TimeBeanId="11"/>
+            <Volume PCUVolume="0.8779862418857209" TimeBeanId="12"/>
+            <Volume PCUVolume="0.005336921985297912" TimeBeanId="17"/>
+            <Volume PCUVolume="7.506977897830967" TimeBeanId="18"/>
+            <Volume PCUVolume="0.0016410799238668796" TimeBeanId="19"/>
+            <Volume PCUVolume="6.951106239742397" TimeBeanId="8"/>
+            <Volume PCUVolume="1103.3961017037295" TimeBeanId="9"/>
+            <Volume PCUVolume="564.8081514748691" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="6r_6_stop"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="NetworkWideFare___5r_5EEE_stop_train___1r_1AAA_stop_train___train" MeasurementType="fareLinkVolume" fareLink="NetworkWideFare___5r_5EEE_stop_train___1r_1AAA_stop_train___train">
+        <Volumes>
+            <Volume PCUVolume="15.22440171032807" TimeBeanId="16"/>
+            <Volume PCUVolume="5.613210676177288" TimeBeanId="17"/>
+            <Volume PCUVolume="18.598888608985156" TimeBeanId="18"/>
+            <Volume PCUVolume="23.330450619633265" TimeBeanId="19"/>
+            <Volume PCUVolume="1.2240376696050779" TimeBeanId="20"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="NetworkWideFare___7_7rGGG_stop_train___5r_5EEE_stop_train___train" MeasurementType="fareLinkVolume" fareLink="NetworkWideFare___7_7rGGG_stop_train___5r_5EEE_stop_train___train">
+        <Volumes>
+            <Volume PCUVolume="8.457778634790609" TimeBeanId="18"/>
+            <Volume PCUVolume="8.463722999371562" TimeBeanId="19"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="InVehicleFare___bus1___From_4_to_1_bus1___4r_4DDD_stop___2r_2BBB_stop___bus" MeasurementType="fareLinkVolume" fareLink="InVehicleFare___bus1___From_4_to_1_bus1___4r_4DDD_stop___2r_2BBB_stop___bus">
+        <Volumes>
+            <Volume PCUVolume="2.12456891790288E-5" TimeBeanId="16"/>
+            <Volume PCUVolume="1.5538489276771912" TimeBeanId="17"/>
+            <Volume PCUVolume="3.47224243348795" TimeBeanId="18"/>
+            <Volume PCUVolume="0.005521753145471561" TimeBeanId="19"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="InVehicleFare___bus2___From_2_to_3_bus2___2_2rBBB_stop___5_5rEEE_stop___bus" MeasurementType="fareLinkVolume" fareLink="InVehicleFare___bus2___From_2_to_3_bus2___2_2rBBB_stop___5_5rEEE_stop___bus">
+        <Volumes>
+            <Volume PCUVolume="0.0011954668542791546" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[1r_5]" MeasurementId="1r_5" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="369.7396344211793" TimeBeanId="11"/>
+            <Volume PCUVolume="6.6202331420153895" TimeBeanId="12"/>
+            <Volume PCUVolume="6.286125608872884E-4" TimeBeanId="7"/>
+            <Volume PCUVolume="119.20000123474846" TimeBeanId="8"/>
+            <Volume PCUVolume="1856.219155665627" TimeBeanId="9"/>
+            <Volume PCUVolume="1249.8767128486434" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="1r_5"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[1r_2]" MeasurementId="1r_2" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="310.36845761753085" TimeBeanId="11"/>
+            <Volume PCUVolume="1.7812948606938407E-5" TimeBeanId="7"/>
+            <Volume PCUVolume="234.7424000408929" TimeBeanId="8"/>
+            <Volume PCUVolume="988.519486682275" TimeBeanId="9"/>
+            <Volume PCUVolume="1058.5580164583464" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="1r_2"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[5_5r_stop]" MeasurementId="5_5r_stop" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="788.305120283624" TimeBeanId="11"/>
+            <Volume PCUVolume="13.537865856011106" TimeBeanId="12"/>
+            <Volume PCUVolume="6.380627137633547E-4" TimeBeanId="7"/>
+            <Volume PCUVolume="426.9407449691631" TimeBeanId="8"/>
+            <Volume PCUVolume="3933.152232177565" TimeBeanId="9"/>
+            <Volume PCUVolume="2565.0850907774875" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="5_5r_stop"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="InVehicleFare___bus2___From_3_to_2_bus2___7r_7GGG_stop___5r_5EEE_stop___bus" MeasurementType="fareLinkVolume" fareLink="InVehicleFare___bus2___From_3_to_2_bus2___7r_7GGG_stop___5r_5EEE_stop___bus">
+        <Volumes>
+            <Volume PCUVolume="15.22440171032807" TimeBeanId="16"/>
+            <Volume PCUVolume="4.155120946527145" TimeBeanId="17"/>
+            <Volume PCUVolume="6.6077544541466775" TimeBeanId="18"/>
+            <Volume PCUVolume="21.17419925199847" TimeBeanId="19"/>
+            <Volume PCUVolume="1.2240376696050779" TimeBeanId="20"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="InVehicleFare___bus1___From_1_to_4_bus1___1_1rAAA_stop___5_5rEEE_stop___bus" MeasurementType="fareLinkVolume" fareLink="InVehicleFare___bus1___From_1_to_4_bus1___1_1rAAA_stop___5_5rEEE_stop___bus">
+        <Volumes>
+            <Volume PCUVolume="0.015175221511173415" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="NetworkWideFare___1_1rAAA_stop_train___4_4rDDD_stop_train___train" MeasurementType="fareLinkVolume" fareLink="NetworkWideFare___1_1rAAA_stop_train___4_4rDDD_stop_train___train">
+        <Volumes>
+            <Volume PCUVolume="129.1732992773664" TimeBeanId="11"/>
+            <Volume PCUVolume="60.32711414534739" TimeBeanId="8"/>
+            <Volume PCUVolume="1017.3902764887113" TimeBeanId="9"/>
+            <Volume PCUVolume="610.3070677185019" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="NetworkWideFare___6r_6FFF_stop_train___1r_1AAA_stop_train___train" MeasurementType="fareLinkVolume" fareLink="NetworkWideFare___6r_6FFF_stop_train___1r_1AAA_stop_train___train">
+        <Volumes>
+            <Volume PCUVolume="0.0013457599042760219" TimeBeanId="16"/>
+            <Volume PCUVolume="1.7424798570889517" TimeBeanId="17"/>
+            <Volume PCUVolume="3.506023606875081" TimeBeanId="18"/>
+            <Volume PCUVolume="0.6783337340594902" TimeBeanId="19"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="NetworkWideFare___6r_6FFF_stop_train___7r_7GGG_stop_train___train" MeasurementType="fareLinkVolume" fareLink="NetworkWideFare___6r_6FFF_stop_train___7r_7GGG_stop_train___train">
+        <Volumes>
+            <Volume PCUVolume="0.45921613811631445" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[5r_7]" MeasurementId="5r_7" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="618.919895860156" TimeBeanId="11"/>
+            <Volume PCUVolume="13.537865856011106" TimeBeanId="12"/>
+            <Volume PCUVolume="6.380627137633547E-4" TimeBeanId="7"/>
+            <Volume PCUVolume="415.74884097103677" TimeBeanId="8"/>
+            <Volume PCUVolume="2795.5505842803273" TimeBeanId="9"/>
+            <Volume PCUVolume="1634.100900411513" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="5r_7"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="InVehicleFare___bus2___From_3_to_2_bus2___6r_6FFF_stop___7r_7GGG_stop___bus" MeasurementType="fareLinkVolume" fareLink="InVehicleFare___bus2___From_3_to_2_bus2___6r_6FFF_stop___7r_7GGG_stop___bus">
+        <Volumes>
+            <Volume PCUVolume="10.330871208979582" TimeBeanId="11"/>
+            <Volume PCUVolume="0.5498710779792854" TimeBeanId="8"/>
+            <Volume PCUVolume="42.68686405315998" TimeBeanId="9"/>
+            <Volume PCUVolume="24.952677119381246" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[5r_6]" MeasurementId="5r_6" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="169.38522442346846" TimeBeanId="11"/>
+            <Volume PCUVolume="11.191903998126042" TimeBeanId="8"/>
+            <Volume PCUVolume="1137.6016478972444" TimeBeanId="9"/>
+            <Volume PCUVolume="930.9841903659749" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="5r_6"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="InVehicleFare___bus2___From_2_to_3_bus2___7_7rGGG_stop___6_6rFFF_stop___bus" MeasurementType="fareLinkVolume" fareLink="InVehicleFare___bus2___From_2_to_3_bus2___7_7rGGG_stop___6_6rFFF_stop___bus">
+        <Volumes>
+            <Volume PCUVolume="0.020268396500340624" TimeBeanId="16"/>
+            <Volume PCUVolume="15.790571770815383" TimeBeanId="17"/>
+            <Volume PCUVolume="10.386929673677718" TimeBeanId="18"/>
+            <Volume PCUVolume="6.720481003000771" TimeBeanId="19"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[5_2r]" MeasurementId="5_2r" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="0.01728631303612203" TimeBeanId="15"/>
+            <Volume PCUVolume="384.7224931290885" TimeBeanId="16"/>
+            <Volume PCUVolume="2695.331229911334" TimeBeanId="17"/>
+            <Volume PCUVolume="1224.2247956744782" TimeBeanId="18"/>
+            <Volume PCUVolume="284.1943768186148" TimeBeanId="19"/>
+            <Volume PCUVolume="3.760244453113277" TimeBeanId="20"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="5_2r"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="NetworkWideFare___2_2rBBB_stop_train___7_7rGGG_stop_train___train" MeasurementType="fareLinkVolume" fareLink="NetworkWideFare___2_2rBBB_stop_train___7_7rGGG_stop_train___train">
+        <Volumes>
+            <Volume PCUVolume="309.41626161836336" TimeBeanId="11"/>
+            <Volume PCUVolume="2.3664676767634085" TimeBeanId="12"/>
+            <Volume PCUVolume="7.289772483614937E-5" TimeBeanId="7"/>
+            <Volume PCUVolume="172.27698529673188" TimeBeanId="8"/>
+            <Volume PCUVolume="1729.0208414383565" TimeBeanId="9"/>
+            <Volume PCUVolume="917.1533601375945" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[6_6r_stop]" MeasurementId="6_6r_stop" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="0.1603693874397423" TimeBeanId="11"/>
+            <Volume PCUVolume="15.242171799386497" TimeBeanId="16"/>
+            <Volume PCUVolume="586.0682290169567" TimeBeanId="17"/>
+            <Volume PCUVolume="522.1517718181934" TimeBeanId="18"/>
+            <Volume PCUVolume="124.47401014919183" TimeBeanId="19"/>
+            <Volume PCUVolume="2.360125790871558" TimeBeanId="8"/>
+            <Volume PCUVolume="106.24882879736806" TimeBeanId="9"/>
+            <Volume PCUVolume="0.15571492382013372" TimeBeanId="20"/>
+            <Volume PCUVolume="37.18807752435284" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="6_6r_stop"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="NetworkWideFare___5_5rEEE_stop_train___4_4rDDD_stop_train___train" MeasurementType="fareLinkVolume" fareLink="NetworkWideFare___5_5rEEE_stop_train___4_4rDDD_stop_train___train">
+        <Volumes>
+            <Volume PCUVolume="0.015175221511173415" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[2r_2_stop]" MeasurementId="2r_2_stop" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="0.017286813756930846" TimeBeanId="15"/>
+            <Volume PCUVolume="445.2204921317293" TimeBeanId="16"/>
+            <Volume PCUVolume="4493.584241079721" TimeBeanId="17"/>
+            <Volume PCUVolume="2985.9077772043493" TimeBeanId="18"/>
+            <Volume PCUVolume="586.7026578048633" TimeBeanId="19"/>
+            <Volume PCUVolume="3.9159593769334107" TimeBeanId="20"/>
+            <Volume PCUVolume="0.4364025230106897" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="2r_2_stop"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[6_7r]" MeasurementId="6_7r" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="263.35783846634376" TimeBeanId="11"/>
+            <Volume PCUVolume="0.8779862418857209" TimeBeanId="12"/>
+            <Volume PCUVolume="15.782884446996873" TimeBeanId="8"/>
+            <Volume PCUVolume="2134.7489208036027" TimeBeanId="9"/>
+            <Volume PCUVolume="1458.6042643164894" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="6_7r"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="NetworkWideFare___6r_6FFF_stop_train___2r_2BBB_stop_train___train" MeasurementType="fareLinkVolume" fareLink="NetworkWideFare___6r_6FFF_stop_train___2r_2BBB_stop_train___train">
+        <Volumes>
+            <Volume PCUVolume="0.5525185410454928" TimeBeanId="18"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[3r_3_stop]" MeasurementId="3r_3_stop" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="5.007208088116214E-7" TimeBeanId="15"/>
+            <Volume PCUVolume="45.255827203254135" TimeBeanId="16"/>
+            <Volume PCUVolume="1212.1847821514523" TimeBeanId="17"/>
+            <Volume PCUVolume="1239.5312097116825" TimeBeanId="18"/>
+            <Volume PCUVolume="178.0342708370569" TimeBeanId="19"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="3r_3_stop"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="InVehicleFare___bus1___From_4_to_1_bus1___5r_5EEE_stop___2r_2BBB_stop___bus" MeasurementType="fareLinkVolume" fareLink="InVehicleFare___bus1___From_4_to_1_bus1___5r_5EEE_stop___2r_2BBB_stop___bus">
+        <Volumes>
+            <Volume PCUVolume="1.1884243968129147" TimeBeanId="18"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="InVehicleFare___bus1___From_1_to_4_bus1___1_1rAAA_stop___2_2rBBB_stop___bus" MeasurementType="fareLinkVolume" fareLink="InVehicleFare___bus1___From_1_to_4_bus1___1_1rAAA_stop___2_2rBBB_stop___bus">
+        <Volumes>
+            <Volume PCUVolume="16.30622535825858" TimeBeanId="11"/>
+            <Volume PCUVolume="0.1385231552133743" TimeBeanId="8"/>
+            <Volume PCUVolume="0.048608982797574266" TimeBeanId="9"/>
+            <Volume PCUVolume="18.22665519833096" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="NetworkWideFare___4r_4DDD_stop_train___1r_1AAA_stop_train___train" MeasurementType="fareLinkVolume" fareLink="NetworkWideFare___4r_4DDD_stop_train___1r_1AAA_stop_train___train">
+        <Volumes>
+            <Volume PCUVolume="31.30920643442628" TimeBeanId="16"/>
+            <Volume PCUVolume="847.3801922147768" TimeBeanId="17"/>
+            <Volume PCUVolume="837.9739384577604" TimeBeanId="18"/>
+            <Volume PCUVolume="69.90304821068425" TimeBeanId="19"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[4_4r_stop]" MeasurementId="4_4r_stop" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="286.8321359029347" TimeBeanId="11"/>
+            <Volume PCUVolume="5.007208088116214E-7" TimeBeanId="15"/>
+            <Volume PCUVolume="45.255827203254135" TimeBeanId="16"/>
+            <Volume PCUVolume="1212.1901190734377" TimeBeanId="17"/>
+            <Volume PCUVolume="1247.0381876095132" TimeBeanId="18"/>
+            <Volume PCUVolume="1.7812948606938407E-5" TimeBeanId="7"/>
+            <Volume PCUVolume="178.03591191698078" TimeBeanId="19"/>
+            <Volume PCUVolume="237.1025062465901" TimeBeanId="8"/>
+            <Volume PCUVolume="1093.7424096232921" TimeBeanId="9"/>
+            <Volume PCUVolume="1064.8429767181392" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="4_4r_stop"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="InVehicleFare___bus2___From_3_to_2_bus2___7r_7GGG_stop___2r_2BBB_stop___bus" MeasurementType="fareLinkVolume" fareLink="InVehicleFare___bus2___From_3_to_2_bus2___7r_7GGG_stop___2r_2BBB_stop___bus">
+        <Volumes>
+            <Volume PCUVolume="0.0011659856212093546" TimeBeanId="15"/>
+            <Volume PCUVolume="69.9251705351812" TimeBeanId="16"/>
+            <Volume PCUVolume="178.36187051240898" TimeBeanId="17"/>
+            <Volume PCUVolume="280.2298098971343" TimeBeanId="18"/>
+            <Volume PCUVolume="121.78466559626183" TimeBeanId="19"/>
+            <Volume PCUVolume="1.5938113736779587" TimeBeanId="20"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="NetworkWideFare___1_1rAAA_stop_train___5_5rEEE_stop_train___train" MeasurementType="fareLinkVolume" fareLink="NetworkWideFare___1_1rAAA_stop_train___5_5rEEE_stop_train___train">
+        <Volumes>
+            <Volume PCUVolume="21.399937631974854" TimeBeanId="11"/>
+            <Volume PCUVolume="0.2487539021704965" TimeBeanId="12"/>
+            <Volume PCUVolume="4.992841644474877" TimeBeanId="8"/>
+            <Volume PCUVolume="7.850713217877055" TimeBeanId="9"/>
+            <Volume PCUVolume="43.234412240311386" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="InVehicleFare___bus1___From_4_to_1_bus1___2r_2BBB_stop___1r_1AAA_stop___bus" MeasurementType="fareLinkVolume" fareLink="InVehicleFare___bus1___From_4_to_1_bus1___2r_2BBB_stop___1r_1AAA_stop___bus">
+        <Volumes>
+            <Volume PCUVolume="0.19100001269631917" TimeBeanId="17"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="InVehicleFare___bus1___From_1_to_4_bus1___2_2rBBB_stop___6_6rFFF_stop___bus" MeasurementType="fareLinkVolume" fareLink="InVehicleFare___bus1___From_1_to_4_bus1___2_2rBBB_stop___6_6rFFF_stop___bus">
+        <Volumes>
+            <Volume PCUVolume="5.434013337301917" TimeBeanId="11"/>
+            <Volume PCUVolume="2.206921489057011" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="NetworkWideFare___7_7rGGG_stop_train___4_4rDDD_stop_train___train" MeasurementType="fareLinkVolume" fareLink="NetworkWideFare___7_7rGGG_stop_train___4_4rDDD_stop_train___train">
+        <Volumes>
+            <Volume PCUVolume="2.12456891790288E-5" TimeBeanId="16"/>
+            <Volume PCUVolume="1.5553810421359666" TimeBeanId="17"/>
+            <Volume PCUVolume="3.47224243348795" TimeBeanId="18"/>
+            <Volume PCUVolume="0.005521753145471561" TimeBeanId="19"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="NetworkWideFare___1_1rAAA_stop_train___6_6rFFF_stop_train___train" MeasurementType="fareLinkVolume" fareLink="NetworkWideFare___1_1rAAA_stop_train___6_6rFFF_stop_train___train">
+        <Volumes>
+            <Volume PCUVolume="2.6509362725498793" TimeBeanId="11"/>
+            <Volume PCUVolume="0.5498710779792854" TimeBeanId="8"/>
+            <Volume PCUVolume="42.68686405315998" TimeBeanId="9"/>
+            <Volume PCUVolume="22.45698489436854" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="InVehicleFare___bus2___From_3_to_2_bus2___5r_5EEE_stop___2r_2BBB_stop___bus" MeasurementType="fareLinkVolume" fareLink="InVehicleFare___bus2___From_3_to_2_bus2___5r_5EEE_stop___2r_2BBB_stop___bus">
+        <Volumes>
+            <Volume PCUVolume="7.269354237977692" TimeBeanId="18"/>
+            <Volume PCUVolume="8.463722999371562" TimeBeanId="19"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[4_6r]" MeasurementId="4_6r" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="0.005336921985297912" TimeBeanId="17"/>
+            <Volume PCUVolume="7.506977897830967" TimeBeanId="18"/>
+            <Volume PCUVolume="0.0016410799238668796" TimeBeanId="19"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="4_6r"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[7_5r]" MeasurementId="7_5r" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="0.0173005452689251" TimeBeanId="15"/>
+            <Volume PCUVolume="617.1286261275734" TimeBeanId="16"/>
+            <Volume PCUVolume="2932.441629488085" TimeBeanId="17"/>
+            <Volume PCUVolume="1494.2516095283374" TimeBeanId="18"/>
+            <Volume PCUVolume="431.2710669141861" TimeBeanId="19"/>
+            <Volume PCUVolume="7.482088344779435" TimeBeanId="20"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="7_5r"/>
+        </LinkIds>
+    </Measurement>
+</Measurements>

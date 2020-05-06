@@ -2,25 +2,21 @@ package matsimIntegrate;
 
 import java.util.Map;
 
-import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.pt.router.CustomDataManager;
 import org.matsim.pt.router.PreparedTransitSchedule;
-import org.matsim.pt.transitSchedule.api.TransitLine;
 import org.matsim.pt.transitSchedule.api.TransitRoute;
 
+import MaaSPackages.MaaSPackage;
 import dynamicTransitRouter.FareDynamicTransitTimeAndDisutility;
 import dynamicTransitRouter.RouteHelper;
-import dynamicTransitRouter.TransitLineRoute;
-import dynamicTransitRouter.TransitStop;
 import dynamicTransitRouter.TransitRouterNetworkHR.TransitRouterNetworkLink;
 import dynamicTransitRouter.costs.StopStopTime;
 import dynamicTransitRouter.costs.VehicleOccupancy;
 import dynamicTransitRouter.costs.WaitingTime;
 import dynamicTransitRouter.fareCalculators.FareCalculator;
 import dynamicTransitRouter.transfer.TransferDiscountCalculator;
-import singlePlanAlgo.MAASPackage;
-import singlePlanAlgo.MaasStrategyModule;
+import optimizerAgent.MaaSUtil;
 import transitCalculatorsWithFare.FareTransitRouterConfig;
 
 public class FareDynamicTransitTimeAndDisutilityMaaS extends FareDynamicTransitTimeAndDisutility{
@@ -57,7 +53,7 @@ public class FareDynamicTransitTimeAndDisutilityMaaS extends FareDynamicTransitT
 		} else
 			newHelper = fromNodeHelper.clone();
 
-		MAASPackage mp = (MAASPackage) person.getAttributes().getAttribute(MaasStrategyModule.StrategyAttributeName);
+		MaaSPackage mp = (MaaSPackage) person.getSelectedPlan().getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName);
 		
 		// If it is a transfer link, we will calculate the transfer disutility for the transfer.
 		if (wrapped.getRoute() == null) {

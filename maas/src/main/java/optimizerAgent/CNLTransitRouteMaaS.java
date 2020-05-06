@@ -6,6 +6,8 @@ import java.util.Map;
 
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.pt.transitSchedule.api.TransitSchedule;
+
+import MaaSPackages.MaaSPackage;
 import dynamicTransitRouter.fareCalculators.FareCalculator;
 import ust.hk.praisehk.metamodelcalibration.analyticalModel.FareLink;
 import ust.hk.praisehk.metamodelcalibration.analyticalModelImpl.CNLTransitDirectLink;
@@ -31,13 +33,15 @@ public class CNLTransitRouteMaaS extends CNLTransitRoute{
 	 */
 	@Override
 	public double getFare(TransitSchedule ts, Map<String, FareCalculator> farecalc, Map<String, Object>additionalDataContainer) {
+		this.routeFare=0;
 		for(FareLink s:super.FareEntryAndExit) {
 			if(s.getType().equals(FareLink.NetworkWideFare)) {
 				this.routeFare+=farecalc.get(s.getMode()).getFares(null, null, s.getBoardingStopFacility(), s.getAlightingStopFacility()).get(0);
 			}else {
 				this.routeFare+=farecalc.get(s.getMode()).getFares(s.getTransitRoute(), s.getTransitLine(), s.getBoardingStopFacility(), s.getAlightingStopFacility()).get(0);
 			}
-			//TODO: finish implementing MaaS embedded fare. 
+			MaaSPackage maas = (MaaSPackage)additionalDataContainer.get(MaaSUtil.CurrentSelectedMaaSPackageAttributeName);
+			if(maas!=null && maas.getDiscounts().get(s.toString())!=null)this.routeFare-=maas.getDiscounts().get(s.toString());
 		}
 		return this.routeFare;
 		

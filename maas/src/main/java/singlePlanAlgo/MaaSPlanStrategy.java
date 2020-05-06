@@ -16,16 +16,17 @@ import org.matsim.core.replanning.selectors.ExpBetaPlanSelector;
 import com.google.inject.name.Named;
 
 import MaaSPackages.MaaSPackages;
+import optimizerAgent.MaaSUtil;
 
 public class MaaSPlanStrategy implements PlanStrategy{
 
 	private final PlanStrategy planStrategyDelegate;
 	
 	@Inject
-	private @Named("MAASPackages") MaaSPackages packages;
+	private @Named(MaaSUtil.MaaSPackagesAttributeName) MaaSPackages packages;
 
 	@Inject // The constructor must be annotated so that the framework knows which one to use.
-	MaaSPlanStrategy(Config config,Scenario scenario, EventsManager eventsManager,@Named("MaaSPackages") MaaSPackages packages) {
+	MaaSPlanStrategy(Config config,Scenario scenario, EventsManager eventsManager,@Named(MaaSUtil.MaaSPackagesAttributeName) MaaSPackages packages) {
 		// A PlanStrategy is something that can be applied to a Person (not a Plan).
         // It first selects one of the plans:
         //MyPlanSelector planSelector = new MyPlanSelector();

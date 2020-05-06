@@ -1,6 +1,6 @@
 package optimizerAgent;
 
 public final class MaaSUtil {
-	public final String MaaSPackagesAttributeName = "MAASPackages"; 
-	public final String CurrentSelectedMaaSPackageAttributeName = "SelectedMaaSPlan";
+	public static final String MaaSPackagesAttributeName = "MAASPackages"; 
+	public static final String CurrentSelectedMaaSPackageAttributeName = "SelectedMaaSPlan";
 }
