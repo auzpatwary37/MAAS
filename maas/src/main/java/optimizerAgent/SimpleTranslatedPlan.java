@@ -16,6 +16,7 @@ import org.matsim.utils.objectattributes.AttributeConverter;
 
 import ust.hk.praisehk.metamodelcalibration.analyticalModel.AnalyticalModelRoute;
 import ust.hk.praisehk.metamodelcalibration.analyticalModel.AnalyticalModelTransitRoute;
+import ust.hk.praisehk.metamodelcalibration.analyticalModel.FareLink;
 import ust.hk.praisehk.metamodelcalibration.analyticalModel.TimeUtils;
 import ust.hk.praisehk.metamodelcalibration.analyticalModel.TransitDirectLink;
 import ust.hk.praisehk.metamodelcalibration.analyticalModel.TransitLink;
@@ -54,6 +55,9 @@ public class SimpleTranslatedPlan {
 	private Map<String,List<TransitLink>> transitUsage = new ConcurrentHashMap<>();
 	
 	//this is time step specific transit link usage
+	private Map<String,List<FareLink>> fareLinkUsage = new ConcurrentHashMap<>();
+	
+	//this is time step specific transit link usage
 	private Map<String,Map<Id<TransitLink>,TransitLink>> transitLinkMap = new ConcurrentHashMap<>();
 	
 	// These are all the transit routes used in these plans (Routes can directly calculate utility)
@@ -80,6 +84,7 @@ public class SimpleTranslatedPlan {
 			this.transitLinkMap.put(s, new ConcurrentHashMap<>());
 			this.trroutes.put(s, new ConcurrentHashMap<>());
 			this.routes.put(s, new ConcurrentHashMap<>());
+			this.fareLinkUsage.put(s, new ArrayList<>());
 		}
 		
 		TripChain tripchain = new CNLTripChain(plan,scenario.getTransitSchedule(),scenario,scenario.getNetwork());
@@ -96,7 +101,8 @@ public class SimpleTranslatedPlan {
 				this.carUsage.get(timeId).addAll(route.getLinkIds());
 				this.routes.get(timeId).put(route.getRouteId(), route);
 			}else if(trip.getTrRoute()!=null){
-				CNLTransitRoute route = (CNLTransitRoute) trip.getTrRoute(); 
+				
+				CNLTransitRouteMaaS route = new CNLTransitRouteMaaS((CNLTransitRoute) trip.getTrRoute(), scenario, scenario.getTransitSchedule());
 				for(Entry<Id<TransitLink>,TransitLink>trLink:route.getTransitLinks().entrySet()) {
 					if(trLink.getValue() instanceof TransitDirectLink) {
 						CNLTransitDirectLink link = (CNLTransitDirectLink) trLink.getValue();
@@ -105,7 +111,13 @@ public class SimpleTranslatedPlan {
 					this.transitUsage.get(timeId).add(trLink.getValue());
 					transitLinkMap.get(timeId).put(trLink.getKey(),trLink.getValue());
 				}
+				
+				for(FareLink fl:route.getFareEntryAndExit()) {
+					this.fareLinkUsage.get(timeId).add(fl);
+				}
+				
 				this.totalWalkDistance += route.getRouteWalkingDistance();
+				this.trroutes.get(timeId).put(route.getTrRouteId(), route);
 			}else {
 				//TODO: Calculate the walk distance and add it 
 				/*
@@ -234,6 +246,10 @@ public class SimpleTranslatedPlan {
 	 */
 	public void setProbability(double probability) {
 		this.probability = probability;
+	}
+
+	public Map<String, List<FareLink>> getFareLinkUsage() {
+		return fareLinkUsage;
 	}
 	
 	
