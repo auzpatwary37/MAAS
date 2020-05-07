@@ -87,7 +87,6 @@ public class TransitRouterFareDynamicMaasImpl extends TransitRouterFareDynamicIm
 				//Add a FareLink
 				String mode = l.fromNode.route.getTransportMode();
 				String fareLinkType = (mode.equals("train") || mode.equals("LR"))?FareLink.NetworkWideFare:FareLink.InVehicleFare;
-				
 				FareLink f = new FareLink(fareLinkType,l.fromNode.line.getId(), l.fromNode.route.getId(), stop.getStopFacility().getId(), 
 						l.fromNode.stop.getStopFacility().getId(), mode);
 				
