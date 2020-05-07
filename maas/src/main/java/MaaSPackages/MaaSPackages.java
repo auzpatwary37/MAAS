@@ -2,18 +2,21 @@ package MaaSPackages;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.matsim.api.core.v01.Id;
 import org.matsim.pt.transitSchedule.api.TransitLine;
 import org.matsim.pt.transitSchedule.api.TransitSchedule;
 
 import dynamicTransitRouter.fareCalculators.FareCalculator;
+import transitCalculatorsWithFare.FareLink;
 
 public class MaaSPackages{
 	
@@ -21,6 +24,8 @@ public class MaaSPackages{
 	private Map<String,Set<MaaSPackage>> massPackagesPerOperator=new HashMap<>();
 	public final String maasPriceVariableName = "MAAS_Price";
 	public final String maasTaxiTripVariableName = "MAAS_Taxi";
+	private Map<String,String> fareLinkToOperatorMap = new HashMap<>();//This Assumes fare links are unique to operators, this might not be true
+	//TODO: fix this issue.
 	
 	
 	public Map<String,List<MaaSPackages>> packages= new HashMap<>();
@@ -52,7 +57,8 @@ public class MaaSPackages{
 			}
 			packages.get(mode).addTransitLine(d.getValue(), fareCalculators, defaultDiscount, fullDiscounted);
 		}
-		this.massPackages=packages;
+		//this.massPackages=packages;
+		packages.values().stream().forEach((maas)->this.addMaaSPacakge(maas));
 	}
 	
 	public MaaSPackages(Map<String, MaaSPackage> packages) {
@@ -70,6 +76,7 @@ public class MaaSPackages{
 			this.massPackagesPerOperator.put(maas.getOperatorId(), new HashSet<>());
 			this.massPackagesPerOperator.get(maas.getOperatorId()).add(maas);
 		}
+		this.fareLinkToOperatorMap.putAll(maas.getFareLinks().keySet().stream().collect(Collectors.toMap(a->a, a->maas.getOperatorId())));
 	}
 
 	public Map<String, MaaSPackage> getMassPackages() {
@@ -81,7 +88,9 @@ public class MaaSPackages{
 	}
 	
 	
-	
+	public String getOperatorId(FareLink fl) {
+		return this.fareLinkToOperatorMap.get(fl.toString());
+	}
 	
 	
 }

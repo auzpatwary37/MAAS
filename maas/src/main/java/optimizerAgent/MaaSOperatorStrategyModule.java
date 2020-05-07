@@ -13,7 +13,7 @@ import com.google.inject.name.Named;
 import MaaSPackages.MaaSPackages;
 
 
-public class MAASOperatorModule implements PlanStrategyModule{
+public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 	
 	private Random rnd;
 	@Inject

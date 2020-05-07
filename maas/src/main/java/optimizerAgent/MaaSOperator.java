@@ -9,11 +9,11 @@ import org.matsim.api.core.v01.population.Plan;
 import org.matsim.core.utils.collections.Tuple;
 import org.matsim.utils.objectattributes.attributable.Attributes;
 
-public class MAASOperator extends OptimizingAgent{
+public class MaaSOperator extends OptimizingAgent{
 
-	public static String type = "MAASOperator";
+	public static String type = "MaaSOperator";
 	
-	public MAASOperator(Person person, Map<String, Double> variableIntialValue,
+	public MaaSOperator(Person person, Map<String, Double> variableIntialValue,
 			Map<String, Tuple<Double, Double>> variableRange) {
 		super(person, type, variableIntialValue, variableRange);
 		

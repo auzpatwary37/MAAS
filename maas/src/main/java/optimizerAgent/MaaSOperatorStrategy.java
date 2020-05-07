@@ -13,13 +13,13 @@ import org.matsim.core.replanning.PlanStrategyImpl;
 import org.matsim.core.replanning.ReplanningContext;
 import org.matsim.core.replanning.selectors.BestPlanSelector;
 
-public class MAASOperatorStrategy implements PlanStrategy{
+public class MaaSOperatorStrategy implements PlanStrategy{
 	
 	private final PlanStrategy planStrategyDelegate;
 	
 	
 	@Inject // The constructor must be annotated so that the framework knows which one to use.
-	MAASOperatorStrategy(Config config,Scenario scenario, EventsManager eventsManager) {
+	MaaSOperatorStrategy(Config config,Scenario scenario, EventsManager eventsManager) {
 		// A PlanStrategy is something that can be applied to a Person (not a Plan).
         // It first selects one of the plans:
         //MyPlanSelector planSelector = new MyPlanSelector();
@@ -35,13 +35,15 @@ public class MAASOperatorStrategy implements PlanStrategy{
         // one module added here, then the plan is copied and then modified.
 		
 		PlanStrategyImpl.Builder builder = new PlanStrategyImpl.Builder(new BestPlanSelector());
-        builder.addStrategyModule(new MAASOperatorModule());
+        builder.addStrategyModule(new MaaSOperatorStrategyModule());
 
         // these modules may, at the same time, be events listeners (so that they can collect information):
         //eventsManager.addHandler(mod);
 
         
         planStrategyDelegate = builder.build();
+        
+        
 	}
 
 	@Override

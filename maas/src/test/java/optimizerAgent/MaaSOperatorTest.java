@@ -20,6 +20,7 @@ import org.matsim.core.config.groups.StrategyConfigGroup.StrategySettings;
 import org.matsim.core.controler.Controler;
 import org.matsim.core.controler.OutputDirectoryHierarchy;
 import org.matsim.core.scenario.ScenarioUtils;
+import org.matsim.core.utils.collections.Tuple;
 import org.matsim.lanes.Lane;
 import org.matsim.lanes.LanesToLinkAssignment;
 import org.xml.sax.SAXException;
@@ -57,14 +58,14 @@ public class MaaSOperatorTest {
 		config.strategy().addStrategySettings(stratSets);
 		
 		stratSets = new StrategySettings();
-		stratSets.setStrategyName(MAASOperatorStrategy.class.getName());
+		stratSets.setStrategyName(MaaSOperatorStrategy.class.getName());
 		stratSets.setWeight(1);
 		stratSets.setDisableAfter(200);
-		stratSets.setSubpopulation(MAASOperator.type);
+		stratSets.setSubpopulation(MaaSOperator.type);
 		config.strategy().addStrategySettings(stratSets);
 		
 		
-		ScoringParameterSet s = config.planCalcScore().getOrCreateScoringParameters(MAASOperator.type);
+		ScoringParameterSet s = config.planCalcScore().getOrCreateScoringParameters(MaaSOperator.type);
 		
 		ScoringParameterSet ss =  config.planCalcScore().getScoringParameters("person_TCSwithCar");
 		
@@ -85,7 +86,7 @@ public class MaaSOperatorTest {
 		
 		MaaSPackages packages = new MaaSPackagesReader().readPackagesFile("test/packages.xml");
 		
-		OptimizerAgentCreator.createMAASOperator(packages, scenario.getPopulation(), "test/agentPop.xml");
+		MaaSUtil.createMaaSOperator(packages, scenario.getPopulation(), "test/agentPop.xml",new Tuple<>(.5,2.));
 		
 		
 		for(LanesToLinkAssignment l2l:scenario.getLanes().getLanesToLinkAssignments().values()) {

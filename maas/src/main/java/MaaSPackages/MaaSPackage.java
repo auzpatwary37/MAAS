@@ -12,7 +12,8 @@ import org.matsim.pt.transitSchedule.api.TransitSchedule;
 import org.matsim.pt.transitSchedule.api.TransitStopFacility;
 
 import dynamicTransitRouter.fareCalculators.FareCalculator;
-import ust.hk.praisehk.metamodelcalibration.analyticalModel.FareLink;
+import transitCalculatorsWithFare.FareLink;
+
 
 
 
@@ -158,6 +159,14 @@ public class MaaSPackage {
 	}
 	
 
+	public double getDiscountForFareLink(FareLink fl) {
+		Double discount = 0.;
+		if((discount = this.getDiscounts().get(fl.toString()))==null) {
+			discount = 0.;
+		}
+		return discount;
+	}
+	
 	
 	//--------------------------GetterSetter-----------------------------------------
 	

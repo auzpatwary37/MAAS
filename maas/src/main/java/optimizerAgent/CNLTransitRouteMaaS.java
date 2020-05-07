@@ -9,7 +9,7 @@ import org.matsim.pt.transitSchedule.api.TransitSchedule;
 
 import MaaSPackages.MaaSPackage;
 import dynamicTransitRouter.fareCalculators.FareCalculator;
-import ust.hk.praisehk.metamodelcalibration.analyticalModel.FareLink;
+import transitCalculatorsWithFare.FareLink;
 import ust.hk.praisehk.metamodelcalibration.analyticalModelImpl.CNLTransitDirectLink;
 import ust.hk.praisehk.metamodelcalibration.analyticalModelImpl.CNLTransitRoute;
 import ust.hk.praisehk.metamodelcalibration.analyticalModelImpl.CNLTransitTransferLink;

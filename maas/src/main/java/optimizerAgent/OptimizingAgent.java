@@ -54,15 +54,18 @@ public abstract class OptimizingAgent implements Person{
 		return variableRange;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public Plan createAttributedPlan() {
 		Plan plan = PopulationUtils.createPlan();
 		//make attribute per variable
 		for(Entry<String, Tuple<Double, Double>> variable:this.variableRange.entrySet()) {
 			plan.getAttributes().putAttribute(variable.getKey(),new VariableDetails(variable.getKey(),new Tuple<Double,Double>(variable.getValue().getFirst(),variable.getValue().getSecond()),this.variableIntialValue.get(variable.getKey())));
 		}
+		//Add a dummy activity
+		//plan.addActivity(PopulationUtils.createActivityFromCoord("",""));
 		this.person.addPlan(plan);
 		this.person.setSelectedPlan(plan);
-		this.person.getAttributes().putAttribute(ConfigUtils.createConfig().plans().getSubpopulationAttributeName(), this.type);
+		PopulationUtils.putSubpopulation(person, this.type);
 		return plan;
 	}
 	

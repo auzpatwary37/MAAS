@@ -18,6 +18,7 @@ import com.google.inject.name.Names;
 
 import MaaSPackages.MaaSPackages;
 import MaaSPackages.MaaSPackagesReader;
+import optimizerAgent.MaaSOperatorControlerListener;
 import optimizerAgent.MaaSUtil;
 
 public class MaaSDataLoader extends AbstractModule{
@@ -29,9 +30,10 @@ public class MaaSDataLoader extends AbstractModule{
 		this.maasPacakges = null;
 	}
 
-	public MaaSDataLoader(MaaSPackages packages, Map<String,Tuple<Double,Double>> timeBeans) {
+	public MaaSDataLoader(MaaSPackages packages, Map<String,Tuple<Double,Double>> timeBeans,Scenario scenario) {
 		this.maasPacakges = packages;
 		this.timeBeans = timeBeans;
+		MaaSUtil.createMaaSOperator(this.maasPacakges, scenario.getPopulation(), null, new Tuple<>(.5,2.));
 	}
 
 	@Override
@@ -41,8 +43,12 @@ public class MaaSDataLoader extends AbstractModule{
 		} else {
 			bind(MaaSPackages.class).annotatedWith(Names.named(MaaSUtil.MaaSPackagesAttributeName)).toProvider(MaaSPackagesProvider.class).in(Singleton.class);
 		}
+		this.addControlerListenerBinding().to(MaaSOperatorControlerListener.class).asEagerSingleton();
 		
-		
+		//bind the maas handler
+		this.addEventHandlerBinding().to(MaaSDiscountAndChargeHandler.class).asEagerSingleton();
+		bind(MaaSDiscountAndChargeHandler.class).in(Singleton.class);
+		bind(MaaSOperatorControlerListener.class).in(Singleton.class);
 		
 	}
 	

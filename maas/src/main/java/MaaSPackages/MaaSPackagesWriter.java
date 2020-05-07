@@ -17,7 +17,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.helpers.DefaultHandler;
 
-import ust.hk.praisehk.metamodelcalibration.analyticalModel.FareLink;
+import transitCalculatorsWithFare.FareLink;
+
 
 
 
