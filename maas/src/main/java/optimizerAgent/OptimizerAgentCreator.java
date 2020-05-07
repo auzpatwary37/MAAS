@@ -22,8 +22,10 @@ import org.matsim.core.scenario.CustomizableUtils;
 import org.matsim.core.utils.collections.Tuple;
 import org.matsim.utils.objectattributes.attributable.Attributes;
 
-import singlePlanAlgo.MAASPackage;
-import singlePlanAlgo.MAASPackages;
+import MaaSPackages.MaaSPackage;
+import MaaSPackages.MaaSPackages;
+
+
 
 /**
  * For now we only try the MAAS optimizer agents
@@ -34,8 +36,8 @@ import singlePlanAlgo.MAASPackages;
  */
 public class OptimizerAgentCreator {
 
-	public static void createMAASOperator(MAASPackages packages,Population population, String popOutLoc) {
-		for(Entry<String, Set<MAASPackage>> operator:packages.getMassPackagesPerOperator().entrySet()) {
+	public static void createMAASOperator(MaaSPackages packages,Population population, String popOutLoc) {
+		for(Entry<String, Set<MaaSPackage>> operator:packages.getMassPackagesPerOperator().entrySet()) {
 			//create one agent per operator
 			PopulationFactory popFac = population.getFactory();
 			Person person = popFac.createPerson(Id.createPersonId(operator.getKey()+"MAASAgent"));
@@ -43,7 +45,7 @@ public class OptimizerAgentCreator {
 			Map<String,Double> variable = new HashMap<>();
 			Map<String,Tuple<Double,Double>> variableLimit = new HashMap<>();
 			
-			for(MAASPackage m:operator.getValue()) {
+			for(MaaSPackage m:operator.getValue()) {
 				//For now only create price of package 
 				variable.put(m.getId().toString()+"_Price",100.);
 				variableLimit.put(m.getId().toString()+"_Price",new Tuple<>(50.,150.));

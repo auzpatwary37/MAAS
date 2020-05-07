@@ -24,6 +24,7 @@ import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.config.groups.PlanCalcScoreConfigGroup;
 import org.matsim.core.config.groups.PlanCalcScoreConfigGroup.ActivityParams;
+import org.matsim.core.population.PopulationUtils;
 import org.matsim.core.scoring.functions.ActivityUtilityParameters;
 import org.matsim.core.scoring.functions.ScoringParameters;
 import org.matsim.core.utils.collections.Tuple;
@@ -36,12 +37,15 @@ import org.matsim.vehicles.Vehicles;
 
 import com.google.inject.Inject;
 
+import MaaSPackages.MaaSPackage;
+import MaaSPackages.MaaSPackages;
 import dynamicTransitRouter.fareCalculators.FareCalculator;
-import singlePlanAlgo.MAASPackages;
 import ust.hk.praisehk.metamodelcalibration.analyticalModel.AnalyticalModelLink;
 import ust.hk.praisehk.metamodelcalibration.analyticalModel.AnalyticalModelNetwork;
 import ust.hk.praisehk.metamodelcalibration.analyticalModel.AnalyticalModelRoute;
 import ust.hk.praisehk.metamodelcalibration.analyticalModel.AnalyticalModelTransitRoute;
+import ust.hk.praisehk.metamodelcalibration.analyticalModel.FareLink;
+import ust.hk.praisehk.metamodelcalibration.analyticalModel.SUEModelOutput;
 import ust.hk.praisehk.metamodelcalibration.analyticalModel.TransitDirectLink;
 import ust.hk.praisehk.metamodelcalibration.analyticalModel.TransitLink;
 import ust.hk.praisehk.metamodelcalibration.analyticalModelImpl.CNLLink;
@@ -49,6 +53,9 @@ import ust.hk.praisehk.metamodelcalibration.analyticalModelImpl.CNLNetwork;
 import ust.hk.praisehk.metamodelcalibration.analyticalModelImpl.CNLSUEModel;
 import ust.hk.praisehk.metamodelcalibration.analyticalModelImpl.CNLTransitDirectLink;
 import ust.hk.praisehk.metamodelcalibration.matsimIntegration.SignalFlowReductionGenerator;
+import ust.hk.praisehk.metamodelcalibration.measurements.Measurement;
+import ust.hk.praisehk.metamodelcalibration.measurements.MeasurementType;
+import ust.hk.praisehk.metamodelcalibration.measurements.Measurements;
 
 /**
  * 
@@ -112,6 +119,9 @@ import ust.hk.praisehk.metamodelcalibration.matsimIntegration.SignalFlowReductio
  *  CalcPlanLinkTransitLinkIncidece: this will calculate the incidence relation from plan. I this really necessary? This can calculated per plan
  *  
  *  updateLinkFlow: 
+ *  
+ *  TODO: add a measurements based assignment function : commencing operation, maybe I will just add it to the previous commit. Ashraf May2,2020.
+ *  Should be easier if we used the ScoringParameters from matsim group. 
  * 
  */
 public class PersonPlanSueModel {
@@ -125,7 +135,7 @@ public class PersonPlanSueModel {
 	private Population population;
 	private Map<String,Tuple<Double,Double>>timeBeans;
 	private Map<String,FareCalculator> farecalculators;
-	private MAASPackages maasPakages;
+	private MaaSPackages maasPakages;
 	private Scenario scenario; 
 	private TransitSchedule ts;
 	private Map<String,AnalyticalModelNetwork> networks = new ConcurrentHashMap<>();;
@@ -146,7 +156,7 @@ public class PersonPlanSueModel {
 	private List<Double> beta=new ArrayList<>(); //This is related to weighted MSA of the SUE
 	private List<Double> error=new ArrayList<>();
 	private int consecutiveErrorIncrease = 0;
-	
+	private boolean emptyMeasurements = false;
 	
 	//This are needed for output generation 
 	
@@ -161,9 +171,24 @@ public class PersonPlanSueModel {
 	public static final String PlanMiuName="Miu";
 	public static final String TransferalphaName="Transferalpha";
 	public static final String TransferbetaName="Transferbeta";
+	public static final String PlanKeyIdentifierName = "planKey";
 	
 	
+	//___________________________FrontEndFunctionality____________________________________
 	
+
+	public Measurements performAssignment(Population population, LinkedHashMap<String,Double> params, Measurements originalMeasurements) {
+		Measurements m = this.performAssignment(population, params,this.AnalyticalModelInternalParams, originalMeasurements);
+		return m;
+	}
+	
+	public SUEModelOutput performAssignment(Population population, LinkedHashMap<String,Double> params) {
+		SUEModelOutput flow = this.performAssignment(population, params,this.AnalyticalModelInternalParams);
+		return flow;
+	}
+	
+	
+	//___________________________________________________________________________________
 	//Constructor
 	@Inject
 	public PersonPlanSueModel(Map<String, Tuple<Double, Double>> timeBean,Config config) {
@@ -267,7 +292,7 @@ public class PersonPlanSueModel {
 	 * TODO: finish implementing this function, Done???
 	 * @param population
 	 */
-	public void populateModel(Scenario scenario, Map<String,FareCalculator> fareCalculator, MAASPackages packages) {
+	public void populateModel(Scenario scenario, Map<String,FareCalculator> fareCalculator, MaaSPackages packages) {
 		this.population = scenario.getPopulation();
 		this.scenario = scenario;
 		SignalFlowReductionGenerator sg=new SignalFlowReductionGenerator(scenario);
@@ -288,32 +313,55 @@ public class PersonPlanSueModel {
 		
 	}
 	
-	private OutputFlow singlePersonNL(Person person, LinkedHashMap<String,Double> params, LinkedHashMap<String,Double> anaParams) {
+	private SUEModelOutput singlePersonNL(Person person, LinkedHashMap<String,Double> Oparams, LinkedHashMap<String,Double> anaParams) {
+		
+		//get the subpopulation
+		String subpopulation = PopulationUtils.getSubpopulation(person);
 		
 		Map<String, Double> utilities = new HashMap<>();
 		Map<String, Double> planProb = new HashMap<>();
 		Map<String,Map<Id<Link>,Double>> linkFlow = new HashMap<>();
 		Map<String,Map<Id<TransitLink>,Double>> transitLinkFlow = new HashMap<>();
+		Map<String,Map<String,Double>> fareLinkFlow = new HashMap<>();
 		Map<String, SimpleTranslatedPlan> trPlans = new HashMap<>();
 		
+		//This should handle for the basic params per subpopulation
+		LinkedHashMap<String,Double> params = this.handleBasicParams(Oparams, subpopulation, this.scenario.getConfig());
+		int planNo = 0;
 		//Calculate the utility, Should we move the utility calculation part inside the simple translated plan itself? makes more sense. (April 2020)
 		for(Plan plan:person.getPlans()) {
+			
+			//Give an identifier to the plan. We will give a String identifier which will be saved as plan attribute
+			String planKey = (String)plan.getAttributes().getAttribute(PersonPlanSueModel.PlanKeyIdentifierName);
+			if(planKey == null) {
+				planKey = person.getId().toString()+"_^_"+planNo;
+				plan.getAttributes().putAttribute(PersonPlanSueModel.PlanKeyIdentifierName, planKey);
+				planNo++;
+			}
+			
+			
 			double utility = 0;
+			//Add the MaaSPackage disutility
+			MaaSPackage maas = this.maasPakages.getMassPackages().get(plan.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName));
+			Map<String,Object> additionalInfo = new HashMap<>();
+			additionalInfo.put(MaaSUtil.CurrentSelectedMaaSPackageAttributeName, maas);
+			if(maas!=null)utility+=params.get(CNLSUEModel.MarginalUtilityofMoneyName)*maas.getPackageCost();
+			
 			SimpleTranslatedPlan trPlan = (SimpleTranslatedPlan) plan.getAttributes().getAttribute(SimpleTranslatedPlan.SimplePlanAttributeName);//extract the translated plan first
-			trPlans.put(plan.toString(), trPlan);
+			trPlans.put(planKey, trPlan);
 			for(Activity ac:trPlan.getActivities()) {// for now this class is not implemented: done may 2 2020
-				utility += this.calcActivityUtility(ac, this.scenario.getConfig(),person);
+				utility += this.calcActivityUtility(ac, this.scenario.getConfig(),subpopulation);
 			}
 			for(Entry<String, Map<Id<AnalyticalModelTransitRoute>, AnalyticalModelTransitRoute>> trRouteMap:trPlan.getTrroutes().entrySet()) {
 				for(AnalyticalModelTransitRoute trRoute : trRouteMap.getValue().values()) {
-					utility += trRoute.calcRouteUtility(params, anaParams, this.networks.get(trRouteMap.getKey()), this.farecalculators, this.timeBeans.get(trRouteMap.getKey()));
+					utility += trRoute.calcRouteUtility(params, anaParams, this.networks.get(trRouteMap.getKey()), this.farecalculators,additionalInfo, this.timeBeans.get(trRouteMap.getKey()));
 				}
 				
 				for(AnalyticalModelRoute route: trPlan.getRoutes().get(trRouteMap.getKey()).values()) {
 					utility += route.calcRouteUtility(params, anaParams, this.networks.get(trRouteMap.getKey()), this.timeBeans.get(trRouteMap.getKey())); 
 				}
 			}
-			utilities.put(plan.toString(),utility);
+			utilities.put(planKey,utility);
 			
 			// Maybe add the walk dis-utility?
 			
@@ -342,7 +390,7 @@ public class PersonPlanSueModel {
 			SimpleTranslatedPlan trPlan = plan.getValue();
 			for(Entry<String, List<Id<Link>>> s: trPlan.getCarUsage().entrySet()) {				
 				if(!linkFlow.containsKey(s.getKey()))linkFlow.put(s.getKey(), new HashMap<>());
-				Map<Id<Link>,Double>flowMap = s.getValue().stream().collect(Collectors.toMap(ss->ss, ss->planProb.get(plan.getKey())));
+				Map<Id<Link>,Double>flowMap = s.getValue().stream().collect(Collectors.toMap(ss->ss, ss->planProb.get(plan.getKey()),(v1,v2)->(v1+v2)));
 				flowMap.keySet().forEach((linkId)->linkFlow.get(s.getKey()).compute(linkId, (k,v)->(v==null)?flowMap.get(linkId):v+flowMap.get(linkId)));
 			}
 			
@@ -365,27 +413,39 @@ public class PersonPlanSueModel {
 						));
 				//
 				
-				Map<Id<TransitLink>,Double>flowMap = s.getValue().stream().collect(Collectors.toMap(TransitLink::getTrLinkId, ss->planProb.get(plan.getKey())));
+				Map<Id<TransitLink>,Double>flowMap = s.getValue().stream().collect(Collectors.toMap(TransitLink::getTrLinkId, ss->planProb.get(plan.getKey()),(v1,v2)->(v1+v2)));
 				flowMap.keySet().forEach((trLinkId)->transitLinkFlow.get(s.getKey()).compute(trLinkId, (k,v)->(v==null)?flowMap.get(trLinkId):v+flowMap.get(trLinkId)));
 			}
+			
+			for(Entry<String, List<FareLink>> s: trPlan.getFareLinkUsage().entrySet()) {				
+				if(!fareLinkFlow.containsKey(s.getKey()))fareLinkFlow.put(s.getKey(), new HashMap<>());
+				Map<String,Double>flowMap = s.getValue().stream().collect(Collectors.toMap(ss->ss.toString(), ss->planProb.get(plan.getKey()),(v1,v2)->(v1+v2)));
+				flowMap.keySet().forEach((fareLink)->fareLinkFlow.get(s.getKey()).compute(fareLink, (k,v)->(v==null)?flowMap.get(fareLink):v+flowMap.get(fareLink)));
+			}
+			
 		}
-		
-		return new OutputFlow(linkFlow,transitLinkFlow);
+		if(linkFlow==null||transitLinkFlow==null||fareLinkFlow==null) {
+			System.out.println();
+		}
+		return new SUEModelOutput(linkFlow,transitLinkFlow, null, null, fareLinkFlow);
 	}
 	
 	//TODO: still do not take params in sub-population. We have to incorporate that 
-	private OutputFlow performNetworkLoading(Population population, LinkedHashMap<String,Double> params, LinkedHashMap<String,Double> anaParams) {
+	private SUEModelOutput performNetworkLoading(Population population, LinkedHashMap<String,Double> params, LinkedHashMap<String,Double> anaParams) {
 		
 		List<Map<String,Map<Id<Link>, Double>>> linkVolumes=Collections.synchronizedList(new ArrayList<>());
 		List<Map<String,Map<Id<TransitLink>, Double>>> linkTransitVolumes=Collections.synchronizedList(new ArrayList<>());
+		List<Map<String,Map<String,Double>>> fareLinkFlows=Collections.synchronizedList(new ArrayList<>());
 		
 		Map<String,Map<Id<Link>,Double>> linkFlow = new HashMap<>();
 		Map<String,Map<Id<TransitLink>,Double>> transitLinkFlow = new HashMap<>();
+		Map<String,Map<String,Double>> fareLinkFlow = new HashMap<>();
 		
 		population.getPersons().values().parallelStream().forEach((person)->{
-			OutputFlow flow= this.singlePersonNL(person, params, anaParams);
-			linkVolumes.add(flow.linkFlow);
-			linkTransitVolumes.add(flow.transitLinkFlow);
+			SUEModelOutput flow= this.singlePersonNL(person, params, anaParams);
+			linkVolumes.add(flow.getLinkVolume());
+			linkTransitVolumes.add(flow.getLinkTransitVolume());
+			fareLinkFlows.add(flow.getFareLinkVolume());
 		});
 		
 		linkVolumes.stream().forEach((linkFlowMap)->{
@@ -408,7 +468,17 @@ public class PersonPlanSueModel {
 			});
 		});
 		
-		return new OutputFlow(linkFlow,transitLinkFlow);
+		fareLinkFlows.stream().forEach((linkFlowMap)->{
+			linkFlowMap.entrySet().stream().forEach((timeLinkFlowMap)->{
+				if(!fareLinkFlow.containsKey(timeLinkFlowMap.getKey())) {
+					fareLinkFlow.put(timeLinkFlowMap.getKey(), timeLinkFlowMap.getValue());
+				}else {
+					timeLinkFlowMap.getValue().entrySet().stream().forEach((map)->fareLinkFlow.get(timeLinkFlowMap.getKey()).compute(map.getKey(), (k,v)->(v==null)?map.getValue():v+map.getValue()));
+				}
+			});
+		});
+		
+		return new SUEModelOutput(linkFlow,transitLinkFlow, null, null, fareLinkFlow);
 	}
 	
 	/**
@@ -507,17 +577,61 @@ public class PersonPlanSueModel {
 	
 	
 	
-	public void performAssignment(Population population, LinkedHashMap<String,Double> params, LinkedHashMap<String,Double> anaParams) {
-		
+	private SUEModelOutput performAssignment(Population population, LinkedHashMap<String,Double> params, LinkedHashMap<String,Double> anaParams) {
+		SUEModelOutput flow = null;
 		for(int counter = 1; counter < this.maxIter; counter++) {
-			OutputFlow flow  = this.performNetworkLoading(population, params, anaParams);
-			boolean shouldStop = this.updateVolume(flow.linkFlow, flow.transitLinkFlow, counter);
+			flow  = this.performNetworkLoading(population, params, anaParams);
+			boolean shouldStop = this.updateVolume(flow.getLinkVolume(), flow.getLinkTransitVolume(), counter);
 			if(shouldStop) {
 				break;
 			}
 		}
+		return flow;
 	}
 	
+	
+	private Measurements performAssignment(Population population, LinkedHashMap<String,Double> params, LinkedHashMap<String,Double> anaParams, Measurements originalMeasurements) {
+		Measurements measurementsToUpdate = null;
+		SUEModelOutput flow = this.performAssignment(population, params, anaParams);
+		
+		if(originalMeasurements==null) {//for now we just add the fare link and link volume for a null measurements
+			this.emptyMeasurements=true;
+			measurementsToUpdate=Measurements.createMeasurements(this.timeBeans);
+			//create and insert link volume measurement
+			for(Entry<String, Map<Id<Link>, Double>> timeFlow:flow.getLinkVolume().entrySet()) {
+				for(Entry<Id<Link>, Double> link:timeFlow.getValue().entrySet()) {
+					Id<Measurement> mid = Id.create(link.getKey().toString(), Measurement.class);
+					if(measurementsToUpdate.getMeasurements().containsKey(mid)) {
+						measurementsToUpdate.getMeasurements().get(mid).putVolume(timeFlow.getKey(), link.getValue());
+					}else {
+						measurementsToUpdate.createAnadAddMeasurement(mid.toString(), MeasurementType.linkVolume);
+						List<Id<Link>> links = new ArrayList<>();
+						links.add(link.getKey());
+						measurementsToUpdate.getMeasurements().get(mid).setAttribute(Measurement.linkListAttributeName, links);
+						measurementsToUpdate.getMeasurements().get(mid).putVolume(timeFlow.getKey(), link.getValue());
+					}
+				}
+			}
+			
+			for(Entry<String, Map<String, Double>> timeFlow:flow.getFareLinkVolume().entrySet()) {
+				for(Entry<String, Double> link:timeFlow.getValue().entrySet()) {
+					Id<Measurement> mid = Id.create(link.getKey().toString(), Measurement.class);
+					if(measurementsToUpdate.getMeasurements().containsKey(mid)) {
+						measurementsToUpdate.getMeasurements().get(mid).putVolume(timeFlow.getKey(), link.getValue());
+					}else {
+						measurementsToUpdate.createAnadAddMeasurement(mid.toString(), MeasurementType.fareLinkVolume);
+						measurementsToUpdate.getMeasurements().get(mid).setAttribute(Measurement.FareLinkAttributeName, new FareLink(link.getKey()));
+						measurementsToUpdate.getMeasurements().get(mid).putVolume(timeFlow.getKey(), link.getValue());
+					}
+				}
+			}
+		}else {
+			measurementsToUpdate=originalMeasurements.clone();
+			measurementsToUpdate.resetMeasurements();
+			measurementsToUpdate.updateMeasurements(flow, null, null);
+		}
+		return measurementsToUpdate;
+	}
 	
 	/**
 	 * Calculate some sort of simple activity utility
@@ -525,8 +639,8 @@ public class PersonPlanSueModel {
 	 * @param config
 	 * @return
 	 */
-	private double calcActivityUtility(Activity activity, Config config, Person person) {
-		ScoringParameters scParam = new ScoringParameters.Builder(config.planCalcScore(), config.planCalcScore().getScoringParameters(null), config.scenario()).build();
+	private double calcActivityUtility(Activity activity, Config config, String subPopulation) {
+		ScoringParameters scParam = new ScoringParameters.Builder(config.planCalcScore(), config.planCalcScore().getScoringParameters(subPopulation), config.scenario()).build();
 		//First find the duration. As for now we switch off the departure time choice, The duration 
 		//will only depend on the previous trip end time 
 		ActivityUtilityParameters actParams = scParam.utilParams.get(activity.getType());
@@ -544,6 +658,39 @@ public class PersonPlanSueModel {
 		return utility;
 	}
 
+	
+	private LinkedHashMap<String,Double> handleBasicParams(LinkedHashMap<String,Double> params, String subPopulation, Config config){
+		LinkedHashMap<String,Double> newParams = new LinkedHashMap<>();
+		// Handle the original params first
+		for(String s:params.keySet()) {
+			if(subPopulation!=null && (s.contains(subPopulation)||s.contains("All"))) {
+				newParams.put(s.split(" ")[1],params.get(s));
+			}else if (subPopulation == null) {
+				newParams.put(s, params.get(s));
+			}
+		}
+		ScoringParameters scParam = new ScoringParameters.Builder(config.planCalcScore(), config.planCalcScore().getScoringParameters(subPopulation), config.scenario()).build();
+		
+		newParams.compute(CNLSUEModel.MarginalUtilityofTravelCarName,(k,v)->v==null?scParam.modeParams.get("car").marginalUtilityOfTraveling_s:v);
+		newParams.compute(CNLSUEModel.MarginalUtilityofDistanceCarName, (k,v)->v==null?scParam.modeParams.get("car").marginalUtilityOfDistance_m:v);
+		newParams.compute(CNLSUEModel.MarginalUtilityofMoneyName, (k,v)->v==null?scParam.marginalUtilityOfMoney:v);
+		newParams.compute(CNLSUEModel.DistanceBasedMoneyCostCarName, (k,v)->v==null?scParam.modeParams.get("car").monetaryDistanceCostRate:v);
+		newParams.compute(CNLSUEModel.MarginalUtilityofTravelptName, (k,v)->v==null?scParam.modeParams.get("pt").marginalUtilityOfTraveling_s:v);
+		newParams.compute(CNLSUEModel.MarginalUtilityOfDistancePtName, (k,v)->v==null?scParam.modeParams.get("pt").marginalUtilityOfDistance_m:v);
+		newParams.compute(CNLSUEModel.MarginalUtilityofWaitingName, (k,v)->v==null?scParam.marginalUtilityOfWaitingPt_s:v);
+		newParams.compute(CNLSUEModel.UtilityOfLineSwitchName, (k,v)->v==null?scParam.utilityOfLineSwitch:v);
+		newParams.compute(CNLSUEModel.MarginalUtilityOfWalkingName, (k,v)->v==null?scParam.modeParams.get("walk").marginalUtilityOfTraveling_s:v);
+		newParams.compute(CNLSUEModel.DistanceBasedMoneyCostWalkName, (k,v)->v==null?scParam.modeParams.get("walk").monetaryDistanceCostRate:v);
+		newParams.compute(CNLSUEModel.ModeConstantCarName, (k,v)->v==null?scParam.modeParams.get("car").constant:v);
+		newParams.compute(CNLSUEModel.ModeConstantPtname, (k,v)->v==null?scParam.modeParams.get("pt").constant:v);
+		newParams.compute(CNLSUEModel.MarginalUtilityofPerformName, (k,v)->v==null?scParam.marginalUtilityOfPerforming_s:v);
+		
+		newParams.compute(CNLSUEModel.CapacityMultiplierName, (k,v)->v==null?config.qsim().getFlowCapFactor():v);
+		
+		return newParams;
+	}
+	
+	
 //----------------------getter setter------------------------
 	
 	public Map<String, Double> getDefaultParameters() {

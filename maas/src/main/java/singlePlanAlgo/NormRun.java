@@ -1,13 +1,10 @@
 package singlePlanAlgo;
 
 import java.io.IOException;
-import java.util.LinkedHashMap;
-
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.apache.log4j.PropertyConfigurator;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.contrib.signals.builder.Signals;
 import org.matsim.contrib.signals.data.SignalsData;
@@ -29,7 +26,6 @@ import dynamicTransitRouter.DynamicRoutingModule;
 import dynamicTransitRouter.TransitRouterFareDynamicImpl;
 import dynamicTransitRouter.fareCalculators.ZonalFareXMLParserV2;
 import optimizerAgent.MetamodelModule;
-import singlePlanAlgo.MAASPlanStrategy;
 
 public class NormRun {
 public static void main(String[] args) {
@@ -108,15 +104,15 @@ public static void main(String[] args) {
 //	ConfigGeneratorLargeToy.reduceLinkCapacity(scenario.getNetwork(),.15);
 	StrategySettings stratSets = new StrategySettings();
 	
-	stratSets.setStrategyName(MAASPlanStrategy.class.getName());
+	stratSets.setStrategyName(MaaSPlanStrategy.class.getName());
 	stratSets.setWeight(0.7);
 	stratSets.setDisableAfter(200);
 	stratSets.setSubpopulation("person_TCSwithCar");
 	config.strategy().addStrategySettings(stratSets);
-	config.addModule(new MAASConfigGroup());
+	config.addModule(new MaaSConfigGroup());
 	
-	config.getModules().get(MAASConfigGroup.GROUP_NAME).addParam(MAASConfigGroup.INPUT_FILE,"test/packages.xml");
-	
+	config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"test/packages.xml");
+	config.plans().setInsistingOnUsingDeprecatedPersonAttributeFile(true);
 	new ConfigWriter(config).write("test/config.xml");
 	Scenario scenario = ScenarioUtils.loadScenario(config);
 	for(LanesToLinkAssignment l2l:scenario.getLanes().getLanesToLinkAssignments().values()) {
@@ -135,7 +131,7 @@ public static void main(String[] args) {
 	
 	scenario.addScenarioElement(SignalsData.ELEMENT_NAME, new SignalsDataLoader(config).loadSignalsData());	
 	Controler controler = new Controler(scenario);
-	controler.addOverridingModule(new MAASDataLoader());
+	controler.addOverridingModule(new MaaSDataLoader());
 	controler.addOverridingModule(new MetamodelModule());
 	ZonalFareXMLParserV2 busFareGetter = new ZonalFareXMLParserV2(scenario.getTransitSchedule());
 	SAXParser saxParser;

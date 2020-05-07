@@ -24,9 +24,10 @@ import org.xml.sax.SAXException;
 
 import dynamicTransitRouter.DynamicRoutingModule;
 import dynamicTransitRouter.fareCalculators.ZonalFareXMLParserV2;
-import singlePlanAlgo.MAASConfigGroup;
-import singlePlanAlgo.MAASDataLoader;
-import singlePlanAlgo.MAASPlanStrategy;
+
+import singlePlanAlgo.MaaSConfigGroup;
+import singlePlanAlgo.MaaSDataLoader;
+import singlePlanAlgo.MaaSPlanStrategy;
 import singlePlanAlgo.RunUtils;
 
 public class PlanTranslatorTest {
@@ -39,13 +40,13 @@ public class PlanTranslatorTest {
 				
 				StrategySettings stratSets = new StrategySettings();
 				
-				stratSets.setStrategyName(MAASPlanStrategy.class.getName());
+				stratSets.setStrategyName(MaaSPlanStrategy.class.getName());
 				stratSets.setWeight(0.7);
 				stratSets.setDisableAfter(200);
 				stratSets.setSubpopulation("person_TCSwithCar");
 				config.strategy().addStrategySettings(stratSets);
-				config.addModule(new MAASConfigGroup());
-				config.getModules().get(MAASConfigGroup.GROUP_NAME).addParam(MAASConfigGroup.INPUT_FILE,"test/packages.xml");
+				config.addModule(new MaaSConfigGroup());
+				config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"test/packages.xml");
 				
 				Scenario scenario = ScenarioUtils.loadScenario(config);
 				
@@ -65,7 +66,7 @@ public class PlanTranslatorTest {
 				
 				scenario.addScenarioElement(SignalsData.ELEMENT_NAME, new SignalsDataLoader(config).loadSignalsData());	
 				Controler controler = new Controler(scenario);
-				controler.addOverridingModule(new MAASDataLoader());
+				controler.addOverridingModule(new MaaSDataLoader());
 				ZonalFareXMLParserV2 busFareGetter = new ZonalFareXMLParserV2(scenario.getTransitSchedule());
 				SAXParser saxParser;
 				
