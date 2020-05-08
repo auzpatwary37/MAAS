@@ -62,8 +62,7 @@ public class TransitRouterFareDynamicMaasImpl extends TransitRouterFareDynamicIm
 		Coord coord = fromCoord;
 		TransitRouteStop stop = null;
 		double time = departureTime;
-		
-		person.getAttributes().getAttribute("");
+		boolean lastLegIsInSystem = false;
 		
 		for (Link link : p.links) {
 			TransitRouterNetworkHR.TransitRouterNetworkLink l = (TransitRouterNetworkHR.TransitRouterNetworkLink) link;
@@ -74,7 +73,7 @@ public class TransitRouterFareDynamicMaasImpl extends TransitRouterFareDynamicIm
 				time += ttime;
 			}
 			else if(l.fromNode.route!=null) {
-				//inside link
+				//inside link (egress link)
 				leg = PopulationUtils.createLeg(TransportMode.pt);
 				ExperimentalTransitRoute ptRoute = new ExperimentalTransitRoute(stop.getStopFacility(), l.fromNode.line, l.fromNode.route, l.fromNode.stop.getStopFacility());
 				leg.setRoute(ptRoute);
@@ -87,18 +86,35 @@ public class TransitRouterFareDynamicMaasImpl extends TransitRouterFareDynamicIm
 				//Add a FareLink
 				String mode = l.fromNode.route.getTransportMode();
 				String fareLinkType = (mode.equals("train") || mode.equals("LR"))?FareLink.NetworkWideFare:FareLink.InVehicleFare;
-				FareLink f = new FareLink(fareLinkType,l.fromNode.line.getId(), l.fromNode.route.getId(), stop.getStopFacility().getId(), 
-						l.fromNode.stop.getStopFacility().getId(), mode);
 				
-				Object o = person.getAttributes().getAttribute(FareLink.FareLinkAttributeName);
+				
+				Object o = person.getSelectedPlan().getAttributes().getAttribute(FareLink.FareLinkAttributeName);  //TODO: It may have some information on the old one, need to fix
 				if( o == null) {
 					o = new ArrayList<FareLink>();
 				}
-				((List<FareLink>) o).add(f);
+				List<FareLink> fareLinkList = (List<FareLink>) o;
+				FareLink f = null;
+				if(fareLinkType.equals(FareLink.NetworkWideFare)) {
+					if(lastLegIsInSystem) { //Replace the old link by new fare link with new stop facility
+						FareLink oldF = fareLinkList.remove(fareLinkList.size()-1);
+						f = new FareLink(fareLinkType, null, null, oldF.getBoardingStopFacility(), 
+								l.fromNode.stop.getStopFacility().getId(), mode);
+					}else {
+						f = new FareLink(fareLinkType, null, null, stop.getStopFacility().getId(), 
+							l.fromNode.stop.getStopFacility().getId(), mode);
+					}
+				}else {
+					f = new FareLink(fareLinkType,l.fromNode.line.getId(), l.fromNode.route.getId(), stop.getStopFacility().getId(), 
+							l.fromNode.stop.getStopFacility().getId(), mode);
+				}
+				fareLinkList.add(f);
+				if(fareLinkType.equals(FareLink.NetworkWideFare)) {
+					lastLegIsInSystem = true;
+				}
 				
 			}
 			else if(l.toNode.route!=null) {
-				//wait link
+				//wait link (boarding link)
 				leg = PopulationUtils.createLeg(TransportMode.transit_walk);
 				walkDistance = CoordUtils.calcEuclideanDistance(coord, l.toNode.stop.getStopFacility().getCoord()); 
 				walkWaitTime = walkDistance/tConfig.getBeelineWalkSpeed()/*+ttCalculator.getLinkTravelTime(l, time+walkDistance/this.config.getBeelineWalkSpeed(), person, null)*/;
