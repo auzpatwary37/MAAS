@@ -37,8 +37,8 @@ import dynamicTransitRouter.costs.WaitingTime;
 import dynamicTransitRouter.fareCalculators.FareCalculator;
 import dynamicTransitRouter.transfer.TransferDiscountCalculator;
 import running.RunUtils;
+import transitCalculatorsWithFare.FareLink;
 import transitCalculatorsWithFare.FareTransitRouterConfig;
-import ust.hk.praisehk.metamodelcalibration.analyticalModel.FareLink;
 
 public class TransitRouterFareDynamicMaasImpl extends TransitRouterFareDynamicImpl{
 

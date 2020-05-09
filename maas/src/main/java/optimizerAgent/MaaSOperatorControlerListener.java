@@ -30,7 +30,7 @@ public class MaaSOperatorControlerListener implements BeforeMobsimListener{
 			if(PopulationUtils.getSubpopulation(p).equals(MaaSUtil.MaaSOperatorAgentSubPopulationName)) {//this is a maas operator
 				String operatorId = p.getId().toString().replace(MaaSUtil.MaaSOperatorSubscript, "");
 				for(MaaSPackage m:packages.getMassPackagesPerOperator().get(operatorId)) {
-					double cost = ((VariableDetails)p.getAttributes().getAttribute(m.getId()+MaaSUtil.MaaSOperatorPacakgePriceVariableSubscript)).getCurrentValue();
+					double cost =  ((VariableDetails)p.getAttributes().getAttribute(m.getId()+MaaSUtil.MaaSOperatorPacakgePriceVariableSubscript)).getCurrentValue();
 					m.setPackageCost(cost);//We only load the cost for now
 				}
 			}
