@@ -37,8 +37,8 @@ import dynamicTransitRouter.costs.WaitingTime;
 import dynamicTransitRouter.fareCalculators.FareCalculator;
 import dynamicTransitRouter.transfer.TransferDiscountCalculator;
 import running.RunUtils;
+import transitCalculatorsWithFare.FareLink;
 import transitCalculatorsWithFare.FareTransitRouterConfig;
-import ust.hk.praisehk.metamodelcalibration.analyticalModel.FareLink;
 
 public class TransitRouterFareDynamicMaasImpl extends TransitRouterFareDynamicImpl{
 
@@ -88,11 +88,10 @@ public class TransitRouterFareDynamicMaasImpl extends TransitRouterFareDynamicIm
 				String fareLinkType = (mode.equals("train") || mode.equals("LR"))?FareLink.NetworkWideFare:FareLink.InVehicleFare;
 				
 				
-				Object o = person.getSelectedPlan().getAttributes().getAttribute(FareLink.FareLinkAttributeName);  //TODO: It may have some information on the old one, need to fix
-				if( o == null) {
-					o = new ArrayList<FareLink>();
+				List<FareLink> fareLinkList = (List<FareLink>) person.getSelectedPlan().getAttributes().getAttribute(FareLink.FareLinkAttributeName);  //TODO: It may have some information on the old one, need to fix
+				if( fareLinkList == null) {
+					fareLinkList = new ArrayList<FareLink>();
 				}
-				List<FareLink> fareLinkList = (List<FareLink>) o;
 				FareLink f = null;
 				if(fareLinkType.equals(FareLink.NetworkWideFare)) {
 					if(lastLegIsInSystem) { //Replace the old link by new fare link with new stop facility
