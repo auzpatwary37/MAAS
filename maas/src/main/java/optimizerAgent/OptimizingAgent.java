@@ -32,15 +32,11 @@ public abstract class OptimizingAgent implements Person{
 		this.variableIntialValue = variableIntialValue;
 		this.variableRange = variableRange;
 		this.createAttributedPlan();
-		
-		}
-	
+	}
 	
 	protected Map<String, Double> variableIntialValue = new HashMap<>();
 	protected Map<String, Tuple<Double,Double>> variableRange = new HashMap<>();
-	
 	public abstract double getFunctionalScoreApproximation();
-	
 	public abstract Map<String,Double> getScoreGradientApproximation();
 
 	public Person getPerson() {

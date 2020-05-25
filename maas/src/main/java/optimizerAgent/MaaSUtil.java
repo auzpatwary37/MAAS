@@ -34,8 +34,8 @@ public final class MaaSUtil {
 	public static final String operatorRevenueName = "revenue";
 	public static final String dummyActivityTypeForMaasOperator = "maasOperatorAct";
 
-	public static Activity createMaaSOperator(MaaSPackages packages,Population population, String popOutLoc, Tuple<Double,Double> boundsMultiplier) {
-		
+	public static Activity createMaaSOperator(MaaSPackages packages, Population population, String popOutLoc, 
+			Tuple<Double,Double> boundsMultiplier) {
 		int totalPop = population.getPersons().values().size();
 		int rnd = new Random().nextInt(totalPop);
 		PlanElement pe = ((Person)population.getPersons().values().toArray()[rnd]).getPlans().get(0).getPlanElements().get(0);
@@ -55,8 +55,6 @@ public final class MaaSUtil {
 				variable.put(m.getId()+MaaSUtil.MaaSOperatorPacakgePriceVariableSubscript,m.getPackageCost());
 				variableLimit.put(m.getId()+MaaSUtil.MaaSOperatorPacakgePriceVariableSubscript,new Tuple<>(boundsMultiplier.getFirst()*m.getPackageCost(),boundsMultiplier.getSecond()*m.getPackageCost()));
 			}
-			
-			
 			MaaSOperator agent = new MaaSOperator(person, variable, variableLimit,act);
 			population.addPerson(agent);
 					

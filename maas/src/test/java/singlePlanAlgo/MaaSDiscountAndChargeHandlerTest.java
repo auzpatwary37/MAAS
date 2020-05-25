@@ -3,6 +3,7 @@ package singlePlanAlgo;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -27,8 +28,11 @@ import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.core.utils.collections.Tuple;
 import org.matsim.lanes.Lane;
 import org.matsim.lanes.LanesToLinkAssignment;
+import org.matsim.vehicles.Vehicle;
 import org.matsim.vehicles.VehicleUtils;
 import org.xml.sax.SAXException;
+
+import com.google.common.collect.Maps;
 
 import MaaSPackages.MaaSPackages;
 import MaaSPackages.MaaSPackagesReader;
@@ -95,7 +99,15 @@ class MaaSDiscountAndChargeHandlerTest {
 				
 				Scenario scenario = ScenarioUtils.loadScenario(config);
 				
-				MaaSPackages packages = new MaaSPackagesReader().readPackagesFile("test/packages.xml");
+				for(Person person: scenario.getPopulation().getPersons().values()) {
+					Id<Vehicle> vehId = Id.create(person.getId().toString(), Vehicle.class);
+					Map<String, Id<Vehicle>> modeToVehicle = Maps.newHashMap();
+					modeToVehicle.put("taxi", vehId);
+					modeToVehicle.put("car", vehId);
+					VehicleUtils.insertVehicleIdsIntoAttributes(person, modeToVehicle);
+				}
+				
+				MaaSPackages packages = new MaaSPackagesReader().readPackagesFile("test/packages_May2020.xml"); //It has to be consistent with the config.
 				
 				Activity act = MaaSUtil.createMaaSOperator(packages, scenario.getPopulation(), "test/agentPop.xml",new Tuple<>(.5,2.));
 				

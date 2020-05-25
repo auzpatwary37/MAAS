@@ -76,18 +76,18 @@ public class MaaSDiscountAndChargeHandler implements PersonMoneyEventHandler, Pe
 			}
 			
 		}
-		
 	}
-
-
-
 
 	@Override
 	public void handleEvent(PersonDepartureEvent event) {
+		if(!this.sceanrio.getPopulation().getPersons().containsKey(event.getPersonId())) {
+			return; //Ignore the 'person' that is not actually a person (e.g. A bus driver) 
+		}
+		
 		Plan plan = this.sceanrio.getPopulation().getPersons().get(event.getPersonId()).getSelectedPlan();
 		String selectedMaaSid = (String) plan.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName);
 		if(selectedMaaSid!=null) {
-		MaaSPackage m = this.packages.getMassPackages().get(selectedMaaSid);
+			MaaSPackage m = this.packages.getMassPackages().get(selectedMaaSid);
 			double maasCost = m.getPackageCost();
 			String packageOperatorId = m.getOperatorId()+MaaSUtil.MaaSOperatorSubscript;
 			this.eventManager.processEvent(new PersonMoneyEvent(event.getTime(),event.getPersonId(), -maasCost, MaaSUtil.AgentpayForMaaSPackageTransactionName,m.getId()));//Agent buying package
