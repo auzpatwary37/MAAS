@@ -43,12 +43,12 @@ public class MaaSDataLoader extends AbstractModule{
 		} else {
 			bind(MaaSPackages.class).annotatedWith(Names.named(MaaSUtil.MaaSPackagesAttributeName)).toProvider(MaaSPackagesProvider.class).in(Singleton.class);
 		}
-		this.addControlerListenerBinding().to(MaaSOperatorControlerListener.class).asEagerSingleton();
+		//this.addControlerListenerBinding().to(MaaSOperatorControlerListener.class).asEagerSingleton();
 		
 		//bind the maas handler
 		this.addEventHandlerBinding().to(MaaSDiscountAndChargeHandler.class).asEagerSingleton();
 		bind(MaaSDiscountAndChargeHandler.class).in(Singleton.class);
-		bind(MaaSOperatorControlerListener.class).in(Singleton.class);
+		//bind(MaaSOperatorControlerListener.class).in(Singleton.class);
 		
 	}
 	

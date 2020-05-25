@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.matsim.api.core.v01.Id;
+import org.matsim.api.core.v01.population.Activity;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.Plan;
 import org.matsim.core.utils.collections.Tuple;
@@ -14,8 +15,8 @@ public class MaaSOperator extends OptimizingAgent{
 	public static String type = "MaaSOperator";
 	
 	public MaaSOperator(Person person, Map<String, Double> variableIntialValue,
-			Map<String, Tuple<Double, Double>> variableRange) {
-		super(person, type, variableIntialValue, variableRange);
+			Map<String, Tuple<Double, Double>> variableRange, Activity act) {
+		super(person, type,act, variableIntialValue, variableRange);
 		
 	}
 
