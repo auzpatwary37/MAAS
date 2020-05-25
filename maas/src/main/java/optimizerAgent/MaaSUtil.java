@@ -4,12 +4,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Random;
 
+import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
+import org.matsim.api.core.v01.population.Activity;
 import org.matsim.api.core.v01.population.Person;
+import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.api.core.v01.population.Population;
 import org.matsim.api.core.v01.population.PopulationFactory;
 import org.matsim.api.core.v01.population.PopulationWriter;
+import org.matsim.core.population.PopulationUtils;
 import org.matsim.core.utils.collections.Tuple;
 
 import MaaSPackages.MaaSPackage;
@@ -27,8 +32,16 @@ public final class MaaSUtil {
 	public static final String MaaSOperatorPacakgePriceVariableSubscript = "_price";//maas package id + MaaSUtil.MaaSOperatorPacakgePriceVariableSubscript
 	public static final String MaaSOperatorFareLinkDiscountVariableSubscript = "_discount";//fareLink.toString() + MaaSUtil.MaaSOperatorPacakgePriceVariableSubscript
 	public static final String operatorRevenueName = "revenue";
+	public static final String dummyActivityTypeForMaasOperator = "maasOperatorAct";
 
-	public static void createMaaSOperator(MaaSPackages packages,Population population, String popOutLoc, Tuple<Double,Double> boundsMultiplier) {
+	public static Activity createMaaSOperator(MaaSPackages packages,Population population, String popOutLoc, Tuple<Double,Double> boundsMultiplier) {
+		
+		int totalPop = population.getPersons().values().size();
+		int rnd = new Random().nextInt(totalPop);
+		PlanElement pe = ((Person)population.getPersons().values().toArray()[rnd]).getPlans().get(0).getPlanElements().get(0);
+		Coord coord = ((Activity) pe).getCoord();
+		Activity act = PopulationUtils.createActivityFromCoord(dummyActivityTypeForMaasOperator,coord);
+		
 		for(Entry<String, Set<MaaSPackage>> operator:packages.getMassPackagesPerOperator().entrySet()) {
 			//create one agent per operator
 			PopulationFactory popFac = population.getFactory();
@@ -43,10 +56,10 @@ public final class MaaSUtil {
 				variableLimit.put(m.getId()+MaaSUtil.MaaSOperatorPacakgePriceVariableSubscript,new Tuple<>(boundsMultiplier.getFirst()*m.getPackageCost(),boundsMultiplier.getSecond()*m.getPackageCost()));
 			}
 			
-			MaaSOperator agent = new MaaSOperator(person, variable, variableLimit);
-			population.addPerson(agent);
-
 			
+			MaaSOperator agent = new MaaSOperator(person, variable, variableLimit,act);
+			population.addPerson(agent);
+					
 			
 			//plan.getAttributes().putAttribute("variableName", value)
 			
@@ -56,5 +69,6 @@ public final class MaaSUtil {
 			popWriter.putAttributeConverter(VariableDetails.class, VariableDetails.getAttributeConverter());
 			popWriter.write(popOutLoc);
 		}
+		return act;
 	}
 }

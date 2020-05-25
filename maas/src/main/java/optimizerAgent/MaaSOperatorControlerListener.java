@@ -24,8 +24,9 @@ public class MaaSOperatorControlerListener implements BeforeMobsimListener{
 		
 	};
 	
+	
 	@Override
-	public void notifyBeforeMobsim(BeforeMobsimEvent event) {
+	public void notifyBeforeMobsim(BeforeMobsimEvent event) {// This class will load the decided price variables in the MaaSPackages.
 		scenario.getPopulation().getPersons().values().forEach(p->{
 			if(PopulationUtils.getSubpopulation(p).equals(MaaSUtil.MaaSOperatorAgentSubPopulationName)) {//this is a maas operator
 				String operatorId = p.getId().toString().replace(MaaSUtil.MaaSOperatorSubscript, "");
