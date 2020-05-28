@@ -14,6 +14,7 @@ import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.population.Activity;
 import org.matsim.api.core.v01.population.Person;
+import org.matsim.contrib.common.util.LoggerUtils;
 import org.matsim.contrib.signals.builder.Signals;
 import org.matsim.contrib.signals.data.SignalsData;
 import org.matsim.contrib.signals.data.SignalsDataLoader;
@@ -39,6 +40,7 @@ import MaaSPackages.MaaSPackagesReader;
 import dynamicTransitRouter.DynamicRoutingModule;
 import dynamicTransitRouter.fareCalculators.ZonalFareXMLParserV2;
 import optimizerAgent.MaaSOperator;
+import optimizerAgent.MaaSOperatorOptimizationModule;
 import optimizerAgent.MaaSOperatorStrategy;
 import optimizerAgent.MaaSUtil;
 import optimizerAgent.MetamodelModule;
@@ -60,7 +62,7 @@ class MaaSDiscountAndChargeHandlerTest {
 				config.addModule(new MaaSConfigGroup());
 				
 				config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"test/packages_May2020.xml");
-				
+				LoggerUtils.setVerbose(false);
 				
 				config.plans().setInsistingOnUsingDeprecatedPersonAttributeFile(true);
 				
@@ -107,7 +109,7 @@ class MaaSDiscountAndChargeHandlerTest {
 					VehicleUtils.insertVehicleIdsIntoAttributes(person, modeToVehicle);
 				}
 				
-				MaaSPackages packages = new MaaSPackagesReader().readPackagesFile("test/packages_May2020.xml"); //It has to be consistent with the config.
+				MaaSPackages packages = new MaaSPackagesReader().readPackagesFile(scenario.getConfig().getModules().get(MaaSConfigGroup.GROUP_NAME).getParams().get(MaaSConfigGroup.INPUT_FILE)); //It has to be consistent with the config.
 				
 				Activity act = MaaSUtil.createMaaSOperator(packages, scenario.getPopulation(), "test/agentPop.xml",new Tuple<>(.5,2.));
 				
@@ -135,6 +137,7 @@ class MaaSDiscountAndChargeHandlerTest {
 				Controler controler = new Controler(scenario);
 				controler.addOverridingModule(new MaaSDataLoader());
 				controler.addOverridingModule(new MetamodelModule());
+				controler.addOverridingModule(new MaaSOperatorOptimizationModule());
 				ZonalFareXMLParserV2 busFareGetter = new ZonalFareXMLParserV2(scenario.getTransitSchedule());
 				SAXParser saxParser;
 				

@@ -51,9 +51,10 @@ public class MaaSPackages{
 		for(Entry<Id<TransitLine>, TransitLine> d:ts.getTransitLines().entrySet()) {
 			String mode = d.getValue().getRoutes().get(new ArrayList<>(d.getValue().getRoutes().keySet()).get(0)).getTransportMode();
 			if(!packages.containsKey(mode)){
+				operatorId++;
 				packages.put(mode, new MaaSPackage(mode, Integer.toString(operatorId), defaultCost, freeTaxiTrip));
 				packages.get(mode).setPackageExpairyTime(24*3600.);
-				operatorId++;
+				
 			}
 			packages.get(mode).addTransitLine(d.getValue(), fareCalculators, defaultDiscount, fullDiscounted);
 		}

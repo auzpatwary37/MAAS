@@ -19,6 +19,7 @@ import org.matsim.core.utils.collections.Tuple;
 
 import MaaSPackages.MaaSPackage;
 import MaaSPackages.MaaSPackages;
+import transitCalculatorsWithFare.FareLink;
 
 public final class MaaSUtil {
 	public static final String MaaSPackagesAttributeName = "MAASPackages"; 
@@ -46,14 +47,14 @@ public final class MaaSUtil {
 			//create one agent per operator
 			PopulationFactory popFac = population.getFactory();
 			Person person = popFac.createPerson(Id.createPersonId(operator.getKey()+MaaSUtil.MaaSOperatorSubscript));
-			
+
 			Map<String,Double> variable = new HashMap<>();
 			Map<String,Tuple<Double,Double>> variableLimit = new HashMap<>();
 			
 			for(MaaSPackage m:operator.getValue()) {
 				//For now only create price of package 
-				variable.put(m.getId()+MaaSUtil.MaaSOperatorPacakgePriceVariableSubscript,m.getPackageCost());
-				variableLimit.put(m.getId()+MaaSUtil.MaaSOperatorPacakgePriceVariableSubscript,new Tuple<>(boundsMultiplier.getFirst()*m.getPackageCost(),boundsMultiplier.getSecond()*m.getPackageCost()));
+				variable.put(MaaSUtil.generateMaaSPackageCostKey(m.getId()),m.getPackageCost());
+				variableLimit.put(MaaSUtil.generateMaaSPackageCostKey(m.getId()),new Tuple<>(boundsMultiplier.getFirst()*m.getPackageCost(),boundsMultiplier.getSecond()*m.getPackageCost()));
 			}
 			MaaSOperator agent = new MaaSOperator(person, variable, variableLimit,act);
 			population.addPerson(agent);
@@ -68,5 +69,47 @@ public final class MaaSUtil {
 			popWriter.write(popOutLoc);
 		}
 		return act;
+	}
+	
+	//Generate a unique key for the package cost variable 
+	public static String generateMaaSPackageCostKey(String packageId) {
+		return packageId+MaaSOperatorPacakgePriceVariableSubscript;
+	}
+	
+	public static String retrievePackageId(String variableDetailsKey) {
+		String packageId = null;
+		if(variableDetailsKey.contains(MaaSUtil.MaaSOperatorPacakgePriceVariableSubscript)) {
+			packageId = variableDetailsKey.replace(MaaSUtil.MaaSOperatorPacakgePriceVariableSubscript, "");
+		}else if(variableDetailsKey.contains(MaaSUtil.MaaSOperatorFareLinkDiscountVariableSubscript)){
+			packageId = variableDetailsKey.split("^")[0];
+		}
+		return packageId;
+	}
+	
+	public static String retrieveFareLink(String variableDetailsKey) {
+		if(!variableDetailsKey.contains(MaaSUtil.MaaSOperatorFareLinkDiscountVariableSubscript)) throw new IllegalArgumentException("This is not a fare link variable details!!!");
+		variableDetailsKey.replace(MaaSUtil.MaaSOperatorFareLinkDiscountVariableSubscript, "");
+		return variableDetailsKey.split("^")[1];
+	}
+	
+	public static String generateMaaSFareLinkDiscountKey(String packageId, FareLink fareLink) {
+		return packageId+"^"+fareLink.toString()+MaaSOperatorPacakgePriceVariableSubscript;
+	}
+	
+	public static String generateOperatorId(String operatorId) {
+		return operatorId+MaaSUtil.MaaSOperatorSubscript;
+	}
+
+	public static String retrieveOperatorIdFromOperatorPersonId(Id<Person> personId) {
+		if(!personId.toString().contains(MaaSUtil.MaaSOperatorSubscript)) throw new IllegalArgumentException("This is not an MaaS operator!!!");
+		return personId.toString().replace(MaaSUtil.MaaSOperatorSubscript, "");
+	}
+	
+	public static boolean ifFareLinkVariableDetails(String key) {
+		return key.contains(MaaSUtil.MaaSOperatorFareLinkDiscountVariableSubscript);
+	}
+	
+	public static boolean ifMaaSPackageCostVariableDetails(String key) {
+		return key.contains(MaaSUtil.MaaSOperatorPacakgePriceVariableSubscript);
 	}
 }

@@ -188,6 +188,10 @@ public class MaaSPackage {
 		this.discounts = discounts;
 	}
 	
+	public void setDiscountForFareLink(FareLink fareLink, double discount) {
+		if(!this.discounts.containsKey(fareLink.toString()))throw new IllegalArgumentException("The fare link "+fareLink.toString()+" does not belong to this package!!!");
+		this.discounts.put(fareLink.toString(), discount);
+	}
 	
 
 	public Map<String, Double> getFullFare() {

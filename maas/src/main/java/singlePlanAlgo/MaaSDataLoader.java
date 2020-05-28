@@ -12,6 +12,7 @@ import org.matsim.api.core.v01.population.Population;
 import org.matsim.core.config.Config;
 import org.matsim.core.controler.AbstractModule;
 import org.matsim.core.gbl.MatsimRandom;
+import org.matsim.core.population.PopulationUtils;
 import org.matsim.core.utils.collections.Tuple;
 
 import com.google.inject.name.Names;
@@ -43,12 +44,12 @@ public class MaaSDataLoader extends AbstractModule{
 		} else {
 			bind(MaaSPackages.class).annotatedWith(Names.named(MaaSUtil.MaaSPackagesAttributeName)).toProvider(MaaSPackagesProvider.class).in(Singleton.class);
 		}
-		//this.addControlerListenerBinding().to(MaaSOperatorControlerListener.class).asEagerSingleton();
+		
 		
 		//bind the maas handler
 		this.addEventHandlerBinding().to(MaaSDiscountAndChargeHandler.class).asEagerSingleton();
 		bind(MaaSDiscountAndChargeHandler.class).in(Singleton.class);
-		//bind(MaaSOperatorControlerListener.class).in(Singleton.class);
+		
 		
 	}
 	
@@ -67,10 +68,12 @@ public class MaaSDataLoader extends AbstractModule{
 		private static void insertRandomMaaSPackage(Population population, MaaSPackages packages) {
 			Random rnd = MatsimRandom.getRandom();
 			population.getPersons().values().forEach((p)->{
-				p.getPlans().forEach((plan)->{
-					int index = rnd.nextInt(packages.getMassPackages().size());
-					plan.getAttributes().putAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName, packages.getMassPackages().keySet().toArray()[index]);
-				});
+				if(!PopulationUtils.getSubpopulation(p).equals(MaaSUtil.MaaSOperatorAgentSubPopulationName)) {
+					p.getPlans().forEach((plan)->{
+						int index = rnd.nextInt(packages.getMassPackages().size());
+						plan.getAttributes().putAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName, packages.getMassPackages().keySet().toArray()[index]);
+					});
+				}
 			});
 		}
 	}
