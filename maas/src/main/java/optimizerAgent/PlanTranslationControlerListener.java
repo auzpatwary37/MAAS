@@ -12,7 +12,7 @@ import com.google.inject.Inject;
 public class PlanTranslationControlerListener implements IterationStartsListener, StartupListener{
 	
 	@Inject 
-	private timeBeansWrapped timeBeans;
+	private timeBeansWrapper timeBeansWrapped;
 	
 	@Inject
 	private EventsManager manager;
@@ -22,7 +22,7 @@ public class PlanTranslationControlerListener implements IterationStartsListener
 	
 	@Override
 	public void notifyStartup(StartupEvent event) {
-		this.planTranslator = new PlanTranslator(timeBeans.timeBeans, event.getServices().getScenario());
+		this.planTranslator = new PlanTranslator(timeBeansWrapped.timeBeans, event.getServices().getScenario());
 		manager.addHandler(planTranslator);
 	}
 	

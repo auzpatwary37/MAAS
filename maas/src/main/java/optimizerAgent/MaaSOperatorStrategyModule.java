@@ -62,6 +62,11 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 		
 		
 	}
+	
+	public void IntelegentOperatorDecisionEngine() {
+		
+	}
+	
 
 	@Override
 	public void finishReplanning() {

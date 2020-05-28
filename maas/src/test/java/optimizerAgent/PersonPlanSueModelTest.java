@@ -108,7 +108,7 @@ class PersonPlanSueModelTest {
 					timeBean.put(Integer.toString(i+1), new Tuple<>(i*3600.,(i+1)*3600.));
 				}
 				
-				bind(timeBeanWrapper.class).toInstance(new timeBeanWrapper(timeBean));
+				bind(timeBeansWrapper.class).toInstance(new timeBeansWrapper(timeBean));
 			}
 			
 		});
@@ -155,7 +155,7 @@ class PersonPlanSueModelTest {
 	void testPersonPlanSueModel() {
 		
 		Injector injector = createInjector();
-		PersonPlanSueModel model = new PersonPlanSueModel(injector.getInstance(timeBeanWrapper.class).timeBean,injector.getInstance(Config.class));
+		PersonPlanSueModel model = new PersonPlanSueModel(injector.getInstance(timeBeansWrapper.class).timeBeans,injector.getInstance(Config.class));
 		assertNotNull(model);
 		
 	}
@@ -167,9 +167,9 @@ class PersonPlanSueModelTest {
 	void testPerformAssignement() {
 		
 		Injector injector = createInjector();
-		PersonPlanSueModel model = new PersonPlanSueModel(injector.getInstance(timeBeanWrapper.class).timeBean, injector.getInstance(Config.class));
+		PersonPlanSueModel model = new PersonPlanSueModel(injector.getInstance(timeBeansWrapper.class).timeBeans, injector.getInstance(Config.class));
 		Scenario scenario = injector.getInstance(Scenario.class);
-		model.populateModel(scenario, injector.getInstance(timeBeanWrapper.class).fareCalculators, injector.getInstance(MaaSPackages.class));
+		model.populateModel(scenario, injector.getInstance(timeBeansWrapper.class).fareCalculators, injector.getInstance(MaaSPackages.class));
 		ParamReader pReader = injector.getInstance(ParamReader.class);
 		MaaSPackages packages = injector.getInstance(MaaSPackages.class);
 		Random rnd = new Random();
@@ -178,7 +178,7 @@ class PersonPlanSueModelTest {
 		Population population = injector.getInstance(Population.class);
 		population.getPersons().entrySet().parallelStream().forEach((p)->{
 			p.getValue().getPlans().forEach((plan)->{
-				plan.getAttributes().putAttribute(SimpleTranslatedPlan.SimplePlanAttributeName, new SimpleTranslatedPlan(injector.getInstance(timeBeanWrapper.class).timeBean, plan, scenario));
+				plan.getAttributes().putAttribute(SimpleTranslatedPlan.SimplePlanAttributeName, new SimpleTranslatedPlan(injector.getInstance(timeBeansWrapper.class).timeBeans, plan, scenario));
 				plan.getAttributes().putAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName, packages.getMassPackages().keySet().toArray()[rnd.nextInt(packages.getMassPackages().size())]);
 			});
 		});
@@ -196,12 +196,4 @@ class PersonPlanSueModelTest {
 
 }
 
-class timeBeanWrapper{
-	@Inject
-	Map<String,FareCalculator> fareCalculators;
-	final Map<String,Tuple<Double,Double>>timeBean;
-	
-	public timeBeanWrapper(final Map<String,Tuple<Double,Double>>timeBean) {
-		this.timeBean = timeBean;
-	}
-}
+

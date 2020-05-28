@@ -31,9 +31,9 @@ public class MetamodelModule extends AbstractModule{
 	public void install() {
 		
 		if (timeBeans != null) {
-			bind(timeBeansWrapped.class).toInstance(new timeBeansWrapped(timeBeans));
+			bind(timeBeansWrapper.class).toInstance(new timeBeansWrapper(timeBeans));
 		} else {
-			bind(timeBeansWrapped.class).toProvider(TimeBeansWrappedProvider.class).in(Singleton.class);
+			bind(timeBeansWrapper.class).toProvider(TimeBeansWrappedProvider.class).in(Singleton.class);
 		}
 		
 		//Bind any other controller listener needed
@@ -46,11 +46,11 @@ public class MetamodelModule extends AbstractModule{
 		System.out.println();
 	}
 	
-	private static class TimeBeansWrappedProvider implements Provider<timeBeansWrapped> {
+	private static class TimeBeansWrappedProvider implements Provider<timeBeansWrapper> {
 		
 		@Inject Config matsimConfig;
 		@Override
-		public timeBeansWrapped get() {
+		public timeBeansWrapper get() {
 			double startTime = matsimConfig.qsim().getStartTime().seconds();
 			double endTime = matsimConfig.qsim().getEndTime().seconds();
 			Map<String,Tuple<Double,Double>> timeBeans = new HashMap<>();
@@ -59,7 +59,7 @@ public class MetamodelModule extends AbstractModule{
 				timeBeans.put(Integer.toString(hour), new Tuple<>(i,i+3600));
 				hour = hour + 1;
 			}
-			return new timeBeansWrapped(timeBeans);
+			return new timeBeansWrapper(timeBeans);
 		}
 	}
 
@@ -68,10 +68,3 @@ public class MetamodelModule extends AbstractModule{
 
 
 
-class timeBeansWrapped{
-	public final Map<String,Tuple<Double,Double>> timeBeans;
-	
-	public timeBeansWrapped(Map<String,Tuple<Double,Double>> timeBeans) {
-		this.timeBeans = timeBeans;
-	}
-}

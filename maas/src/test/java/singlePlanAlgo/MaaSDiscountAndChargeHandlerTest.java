@@ -56,13 +56,12 @@ class MaaSDiscountAndChargeHandlerTest {
 	@Test
 	void test() {
 		// This will test the optimization agent insertion
-		
+				LoggerUtils.setDisableVerbose(true);
 				Config config = RunUtils.provideConfig();
 				
 				config.addModule(new MaaSConfigGroup());
 				
 				config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"test/packages_May2020.xml");
-				LoggerUtils.setVerbose(false);
 				
 				config.plans().setInsistingOnUsingDeprecatedPersonAttributeFile(true);
 				

@@ -173,7 +173,37 @@ public class PersonPlanSueModel {
 	public static final String TransferbetaName="Transferbeta";
 	public static final String PlanKeyIdentifierName = "planKey";
 	
+	//______________________BackPropogationVariables______________________________________
 	
+	//We need a unique key for each plan. Let's assign one for each at the zero'th iteration
+	
+	// We need four incidence variables
+	//1. link-plan incidence {linkID->Tuple<PlanId,numberOfTimesUsed>} 
+	// [can be separated for physical links, tranistDirectLinks, transferLinks and fareLinks]
+	//2. MaaS Package to plan incidence {packageId->Plan}
+	//3. Transfer Link to transferLinks and directLinks
+	
+	Map<String,Map<Id<Link>,Map<String,Double>>> linkPlanIncidence = new ConcurrentHashMap<>();//Should be changed to HashMap after population is complete.
+	Map<String,Map<Id<TransitLink>,Map<String,Double>>> trLinkPlanIncidence = new ConcurrentHashMap<>();
+	Map<String,Map<String,Map<String,Double>>> fareLinkPlanIncidence = new ConcurrentHashMap<>();
+	
+	Map<String,List<String>> maasPackagePlanIncidence = new ConcurrentHashMap<>();//done
+	Map<String,Map<Id<TransitLink>,List<Id<TransitLink>>>>transferLinkToDirectLinkIncidence = new ConcurrentHashMap<>();
+	
+	//Save plan probability
+	
+	Map<String,Double> planProbability = new ConcurrentHashMap<>();//done
+	
+	//Gradient Variable
+	Map<String,Map<Id<Link>,Map<String,Double>>> linkGradient = new ConcurrentHashMap<>();
+	Map<String,Map<Id<TransitLink>,Map<String,Double>>> trLinkGradient = new ConcurrentHashMap<>();
+	Map<String,Map<String,Map<String,Double>>> fareLinkGradient = new ConcurrentHashMap<>();
+	
+	Map<String,Map<Id<Link>,Map<String,Double>>> linkTravelTimeGradient = new ConcurrentHashMap<>();
+	Map<String,Map<Id<TransitLink>,Map<String,Double>>> trLinkTravelTimeGradient = new ConcurrentHashMap<>();
+	
+	Map<String,Map<String,Double>> planProbabilityGradient = new ConcurrentHashMap<>();
+	Map<String,Map<String,Double>> pacakgeUserGradient = new ConcurrentHashMap<>();
 	//___________________________FrontEndFunctionality____________________________________
 	
 
@@ -190,12 +220,24 @@ public class PersonPlanSueModel {
 	
 	//___________________________________________________________________________________
 	//Constructor
-	@Inject
+	
 	public PersonPlanSueModel(Map<String, Tuple<Double, Double>> timeBean,Config config) {
 		this.timeBeans=timeBean;
 		//this.defaultParameterInitiation(null);
 		for(String timeBeanId:this.timeBeans.keySet()) {
 			this.transitLinks.put(timeBeanId, new HashMap<Id<TransitLink>, TransitLink>());
+			this.linkPlanIncidence.put(timeBeanId, new ConcurrentHashMap<>());
+			this.trLinkPlanIncidence.put(timeBeanId, new ConcurrentHashMap<>());
+			this.fareLinkPlanIncidence.put(timeBeanId, new ConcurrentHashMap<>());
+			this.transferLinkToDirectLinkIncidence.put(timeBeanId, new ConcurrentHashMap<>());
+			
+			this.linkGradient.put(timeBeanId, new ConcurrentHashMap<>());
+			this.trLinkGradient.put(timeBeanId, new ConcurrentHashMap<>());
+			this.fareLinkGradient.put(timeBeanId, new ConcurrentHashMap<>());
+			
+			this.linkTravelTimeGradient.put(timeBeanId, new ConcurrentHashMap<>());
+			this.trLinkTravelTimeGradient.put(timeBeanId, new ConcurrentHashMap<>());
+			
 			
 			//For result recording
 			outputLinkTT.put(timeBeanId, new HashMap<>());
@@ -313,7 +355,7 @@ public class PersonPlanSueModel {
 		
 	}
 	
-	private SUEModelOutput singlePersonNL(Person person, LinkedHashMap<String,Double> Oparams, LinkedHashMap<String,Double> anaParams) {
+	private SUEModelOutput singlePersonNL(Person person, LinkedHashMap<String,Double> Oparams, LinkedHashMap<String,Double> anaParams, int counter) {
 		
 		//get the subpopulation
 		String subpopulation = PopulationUtils.getSubpopulation(person);
@@ -335,7 +377,7 @@ public class PersonPlanSueModel {
 			String planKey = (String)plan.getAttributes().getAttribute(PersonPlanSueModel.PlanKeyIdentifierName);
 			if(planKey == null) {
 				planKey = person.getId().toString()+"_^_"+planNo;
-				plan.getAttributes().putAttribute(PersonPlanSueModel.PlanKeyIdentifierName, planKey);
+				//plan.getAttributes().putAttribute(PersonPlanSueModel.PlanKeyIdentifierName, planKey);
 				planNo++;
 			}
 			
@@ -343,6 +385,13 @@ public class PersonPlanSueModel {
 			double utility = 0;
 			//Add the MaaSPackage disutility
 			MaaSPackage maas = this.maasPakages.getMassPackages().get(plan.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName));
+			
+			if(!this.maasPackagePlanIncidence.containsKey(maas.getId())) {
+				this.maasPackagePlanIncidence.put(maas.getId(), new ArrayList<>());	
+			}
+			
+			if(!this.maasPackagePlanIncidence.get(maas.getId()).contains(planKey))this.maasPackagePlanIncidence.get(maas.getId()).add(planKey);
+			
 			Map<String,Object> additionalInfo = new HashMap<>();
 			additionalInfo.put(MaaSUtil.CurrentSelectedMaaSPackageAttributeName, maas);
 			if(maas!=null)utility+=params.get(CNLSUEModel.MarginalUtilityofMoneyName)*maas.getPackageCost();
@@ -382,16 +431,26 @@ public class PersonPlanSueModel {
 			double v = planProb.get(d.getKey())/utilSum;
 			planProb.put(d.getKey(), v);
 			trPlans.get(d.getKey()).setProbability(v);
+			this.planProbability.put(d.getKey(), v);
 		}
 		
 		// Collect the flow
 		
 		for(Entry<String, SimpleTranslatedPlan> plan:trPlans.entrySet()) {
 			SimpleTranslatedPlan trPlan = plan.getValue();
-			for(Entry<String, List<Id<Link>>> s: trPlan.getCarUsage().entrySet()) {				
+			for(Entry<String, List<Id<Link>>> s: trPlan.getCarUsage().entrySet()) {	
+				
 				if(!linkFlow.containsKey(s.getKey()))linkFlow.put(s.getKey(), new HashMap<>());
 				Map<Id<Link>,Double>flowMap = s.getValue().stream().collect(Collectors.toMap(ss->ss, ss->planProb.get(plan.getKey()),(v1,v2)->(v1+v2)));
 				flowMap.keySet().forEach((linkId)->linkFlow.get(s.getKey()).compute(linkId, (k,v)->(v==null)?flowMap.get(linkId):v+flowMap.get(linkId)));
+				
+				if(counter == 1) {
+					s.getValue().forEach((link)->{
+						if(!this.linkPlanIncidence.get(s.getKey()).containsKey(link))this.linkPlanIncidence.get(s.getKey()).put(link, new HashMap<>());
+						Map<String, Double> incidenceMap = this.linkPlanIncidence.get(s.getKey()).get(link);
+						incidenceMap.compute(plan.getKey(), (k,v)->(v==null)?1:v+1);
+					});
+				}
 			}
 			
 			for(Entry<String, List<TransitLink>> s:trPlan.getTransitUsage().entrySet()) {
@@ -399,7 +458,7 @@ public class PersonPlanSueModel {
 				
 				
 				//This line adds the transitLinks to the class transitLinkMap. 
-				s.getValue().stream().forEach((trLink)->//for each transitLinks in the transitLinkUsageMap in this plan,
+				s.getValue().stream().forEach((trLink)->{//for each transitLinks in the transitLinkUsageMap in this plan,
 				this.transitLinks.get(s.getKey())//get that timeBean's class transitLinkMap
 				.compute(trLink.getTrLinkId(), (k,v)->{// check if the link is already there
 							if(v==null)	{// if the link is not present in the class transit link map, i.e. the value returned is null,
@@ -410,7 +469,15 @@ public class PersonPlanSueModel {
 								}
 							return v;//else just leave it be, i.e. return the found transitLink
 							}
-						));
+						);
+				if(!this.trLinkPlanIncidence.get(s.getKey()).containsKey(trLink.getTrLinkId())) {
+					this.trLinkPlanIncidence.get(s.getKey()).put(trLink.getTrLinkId(), new HashMap<>());
+				}
+				Map<String, Double> incidenceMap = this.trLinkPlanIncidence.get(s.getKey()).get(trLink.getTrLinkId());
+				if(counter == 1){
+					incidenceMap.compute(plan.getKey(), (k,v)->(v==null)?1:v+1);
+				}
+				});
 				//
 				
 				Map<Id<TransitLink>,Double>flowMap = s.getValue().stream().collect(Collectors.toMap(TransitLink::getTrLinkId, ss->planProb.get(plan.getKey()),(v1,v2)->(v1+v2)));
@@ -421,6 +488,14 @@ public class PersonPlanSueModel {
 				if(!fareLinkFlow.containsKey(s.getKey()))fareLinkFlow.put(s.getKey(), new HashMap<>());
 				Map<String,Double>flowMap = s.getValue().stream().collect(Collectors.toMap(ss->ss.toString(), ss->planProb.get(plan.getKey()),(v1,v2)->(v1+v2)));
 				flowMap.keySet().forEach((fareLink)->fareLinkFlow.get(s.getKey()).compute(fareLink, (k,v)->(v==null)?flowMap.get(fareLink):v+flowMap.get(fareLink)));
+				if(counter == 1) {
+					s.getValue().forEach((fl)->{
+						if(!this.fareLinkPlanIncidence.get(s.getKey()).containsKey(fl.toString()))this.fareLinkPlanIncidence.get(s.getKey()).put(fl.toString(), new HashMap<>());
+						Map<String, Double> incidenceMap = this.fareLinkPlanIncidence.get(s.getKey()).get(fl.toString());
+						incidenceMap.compute(plan.getKey(), (k,v)->(v==null)?1:v+1);
+					});
+				}
+			
 			}
 			
 		}
@@ -431,7 +506,7 @@ public class PersonPlanSueModel {
 	}
 	
 	//TODO: still do not take params in sub-population. We have to incorporate that 
-	private SUEModelOutput performNetworkLoading(Population population, LinkedHashMap<String,Double> params, LinkedHashMap<String,Double> anaParams) {
+	private SUEModelOutput performNetworkLoading(Population population, LinkedHashMap<String,Double> params, LinkedHashMap<String,Double> anaParams, int counter) {
 		
 		List<Map<String,Map<Id<Link>, Double>>> linkVolumes=Collections.synchronizedList(new ArrayList<>());
 		List<Map<String,Map<Id<TransitLink>, Double>>> linkTransitVolumes=Collections.synchronizedList(new ArrayList<>());
@@ -442,7 +517,10 @@ public class PersonPlanSueModel {
 		Map<String,Map<String,Double>> fareLinkFlow = new HashMap<>();
 		
 		population.getPersons().values().parallelStream().forEach((person)->{
-			SUEModelOutput flow= this.singlePersonNL(person, params, anaParams);
+			if(PopulationUtils.getSubpopulation(person).equals(MaaSUtil.MaaSOperatorAgentSubPopulationName)) {
+				return;
+			}
+			SUEModelOutput flow= this.singlePersonNL(person, params, anaParams,counter);
 			linkVolumes.add(flow.getLinkVolume());
 			linkTransitVolumes.add(flow.getLinkTransitVolume());
 			fareLinkFlows.add(flow.getFareLinkVolume());
@@ -580,7 +658,7 @@ public class PersonPlanSueModel {
 	private SUEModelOutput performAssignment(Population population, LinkedHashMap<String,Double> params, LinkedHashMap<String,Double> anaParams) {
 		SUEModelOutput flow = null;
 		for(int counter = 1; counter < this.maxIter; counter++) {
-			flow  = this.performNetworkLoading(population, params, anaParams);
+			flow  = this.performNetworkLoading(population, params, anaParams,counter);
 			boolean shouldStop = this.updateVolume(flow.getLinkVolume(), flow.getLinkTransitVolume(), counter);
 			if(shouldStop) {
 				break;
