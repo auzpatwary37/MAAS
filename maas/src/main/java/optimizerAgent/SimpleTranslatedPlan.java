@@ -72,6 +72,8 @@ public class SimpleTranslatedPlan {
 	//the plans choice probability
 	private double probability = 0;
 	
+	private String planKey;
+	
 	
 	double totalWalkDistance = 0;
 	
@@ -112,7 +114,7 @@ public class SimpleTranslatedPlan {
 					transitLinkMap.get(timeId).put(trLink.getKey(),trLink.getValue());
 				}
 				
-				for(FareLink fl:route.getFareEntryAndExit()) {
+				for(FareLink fl:route.getFareLinks()) {
 					this.fareLinkUsage.get(timeId).add(fl);
 				}
 				
@@ -250,6 +252,14 @@ public class SimpleTranslatedPlan {
 
 	public Map<String, List<FareLink>> getFareLinkUsage() {
 		return fareLinkUsage;
+	}
+
+	public String getPlanKey() {
+		return planKey;
+	}
+
+	public void setPlanKey(String planKey) {
+		this.planKey = planKey;
 	}
 	
 	
