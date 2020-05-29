@@ -188,7 +188,6 @@ public class PersonPlanSueModel {
 	Map<String,Map<String,Map<String,Double>>> fareLinkPlanIncidence = new ConcurrentHashMap<>();
 	
 	Map<String,List<String>> maasPackagePlanIncidence = new ConcurrentHashMap<>();//done
-	Map<String,Map<Id<TransitLink>,List<Id<TransitLink>>>>transferLinkToDirectLinkIncidence = new ConcurrentHashMap<>();
 	
 	//Save plan probability
 	
@@ -229,7 +228,7 @@ public class PersonPlanSueModel {
 			this.linkPlanIncidence.put(timeBeanId, new ConcurrentHashMap<>());
 			this.trLinkPlanIncidence.put(timeBeanId, new ConcurrentHashMap<>());
 			this.fareLinkPlanIncidence.put(timeBeanId, new ConcurrentHashMap<>());
-			this.transferLinkToDirectLinkIncidence.put(timeBeanId, new ConcurrentHashMap<>());
+
 			
 			this.linkGradient.put(timeBeanId, new ConcurrentHashMap<>());
 			this.trLinkGradient.put(timeBeanId, new ConcurrentHashMap<>());
@@ -386,11 +385,12 @@ public class PersonPlanSueModel {
 			//Add the MaaSPackage disutility
 			MaaSPackage maas = this.maasPakages.getMassPackages().get(plan.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName));
 			
-			if(!this.maasPackagePlanIncidence.containsKey(maas.getId())) {
-				this.maasPackagePlanIncidence.put(maas.getId(), new ArrayList<>());	
+			if(counter==1) {
+				if(!this.maasPackagePlanIncidence.containsKey(maas.getId())) {
+					this.maasPackagePlanIncidence.put(maas.getId(), new ArrayList<>());	
+				}
+				this.maasPackagePlanIncidence.get(maas.getId()).add(planKey);
 			}
-			
-			if(!this.maasPackagePlanIncidence.get(maas.getId()).contains(planKey))this.maasPackagePlanIncidence.get(maas.getId()).add(planKey);
 			
 			Map<String,Object> additionalInfo = new HashMap<>();
 			additionalInfo.put(MaaSUtil.CurrentSelectedMaaSPackageAttributeName, maas);
@@ -446,7 +446,7 @@ public class PersonPlanSueModel {
 				
 				if(counter == 1) {
 					s.getValue().forEach((link)->{
-						if(!this.linkPlanIncidence.get(s.getKey()).containsKey(link))this.linkPlanIncidence.get(s.getKey()).put(link, new HashMap<>());
+						if(!this.linkPlanIncidence.get(s.getKey()).containsKey(link))this.linkPlanIncidence.get(s.getKey()).put(link, new ConcurrentHashMap<>());
 						Map<String, Double> incidenceMap = this.linkPlanIncidence.get(s.getKey()).get(link);
 						incidenceMap.compute(plan.getKey(), (k,v)->(v==null)?1:v+1);
 					});
@@ -471,7 +471,7 @@ public class PersonPlanSueModel {
 							}
 						);
 				if(!this.trLinkPlanIncidence.get(s.getKey()).containsKey(trLink.getTrLinkId())) {
-					this.trLinkPlanIncidence.get(s.getKey()).put(trLink.getTrLinkId(), new HashMap<>());
+					this.trLinkPlanIncidence.get(s.getKey()).put(trLink.getTrLinkId(), new ConcurrentHashMap<>());
 				}
 				Map<String, Double> incidenceMap = this.trLinkPlanIncidence.get(s.getKey()).get(trLink.getTrLinkId());
 				if(counter == 1){
@@ -490,7 +490,7 @@ public class PersonPlanSueModel {
 				flowMap.keySet().forEach((fareLink)->fareLinkFlow.get(s.getKey()).compute(fareLink, (k,v)->(v==null)?flowMap.get(fareLink):v+flowMap.get(fareLink)));
 				if(counter == 1) {
 					s.getValue().forEach((fl)->{
-						if(!this.fareLinkPlanIncidence.get(s.getKey()).containsKey(fl.toString()))this.fareLinkPlanIncidence.get(s.getKey()).put(fl.toString(), new HashMap<>());
+						if(!this.fareLinkPlanIncidence.get(s.getKey()).containsKey(fl.toString()))this.fareLinkPlanIncidence.get(s.getKey()).put(fl.toString(), new ConcurrentHashMap<>());
 						Map<String, Double> incidenceMap = this.fareLinkPlanIncidence.get(s.getKey()).get(fl.toString());
 						incidenceMap.compute(plan.getKey(), (k,v)->(v==null)?1:v+1);
 					});
@@ -517,7 +517,7 @@ public class PersonPlanSueModel {
 		Map<String,Map<String,Double>> fareLinkFlow = new HashMap<>();
 		
 		population.getPersons().values().parallelStream().forEach((person)->{
-			if(PopulationUtils.getSubpopulation(person).equals(MaaSUtil.MaaSOperatorAgentSubPopulationName)) {
+			if(PopulationUtils.getSubpopulation(person)!=null && PopulationUtils.getSubpopulation(person).equals(MaaSUtil.MaaSOperatorAgentSubPopulationName)) {
 				return;
 			}
 			SUEModelOutput flow= this.singlePersonNL(person, params, anaParams,counter);
