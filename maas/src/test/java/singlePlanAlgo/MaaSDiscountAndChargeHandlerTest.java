@@ -24,7 +24,9 @@ import org.matsim.core.config.groups.PlanCalcScoreConfigGroup.ActivityParams;
 import org.matsim.core.config.groups.PlanCalcScoreConfigGroup.ScoringParameterSet;
 import org.matsim.core.config.groups.StrategyConfigGroup.StrategySettings;
 import org.matsim.core.controler.Controler;
+import org.matsim.core.controler.ControlerUtils;
 import org.matsim.core.controler.OutputDirectoryHierarchy;
+import org.matsim.core.controler.OutputDirectoryLogging;
 import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.core.utils.collections.Tuple;
 import org.matsim.lanes.Lane;
@@ -52,17 +54,19 @@ import optimizerAgent.MaaSUtil;
  */
 class MaaSDiscountAndChargeHandlerTest {
 
+
 	@Test
 	void test() {
 		// This will test the optimization agent insertion
-				LoggerUtils.setDisableVerbose(true);
 				Config config = RunUtils.provideConfig();
 				
+				OutputDirectoryLogging.catchLogEntries();
 				config.addModule(new MaaSConfigGroup());
 				
 				config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"test/packages_May2020.xml");
 				
 				config.plans().setInsistingOnUsingDeprecatedPersonAttributeFile(true);
+				config.controler().setOutputDirectory("toyScenarioLarge/output");
 				
 				//Add the MaaS package choice strategy
 				StrategySettings stratSets = new StrategySettings();
@@ -76,7 +80,7 @@ class MaaSDiscountAndChargeHandlerTest {
 				stratSets.setStrategyName(MaaSOperatorStrategy.class.getName());
 				stratSets.setWeight(1);
 				stratSets.setDisableAfter(200);
-				stratSets.setSubpopulation(MaaSOperator.type);
+				stratSets.setSubpopulation(MaaSUtil.MaaSOperatorAgentSubPopulationName);
 				config.strategy().addStrategySettings(stratSets);
 				
 				
@@ -158,7 +162,6 @@ class MaaSDiscountAndChargeHandlerTest {
 					e.printStackTrace();
 				}
 				Signals.configure(controler);
-				
 				controler.getConfig().controler().setOverwriteFileSetting(OutputDirectoryHierarchy.OverwriteFileSetting.overwriteExistingFiles);
 				controler.run();
 		fail("Not yet implemented");
