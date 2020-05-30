@@ -25,7 +25,7 @@ import org.xml.sax.SAXException;
 import dynamicTransitRouter.DynamicRoutingModule;
 import dynamicTransitRouter.TransitRouterFareDynamicImpl;
 import dynamicTransitRouter.fareCalculators.ZonalFareXMLParserV2;
-import optimizerAgent.MetamodelModule;
+import optimizerAgent.MaaSOperatorOptimizationModule;
 
 public class NormRun {
 public static void main(String[] args) {
@@ -132,7 +132,7 @@ public static void main(String[] args) {
 	scenario.addScenarioElement(SignalsData.ELEMENT_NAME, new SignalsDataLoader(config).loadSignalsData());	
 	Controler controler = new Controler(scenario);
 	controler.addOverridingModule(new MaaSDataLoader());
-	controler.addOverridingModule(new MetamodelModule());
+	controler.addOverridingModule(new MaaSOperatorOptimizationModule());
 	ZonalFareXMLParserV2 busFareGetter = new ZonalFareXMLParserV2(scenario.getTransitSchedule());
 	SAXParser saxParser;
 	

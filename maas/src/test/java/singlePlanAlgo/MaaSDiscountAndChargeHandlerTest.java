@@ -43,7 +43,6 @@ import optimizerAgent.MaaSOperator;
 import optimizerAgent.MaaSOperatorOptimizationModule;
 import optimizerAgent.MaaSOperatorStrategy;
 import optimizerAgent.MaaSUtil;
-import optimizerAgent.MetamodelModule;
 
 /**
  * This class will basically test the connection between different components for MaaS implementation in MATSim.
@@ -135,7 +134,6 @@ class MaaSDiscountAndChargeHandlerTest {
 				scenario.addScenarioElement(SignalsData.ELEMENT_NAME, new SignalsDataLoader(config).loadSignalsData());	
 				Controler controler = new Controler(scenario);
 				controler.addOverridingModule(new MaaSDataLoader());
-				controler.addOverridingModule(new MetamodelModule());
 				controler.addOverridingModule(new MaaSOperatorOptimizationModule());
 				ZonalFareXMLParserV2 busFareGetter = new ZonalFareXMLParserV2(scenario.getTransitSchedule());
 				SAXParser saxParser;

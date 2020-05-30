@@ -19,7 +19,6 @@ import com.google.inject.name.Names;
 
 import MaaSPackages.MaaSPackages;
 import MaaSPackages.MaaSPackagesReader;
-import optimizerAgent.MaaSOperatorControlerListener;
 import optimizerAgent.MaaSUtil;
 
 public class MaaSDataLoader extends AbstractModule{
