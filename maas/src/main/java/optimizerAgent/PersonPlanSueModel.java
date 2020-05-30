@@ -218,13 +218,13 @@ public class PersonPlanSueModel {
 	
 
 	public Measurements performAssignment(Population population, LinkedHashMap<String,Double> params, Measurements originalMeasurements) {
-		MaaSUtil.updateMaaSVaribles(this.maasPakages, params);
+		MaaSUtil.updateMaaSVariables(this.maasPakages, params);
 		Measurements m = this.performAssignment(population, params,this.AnalyticalModelInternalParams, originalMeasurements);
 		return m;
 	}
 	
 	public SUEModelOutput performAssignment(Population population, LinkedHashMap<String,Double> params) {
-		MaaSUtil.updateMaaSVaribles(this.maasPakages, params);
+		MaaSUtil.updateMaaSVariables(this.maasPakages, params);
 		SUEModelOutput flow = this.performAssignment(population, params,this.AnalyticalModelInternalParams);
 		return flow;
 	}

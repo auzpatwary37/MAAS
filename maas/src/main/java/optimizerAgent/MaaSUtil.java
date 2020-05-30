@@ -113,7 +113,7 @@ public final class MaaSUtil {
 		return key.contains(MaaSUtil.MaaSOperatorPacakgePriceVariableSubscript);
 	}
 	
-	public static void updateMaaSVaribles(MaaSPackages packages, HashMap<String,Double> variables) {
+	public static void updateMaaSVariables(MaaSPackages packages, Map<String,Double> variables) {
 		for(Entry<String, Double> var:variables.entrySet()) {
 			if(MaaSUtil.ifFareLinkVariableDetails(var.getKey())) {//variable is fareLink variable.
 				String pacakge = MaaSUtil.retrievePackageId(var.getKey());

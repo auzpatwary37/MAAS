@@ -3,6 +3,7 @@ package optimizer;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.matsim.api.core.v01.population.Plan;
 import org.matsim.core.utils.collections.Tuple;
 
 import optimizerAgent.VariableDetails;
@@ -19,6 +20,14 @@ public class Adam implements Optimizer{
 	private Map<String,Double> v = new HashMap<>();
 	private int counter;
 	private final String id;
+	
+	public Adam(Plan maasAgentPlan) {
+		this.id = maasAgentPlan.getPerson().getId().toString();
+		maasAgentPlan.getAttributes().getAsMap().entrySet().forEach(a->{
+			if(a.getValue() instanceof VariableDetails) this.variables.put(a.getKey(), (VariableDetails)a.getValue());
+		});
+		this.initialize();
+	}
 
 	public Adam(String id, Map<String,VariableDetails> variables) {
 		this.variables = variables;
@@ -61,6 +70,17 @@ public class Adam implements Optimizer{
 		
 		return this.variables;
 	}
+
+	@Override
+	public String getId() {
+		return this.id;
+	}
+
+	@Override
+	public Map<String, VariableDetails> getVarables() {
+		return this.variables;
+	}
+	
 	
 	
 }

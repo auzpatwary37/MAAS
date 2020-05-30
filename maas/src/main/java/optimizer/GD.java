@@ -2,6 +2,7 @@ package optimizer;
 
 import java.util.Map;
 
+import org.matsim.api.core.v01.population.Plan;
 import org.matsim.core.utils.collections.Tuple;
 
 import optimizerAgent.VariableDetails;
@@ -24,6 +25,13 @@ public class GD implements Optimizer{
 		this.id = id;
 	}
 	
+	public GD(Plan maasAgentPlan) {
+		this.id = maasAgentPlan.getPerson().getId().toString();
+		maasAgentPlan.getAttributes().getAsMap().entrySet().forEach(a->{
+			if(a.getValue() instanceof VariableDetails) this.variables.put(a.getKey(), (VariableDetails)a.getValue());
+		});
+	}
+	
 	@Override
 	public Map<String, VariableDetails> takeStep(Map<String, Double> gradient) {
 		counter = counter+1;
@@ -38,5 +46,17 @@ public class GD implements Optimizer{
 		
 		return this.variables;
 	}
+
+	@Override
+	public String getId() {
+		return this.id;
+	}
+
+	@Override
+	public Map<String, VariableDetails> getVarables() {
+		return this.variables;
+	}
+	
+	
 
 }
