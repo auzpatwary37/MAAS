@@ -66,6 +66,8 @@ public class SimpleTranslatedPlan {
 	// this is the list of all the car routes
 	private Map<String, Map<Id<AnalyticalModelRoute>,AnalyticalModelRoute>> routes = new ConcurrentHashMap<>(); 
 	
+	private String maasPacakgeId =null;
+	
 	
 	private List<Activity> activities;
 	
@@ -261,6 +263,15 @@ public class SimpleTranslatedPlan {
 	public void setPlanKey(String planKey) {
 		this.planKey = planKey;
 	}
+
+	public String getMaasPacakgeId() {
+		return maasPacakgeId;
+	}
+
+	public void setMaasPacakgeId(String maasPacakgeId) {
+		this.maasPacakgeId = maasPacakgeId;
+	}
+	
 	
 	
 	

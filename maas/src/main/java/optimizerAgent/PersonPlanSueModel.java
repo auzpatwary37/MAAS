@@ -190,7 +190,8 @@ public class PersonPlanSueModel {
 	
 	Map<String,Map<Id<Link>,Map<String,Double>>> linkPlanIncidence = new ConcurrentHashMap<>();//done
 	Map<String,Map<Id<TransitLink>,Map<String,Double>>> trLinkPlanIncidence = new ConcurrentHashMap<>();//done
-	Map<String,Map<String,Map<String,Double>>> fareLinkPlanIncidence = new ConcurrentHashMap<>();//done
+	//timeId-maasPacakge-fareLinkid-planid-numofUsage
+	Map<String,Map<String,Map<String,Map<String,Double>>>> fareLinkPlanIncidence = new ConcurrentHashMap<>();//done
 	
 	//should be packageId-list<planid>
 	Map<String,List<String>> maasPackagePlanIncidence = new ConcurrentHashMap<>();//done
@@ -205,7 +206,8 @@ public class PersonPlanSueModel {
 	//Gradient Variable
 	Map<String,Map<Id<Link>,Map<String,Double>>> linkGradient = new ConcurrentHashMap<>();
 	Map<String,Map<Id<TransitLink>,Map<String,Double>>> trLinkGradient = new ConcurrentHashMap<>();
-	Map<String,Map<String,Map<String,Double>>> fareLinkGradient = new ConcurrentHashMap<>();
+	//timeId-maasPacakge-fareLinkid-varkey-gradient
+	Map<String,Map<String,Map<String,Map<String,Double>>>> fareLinkGradient = new ConcurrentHashMap<>();
 	
 	Map<String,Map<Id<Link>,Map<String,Double>>> linkTravelTimeGradient = new ConcurrentHashMap<>();
 	Map<String,Map<Id<TransitLink>,Map<String,Double>>> trLinkTravelTimeGradient = new ConcurrentHashMap<>();
@@ -216,11 +218,13 @@ public class PersonPlanSueModel {
 	
 
 	public Measurements performAssignment(Population population, LinkedHashMap<String,Double> params, Measurements originalMeasurements) {
+		MaaSUtil.updateMaaSVaribles(this.maasPakages, params);
 		Measurements m = this.performAssignment(population, params,this.AnalyticalModelInternalParams, originalMeasurements);
 		return m;
 	}
 	
 	public SUEModelOutput performAssignment(Population population, LinkedHashMap<String,Double> params) {
+		MaaSUtil.updateMaaSVaribles(this.maasPakages, params);
 		SUEModelOutput flow = this.performAssignment(population, params,this.AnalyticalModelInternalParams);
 		return flow;
 	}
@@ -372,7 +376,7 @@ public class PersonPlanSueModel {
 		Map<String, Double> planProb = new HashMap<>();
 		Map<String,Map<Id<Link>,Double>> linkFlow = new HashMap<>();
 		Map<String,Map<Id<TransitLink>,Double>> transitLinkFlow = new HashMap<>();
-		Map<String,Map<String,Double>> fareLinkFlow = new HashMap<>();
+		Map<String,Map<String,Map<String,Double>>> fareLinkFlow = new HashMap<>();
 		Map<String, SimpleTranslatedPlan> trPlans = new HashMap<>();
 		
 		//This should handle for the basic params per subpopulation
@@ -385,7 +389,7 @@ public class PersonPlanSueModel {
 			SimpleTranslatedPlan trPlan = (SimpleTranslatedPlan) plan.getAttributes().getAttribute(SimpleTranslatedPlan.SimplePlanAttributeName);//extract the translated plan first
 			String planKey = trPlan.getPlanKey();
 			
-			if(planKey == null) {
+			if(counter==1) {
 				planKey = person.getId().toString()+"_^_"+planNo;
 				trPlan.setPlanKey(planKey);
 				planNo++;
@@ -397,10 +401,11 @@ public class PersonPlanSueModel {
 			MaaSPackage maas = this.maasPakages.getMassPackages().get(plan.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName));
 			
 			if(counter==1) {
-				if(!this.maasPackagePlanIncidence.containsKey(maas.getId())) {
-					this.maasPackagePlanIncidence.put(maas.getId(), new ArrayList<>());	
+				if(maas!=null)trPlan.setMaasPacakgeId(maas.getId());
+				if(!this.maasPackagePlanIncidence.containsKey(trPlan.getMaasPacakgeId())) {
+					this.maasPackagePlanIncidence.put(trPlan.getMaasPacakgeId(), new ArrayList<>());	
 				}
-				this.maasPackagePlanIncidence.get(maas.getId()).add(planKey);
+				this.maasPackagePlanIncidence.get(trPlan.getMaasPacakgeId()).add(planKey);
 			}
 			
 			Map<String,Object> additionalInfo = new HashMap<>();
@@ -497,12 +502,18 @@ public class PersonPlanSueModel {
 			
 			for(Entry<String, List<FareLink>> s: trPlan.getFareLinkUsage().entrySet()) {				
 				if(!fareLinkFlow.containsKey(s.getKey()))fareLinkFlow.put(s.getKey(), new HashMap<>());
+				String packageId = trPlan.getMaasPacakgeId();
+				if(!fareLinkFlow.get(s.getKey()).containsKey(packageId)) {
+					fareLinkFlow.get(s.getKey()).put(packageId, new HashMap<>());
+				}
+				if(!this.fareLinkPlanIncidence.get(s.getKey()).containsKey(packageId))this.fareLinkPlanIncidence.get(s.getKey()).put(packageId, new ConcurrentHashMap<>());
+				
 				Map<String,Double>flowMap = s.getValue().stream().collect(Collectors.toMap(ss->ss.toString(), ss->planProb.get(plan.getKey()),(v1,v2)->(v1+v2)));
-				flowMap.keySet().forEach((fareLink)->fareLinkFlow.get(s.getKey()).compute(fareLink, (k,v)->(v==null)?flowMap.get(fareLink):v+flowMap.get(fareLink)));
+				flowMap.keySet().forEach((fareLink)->fareLinkFlow.get(s.getKey()).get(packageId).compute(fareLink, (k,v)->(v==null)?flowMap.get(fareLink):v+flowMap.get(fareLink)));
 				if(counter == 1) {
 					s.getValue().forEach((fl)->{
-						if(!this.fareLinkPlanIncidence.get(s.getKey()).containsKey(fl.toString()))this.fareLinkPlanIncidence.get(s.getKey()).put(fl.toString(), new ConcurrentHashMap<>());
-						Map<String, Double> incidenceMap = this.fareLinkPlanIncidence.get(s.getKey()).get(fl.toString());
+						if(!this.fareLinkPlanIncidence.get(s.getKey()).get(packageId).containsKey(fl.toString()))this.fareLinkPlanIncidence.get(s.getKey()).put(fl.toString(), new ConcurrentHashMap<>());
+						Map<String, Double> incidenceMap = this.fareLinkPlanIncidence.get(s.getKey()).get(packageId).get(fl.toString());
 						incidenceMap.compute(plan.getKey(), (k,v)->(v==null)?1:v+1);
 					});
 				}
@@ -513,7 +524,9 @@ public class PersonPlanSueModel {
 		if(linkFlow==null||transitLinkFlow==null||fareLinkFlow==null) {
 			System.out.println();
 		}
-		return new SUEModelOutput(linkFlow,transitLinkFlow, null, null, fareLinkFlow);
+		SUEModelOutput out = new SUEModelOutput(linkFlow,transitLinkFlow, null, null, null);
+		out.setMaaSSpecificFareLinkFlow(fareLinkFlow);
+		return out;
 	}
 	
 	//TODO: still do not take params in sub-population. We have to incorporate that 
@@ -521,11 +534,11 @@ public class PersonPlanSueModel {
 		
 		List<Map<String,Map<Id<Link>, Double>>> linkVolumes=Collections.synchronizedList(new ArrayList<>());
 		List<Map<String,Map<Id<TransitLink>, Double>>> linkTransitVolumes=Collections.synchronizedList(new ArrayList<>());
-		List<Map<String,Map<String,Double>>> fareLinkFlows=Collections.synchronizedList(new ArrayList<>());
+		List<Map<String,Map<String,Map<String,Double>>>> fareLinkFlows=Collections.synchronizedList(new ArrayList<>());
 		
 		Map<String,Map<Id<Link>,Double>> linkFlow = new HashMap<>();
 		Map<String,Map<Id<TransitLink>,Double>> transitLinkFlow = new HashMap<>();
-		Map<String,Map<String,Double>> fareLinkFlow = new HashMap<>();
+		Map<String,Map<String,Map<String,Double>>> fareLinkFlow = new HashMap<>();
 		
 		population.getPersons().values().parallelStream().forEach((person)->{
 			if(PopulationUtils.getSubpopulation(person)!=null && PopulationUtils.getSubpopulation(person).equals(MaaSUtil.MaaSOperatorAgentSubPopulationName)) {
@@ -534,7 +547,7 @@ public class PersonPlanSueModel {
 			SUEModelOutput flow= this.singlePersonNL(person, params, anaParams,counter);
 			linkVolumes.add(flow.getLinkVolume());
 			linkTransitVolumes.add(flow.getLinkTransitVolume());
-			fareLinkFlows.add(flow.getFareLinkVolume());
+			fareLinkFlows.add(flow.getMaaSSpecificFareLinkFlow());
 		});
 		
 		linkVolumes.stream().forEach((linkFlowMap)->{
@@ -559,15 +572,22 @@ public class PersonPlanSueModel {
 		
 		fareLinkFlows.stream().forEach((linkFlowMap)->{
 			linkFlowMap.entrySet().stream().forEach((timeLinkFlowMap)->{
-				if(!fareLinkFlow.containsKey(timeLinkFlowMap.getKey())) {
-					fareLinkFlow.put(timeLinkFlowMap.getKey(), timeLinkFlowMap.getValue());
-				}else {
-					timeLinkFlowMap.getValue().entrySet().stream().forEach((map)->fareLinkFlow.get(timeLinkFlowMap.getKey()).compute(map.getKey(), (k,v)->(v==null)?map.getValue():v+map.getValue()));
-				}
+				if(!fareLinkFlow.containsKey(timeLinkFlowMap.getKey()))fareLinkFlow.put(timeLinkFlowMap.getKey(), new HashMap<>());
+				timeLinkFlowMap.getValue().entrySet().stream().forEach(maasLinkFlowMap->{
+				//	if(!fareLinkFlow.get(timeLinkFlowMap.getKey()).containsKey(maasLinkFlowMap.getKey()))fareLinkFlow.get(timeLinkFlowMap.getKey()).put(maasLinkFlowMap.getKey(), new HashMap<>());
+					if(!fareLinkFlow.get(timeLinkFlowMap.getKey()).containsKey(maasLinkFlowMap.getKey())) {
+						fareLinkFlow.get(timeLinkFlowMap.getKey()).put(maasLinkFlowMap.getKey(),maasLinkFlowMap.getValue());
+					}else {
+						maasLinkFlowMap.getValue().entrySet().stream().forEach((map)->fareLinkFlow.get(timeLinkFlowMap.getKey()).get(maasLinkFlowMap.getKey()).compute(map.getKey(), (k,v)->(v==null)?map.getValue():v+map.getValue()));
+					}
+				});
 			});
 		});
 		
-		return new SUEModelOutput(linkFlow,transitLinkFlow, null, null, fareLinkFlow);
+		SUEModelOutput out = new SUEModelOutput(linkFlow,transitLinkFlow, null, null, null);
+		out.setMaaSSpecificFareLinkFlow(fareLinkFlow);
+		
+		return out;
 	}
 	
 	/**
@@ -676,7 +696,7 @@ public class PersonPlanSueModel {
 				break;
 			}
 		}
-		
+		flow.setMaaSPackageUsage(this.calculateMaaSPackageUsage());
 		return flow;
 	}
 	
@@ -803,7 +823,13 @@ public class PersonPlanSueModel {
 			this.linkTravelTimeGradient.get(timeId).putAll(this.linkPlanIncidence.get(timeId).keySet().stream().collect(Collectors.toMap(kk->kk, kk->new HashMap<>(zeroGrad))));
 			this.trLinkGradient.get(timeId).putAll(this.trLinkPlanIncidence.get(timeId).keySet().stream().collect(Collectors.toMap(kk->kk, kk->new HashMap<>(zeroGrad))));
 			this.trLinkTravelTimeGradient.get(timeId).putAll(this.trLinkPlanIncidence.get(timeId).keySet().stream().collect(Collectors.toMap(kk->kk, kk->new HashMap<>(zeroGrad))));
-			this.fareLinkGradient.get(timeId).putAll(this.fareLinkPlanIncidence.get(timeId).keySet().stream().collect(Collectors.toMap(kk->kk, kk->new HashMap<>(zeroGrad))));
+			for(String packageId:this.maasPakages.getMassPackages().keySet()) {
+				this.fareLinkGradient.get(timeId).put(packageId, new HashMap<>());
+				this.fareLinkGradient.get(timeId).get(packageId).putAll(this.fareLinkPlanIncidence.get(timeId).get(packageId).keySet().stream().collect(Collectors.toMap(kk->kk, kk->new HashMap<>(zeroGrad))));
+			}
+			this.fareLinkGradient.get(timeId).put(null, new HashMap<>());
+			this.fareLinkGradient.get(timeId).get(null).putAll(this.fareLinkPlanIncidence.get(timeId).get(null).keySet().stream().collect(Collectors.toMap(kk->kk, kk->new HashMap<>(zeroGrad))));
+			
 		}
 		this.planProbabilityGradient.putAll(this.planProbability.keySet().stream().collect(Collectors.toMap(kk->kk, kk->new HashMap<>(zeroGrad))));
 		this.pacakgeUserGradient.putAll(this.maasPakages.getMassPackages().keySet().stream().collect(Collectors.toMap(kk->kk, kk->new HashMap<>(zeroGrad))));
@@ -954,16 +980,18 @@ public class PersonPlanSueModel {
 			});
 		}
 		
-		for(Entry<String, Map<String, Map<String, Double>>> timeMap:this.fareLinkPlanIncidence.entrySet()) {
-			timeMap.getValue().entrySet().parallelStream().forEach(linkId->{
-				for(String var:this.gradientKeys) {
-					double grad = 0;
-					for(Entry<String, Double> planInc:linkId.getValue().entrySet()) {
-						grad+=this.planProbabilityGradient.get(planInc.getKey()).get(var)*planInc.getValue();
+		for(Entry<String, Map<String, Map<String, Map<String, Double>>>> timeMap:this.fareLinkPlanIncidence.entrySet()) {
+			for(Entry<String, Map<String, Map<String, Double>>> maasMap:timeMap.getValue().entrySet()) {
+				maasMap.getValue().entrySet().parallelStream().forEach(linkId->{
+					for(String var:this.gradientKeys) {
+						double grad = 0;
+						for(Entry<String, Double> planInc:linkId.getValue().entrySet()) {
+							grad+=this.planProbabilityGradient.get(planInc.getKey()).get(var)*planInc.getValue();
+						}
+						this.fareLinkGradient.get(timeMap.getKey()).get(maasMap.getKey()).get(linkId.getKey()).put(var, grad);
 					}
-					this.fareLinkGradient.get(timeMap.getKey()).get(linkId.getKey()).put(var, grad);
-				}
-			});
+				});
+			}
 		}
 		
 		for(Entry<String, List<String>> packageIncidence:this.maasPackagePlanIncidence.entrySet()) {
@@ -976,6 +1004,16 @@ public class PersonPlanSueModel {
 			}
 		}
 		
+	}
+	
+	private Map<String,Double> calculateMaaSPackageUsage() {
+		Map<String,Double>packageUsage = new HashMap<>();
+		for(Entry<String, List<String>> packageDetails:this.maasPackagePlanIncidence.entrySet()) {
+			double volume = 0;
+			for(String plan:packageDetails.getValue())volume+=this.planProbability.get(plan);
+			packageUsage.put(packageDetails.getKey(), volume);
+		}
+		return packageUsage;
 	}
 	
 	
@@ -993,29 +1031,37 @@ public class PersonPlanSueModel {
 	public LinkedHashMap<String, Tuple<Double, Double>> getAnalyticalModelParamsLimit() {
 		return AnalyticalModelParamsLimit;
 	}
+
+	public Map<String, Map<Id<Link>, Map<String, Double>>> getLinkGradient() {
+		return linkGradient;
+	}
+
+	public Map<String, Map<Id<TransitLink>, Map<String, Double>>> getTrLinkGradient() {
+		return trLinkGradient;
+	}
+
+	public Map<String, Map<Id<Link>, Map<String, Double>>> getLinkTravelTimeGradient() {
+		return linkTravelTimeGradient;
+	}
+
+	public Map<String, Map<Id<TransitLink>, Map<String, Double>>> getTrLinkTravelTimeGradient() {
+		return trLinkTravelTimeGradient;
+	}
+
+	public Map<String, Map<String, Double>> getPlanProbabilityGradient() {
+		return planProbabilityGradient;
+	}
+
+	public Map<String, Map<String, Double>> getPacakgeUserGradient() {
+		return pacakgeUserGradient;
+	}
+
+	public Map<String, Map<String, Map<String, Map<String, Double>>>> getFareLinkGradient() {
+		return fareLinkGradient;
+	}
 	
 	
 }
 
-/**
- * This class is just an output class for assignment method
- * This will contain basically two maps
- * link flow map TimBean->(LinkId->linkFlow)
- * transit link flow map TimBean->(TransitLinkId->linkFlow)
- * @author ashraf
- *
- */
-class OutputFlow{
-	final Map<String,Map<Id<Link>,Double>> linkFlow;
-	final Map<String,Map<Id<TransitLink>,Double>> transitLinkFlow;
-	
-	public OutputFlow(Map<String,Map<Id<Link>,Double>> linkFlow, Map<String,Map<Id<TransitLink>,Double>> transitLinkFlow) {
-		this.linkFlow = linkFlow;
-		this.transitLinkFlow = transitLinkFlow;
-	}
-	
-	
-	
-	
-}
+
 

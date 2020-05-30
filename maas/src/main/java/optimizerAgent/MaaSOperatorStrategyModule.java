@@ -19,6 +19,7 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 	@Inject
 	private @Named("MaaSPackages") MaaSPackages packages;
 	
+	
 	private double distanceScale = 1; 
 	
 	private double updateStepSizeAfterIteration = 5;// Make this a parameter in the optimization module

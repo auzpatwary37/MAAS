@@ -112,4 +112,22 @@ public final class MaaSUtil {
 	public static boolean ifMaaSPackageCostVariableDetails(String key) {
 		return key.contains(MaaSUtil.MaaSOperatorPacakgePriceVariableSubscript);
 	}
+	
+	public static void updateMaaSVaribles(MaaSPackages packages, HashMap<String,Double> variables) {
+		for(Entry<String, Double> var:variables.entrySet()) {
+			if(MaaSUtil.ifFareLinkVariableDetails(var.getKey())) {//variable is fareLink variable.
+				String pacakge = MaaSUtil.retrievePackageId(var.getKey());
+				String fareLink = MaaSUtil.retrieveFareLink(var.getKey());
+				packages.getMassPackages().get(pacakge).setDiscountForFareLink(new FareLink(fareLink), var.getValue());
+				
+			}else if(MaaSUtil.ifMaaSPackageCostVariableDetails(var.getKey())) {//variable is package cost variable
+				String pacakge = MaaSUtil.retrievePackageId(var.getKey());
+				packages.getMassPackages().get(pacakge).setPackageCost(var.getValue());
+				
+			}else{//variable is not related to maas
+				continue;
+			}
+		}
+	}
+	
 }
