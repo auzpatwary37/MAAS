@@ -38,7 +38,7 @@ public class MaaSOperatorOptimizationModule extends AbstractModule{
 		
 		//Bind any other controller listener needed
 		
-		this.addControlerListenerBinding().toInstance(new PlanTranslationControlerListener());
+		this.addControlerListenerBinding().to(PlanTranslationControlerListener.class).asEagerSingleton();
 		
 		//Bind Attribute Handlers
 		this.addAttributeConverterBinding(VariableDetails.class).toInstance(VariableDetails.getAttributeConverter());

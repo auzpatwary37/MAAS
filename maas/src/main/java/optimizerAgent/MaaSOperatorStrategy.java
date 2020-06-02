@@ -22,22 +22,14 @@ import dynamicTransitRouter.fareCalculators.FareCalculator;
 
 public class MaaSOperatorStrategy implements PlanStrategy{
 	
+	
+	
+
+	
 	private final PlanStrategy planStrategyDelegate;
 	
-	
-	@Inject
-	private @Named(MaaSUtil.MaaSPackagesAttributeName) MaaSPackages packages;
-	
-	@Inject 
-	private Scenario scenario;
-	
-	@Inject 
-	private timeBeansWrapper timeBeans;
-	@Inject
-	private Map<String,FareCalculator>fareCalculators;
-	
 	@Inject // The constructor must be annotated so that the framework knows which one to use.
-	MaaSOperatorStrategy(Config config,Scenario scenario, EventsManager eventsManager) {
+	MaaSOperatorStrategy(Config config,Scenario scenario, @Named(MaaSUtil.MaaSPackagesAttributeName) MaaSPackages packages, timeBeansWrapper timeBeans, Map<String,FareCalculator>fareCalculators, EventsManager eventsManager) {
 		// A PlanStrategy is something that can be applied to a Person (not a Plan).
         // It first selects one of the plans:
         //MyPlanSelector planSelector = new MyPlanSelector();
@@ -51,10 +43,10 @@ public class MaaSOperatorStrategy implements PlanStrategy{
 
         // Otherwise, to do something with that plan, one needs to add modules into the strategy.  If there is at least
         // one module added here, then the plan is copied and then modified.
-		this.scenario = scenario;
+
 		
 		PlanStrategyImpl.Builder builder = new PlanStrategyImpl.Builder(new BestPlanSelector());
-        builder.addStrategyModule(new MaaSOperatorStrategyModule(packages, this.scenario, timeBeans, fareCalculators));
+        builder.addStrategyModule(new MaaSOperatorStrategyModule(packages, scenario, timeBeans, fareCalculators));
 
         // these modules may, at the same time, be events listeners (so that they can collect information):
         //eventsManager.addHandler(mod);

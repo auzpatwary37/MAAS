@@ -115,7 +115,7 @@ public class IntelligentOperatorDecisionEngine {
 							try {//The try catch block is necessary as we created the incidence matrix based on usage rather than exhaustive enumeration. 
 								//So, there can be null values for any specific keys maasPackage and fareLink and evem for timeBeans in case of flow
 								timeMaasSpecificFareLinkGrad = fareGrad.getValue().get(maasPackage.getId()).get(fl).get(key);//The fare link can be not used at a timeBean by anyone belonging to that specific maas pacakge  
-								nullPackageGrad = fareGrad.getValue().get(null).get(fl).get(key);
+								nullPackageGrad = fareGrad.getValue().get(MaaSUtil.nullMaaSPacakgeKeyName).get(fl).get(key);
 							}catch(Exception e) {//This means either nobody holding that maas package travelled in that time step, or the former
 								if(fareGrad.getValue().get(maasPackage.getId())==null)System.out.println("MaaS Package holder did not travel on any fare link in that timeBean");
 								else if(fareGrad.getValue().get(maasPackage.getId()).get(fl)==null)System.out.println("The fare link was not used by any maas package holder in that time step");
@@ -150,7 +150,7 @@ public class IntelligentOperatorDecisionEngine {
 						try {//The try catch block is necessary as we created the incidence matrix based on usage rather than exhaustive enumeration. 
 							//So, there can be null values for any specific keys maasPackage and fareLink and evem for timeBeans in case of flow
 							flow = timefareLinkFlow.getValue().get(maasPackage.getId()).get(fl);//get flow in that fare link at a time step with maas package 
-							nullPackageFlow = timefareLinkFlow.getValue().get(null).get(fl);
+							nullPackageFlow = timefareLinkFlow.getValue().get(MaaSUtil.nullMaaSPacakgeKeyName).get(fl);
 						}catch(Exception e) {//This means either nobody holding that maas package travelled in that time step, or the former
 							if(timefareLinkFlow.getValue().get(maasPackage.getId())==null)System.out.println("MaaS Package holder did not travel on any fare link in that timeBean");
 							else if(timefareLinkFlow.getValue().get(maasPackage.getId()).get(fl)==null)System.out.println("The fare link was not used by any maas package holder in that time bean");

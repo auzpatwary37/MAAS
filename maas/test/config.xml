@@ -13374,7 +13374,7 @@
 			<param name="executionPath" value="null" />
 			<param name="strategyName" value="optimizerAgent.MaaSOperatorStrategy" />
 			<param name="subpopulation" value="MaaSOperator" />
-			<param name="weight" value="1.0" />
+			<param name="weight" value="0.5" />
 		</parameterset>
 	</module>
 	<module name="subtourModeChoice" >

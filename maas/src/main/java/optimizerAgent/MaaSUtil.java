@@ -34,6 +34,7 @@ public final class MaaSUtil {
 	public static final String MaaSOperatorFareLinkDiscountVariableSubscript = "_discount";//fareLink.toString() + MaaSUtil.MaaSOperatorPacakgePriceVariableSubscript
 	public static final String operatorRevenueName = "revenue";
 	public static final String dummyActivityTypeForMaasOperator = "maasOperatorAct";
+	public static final String nullMaaSPacakgeKeyName = "noMass";
 
 	public static Activity createMaaSOperator(MaaSPackages packages, Population population, String popOutLoc, 
 			Tuple<Double,Double> boundsMultiplier) {

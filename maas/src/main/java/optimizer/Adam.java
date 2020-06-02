@@ -2,6 +2,7 @@ package optimizer;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.matsim.api.core.v01.population.Plan;
 import org.matsim.core.utils.collections.Tuple;
@@ -15,7 +16,7 @@ public class Adam implements Optimizer{
 	private double beta1 = .9;
 	private double beta2 = 0.999;
 	private double eta = 10e-8;
-	private Map<String,VariableDetails> variables;
+	private Map<String,VariableDetails> variables = new HashMap<>();
 	private Map<String,Double> m = new HashMap<>();
 	private Map<String,Double> v = new HashMap<>();
 	private int counter;
@@ -23,9 +24,9 @@ public class Adam implements Optimizer{
 	
 	public Adam(Plan maasAgentPlan) {
 		this.id = maasAgentPlan.getPerson().getId().toString();
-		maasAgentPlan.getAttributes().getAsMap().entrySet().forEach(a->{
+		for(Entry<String, Object> a:maasAgentPlan.getAttributes().getAsMap().entrySet()){
 			if(a.getValue() instanceof VariableDetails) this.variables.put(a.getKey(), (VariableDetails)a.getValue());
-		});
+		}
 		this.initialize();
 	}
 

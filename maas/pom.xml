@@ -83,31 +83,38 @@
   
 
 <dependency>
-    <groupId>org.matsim.contrib</groupId>
-    <artifactId>roadpricing</artifactId>
-    <version>12.0-2019w45-SBB</version>
-</dependency>
-  
-
-<dependency>
-    <groupId>org.matsim.contrib</groupId>
-    <artifactId>signals</artifactId>
-    <version>12.0-2019w45-SBB</version>
-</dependency>
-
-
-<dependency>
-    <groupId>org.matsim.contrib</groupId>
-    <artifactId>emissions</artifactId>
-    <version>12.0-2019w45-SBB</version>
-</dependency>
-
-<!-- https://mvnrepository.com/artifact/org.matsim.contrib/common -->
-<dependency>
-    <groupId>org.matsim.contrib</groupId>
-    <artifactId>common</artifactId>
-    <version>12.0-2019w45-SBB</version>
-</dependency>
+		    <groupId>org.matsim.contrib</groupId>
+		    <artifactId>roadpricing</artifactId>
+		    <version>12.0-SNAPSHOT</version>
+		    <exclusions>
+		    	<exclusion>
+		    		<groupId>org.matsim</groupId>
+		    		<artifactId>matsim</artifactId>
+		    	</exclusion>
+		    </exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.matsim.contrib</groupId>
+			<artifactId>signals</artifactId>
+ 			<version>12.0-SNAPSHOT</version>
+ 			<exclusions>
+ 				<exclusion>
+ 					<groupId>org.matsim</groupId>
+ 					<artifactId>matsim</artifactId>
+ 				</exclusion>
+ 			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.matsim.contrib</groupId>
+			<artifactId>emissions</artifactId>
+			<version>12.0-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.matsim</groupId>
+					<artifactId>matsim</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 
 
 
