@@ -29,6 +29,7 @@ public class IntelligentOperatorDecisionEngine {
 	
 	@Inject
 	private Scenario scenario;
+	
 	@Inject
 	private timeBeansWrapper TimeBeans;
 	
@@ -50,6 +51,14 @@ public class IntelligentOperatorDecisionEngine {
 	 */
 	public void addNewVariable(String key, VariableDetails vd) {
 		this.variables.put(key, vd);
+	}
+	
+	
+	public IntelligentOperatorDecisionEngine(Scenario scenario, MaaSPackages packages, timeBeansWrapper timeBeans, Map<String, FareCalculator> fareCalculators) {
+		this.scenario = scenario;
+		this.TimeBeans = timeBeans;
+		this.packages = packages;
+		this.fareCalculators = fareCalculators;
 	}
 	
 	public void setupAndRunMetaModel() {

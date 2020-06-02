@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Random;
 
+import org.jboss.logging.Logger;
 import org.matsim.api.core.v01.events.ActivityEndEvent;
 import org.matsim.api.core.v01.events.handler.ActivityEndEventHandler;
 import org.matsim.api.core.v01.population.Plan;
@@ -22,7 +23,8 @@ public class MaaSStrategyModule implements   ActivityEndEventHandler,PlanStrateg
 	
 	public LinkedHashMap<String,MaaSPackage> maasPackages= new LinkedHashMap<>();
 	private Random rnd;
-		
+	private static Logger logger = Logger.getLogger(MaaSStrategyModule.class);	
+	
 	public MaaSStrategyModule(MaaSPackages packages){
 		this.maasPackages = new LinkedHashMap<>(packages.getMassPackages());
 		rnd = new Random();
@@ -37,6 +39,7 @@ public class MaaSStrategyModule implements   ActivityEndEventHandler,PlanStrateg
 	@Override
 	public void prepareReplanning(ReplanningContext replanningContext) {
 		// For preparing thread 
+		logger.log(Logger.Level.INFO, "Entering into replanning context in MaaSStrategyModule.");
 		
 	}
 

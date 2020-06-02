@@ -1,5 +1,7 @@
 package optimizerAgent;
 
+import java.util.Map;
+
 import javax.inject.Inject;
 
 import org.matsim.api.core.v01.Scenario;
@@ -13,10 +15,26 @@ import org.matsim.core.replanning.PlanStrategyImpl;
 import org.matsim.core.replanning.ReplanningContext;
 import org.matsim.core.replanning.selectors.BestPlanSelector;
 
+import com.google.inject.name.Named;
+
+import MaaSPackages.MaaSPackages;
+import dynamicTransitRouter.fareCalculators.FareCalculator;
+
 public class MaaSOperatorStrategy implements PlanStrategy{
 	
 	private final PlanStrategy planStrategyDelegate;
 	
+	
+	@Inject
+	private @Named(MaaSUtil.MaaSPackagesAttributeName) MaaSPackages packages;
+	
+	@Inject 
+	private Scenario scenario;
+	
+	@Inject 
+	private timeBeansWrapper timeBeans;
+	@Inject
+	private Map<String,FareCalculator>fareCalculators;
 	
 	@Inject // The constructor must be annotated so that the framework knows which one to use.
 	MaaSOperatorStrategy(Config config,Scenario scenario, EventsManager eventsManager) {
@@ -33,9 +51,10 @@ public class MaaSOperatorStrategy implements PlanStrategy{
 
         // Otherwise, to do something with that plan, one needs to add modules into the strategy.  If there is at least
         // one module added here, then the plan is copied and then modified.
+		this.scenario = scenario;
 		
 		PlanStrategyImpl.Builder builder = new PlanStrategyImpl.Builder(new BestPlanSelector());
-        builder.addStrategyModule(new MaaSOperatorStrategyModule());
+        builder.addStrategyModule(new MaaSOperatorStrategyModule(packages, this.scenario, timeBeans, fareCalculators));
 
         // these modules may, at the same time, be events listeners (so that they can collect information):
         //eventsManager.addHandler(mod);
@@ -49,19 +68,19 @@ public class MaaSOperatorStrategy implements PlanStrategy{
 	@Override
 	public void run(HasPlansAndId<Plan, Person> person) {
 		// TODO Auto-generated method stub
-		
+		this.planStrategyDelegate.run(person);
 	}
 
 	@Override
 	public void init(ReplanningContext replanningContext) {
 		// TODO Auto-generated method stub
-		
+		this.planStrategyDelegate.init(replanningContext);
 	}
 
 	@Override
 	public void finish() {
 		// TODO Auto-generated method stub
-		
+		this.planStrategyDelegate.finish();
 	}
 
 }

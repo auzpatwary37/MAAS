@@ -60,7 +60,7 @@ class MaaSDiscountAndChargeHandlerTest {
 		// This will test the optimization agent insertion
 				Config config = RunUtils.provideConfig();
 				
-				OutputDirectoryLogging.catchLogEntries();
+				//OutputDirectoryLogging.catchLogEntries();
 				config.addModule(new MaaSConfigGroup());
 				
 				config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"test/packages_May2020.xml");
@@ -78,7 +78,7 @@ class MaaSDiscountAndChargeHandlerTest {
 				
 				stratSets = new StrategySettings();
 				stratSets.setStrategyName(MaaSOperatorStrategy.class.getName());
-				stratSets.setWeight(1);
+				stratSets.setWeight(.5);
 				stratSets.setDisableAfter(200);
 				stratSets.setSubpopulation(MaaSUtil.MaaSOperatorAgentSubPopulationName);
 				config.strategy().addStrategySettings(stratSets);
