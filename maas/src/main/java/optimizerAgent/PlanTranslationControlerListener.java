@@ -56,7 +56,7 @@ public class PlanTranslationControlerListener implements IterationStartsListener
 	public void notifyBeforeMobsim(BeforeMobsimEvent event) {
 		for(Person p:scenario.getPopulation().getPersons().values()) {
 			if(!PopulationUtils.getSubpopulation(p).equals(MaaSUtil.MaaSOperatorAgentSubPopulationName)) {
-				if(p.getSelectedPlan().getAttributes().getAttribute(SimpleTranslatedPlan.SimplePlanAttributeName)==null) {
+				if(p.getSelectedPlan().getScore()==null ||p.getSelectedPlan().getScore()==0) {
 					Plan plan = p.getSelectedPlan();
 					plan.getAttributes().putAttribute(SimpleTranslatedPlan.SimplePlanAttributeName, new SimpleTranslatedPlan(timeBeansWrapped.timeBeans, plan, scenario));
 				}
