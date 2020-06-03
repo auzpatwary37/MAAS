@@ -1,5 +1,6 @@
 package optimizer;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
@@ -10,7 +11,7 @@ import optimizerAgent.VariableDetails;
 public class RandomOptimizer implements Optimizer{
 	
 	private final String id;
-	private Map<String,VariableDetails> variables;
+	private Map<String,VariableDetails> variables = new HashMap<>();;
 	private double distanceScale = 1;
 	private double counter = 0;
 
