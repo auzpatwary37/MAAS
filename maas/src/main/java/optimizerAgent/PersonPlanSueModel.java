@@ -13,6 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
+import org.jfree.util.Log;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.network.Link;
@@ -270,12 +271,12 @@ public class PersonPlanSueModel {
 	private void defaultParameterInitiation(Config config){
 		//Loads the Internal default parameters 
 		
-		this.AnalyticalModelInternalParams.put(CNLSUEModel.LinkMiuName, 0.008);
-		this.AnalyticalModelInternalParams.put(CNLSUEModel.ModeMiuName, 0.01);
+		this.AnalyticalModelInternalParams.put(CNLSUEModel.LinkMiuName, 1.);
+		this.AnalyticalModelInternalParams.put(CNLSUEModel.ModeMiuName, 1.);
 		this.AnalyticalModelInternalParams.put(CNLSUEModel.BPRalphaName, 0.15);
 		this.AnalyticalModelInternalParams.put(CNLSUEModel.BPRbetaName, 4.);
 		this.AnalyticalModelInternalParams.put(CNLSUEModel.TransferalphaName, 0.5);
-		this.AnalyticalModelInternalParams.put(CNLSUEModel.TransferbetaName, 1.);
+		this.AnalyticalModelInternalParams.put(CNLSUEModel.TransferbetaName, 1.1);
 		this.loadAnalyticalModelInternalPamamsLimit();
 		
 //		//Loads the External default Parameters
@@ -370,15 +371,7 @@ public class PersonPlanSueModel {
 		
 	}
 	
-	private int n=0;
-	private int m=0;
-	private synchronized void addN() {
-		n++;
-	}
-	private synchronized void addM() {
-		m++;
-	}
-	
+
 	private SUEModelOutput singlePersonNL(Person person, LinkedHashMap<String,Double> Oparams, LinkedHashMap<String,Double> anaParams, int counter) {
 		
 		//get the subpopulation
@@ -396,12 +389,10 @@ public class PersonPlanSueModel {
 		LinkedHashMap<String,Double> params = this.handleBasicParams(Oparams, subpopulation, this.scenario.getConfig());
 		//Calculate the utility, Should we move the utility calculation part inside the simple translated plan itself? makes more sense. (April 2020)
 		for(Plan plan:person.getPlans()) {
-			this.addN();
 
 			//Give an identifier to the plan. We will give a String identifier which will be saved as plan attribute
 			SimpleTranslatedPlan trPlan = (SimpleTranslatedPlan) plan.getAttributes().getAttribute(SimpleTranslatedPlan.SimplePlanAttributeName);//extract the translated plan first
 			String planKey = trPlan.getPlanKey();
-			
 			double utility = 0;
 			//Add the MaaSPackage disutility
 			MaaSPackage maas = this.maasPakages.getMassPackages().get(plan.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName));
@@ -431,6 +422,9 @@ public class PersonPlanSueModel {
 				
 				if(Double.isNaN(utility)||!Double.isFinite(utility))
 					logger.debug("utility is nan or infinite. Debug!!!");
+			}
+			
+			for(Entry<String, Map<Id<AnalyticalModelRoute>, AnalyticalModelRoute>> trRouteMap:trPlan.getRoutes().entrySet()) {
 				
 				for(AnalyticalModelRoute route: trPlan.getRoutes().get(trRouteMap.getKey()).values()) {
 					utility += route.calcRouteUtility(params, anaParams, this.networks.get(trRouteMap.getKey()), this.timeBeans.get(trRouteMap.getKey())); 
@@ -439,22 +433,27 @@ public class PersonPlanSueModel {
 				if(Double.isNaN(utility)||!Double.isFinite(utility))
 					logger.debug("utility is nan or infinite. Debug!!!");
 			}
+			
 			utilities.put(planKey,utility);
 			
 			
 		}
-		
+		if(utilities.size()!=person.getPlans().size()) {
+			throw new IllegalArgumentException("Not same dimension. Please check");
+		}
 		//Apply the soft-max
 		
 		double maxUtil = Collections.max(utilities.values());
 		double utilSum = 0;
 		
+	
 		for(Entry<String, Double> d: utilities.entrySet()) {
 			double v = Math.exp(d.getValue()-maxUtil);
 			planProb.put(d.getKey(), v);
 			utilSum += v;
 		}
-		this.addM();
+		
+		
 		for(Entry<String, Double> d: utilities.entrySet()) {
 			double v = planProb.get(d.getKey())/utilSum;
 			planProb.put(d.getKey(), v);
@@ -528,14 +527,14 @@ public class PersonPlanSueModel {
 					
 					MaaSPackage maas = this.maasPakages.getMassPackages().get(plan.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName));
 					SimpleTranslatedPlan trPlan = (SimpleTranslatedPlan) plan.getAttributes().getAttribute(SimpleTranslatedPlan.SimplePlanAttributeName);
-					String planKey = p.getId().toString()+"_^_"+planNo;
+					String planKey = new String(p.getId().toString()+"_^_"+planNo);
 					this.plans.put(planKey, trPlan);
 					
-					if(trPlan==null) {
-						System.out.println("I am currently just applying a patch. Please fix it asap.");
+					//if(trPlan==null) {
+						//System.out.println("I am currently just applying a patch. Please fix it asap.");
 						trPlan = new SimpleTranslatedPlan(timeBeans, plan, scenario);
 						plan.getAttributes().putAttribute(SimpleTranslatedPlan.SimplePlanAttributeName, trPlan);
-					}
+					//}
 						
 					trPlan.setPlanKey(planKey);
 					planNo++;
@@ -566,6 +565,8 @@ public class PersonPlanSueModel {
 					}
 					
 					for(Entry<String, List<FareLink>> s: trPlan.getFareLinkUsage().entrySet()) {
+						if(trPlan.getMaasPacakgeId().equals(MaaSUtil.nullMaaSPacakgeKeyName))
+							logger.debug("NoMass");
 						if(!this.fareLinkPlanIncidence.get(s.getKey()).containsKey(trPlan.getMaasPacakgeId())) {
 							this.fareLinkPlanIncidence.get(s.getKey()).put(trPlan.getMaasPacakgeId(), new HashMap<>());
 						}
@@ -585,9 +586,8 @@ public class PersonPlanSueModel {
 	}
 	
 	//TODO: still do not take params in sub-population. We have to incorporate that 
-	private SUEModelOutput performNetworkLoading(Population population, LinkedHashMap<String,Double> params, LinkedHashMap<String,Double> anaParams, int counter) {
-		n=0;
-		m=0;
+	private SUEModelOutput performNetworkLoading(Population population, LinkedHashMap<String,Double> params, LinkedHashMap<String,Double> anaParams, int counter) {		
+		
 		List<Map<String,Map<Id<Link>, Double>>> linkVolumes=Collections.synchronizedList(new ArrayList<>());
 		List<Map<String,Map<Id<TransitLink>, Double>>> linkTransitVolumes=Collections.synchronizedList(new ArrayList<>());
 		List<Map<String,Map<String,Map<String,Double>>>> fareLinkFlows=Collections.synchronizedList(new ArrayList<>());
@@ -597,7 +597,7 @@ public class PersonPlanSueModel {
 		Map<String,Map<String,Map<String,Double>>> fareLinkFlow = new HashMap<>();
 		
 		
-		population.getPersons().values().stream().forEach((person)->{
+		population.getPersons().values().parallelStream().forEach((person)->{
 			if(!PopulationUtils.getSubpopulation(person).equals(MaaSUtil.MaaSOperatorAgentSubPopulationName)) {
 			SUEModelOutput flow= this.singlePersonNL(person, params, anaParams,counter);
 			linkVolumes.add(flow.getLinkVolume());
@@ -847,19 +847,19 @@ public class PersonPlanSueModel {
 		}
 		ScoringParameters scParam = new ScoringParameters.Builder(config.planCalcScore(), config.planCalcScore().getScoringParameters(subPopulation), config.scenario()).build();
 		
-		newParams.compute(CNLSUEModel.MarginalUtilityofTravelCarName,(k,v)->v==null?scParam.modeParams.get("car").marginalUtilityOfTraveling_s:v);
+		newParams.compute(CNLSUEModel.MarginalUtilityofTravelCarName,(k,v)->v==null?scParam.modeParams.get("car").marginalUtilityOfTraveling_s*3600:v);
 		newParams.compute(CNLSUEModel.MarginalUtilityofDistanceCarName, (k,v)->v==null?scParam.modeParams.get("car").marginalUtilityOfDistance_m:v);
 		newParams.compute(CNLSUEModel.MarginalUtilityofMoneyName, (k,v)->v==null?scParam.marginalUtilityOfMoney:v);
 		newParams.compute(CNLSUEModel.DistanceBasedMoneyCostCarName, (k,v)->v==null?scParam.modeParams.get("car").monetaryDistanceCostRate:v);
-		newParams.compute(CNLSUEModel.MarginalUtilityofTravelptName, (k,v)->v==null?scParam.modeParams.get("pt").marginalUtilityOfTraveling_s:v);
+		newParams.compute(CNLSUEModel.MarginalUtilityofTravelptName, (k,v)->v==null?scParam.modeParams.get("pt").marginalUtilityOfTraveling_s*3600:v);
 		newParams.compute(CNLSUEModel.MarginalUtilityOfDistancePtName, (k,v)->v==null?scParam.modeParams.get("pt").marginalUtilityOfDistance_m:v);
-		newParams.compute(CNLSUEModel.MarginalUtilityofWaitingName, (k,v)->v==null?scParam.marginalUtilityOfWaitingPt_s:v);
+		newParams.compute(CNLSUEModel.MarginalUtilityofWaitingName, (k,v)->v==null?scParam.marginalUtilityOfWaitingPt_s*3600:v);
 		newParams.compute(CNLSUEModel.UtilityOfLineSwitchName, (k,v)->v==null?scParam.utilityOfLineSwitch:v);
-		newParams.compute(CNLSUEModel.MarginalUtilityOfWalkingName, (k,v)->v==null?scParam.modeParams.get("walk").marginalUtilityOfTraveling_s:v);
+		newParams.compute(CNLSUEModel.MarginalUtilityOfWalkingName, (k,v)->v==null?scParam.modeParams.get("walk").marginalUtilityOfTraveling_s*3600:v);
 		newParams.compute(CNLSUEModel.DistanceBasedMoneyCostWalkName, (k,v)->v==null?scParam.modeParams.get("walk").monetaryDistanceCostRate:v);
 		newParams.compute(CNLSUEModel.ModeConstantCarName, (k,v)->v==null?scParam.modeParams.get("car").constant:v);
 		newParams.compute(CNLSUEModel.ModeConstantPtname, (k,v)->v==null?scParam.modeParams.get("pt").constant:v);
-		newParams.compute(CNLSUEModel.MarginalUtilityofPerformName, (k,v)->v==null?scParam.marginalUtilityOfPerforming_s:v);
+		newParams.compute(CNLSUEModel.MarginalUtilityofPerformName, (k,v)->v==null?scParam.marginalUtilityOfPerforming_s*3600:v);
 		
 		newParams.compute(CNLSUEModel.CapacityMultiplierName, (k,v)->v==null?config.qsim().getFlowCapFactor():v);
 		
@@ -888,7 +888,7 @@ public class PersonPlanSueModel {
 			this.linkTravelTimeGradient.get(timeId).putAll(this.linkPlanIncidence.get(timeId).keySet().stream().collect(Collectors.toMap(kk->kk, kk->new HashMap<>(zeroGrad))));
 			this.trLinkGradient.get(timeId).putAll(this.trLinkPlanIncidence.get(timeId).keySet().stream().collect(Collectors.toMap(kk->kk, kk->new HashMap<>(zeroGrad))));
 			this.trLinkTravelTimeGradient.get(timeId).putAll(this.trLinkPlanIncidence.get(timeId).keySet().stream().collect(Collectors.toMap(kk->kk, kk->new HashMap<>(zeroGrad))));
-			for(String packageId:this.maasPakages.getMassPackages().keySet()) {
+			for(String packageId:this.maasPackagePlanIncidence.keySet()) {
 				this.fareLinkGradient.get(timeId).put(packageId, new HashMap<>());
 				this.fareLinkGradient.get(timeId).get(packageId).putAll(this.fareLinkPlanIncidence.get(timeId).get(packageId).keySet().stream().collect(Collectors.toMap(kk->kk, kk->new HashMap<>(zeroGrad))));
 			}
@@ -941,29 +941,45 @@ public class PersonPlanSueModel {
 						if(link instanceof TransitDirectLink) {
 							CNLTransitDirectLink dlink = (CNLTransitDirectLink)link;
 							double grad = 0;
-							for(Id<Link> linkId:dlink.getLinkList())grad+=this.linkTravelTimeGradient.get(timeMap.getKey()).get(linkId).get(var.getKey());
+							for(Id<Link> linkId:dlink.getLinkList()) {
+								String timeId = timeMap.getKey();
+								if(this.linkTravelTimeGradient.get(timeMap.getKey()).get(linkId)==null) {//As we have used the link plan incidence to loop, there might be some link not used by any plan.
+									//For these links, no matter what the decision variables are, the flow will not change (flows are from transit vehicle flow only). So, for these links, we can assume the gradient
+									//to be zero.
+									logger.debug("Dead link here. Putting gradient = 0.");
+									
+								}else {
+									grad+=this.linkTravelTimeGradient.get(timeMap.getKey()).get(linkId).get(var.getKey());
+								}
+								
+							}
 							if(Double.isNaN(grad))
 								logger.debug("Debug point. Gradient is NAN");
 							this.trLinkTravelTimeGradient.get(timeMap.getKey()).get(dlink.getTrLinkId()).put(var.getKey(), grad);
 						}else if(link instanceof TransitTransferLink){
 							CNLTransitTransferLink transferLink = (CNLTransitTransferLink)link;
 							CNLTransitDirectLink dlink = transferLink.getNextdLink();
-							CNLLink plink = (CNLLink) this.networks.get(timeMap.getKey()).getLinks().get(transferLink.getStartingLinkId());
-							double headway = dlink.getHeadway();
-							double cap = dlink.getCapacity();
-							double freq = dlink.getFrequency();
-							double beta = anaParam.get(PersonPlanSueModel.TransferbetaName);
-							double passengerTobeBorded = transferLink.getPassangerCount();
-							double passengerOnBord = plink.getTransitPassengerVolume(dlink.getLineId()+"_"+dlink.getRouteId());
-							double volume = passengerTobeBorded+passengerOnBord;
-							double grad1 = beta*headway/Math.pow(cap*freq, beta)*Math.pow(volume, beta-1);
-							if(Double.isInfinite(grad1))grad1 = 0;
-							double grad2 = this.trLinkGradient.get(timeMap.getKey()).get(transferLink.getTrLinkId()).get(var.getKey());
-							for(Id<TransitLink> l:transferLink.getIncidentLinkIds()){
-								grad2+=this.trLinkGradient.get(timeMap.getKey()).get(l).get(var.getKey());
+							double grad = 0;
+							if(dlink != null) {//For an alighting link only (the last transfer leg) the next dlink is null. 
+								//The gradient for this link's travel time is zero as the waiting time for a alighting only link is always zero.
+								CNLLink plink = (CNLLink) this.networks.get(timeMap.getKey()).getLinks().get(transferLink.getStartingLinkId());
+								double headway = dlink.getHeadway();
+								double cap = dlink.getCapacity();
+								double freq = dlink.getFrequency();
+								double beta = anaParam.get(PersonPlanSueModel.TransferbetaName);
+								double passengerTobeBorded = transferLink.getPassangerCount();
+								double passengerOnBord = plink.getTransitPassengerVolume(dlink.getLineId()+"_"+dlink.getRouteId());
+								double volume = passengerTobeBorded+passengerOnBord;
+								double grad1 = beta*headway/Math.pow(cap*freq, beta)*Math.pow(volume, beta-1);
+								if(Double.isInfinite(grad1))grad1 = 0;
+								double grad2 = this.trLinkGradient.get(timeMap.getKey()).get(transferLink.getTrLinkId()).get(var.getKey());
+								for(Id<TransitLink> l:transferLink.getIncidentLinkIds()){
+									grad2+=this.trLinkGradient.get(timeMap.getKey()).get(l).get(var.getKey());
+								}
+								grad = grad1*grad2;
+							}else {
+								grad = 0;
 							}
-							double grad = grad1*grad2;
-							
 							if(Double.isNaN(grad))
 								logger.debug("Debug point. Gradient is NAN");
 							this.trLinkTravelTimeGradient.get(timeMap.getKey()).get(transferLink.getTrLinkId()).put(var.getKey(),grad);
@@ -1108,6 +1124,11 @@ public class PersonPlanSueModel {
 						for(Entry<String, Double> planInc:linkId.getValue().entrySet()) {
 							grad+=this.planProbabilityGradient.get(planInc.getKey()).get(var)*planInc.getValue();
 						}
+						if(this.fareLinkGradient.get(timeMap.getKey()).get(maasMap.getKey())==null) {
+							String timeId = timeMap.getKey();
+							String maasKey = maasMap.getKey();
+							logger.debug(timeId+" and "+maasKey+" is not present in fareLinkGradient.");
+						}
 						this.fareLinkGradient.get(timeMap.getKey()).get(maasMap.getKey()).get(linkId.getKey()).put(var, grad);
 					}
 				});
@@ -1120,6 +1141,7 @@ public class PersonPlanSueModel {
 				for(String planId:packageIncidence.getValue()) {
 					grad+=this.planProbabilityGradient.get(planId).get(var);
 				}
+				if(!this.pacakgeUserGradient.containsKey(packageIncidence.getKey()))this.pacakgeUserGradient.put(packageIncidence.getKey(), new ConcurrentHashMap<>());
 				this.pacakgeUserGradient.get(packageIncidence.getKey()).put(var, grad);
 			}
 		}

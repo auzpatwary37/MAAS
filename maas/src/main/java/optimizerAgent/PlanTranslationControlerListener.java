@@ -58,6 +58,8 @@ public class PlanTranslationControlerListener implements IterationStartsListener
 			if(!PopulationUtils.getSubpopulation(p).equals(MaaSUtil.MaaSOperatorAgentSubPopulationName)) {
 				if(p.getSelectedPlan().getScore()==null ||p.getSelectedPlan().getScore()==0) {
 					Plan plan = p.getSelectedPlan();
+					if(p.getPlans().size()>1)
+						System.out.println();
 					plan.getAttributes().putAttribute(SimpleTranslatedPlan.SimplePlanAttributeName, new SimpleTranslatedPlan(timeBeansWrapped.timeBeans, plan, scenario));
 				}
 			}

@@ -53,25 +53,25 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 	@Override
 	public void prepareReplanning(ReplanningContext replanningContext) {
 		logger.info("Entering into the replaning context in MaaSOperatorStrategyModule class.");
- 		//this.decisionEngine = new IntelligentOperatorDecisionEngine(this.scenario,this.packages,this.timeBeans,this.fareCalculators);
+ 		this.decisionEngine = new IntelligentOperatorDecisionEngine(this.scenario,this.packages,this.timeBeans,this.fareCalculators);
 	}
 
 	
 	@Override
 	public void handlePlan(Plan plan) {
-		this.optimizers.put(plan.getPerson().getId().toString(),new RandomOptimizer(plan));
+		this.optimizers.put(plan.getPerson().getId().toString(),new Adam(plan));
 		Map<String,VariableDetails> variables = this.optimizers.get(plan.getPerson().getId().toString()).getVarables();
 		this.variables.putAll(variables);
-		//this.decisionEngine.addOperatorAgent(plan);
+		this.decisionEngine.addOperatorAgent(plan);
 	}
 	
 
 	@Override
 	public void finishReplanning() {
-		//Map<String,Map<String,Double>>grad =  this.decisionEngine.calcApproximateObjectiveGradient();
+		Map<String,Map<String,Double>>grad =  this.decisionEngine.calcApproximateObjectiveGradient();
 		this.optimizers.entrySet().forEach(o->{
-			//o.getValue().takeStep(grad.get(o.getKey()));
-			o.getValue().takeStep(null);
+			o.getValue().takeStep(grad.get(o.getKey()));
+			//o.getValue().takeStep(null);
 		});
 		Map<String,Double> variableValues = new HashMap<>();
 		for(Entry<String, VariableDetails> vd:this.variables.entrySet()) {
