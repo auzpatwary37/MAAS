@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.jboss.logging.Logger;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.Plan;
@@ -38,6 +39,8 @@ public class IntelligentOperatorDecisionEngine {
 	
 	@Inject
 	private @Named("MaaSPackages") MaaSPackages packages;
+	
+	private static final Logger logger = Logger.getLogger(IntelligentOperatorDecisionEngine.class);
 	
 	private PersonPlanSueModel model;
 	private Map<String,Map<String,VariableDetails>>operator = new HashMap<>();
@@ -115,11 +118,19 @@ public class IntelligentOperatorDecisionEngine {
 							try {//The try catch block is necessary as we created the incidence matrix based on usage rather than exhaustive enumeration. 
 								//So, there can be null values for any specific keys maasPackage and fareLink and evem for timeBeans in case of flow
 								timeMaasSpecificFareLinkGrad = fareGrad.getValue().get(maasPackage.getId()).get(fl).get(key);//The fare link can be not used at a timeBean by anyone belonging to that specific maas pacakge  
-								nullPackageGrad = fareGrad.getValue().get(MaaSUtil.nullMaaSPacakgeKeyName).get(fl).get(key);
+								nullPackageGrad = fareGrad.getValue().get(MaaSUtil.nullMaaSPacakgeKeyName).get(fl).get(key);//check
 							}catch(Exception e) {//This means either nobody holding that maas package travelled in that time step, or the former
-								if(fareGrad.getValue().get(maasPackage.getId())==null)System.out.println("MaaS Package holder did not travel on any fare link in that timeBean");
-								else if(fareGrad.getValue().get(maasPackage.getId()).get(fl)==null)System.out.println("The fare link was not used by any maas package holder in that time step");
-								else System.out.println("Should investigate. Might be other issues.");
+								if(fareGrad.getValue().get(maasPackage.getId())==null)
+									logger.info("MaaS Package holder did not travel on any fare link in that timeBean");
+								else if(fareGrad.getValue().get(maasPackage.getId()).get(fl)==null)
+									logger.info("The fare link was not used by any maas package holder in that time step");
+								
+								else if(fareGrad.getValue().get(MaaSUtil.nullMaaSPacakgeKeyName)==null)
+									logger.info("MaaS Package holder did not travel on any fare link in that timeBean");
+								else if(fareGrad.getValue().get(MaaSUtil.nullMaaSPacakgeKeyName).get(fl)==null)
+									logger.info("The fare link was not used by any maas package holder in that time step");
+								else 
+									logger.debug("Should investigate. Might be other issues.");
 							}
 							grad+=(maasPackage.getFullFare().get(fl)-maasPackage.getDiscounts().get(fl))*timeMaasSpecificFareLinkGrad+maasPackage.getFullFare().get(fl)*nullPackageGrad;
 							

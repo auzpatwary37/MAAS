@@ -163,7 +163,7 @@ public class PersonPlanSueModel {
 	private List<Double> error=new ArrayList<>();
 	private int consecutiveErrorIncrease = 0;
 	private boolean emptyMeasurements = false;
-	
+	private int nonZeroPlanGrad = 0;
 	//This are needed for output generation 
 	
 	protected Map<String,Map<Id<Link>,Double>> outputLinkTT=new ConcurrentHashMap<>();
@@ -911,7 +911,7 @@ public class PersonPlanSueModel {
 	 * @param anaParam
 	 */
 	public void caclulateGradient(Population population, int counter, LinkedHashMap<String,Double> Oparams, LinkedHashMap<String,Double>anaParam) {
-		
+		this.nonZeroPlanGrad=0;
 		
 		if(counter == 1) {
 			this.initializeGradients(Oparams);
@@ -970,8 +970,8 @@ public class PersonPlanSueModel {
 								double passengerTobeBorded = transferLink.getPassangerCount();
 								double passengerOnBord = plink.getTransitPassengerVolume(dlink.getLineId()+"_"+dlink.getRouteId());
 								double volume = passengerTobeBorded+passengerOnBord;
-								double grad1 = beta*headway/Math.pow(cap*freq, beta)*Math.pow(volume, beta-1);
-								if(Double.isInfinite(grad1))grad1 = 0;
+								double grad1 = beta*headway/Math.pow(cap*freq, beta)*Math.pow(volume, beta-1);//if both the second and first term is 
+								if(Double.isInfinite(grad1)||Double.isNaN(grad1))grad1 = 0;
 								double grad2 = this.trLinkGradient.get(timeMap.getKey()).get(transferLink.getTrLinkId()).get(var.getKey());
 								for(Id<TransitLink> l:transferLink.getIncidentLinkIds()){
 									grad2+=this.trLinkGradient.get(timeMap.getKey()).get(l).get(var.getKey());
@@ -1011,6 +1011,7 @@ public class PersonPlanSueModel {
 		logger.debug("Total plans= "+this.plans.size());
 		logger.debug("Total plans= "+totalPlan);
 		
+		
 		population.getPersons().entrySet().parallelStream().forEach(p->{
 			//get the subpopulation
 			String subpopulation = PopulationUtils.getSubpopulation(p.getValue());
@@ -1025,7 +1026,7 @@ public class PersonPlanSueModel {
 					double planGradient = 0;
 					
 					if(MaaSUtil.ifMaaSPackageCostVariableDetails(var) && trPlan.getMaasPacakgeId().equals(MaaSUtil.retrievePackageId(var))) {
-						planGradient+=params.get(CNLSUEModel.MarginalUtilityofMoneyName);
+						planGradient-=params.get(CNLSUEModel.MarginalUtilityofMoneyName);//This should be minus not plus?
 					}
 					
 					for(Entry<String, Map<Id<AnalyticalModelTransitRoute>, AnalyticalModelTransitRoute>> trRouteMap:trPlan.getTrroutes().entrySet()) {
@@ -1050,7 +1051,8 @@ public class PersonPlanSueModel {
 							double routeGradientTRLink = 0;
 							if(MaaSUtil.ifFareLinkVariableDetails(var)) {
 								String fl = MaaSUtil.retrieveFareLink(var);
-								if(trRoute.getFareLinks().contains(new FareLink(fl)))routeGradient-=params.get(CNLSUEModel.MarginalUtilityofMoneyName);
+								if(trRoute.getFareLinks().contains(new FareLink(fl)))
+									routeGradient+=params.get(CNLSUEModel.MarginalUtilityofMoneyName);
 							}
 							for(TransitDirectLink dlink:trRoute.getTransitDirectLinks()) {
 								routeGradientDlink += this.trLinkTravelTimeGradient.get(trRouteMap.getKey()).get(dlink.getTrLinkId()).get(var);
@@ -1070,7 +1072,9 @@ public class PersonPlanSueModel {
 								logger.debug("Debug point. Gradient is NAN..");
 						}
 					}
-					planGradient = planGradient*this.planProbability.get(planKey)*(1-this.planProbability.get(planKey));
+					double planProb = this.planProbability.get(planKey);
+					planGradient = planGradient*planProb*(1-this.planProbability.get(planKey));
+					if(planGradient!=0)this.nonZeroPlanGrad++;
 					if(Double.isNaN(planGradient))
 						logger.debug("Debug point. Gradient is NAN");
 					
@@ -1079,7 +1083,7 @@ public class PersonPlanSueModel {
 			}
 		});
 		
-		
+		logger.info("Non zero plan probability gradient = "+this.nonZeroPlanGrad);
 		
 		//finally the link volume and MaaSPackage usage gradient update
 		

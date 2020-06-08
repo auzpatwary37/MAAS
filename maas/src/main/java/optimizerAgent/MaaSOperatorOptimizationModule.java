@@ -43,7 +43,6 @@ public class MaaSOperatorOptimizationModule extends AbstractModule{
 		//Bind Attribute Handlers
 		this.addAttributeConverterBinding(VariableDetails.class).toInstance(VariableDetails.getAttributeConverter());
 		this.addAttributeConverterBinding(SimpleTranslatedPlan.class).toInstance(SimpleTranslatedPlan.getAttributeConverter());
-		System.out.println();
 	}
 	
 	private static class TimeBeansWrappedProvider implements Provider<timeBeansWrapper> {

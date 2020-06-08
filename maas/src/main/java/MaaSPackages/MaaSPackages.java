@@ -50,6 +50,7 @@ public class MaaSPackages{
 		packages.get("train").addTransitMode(ts, "train", fareCalculators, defaultDiscount, fullDiscounted);
 		for(Entry<Id<TransitLine>, TransitLine> d:ts.getTransitLines().entrySet()) {
 			String mode = d.getValue().getRoutes().get(new ArrayList<>(d.getValue().getRoutes().keySet()).get(0)).getTransportMode();
+			if(!mode.equals("train")) {
 			if(!packages.containsKey(mode)){
 				operatorId++;
 				packages.put(mode, new MaaSPackage(mode, Integer.toString(operatorId), defaultCost, freeTaxiTrip));
@@ -57,6 +58,7 @@ public class MaaSPackages{
 				
 			}
 			packages.get(mode).addTransitLine(d.getValue(), fareCalculators, defaultDiscount, fullDiscounted);
+			}
 		}
 		//this.massPackages=packages;
 		packages.values().stream().forEach((maas)->this.addMaaSPacakge(maas));

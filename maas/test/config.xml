@@ -12,7 +12,7 @@
 	</module>
 	<module name="MAAS" >
 		<!-- Use the xml file format reader and writer. -->
-		<param name="inputPacakgesFile" value="test/packages_May2020.xml" />
+		<param name="inputPacakgesFile" value="test/packages_June2020.xml" />
 	</module>
 	<module name="TimeAllocationMutator" >
 		<!-- Default:true; Defines whether time mutation changes an activity's duration. -->

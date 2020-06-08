@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.jboss.logging.Logger;
+import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.population.Plan;
 import org.matsim.api.core.v01.replanning.PlanStrategyModule;
@@ -70,7 +71,7 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 	public void finishReplanning() {
 		Map<String,Map<String,Double>>grad =  this.decisionEngine.calcApproximateObjectiveGradient();
 		this.optimizers.entrySet().forEach(o->{
-			o.getValue().takeStep(grad.get(o.getKey()));
+			o.getValue().takeStep(grad.get(MaaSUtil.retrieveOperatorIdFromOperatorPersonId(Id.createPersonId(o.getKey()))));
 			//o.getValue().takeStep(null);
 		});
 		Map<String,Double> variableValues = new HashMap<>();

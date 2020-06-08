@@ -62,7 +62,7 @@ class MaaSDiscountAndChargeHandlerTest {
 				//OutputDirectoryLogging.catchLogEntries();
 				config.addModule(new MaaSConfigGroup());
 				
-				config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"test/packages_May2020.xml");
+				config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"test/packages_June2020.xml");
 				
 				config.plans().setInsistingOnUsingDeprecatedPersonAttributeFile(true);
 				config.controler().setOutputDirectory("toyScenarioLarge/output");

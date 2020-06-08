@@ -41,7 +41,7 @@ public class MaaSDataLoader extends AbstractModule{
 		if (this.maasPacakges != null) {
 			bind(MaaSPackages.class).annotatedWith(Names.named(MaaSUtil.MaaSPackagesAttributeName)).toInstance(this.maasPacakges);
 		} else {
-			bind(MaaSPackages.class).annotatedWith(Names.named(MaaSUtil.MaaSPackagesAttributeName)).toProvider(MaaSPackagesProvider.class).in(Singleton.class);
+			bind(MaaSPackages.class).annotatedWith(Names.named(MaaSUtil.MaaSPackagesAttributeName)).toProvider(MaaSPackagesProvider.class).asEagerSingleton();
 		}
 		
 		
