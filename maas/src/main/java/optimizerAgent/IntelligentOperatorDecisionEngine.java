@@ -93,6 +93,7 @@ public class IntelligentOperatorDecisionEngine {
 	 */
 	public Map<String,Map<String,Double>> calcApproximateObjectiveGradient() {
 		if(this.flow==null)this.setupAndRunMetaModel();
+		System.out.println(this.scenario.getNetwork().getLinks().get(this.scenario.getNetwork().getLinks().keySet().toArray()[0]).getClass());
 		Map<String,Map<String,Double>>operatorGradient = new HashMap<>();
 		this.operator.entrySet().forEach(operator->{
 			operatorGradient.put(operator.getKey(),new HashMap<>());
@@ -121,14 +122,14 @@ public class IntelligentOperatorDecisionEngine {
 								nullPackageGrad = fareGrad.getValue().get(MaaSUtil.nullMaaSPacakgeKeyName).get(fl).get(key);//check
 							}catch(Exception e) {//This means either nobody holding that maas package travelled in that time step, or the former
 								if(fareGrad.getValue().get(maasPackage.getId())==null)
-									logger.info("MaaS Package holder did not travel on any fare link in that timeBean");
+									logger.debug("MaaS Package holder did not travel on any fare link in that timeBean");
 								else if(fareGrad.getValue().get(maasPackage.getId()).get(fl)==null)
-									logger.info("The fare link was not used by any maas package holder in that time step");
+									logger.debug("The fare link was not used by any maas package holder in that time step");
 								
 								else if(fareGrad.getValue().get(MaaSUtil.nullMaaSPacakgeKeyName)==null)
-									logger.info("MaaS Package holder did not travel on any fare link in that timeBean");
+									logger.debug("MaaS Package holder did not travel on any fare link in that timeBean");
 								else if(fareGrad.getValue().get(MaaSUtil.nullMaaSPacakgeKeyName).get(fl)==null)
-									logger.info("The fare link was not used by any maas package holder in that time step");
+									logger.debug("The fare link was not used by any maas package holder in that time step");
 								else 
 									logger.debug("Should investigate. Might be other issues.");
 							}
