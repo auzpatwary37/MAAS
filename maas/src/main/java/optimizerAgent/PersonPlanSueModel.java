@@ -365,6 +365,7 @@ public class PersonPlanSueModel {
 			System.out.println("No of active signal link = "+sg.activeGc);
 			sg.activeGc=0;
 		}
+		//System.out.println(this.scenario.getNetwork().getLinks().get(this.scenario.getNetwork().getLinks().keySet().toArray()[0]).getClass());
 		this.farecalculators = fareCalculator;
 		this.maasPakages = packages;
 		this.ts = scenario.getTransitSchedule();
@@ -533,9 +534,10 @@ public class PersonPlanSueModel {
 					//if(trPlan==null) {
 						//System.out.println("I am currently just applying a patch. Please fix it asap.");
 						trPlan = new SimpleTranslatedPlan(timeBeans, plan, scenario);
+						
 						plan.getAttributes().putAttribute(SimpleTranslatedPlan.SimplePlanAttributeName, trPlan);
 					//}
-						
+					//System.out.println(this.scenario.getNetwork().getLinks().get(this.scenario.getNetwork().getLinks().keySet().toArray()[0]).getClass());	
 					trPlan.setPlanKey(planKey);
 					planNo++;
 					if(maas!=null) {trPlan.setMaasPacakgeId(maas.getId());}
@@ -746,6 +748,7 @@ public class PersonPlanSueModel {
 		SUEModelOutput flow = null;
 		for(int counter = 1; counter < this.maxIter; counter++) {
 			if(counter == 1)this.createIncidenceMaps(population);
+			
 			flow  = this.performNetworkLoading(population, params, anaParams,counter);//link incidences are ready after this step
 			this.caclulateGradient(population, counter, params, anaParams);
 			boolean shouldStop = this.updateVolume(flow.getLinkVolume(), flow.getLinkTransitVolume(), counter);//transit link dependencies are ready after this step

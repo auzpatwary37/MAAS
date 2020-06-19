@@ -69,11 +69,18 @@ public class PlanTranslationControlerListener implements IterationStartsListener
 	@Override
 	public void notifyAfterMobsim(AfterMobsimEvent event) {
 		String fileName = controlerIO.getIterationFilename(event.getIteration(), FileName);
+		String fileNameFull = controlerIO.getOutputFilename(FileName);
 		File file = new File(fileName);
+		File fullFile = new File(fileNameFull);
 		FileWriter fw = null;
+		FileWriter fwFull = null;
 		try {
 			fw= new FileWriter(file);
 			fw.append("Operator,revenue,var_name,varCurrent,varlowerLimit,varUpperLimit\n");
+			fwFull = new FileWriter(fullFile,true);
+			if(event.getIteration() == 0) {
+				fwFull.append("Operator,Iteration,Revenue\n");
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -91,6 +98,7 @@ public class PlanTranslationControlerListener implements IterationStartsListener
 					}else if(a.getKey().contains(MaaSUtil.operatorRevenueName)){
 						fw.append(p.getId().toString()+","+a.getValue()+","+""+","+
 								""+","+""+","+""+"\n");
+						fwFull.append(p.getId().toString()+","+event.getIteration()+","+a.getValue()+"\n");
 					}
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
@@ -101,6 +109,8 @@ public class PlanTranslationControlerListener implements IterationStartsListener
 		}
 		try {
 			fw.flush();
+			fwFull.flush();
+			fwFull.close();
 			fw.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

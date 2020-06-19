@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.jboss.logging.Logger;
 import org.matsim.api.core.v01.population.Plan;
 import org.matsim.core.utils.collections.Tuple;
 
@@ -21,6 +22,7 @@ public class Adam implements Optimizer{
 	private Map<String,Double> v = new HashMap<>();
 	private int counter;
 	private final String id;
+	private static final Logger logger = Logger.getLogger(Adam.class);
 	
 	public Adam(Plan maasAgentPlan) {
 		this.id = maasAgentPlan.getPerson().getId().toString();
@@ -56,7 +58,10 @@ public class Adam implements Optimizer{
 
 	public Map<String,VariableDetails> takeStep(Map<String,Double> gradient){
 		counter = counter+1;
-		
+		if(gradient==null) {
+			logger.debug("Gradient is null");
+		}
+		//for(Entry<String, Double> g:gradient.entrySet()) {
 		gradient.entrySet().parallelStream().forEach(g->{
 			m.compute(g.getKey(), (k,v)->this.beta1*v+(1-beta1)*g.getValue());
 			v.compute(g.getKey(), (k,v)->this.beta2*v+(1-this.beta2)*g.getValue()*g.getValue());
@@ -68,6 +73,7 @@ public class Adam implements Optimizer{
 			else if (var>limit.getSecond()) var = limit.getSecond();
 			this.variables.get(g.getKey()).setCurrentValue(var);
 		});
+		//}
 		
 		return this.variables;
 	}

@@ -64,15 +64,15 @@ public class IntelligentOperatorDecisionEngine {
 		this.fareCalculators = fareCalculators;
 	}
 	
-	public void setupAndRunMetaModel() {
+
+	
+	
+	public void setupAndRunMetaModel(LinkedHashMap<String,Double> variables) {
 		model = new PersonPlanSueModel(TimeBeans.timeBeans, scenario.getConfig());
 		model.populateModel(scenario, fareCalculators, packages);
-		LinkedHashMap<String,Double> variables = new LinkedHashMap<>();
-		this.variables.values().stream().forEach(vd->{
-			variables.put(vd.getVariableName(), vd.getCurrentValue());
-		});
 		this.flow = model.performAssignment(scenario.getPopulation(),variables);
 	}
+	
 	
 	public void addOperatorAgent(Plan maaSOperatorPlan) {
 		Person agent = maaSOperatorPlan.getPerson();
@@ -86,14 +86,23 @@ public class IntelligentOperatorDecisionEngine {
 	}
 	
 	
+	public Map<String,Map<String,Double>> calcApproximateObjectiveGradient() {
+		LinkedHashMap<String,Double> variables = new LinkedHashMap<>();
+		this.variables.values().stream().forEach(vd->{
+			variables.put(vd.getVariableName(), vd.getCurrentValue());
+		});
+		return this.calcApproximateObjectiveGradient(variables);
+	}
+	
 	//This assumes the current variable values are already applied to the MaaSPackages
 	/**
+	 * Make this parallel. 
 	 * This function is super complicated. Makes sense to revisit over and over
 	 * @return
 	 */
-	public Map<String,Map<String,Double>> calcApproximateObjectiveGradient() {
-		if(this.flow==null)this.setupAndRunMetaModel();
-		System.out.println(this.scenario.getNetwork().getLinks().get(this.scenario.getNetwork().getLinks().keySet().toArray()[0]).getClass());
+	public Map<String,Map<String,Double>> calcApproximateObjectiveGradient(LinkedHashMap<String,Double> variables) {
+		if(this.flow==null)this.setupAndRunMetaModel(variables);
+		//System.out.println(this.scenario.getNetwork().getLinks().get(this.scenario.getNetwork().getLinks().keySet().toArray()[0]).getClass());
 		Map<String,Map<String,Double>>operatorGradient = new HashMap<>();
 		this.operator.entrySet().forEach(operator->{
 			operatorGradient.put(operator.getKey(),new HashMap<>());
@@ -121,16 +130,17 @@ public class IntelligentOperatorDecisionEngine {
 								timeMaasSpecificFareLinkGrad = fareGrad.getValue().get(maasPackage.getId()).get(fl).get(key);//The fare link can be not used at a timeBean by anyone belonging to that specific maas pacakge  
 								nullPackageGrad = fareGrad.getValue().get(MaaSUtil.nullMaaSPacakgeKeyName).get(fl).get(key);//check
 							}catch(Exception e) {//This means either nobody holding that maas package travelled in that time step, or the former
-								if(fareGrad.getValue().get(maasPackage.getId())==null)
-									logger.debug("MaaS Package holder did not travel on any fare link in that timeBean");
-								else if(fareGrad.getValue().get(maasPackage.getId()).get(fl)==null)
-									logger.debug("The fare link was not used by any maas package holder in that time step");
-								
-								else if(fareGrad.getValue().get(MaaSUtil.nullMaaSPacakgeKeyName)==null)
-									logger.debug("MaaS Package holder did not travel on any fare link in that timeBean");
-								else if(fareGrad.getValue().get(MaaSUtil.nullMaaSPacakgeKeyName).get(fl)==null)
-									logger.debug("The fare link was not used by any maas package holder in that time step");
-								else 
+								if(fareGrad.getValue().get(maasPackage.getId())==null) {//case1
+									//logger.debug("MaaS Package holder did not travel on any fare link in that timeBean");
+								}
+								else if(fareGrad.getValue().get(maasPackage.getId()).get(fl)==null) {//case 2
+									//logger.debug("The fare link was not used by any maas package holder in that time step");
+								}
+								else if(fareGrad.getValue().get(MaaSUtil.nullMaaSPacakgeKeyName)==null) {//case3
+									//logger.debug("MaaS Package holder did not travel on any fare link in that timeBean");
+								}else if(fareGrad.getValue().get(MaaSUtil.nullMaaSPacakgeKeyName).get(fl)==null) {//case4
+									//logger.debug("The fare link was not used by any maas package holder in that time step");
+								}else //case5
 									logger.debug("Should investigate. Might be other issues.");
 							}
 							grad+=(maasPackage.getFullFare().get(fl)-maasPackage.getDiscounts().get(fl))*timeMaasSpecificFareLinkGrad+maasPackage.getFullFare().get(fl)*nullPackageGrad;
@@ -148,8 +158,42 @@ public class IntelligentOperatorDecisionEngine {
 		return operatorGradient;
 	}
 	
+	public Map<String,Map<String,Double>> calcFDGradient(){
+		Map<String,Map<String,Double>>operatorGradient = new HashMap<>();
+		//Calcualte x0
+		
+		LinkedHashMap<String,Double> variables = new LinkedHashMap<>();
+		this.variables.values().stream().forEach(vd->{
+			variables.put(vd.getVariableName(), vd.getCurrentValue());
+		});
+		Map<String,Double> y0 = this.calcApproximateObjective(variables);
+		
+		this.operator.entrySet().forEach(operator->{
+			operator.getValue().entrySet().forEach(var->{
+				variables.compute(var.getKey(), (k,v)->v=v+.025);
+				Map<String,Double> yplus = this.calcApproximateObjective(variables);
+				variables.compute(var.getKey(), (k,v)->v=v-.05);
+				Map<String,Double> yminus = this.calcApproximateObjective(variables);
+				yplus.entrySet().forEach(op->{
+					if(operatorGradient.get(op.getKey())==null)operatorGradient.put(op.getKey(), new HashMap<>());
+					double grad = 1/(2*.025)*(yplus.get(op.getKey())-yminus.get(op.getKey()));
+					operatorGradient.get(op.getKey()).put(var.getKey(), grad);
+				});
+			});
+		});
+		return operatorGradient;
+	}
+	
 	public Map<String,Double> calcApproximateObjective(){
-		if(this.flow==null)this.setupAndRunMetaModel();
+		LinkedHashMap<String,Double> variables = new LinkedHashMap<>();
+		this.variables.values().stream().forEach(vd->{
+			variables.put(vd.getVariableName(), vd.getCurrentValue());
+		});
+		return this.calcApproximateObjective(variables);
+	}
+	
+	public Map<String,Double> calcApproximateObjective(LinkedHashMap<String,Double>variables){
+		this.setupAndRunMetaModel(variables);
 		Map<String,Double> operatorObj = new HashMap<>();
 		
 		this.operator.keySet().forEach(o->{
@@ -164,9 +208,15 @@ public class IntelligentOperatorDecisionEngine {
 							flow = timefareLinkFlow.getValue().get(maasPackage.getId()).get(fl);//get flow in that fare link at a time step with maas package 
 							nullPackageFlow = timefareLinkFlow.getValue().get(MaaSUtil.nullMaaSPacakgeKeyName).get(fl);
 						}catch(Exception e) {//This means either nobody holding that maas package travelled in that time step, or the former
-							if(timefareLinkFlow.getValue().get(maasPackage.getId())==null)System.out.println("MaaS Package holder did not travel on any fare link in that timeBean");
-							else if(timefareLinkFlow.getValue().get(maasPackage.getId()).get(fl)==null)System.out.println("The fare link was not used by any maas package holder in that time bean");
-							else System.out.println("Should investigate. Might be other issues.");
+							if(timefareLinkFlow.getValue().get(maasPackage.getId())==null) {
+								//logger.debug("MaaS Package holder did not travel on any fare link in that timeBean");
+							}
+							else if(timefareLinkFlow.getValue().get(maasPackage.getId()).get(fl)==null) {
+								//logger.debug("The fare link was not used by any maas package holder in that time bean");
+							}
+							else {
+								logger.debug("Should investigate. Might be other issues.");//The noMass is not present? 
+							}
 						}
 						obj+=(maasPackage.getFullFare().get(fl)-maasPackage.getDiscounts().get(fl))*flow+maasPackage.getFullFare().get(fl)*nullPackageFlow;
 						

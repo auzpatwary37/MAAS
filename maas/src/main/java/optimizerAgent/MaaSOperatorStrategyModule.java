@@ -28,7 +28,7 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 	@Inject
 	private @Named(MaaSUtil.MaaSPackagesAttributeName) MaaSPackages packages;
 	
-
+	private int MaaSPacakgeInertia = 5;
 	private Scenario scenario;
 	
 
@@ -55,6 +55,8 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 	public void prepareReplanning(ReplanningContext replanningContext) {
 		logger.info("Entering into the replaning context in MaaSOperatorStrategyModule class.");
  		this.decisionEngine = new IntelligentOperatorDecisionEngine(this.scenario,this.packages,this.timeBeans,this.fareCalculators);
+ 		this.variables.clear();
+ 		this.optimizers.clear();
 	}
 
 	
@@ -69,16 +71,22 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 
 	@Override
 	public void finishReplanning() {
-		Map<String,Map<String,Double>>grad =  this.decisionEngine.calcApproximateObjectiveGradient();
-		this.optimizers.entrySet().forEach(o->{
-			o.getValue().takeStep(grad.get(MaaSUtil.retrieveOperatorIdFromOperatorPersonId(Id.createPersonId(o.getKey()))));
-			//o.getValue().takeStep(null);
-		});
-		Map<String,Double> variableValues = new HashMap<>();
-		for(Entry<String, VariableDetails> vd:this.variables.entrySet()) {
-			variableValues.put(vd.getKey(), vd.getValue().getCurrentValue());
+		if(variables.size()!=0) {
+			Map<String,Map<String,Double>>grad =  this.decisionEngine.calcApproximateObjectiveGradient();
+			//Map<String,Map<String,Double>>fdgrad =  this.decisionEngine.calcFDGradient();//This line is for testing only. 
+			
+			if(grad==null)
+				logger.debug("Gradient is null. Debug!!!");
+			this.optimizers.entrySet().forEach(o->{
+				o.getValue().takeStep(grad.get(MaaSUtil.retrieveOperatorIdFromOperatorPersonId(Id.createPersonId(o.getKey()))));
+				//o.getValue().takeStep(null);
+			});
+			Map<String,Double> variableValues = new HashMap<>();
+			for(Entry<String, VariableDetails> vd:this.variables.entrySet()) {
+				variableValues.put(vd.getKey(), vd.getValue().getCurrentValue());
+			}
+			MaaSUtil.updateMaaSVariables(packages, variableValues);
 		}
-		MaaSUtil.updateMaaSVariables(packages, variableValues);
 	}
 
 }

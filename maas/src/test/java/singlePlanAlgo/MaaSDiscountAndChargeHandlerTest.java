@@ -26,6 +26,8 @@ import org.matsim.core.controler.Controler;
 import org.matsim.core.controler.ControlerUtils;
 import org.matsim.core.controler.OutputDirectoryHierarchy;
 import org.matsim.core.controler.OutputDirectoryLogging;
+import org.matsim.core.replanning.strategies.DefaultPlanStrategiesModule;
+import org.matsim.core.replanning.strategies.KeepLastSelected;
 import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.core.utils.collections.Tuple;
 import org.matsim.lanes.Lane;
@@ -44,6 +46,7 @@ import optimizerAgent.MaaSOperator;
 import optimizerAgent.MaaSOperatorOptimizationModule;
 import optimizerAgent.MaaSOperatorStrategy;
 import optimizerAgent.MaaSUtil;
+import running.RunUtils;
 
 /**
  * This class will basically test the connection between different components for MaaS implementation in MATSim.
@@ -57,7 +60,7 @@ class MaaSDiscountAndChargeHandlerTest {
 	@Test
 	void test() {
 		// This will test the optimization agent insertion
-				Config config = RunUtils.provideConfig();
+				Config config = singlePlanAlgo.RunUtils.provideConfig();
 				
 				//OutputDirectoryLogging.catchLogEntries();
 				config.addModule(new MaaSConfigGroup());
@@ -70,7 +73,7 @@ class MaaSDiscountAndChargeHandlerTest {
 				//Add the MaaS package choice strategy
 				StrategySettings stratSets = new StrategySettings();
 				stratSets.setStrategyName(MaaSPlanStrategy.class.getName());
-				stratSets.setWeight(0.7);
+				stratSets.setWeight(0.10);
 				stratSets.setDisableAfter(200);
 				stratSets.setSubpopulation("person_TCSwithCar");
 				config.strategy().addStrategySettings(stratSets);
@@ -81,7 +84,8 @@ class MaaSDiscountAndChargeHandlerTest {
 				stratSets.setDisableAfter(200);
 				stratSets.setSubpopulation(MaaSUtil.MaaSOperatorAgentSubPopulationName);
 				config.strategy().addStrategySettings(stratSets);
-				
+				RunUtils.addStrategy(config, "KeepLastSelected", MaaSUtil.MaaSOperatorAgentSubPopulationName, 
+						0.7, 400);
 				
 				ScoringParameterSet s = config.planCalcScore().getOrCreateScoringParameters(MaaSOperator.type);
 				
