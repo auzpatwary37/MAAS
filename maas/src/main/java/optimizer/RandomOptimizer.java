@@ -53,6 +53,12 @@ public class RandomOptimizer implements Optimizer{
 	public Map<String, VariableDetails> getVarables() {
 		return this.variables;
 	}
+
+	@Override
+	public void reset() {
+		this.distanceScale = 1;
+		this.counter = 0;
+	}
 	
 	
 }

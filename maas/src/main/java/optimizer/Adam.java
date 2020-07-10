@@ -87,6 +87,11 @@ public class Adam implements Optimizer{
 	public Map<String, VariableDetails> getVarables() {
 		return this.variables;
 	}
+
+	@Override
+	public void reset() {
+		this.initialize();
+	}
 	
 	
 	

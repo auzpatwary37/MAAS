@@ -30,8 +30,9 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 	
 	private int MaaSPacakgeInertia = 5;
 	private Scenario scenario;
-	
+	private int maxCounter = 10;
 
+	private int currentMatsimIteration = 0;
 	private timeBeansWrapper timeBeans;
 
 	private Map<String,FareCalculator>fareCalculators;
@@ -53,6 +54,7 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 
 	@Override
 	public void prepareReplanning(ReplanningContext replanningContext) {
+		this.currentMatsimIteration = replanningContext.getIteration();
 		logger.info("Entering into the replaning context in MaaSOperatorStrategyModule class.");
  		this.decisionEngine = new IntelligentOperatorDecisionEngine(this.scenario,this.packages,this.timeBeans,this.fareCalculators);
  		this.variables.clear();
@@ -71,7 +73,13 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 
 	@Override
 	public void finishReplanning() {
-		if(variables.size()!=0) {
+		this.takeSingleStep();//use either this or the following 
+		//this.takeOptimizedStep();
+	}
+	
+	
+	private void takeSingleStep() {
+		if(variables.size()!=0 && this.currentMatsimIteration%this.MaaSPacakgeInertia==0) {
 			Map<String,Map<String,Double>>grad =  this.decisionEngine.calcApproximateObjectiveGradient();
 			//Map<String,Map<String,Double>>fdgrad =  this.decisionEngine.calcFDGradient();//This line is for testing only. 
 			
@@ -87,6 +95,31 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 			}
 			MaaSUtil.updateMaaSVariables(packages, variableValues);
 			this.decisionEngine = null;
+		}
+	}
+	
+	private void takeOptimizedStep() {
+		if(variables.size()!=0 && this.currentMatsimIteration%this.MaaSPacakgeInertia==0) {
+			for(int counter = 0;counter<=maxCounter;counter++) {
+				Map<String,Map<String,Double>>grad =  this.decisionEngine.calcApproximateObjectiveGradient();
+				//Map<String,Map<String,Double>>fdgrad =  this.decisionEngine.calcFDGradient();//This line is for testing only. 
+				
+				if(grad==null)
+					logger.debug("Gradient is null. Debug!!!");
+				this.optimizers.entrySet().forEach(o->{
+					o.getValue().takeStep(grad.get(MaaSUtil.retrieveOperatorIdFromOperatorPersonId(Id.createPersonId(o.getKey()))));//This step 
+					//already decides the new variable values and replace the old one with the new values. As, the same variable details instances
+					//are used in decision engine and also here, the change should be broadcasted automatically. (Make a check if possible)Ashraf July 11, 2020
+					//o.getValue().takeStep(null);
+				});
+				Map<String,Double> variableValues = new HashMap<>();
+				for(Entry<String, VariableDetails> vd:this.variables.entrySet()) {
+					variableValues.put(vd.getKey(), vd.getValue().getCurrentValue());
+				}
+				MaaSUtil.updateMaaSVariables(packages, variableValues);
+			}
+			this.decisionEngine = null;
+			this.optimizers.entrySet().forEach(o->o.getValue().reset());
 		}
 	}
 

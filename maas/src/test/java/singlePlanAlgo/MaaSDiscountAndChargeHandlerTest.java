@@ -80,7 +80,7 @@ class MaaSDiscountAndChargeHandlerTest {
 				
 				stratSets = new StrategySettings();
 				stratSets.setStrategyName(MaaSOperatorStrategy.class.getName());
-				stratSets.setWeight(.5);
+				stratSets.setWeight(1);
 				stratSets.setDisableAfter(200);
 				stratSets.setSubpopulation(MaaSUtil.MaaSOperatorAgentSubPopulationName);
 				config.strategy().addStrategySettings(stratSets);
