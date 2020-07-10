@@ -61,7 +61,7 @@ class MaaSDiscountAndChargeHandlerTest {
 	void test() {
 		// This will test the optimization agent insertion
 				Config config = singlePlanAlgo.RunUtils.provideConfig();
-				
+				new ConfigWriter(config).write("RunUtilsConfig.xml");
 				//OutputDirectoryLogging.catchLogEntries();
 				config.addModule(new MaaSConfigGroup());
 				

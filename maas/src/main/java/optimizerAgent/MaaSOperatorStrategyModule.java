@@ -86,6 +86,7 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 				variableValues.put(vd.getKey(), vd.getValue().getCurrentValue());
 			}
 			MaaSUtil.updateMaaSVariables(packages, variableValues);
+			this.decisionEngine = null;
 		}
 	}
 
