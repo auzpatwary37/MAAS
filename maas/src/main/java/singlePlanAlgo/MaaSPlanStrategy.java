@@ -18,6 +18,7 @@ import org.matsim.core.replanning.modules.ChangeLegMode;
 import org.matsim.core.replanning.modules.ReRoute;
 import org.matsim.core.replanning.modules.TripsToLegsModule;
 import org.matsim.core.replanning.selectors.ExpBetaPlanSelector;
+import org.matsim.core.replanning.selectors.RandomPlanSelector;
 import org.matsim.core.router.TripRouter;
 import org.matsim.facilities.ActivityFacilities;
 
@@ -51,7 +52,8 @@ public class MaaSPlanStrategy implements PlanStrategy{
         // one module added here, then the plan is copied and then modified.
 		this.packages=packages;
 		MaaSStrategyModule mod = new MaaSStrategyModule(packages);
-		PlanStrategyImpl.Builder builder = new PlanStrategyImpl.Builder(new ExpBetaPlanSelector(config.planCalcScore()));
+		PlanStrategyImpl.Builder builder = new PlanStrategyImpl.Builder(new RandomPlanSelector());
+		//PlanStrategyImpl.Builder builder = new PlanStrategyImpl.Builder(new ExpBetaPlanSelector(config.planCalcScore()));
         builder.addStrategyModule(mod);
         builder.addStrategyModule(new TripsToLegsModule(tripRouterProvider, globalConfigGroup));
 		builder.addStrategyModule(new ChangeLegMode(globalConfigGroup, changeLegModeConfigGroup));

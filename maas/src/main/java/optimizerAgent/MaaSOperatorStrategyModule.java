@@ -2,7 +2,9 @@ package optimizerAgent;
 
 import java.util.Random;
 import java.util.stream.Collectors;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -11,7 +13,10 @@ import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.population.Plan;
 import org.matsim.api.core.v01.replanning.PlanStrategyModule;
+import org.matsim.core.gbl.Gbl;
+import org.matsim.core.population.PopulationUtils;
 import org.matsim.core.replanning.ReplanningContext;
+import org.matsim.withinday.controller.ExecutedPlansService;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -37,18 +42,22 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 
 	private Map<String,FareCalculator>fareCalculators;
 	
+	private List<Plan> plans = new ArrayList<>();//this is for keeping last selected plan
+	
 	private static Logger logger = Logger.getLogger(MaaSOperatorStrategyModule.class);
 	
 	private IntelligentOperatorDecisionEngine decisionEngine;
 	private Map<String,VariableDetails> variables = new HashMap<>();
 	private Map<String,Optimizer> optimizers = new HashMap<>();
+	private ExecutedPlansService executedPlans;
 	
 	public MaaSOperatorStrategyModule(MaaSPackages packages, Scenario scenario, timeBeansWrapper timeBeans,
-			Map<String, FareCalculator> fareCalculators) {
+			Map<String, FareCalculator> fareCalculators,ExecutedPlansService executedPlans) {
 		this.packages = packages;
 		this.scenario = scenario;
 		this.timeBeans = timeBeans;
 		this.fareCalculators = fareCalculators;
+		this.executedPlans = executedPlans;
 	}
 
 
@@ -64,22 +73,35 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 	
 	@Override
 	public void handlePlan(Plan plan) {
-		this.optimizers.put(plan.getPerson().getId().toString(),new Adam(plan));
-		Map<String,VariableDetails> variables = this.optimizers.get(plan.getPerson().getId().toString()).getVarables();
-		this.variables.putAll(variables);
-		this.decisionEngine.addOperatorAgent(plan);
+		if(this.currentMatsimIteration%this.MaaSPacakgeInertia==0) {
+			String operatorId =  plan.getPerson().getId().toString();
+			if(!this.optimizers.containsKey(operatorId))this.optimizers.put(operatorId,new Adam(plan));
+			Map<String,VariableDetails> variables = this.optimizers.get(plan.getPerson().getId().toString()).getVarables();
+			this.variables.putAll(variables);
+			this.decisionEngine.addOperatorAgent(plan);
+		}else {
+			this.plans.add(plan);
+		}
 	}
 	
 
 	@Override
 	public void finishReplanning() {
+		if(this.currentMatsimIteration%this.MaaSPacakgeInertia==0) {
 		this.takeSingleStep();//use either this or the following 
 		//this.takeOptimizedStep();
+		}else {
+			for(Plan plan:this.plans) {
+				Plan newPlan = executedPlans.getExecutedPlans().get( plan.getPerson().getId() ) ;
+				Gbl.assertNotNull( newPlan ) ;
+				PopulationUtils.copyFromTo(newPlan, plan);
+			}
+		}
 	}
 	
 	
 	private void takeSingleStep() {
-		if(variables.size()!=0 && this.currentMatsimIteration%this.MaaSPacakgeInertia==0) {
+		if(variables.size()!=0) {
 			Map<String,Map<String,Double>>grad =  this.decisionEngine.calcApproximateObjectiveGradient();
 			//Map<String,Map<String,Double>>fdgrad =  this.decisionEngine.calcFDGradient();//This line is for testing only. 
 			
@@ -99,7 +121,7 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 	}
 	
 	private void takeOptimizedStep() {
-		if(variables.size()!=0 && this.currentMatsimIteration%this.MaaSPacakgeInertia==0) {
+		if(variables.size()!=0) {
 			for(int counter = 0;counter<=maxCounter;counter++) {
 				Map<String,Map<String,Double>>grad =  this.decisionEngine.calcApproximateObjectiveGradient();
 				//Map<String,Map<String,Double>>fdgrad =  this.decisionEngine.calcFDGradient();//This line is for testing only. 
