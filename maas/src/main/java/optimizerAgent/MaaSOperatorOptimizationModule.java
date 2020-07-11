@@ -10,6 +10,8 @@ import javax.inject.Singleton;
 import org.matsim.core.config.Config;
 import org.matsim.core.controler.AbstractModule;
 import org.matsim.core.utils.collections.Tuple;
+import org.matsim.withinday.controller.ExecutedPlansServiceImpl;
+import org.matsim.withinday.mobsim.MobsimDataProvider;
 
 
 public class MaaSOperatorOptimizationModule extends AbstractModule{
@@ -39,7 +41,8 @@ public class MaaSOperatorOptimizationModule extends AbstractModule{
 		//Bind any other controller listener needed
 		
 		this.addControlerListenerBinding().to(PlanTranslationControlerListener.class).asEagerSingleton();
-		
+		bind(ExecutedPlansServiceImpl.class).asEagerSingleton();
+		bind(MobsimDataProvider.class).asEagerSingleton();
 		//Bind Attribute Handlers
 		this.addAttributeConverterBinding(VariableDetails.class).toInstance(VariableDetails.getAttributeConverter());
 		this.addAttributeConverterBinding(SimpleTranslatedPlan.class).toInstance(SimpleTranslatedPlan.getAttributeConverter());
