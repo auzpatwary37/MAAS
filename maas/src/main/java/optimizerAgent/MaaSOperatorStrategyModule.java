@@ -17,6 +17,7 @@ import org.matsim.core.gbl.Gbl;
 import org.matsim.core.population.PopulationUtils;
 import org.matsim.core.replanning.ReplanningContext;
 import org.matsim.withinday.controller.ExecutedPlansService;
+import org.matsim.withinday.controller.ExecutedPlansServiceImpl;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -52,7 +53,7 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 	private ExecutedPlansService executedPlans;
 	
 	public MaaSOperatorStrategyModule(MaaSPackages packages, Scenario scenario, timeBeansWrapper timeBeans,
-			Map<String, FareCalculator> fareCalculators,ExecutedPlansService executedPlans) {
+			Map<String, FareCalculator> fareCalculators,ExecutedPlansServiceImpl executedPlans) {
 		this.packages = packages;
 		this.scenario = scenario;
 		this.timeBeans = timeBeans;

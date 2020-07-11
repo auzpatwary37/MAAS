@@ -15,6 +15,7 @@ import org.matsim.core.replanning.PlanStrategyImpl;
 import org.matsim.core.replanning.ReplanningContext;
 import org.matsim.core.replanning.selectors.BestPlanSelector;
 import org.matsim.withinday.controller.ExecutedPlansService;
+import org.matsim.withinday.controller.ExecutedPlansServiceImpl;
 
 import com.google.inject.name.Named;
 
@@ -31,7 +32,7 @@ public class MaaSOperatorStrategy implements PlanStrategy{
 	
 	@Inject // The constructor must be annotated so that the framework knows which one to use.
 	MaaSOperatorStrategy(Config config,Scenario scenario, @Named(MaaSUtil.MaaSPackagesAttributeName) MaaSPackages packages, timeBeansWrapper timeBeans, Map<String,FareCalculator>fareCalculators,
-			EventsManager eventsManager, ExecutedPlansService executedPlans) {
+			EventsManager eventsManager, ExecutedPlansServiceImpl executedPlans) {
 		// A PlanStrategy is something that can be applied to a Person (not a Plan).
         // It first selects one of the plans:
         //MyPlanSelector planSelector = new MyPlanSelector();
