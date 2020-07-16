@@ -50,7 +50,7 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 	private IntelligentOperatorDecisionEngine decisionEngine;
 	private Map<String,VariableDetails> variables = new HashMap<>();
 	private Map<String,Optimizer> optimizers = new HashMap<>();
-	private ExecutedPlansService executedPlans;
+	//private ExecutedPlansService executedPlans;
 	
 	public MaaSOperatorStrategyModule(MaaSPackages packages, Scenario scenario, timeBeansWrapper timeBeans,
 			Map<String, FareCalculator> fareCalculators,ExecutedPlansServiceImpl executedPlans) {
@@ -58,7 +58,7 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 		this.scenario = scenario;
 		this.timeBeans = timeBeans;
 		this.fareCalculators = fareCalculators;
-		this.executedPlans = executedPlans;
+		//this.executedPlans = executedPlans;
 	}
 
 
@@ -88,16 +88,17 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 
 	@Override
 	public void finishReplanning() {
-		if(this.currentMatsimIteration%this.MaaSPacakgeInertia==0) {
-		this.takeSingleStep();//use either this or the following 
-		//this.takeOptimizedStep();
-		}else {
-			for(Plan plan:this.plans) {
-				Plan newPlan = executedPlans.getExecutedPlans().get( plan.getPerson().getId() ) ;
-				Gbl.assertNotNull( newPlan ) ;
-				PopulationUtils.copyFromTo(newPlan, plan);
-			}
+		if(this.currentMatsimIteration>0 && this.currentMatsimIteration%this.MaaSPacakgeInertia==0) {
+		//this.takeSingleStep();//use either this or the following 
+		this.takeOptimizedStep();
 		}
+//		else {
+//			for(Plan plan:this.plans) {
+//				Plan newPlan = executedPlans.getExecutedPlans().get( plan.getPerson().getId() ) ;
+//				Gbl.assertNotNull( newPlan ) ;
+//				PopulationUtils.copyFromTo(newPlan, plan);
+//			}
+//		}
 	}
 	
 	

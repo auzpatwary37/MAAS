@@ -12,8 +12,10 @@ import javax.xml.parsers.SAXParserFactory;
 import org.junit.jupiter.api.Test;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
+import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Activity;
 import org.matsim.api.core.v01.population.Person;
+import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.contrib.signals.builder.Signals;
 import org.matsim.contrib.signals.data.SignalsData;
 import org.matsim.contrib.signals.data.SignalsDataLoader;
@@ -21,18 +23,25 @@ import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigWriter;
 import org.matsim.core.config.groups.PlanCalcScoreConfigGroup.ActivityParams;
 import org.matsim.core.config.groups.PlanCalcScoreConfigGroup.ScoringParameterSet;
+import org.matsim.core.config.groups.PlanCalcScoreConfigGroup.TypicalDurationScoreComputation;
 import org.matsim.core.config.groups.StrategyConfigGroup.StrategySettings;
 import org.matsim.core.controler.Controler;
 import org.matsim.core.controler.ControlerUtils;
 import org.matsim.core.controler.OutputDirectoryHierarchy;
 import org.matsim.core.controler.OutputDirectoryLogging;
+import org.matsim.core.population.PopulationUtils;
 import org.matsim.core.replanning.strategies.DefaultPlanStrategiesModule;
 import org.matsim.core.replanning.strategies.KeepLastSelected;
 import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.core.utils.collections.Tuple;
 import org.matsim.lanes.Lane;
 import org.matsim.lanes.LanesToLinkAssignment;
+import org.matsim.utils.objectattributes.ObjectAttributes;
+import org.matsim.utils.objectattributes.ObjectAttributesXmlReader;
+import org.matsim.utils.objectattributes.attributable.Attributes;
 import org.matsim.vehicles.Vehicle;
+import org.matsim.vehicles.VehicleCapacity;
+import org.matsim.vehicles.VehicleType;
 import org.matsim.vehicles.VehicleUtils;
 import org.xml.sax.SAXException;
 
@@ -64,18 +73,36 @@ class MaaSDiscountAndChargeHandlerTest {
 				new ConfigWriter(config).write("RunUtilsConfig.xml");
 				//OutputDirectoryLogging.catchLogEntries();
 				config.addModule(new MaaSConfigGroup());
-				
+				config.controler().setLastIteration(250);
 				config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"test/packages_June2020.xml");
 				
 				config.plans().setInsistingOnUsingDeprecatedPersonAttributeFile(true);
+//				config.plans().setInputPersonAttributeFile("new Data/core/personAttributesHKI.xml");
+				config.plans().setInputFile("new Data/core/0.plans.xml.gz");
 				config.controler().setOutputDirectory("toyScenarioLarge/output");
 				
+				
+//				
 				//Add the MaaS package choice strategy
 				StrategySettings stratSets = new StrategySettings();
 				stratSets.setStrategyName(MaaSPlanStrategy.class.getName());
-				stratSets.setWeight(0.10);
+				stratSets.setWeight(0.20);
 				stratSets.setDisableAfter(200);
 				stratSets.setSubpopulation("person_TCSwithCar");
+				config.strategy().addStrategySettings(stratSets);
+				
+				stratSets = new StrategySettings();
+				stratSets.setStrategyName(MaaSPlanStrategy.class.getName());
+				stratSets.setWeight(0.20);
+				stratSets.setDisableAfter(200);
+				stratSets.setSubpopulation("person_TCSwithoutCar");
+				config.strategy().addStrategySettings(stratSets);
+				
+				stratSets = new StrategySettings();
+				stratSets.setStrategyName(MaaSPlanStrategy.class.getName());
+				stratSets.setWeight(0.20);
+				stratSets.setDisableAfter(200);
+				stratSets.setSubpopulation("trip_TCS");
 				config.strategy().addStrategySettings(stratSets);
 				
 				stratSets = new StrategySettings();
@@ -84,14 +111,15 @@ class MaaSDiscountAndChargeHandlerTest {
 				stratSets.setDisableAfter(200);
 				stratSets.setSubpopulation(MaaSUtil.MaaSOperatorAgentSubPopulationName);
 				config.strategy().addStrategySettings(stratSets);
+				//___________________
+				
 				RunUtils.addStrategy(config, "KeepLastSelected", MaaSUtil.MaaSOperatorAgentSubPopulationName, 
 						0.7, 400);
 				
 				ScoringParameterSet s = config.planCalcScore().getOrCreateScoringParameters(MaaSOperator.type);
 				
 				ScoringParameterSet ss =  config.planCalcScore().getScoringParameters("person_TCSwithCar");
-				
-				
+
 				
 				s.getOrCreateModeParams("car").setMarginalUtilityOfTraveling(ss.getOrCreateModeParams("car").getMarginalUtilityOfTraveling());
 				s.getOrCreateModeParams("car").setMarginalUtilityOfDistance(ss.getOrCreateModeParams("car").getMarginalUtilityOfDistance());
@@ -105,13 +133,43 @@ class MaaSDiscountAndChargeHandlerTest {
 				new ConfigWriter(config).write("test/config.xml");
 				
 				Scenario scenario = ScenarioUtils.loadScenario(config);
+				ObjectAttributes obj = new ObjectAttributes();
+				new ObjectAttributesXmlReader(obj).readFile("new Data/core/personAttributesHKI.xml");
 				
 				for(Person person: scenario.getPopulation().getPersons().values()) {
+					String subPop = (String) obj.getAttribute(person.getId().toString(), "SUBPOP_ATTRIB_NAME");
+					PopulationUtils.putSubpopulation(person, subPop);
 					Id<Vehicle> vehId = Id.create(person.getId().toString(), Vehicle.class);
 					Map<String, Id<Vehicle>> modeToVehicle = Maps.newHashMap();
 					modeToVehicle.put("taxi", vehId);
 					modeToVehicle.put("car", vehId);
 					VehicleUtils.insertVehicleIdsIntoAttributes(person, modeToVehicle);
+					for(PlanElement pe :person.getSelectedPlan().getPlanElements()) {
+						if (pe instanceof Activity) {
+							Activity act = (Activity)pe;
+							String PersonChangeWithCar_NAME = "person_TCSwithCar";
+							String PersonChangeWithoutCar_NAME = "person_TCSwithoutCar";
+							
+							String PersonFixed_NAME = "trip_TCS";
+							String GVChange_NAME = "person_GV";
+							String GVFixed_NAME = "trip_GV";
+							if(scenario.getConfig().planCalcScore().getScoringParameters(PersonChangeWithCar_NAME).getActivityParams(act.getType()) == null) {
+								ActivityParams params = new ActivityParams(act.getType());
+								params.setTypicalDurationScoreComputation(TypicalDurationScoreComputation.uniform);
+								params.setMinimalDuration(3600);
+								params.setTypicalDuration(8*3600);
+								config.planCalcScore().getScoringParameters(PersonChangeWithCar_NAME).addActivityParams(params);
+								config.planCalcScore().getScoringParameters(PersonChangeWithoutCar_NAME).addActivityParams(params);
+								config.planCalcScore().getScoringParameters(PersonFixed_NAME).addActivityParams(params);
+								config.planCalcScore().getScoringParameters(GVChange_NAME).addActivityParams(params);
+								config.planCalcScore().getScoringParameters(GVFixed_NAME).addActivityParams(params);
+							}
+						}
+					}
+				}
+				
+				for(Link link:scenario.getNetwork().getLinks().values()) {
+					link.setCapacity(link.getCapacity()*.14);
 				}
 				
 				MaaSPackages packages = new MaaSPackagesReader().readPackagesFile(scenario.getConfig().getModules().get(MaaSConfigGroup.GROUP_NAME).getParams().get(MaaSConfigGroup.INPUT_FILE)); //It has to be consistent with the config.
@@ -124,15 +182,22 @@ class MaaSDiscountAndChargeHandlerTest {
 				param.setScoringThisActivityAtAll(false);			
 				scenario.getConfig().planCalcScore().getScoringParameters(MaaSUtil.MaaSOperatorAgentSubPopulationName).addActivityParams(param);
 				
-				for(LanesToLinkAssignment l2l:scenario.getLanes().getLanesToLinkAssignments().values()) {
-					for(Lane l: l2l.getLanes().values()) {
-						
-						//Why this is done? 
-						//Why .1 specifically??
-						l.setCapacityVehiclesPerHour(1800*.15);
-					}
-				}
+//				for(LanesToLinkAssignment l2l:scenario.getLanes().getLanesToLinkAssignments().values()) {
+//					for(Lane l: l2l.getLanes().values()) {
+//						
+//						//Why this is done? 
+//						//Why .1 specifically??
+//						l.setCapacityVehiclesPerHour(1800*.14);
+//					}
+//				}
 				
+				
+				for(VehicleType vt:scenario.getTransitVehicles().getVehicleTypes().values()) {
+					vt.setPcuEquivalents(vt.getPcuEquivalents()*.14);
+					VehicleCapacity vc = vt.getCapacity();
+					vc.setSeats(Math.max((int)(vc.getSeats()*.14),1));
+					vc.setStandingRoom(Math.max((int)(vc.getStandingRoom()*.14),1));
+				}
 				
 //				for(Person p:scenario.getPopulation().getPersons().values()) {
 //					VehicleUtils.insertVehicleIdIntoAttributes(p, "car", Id.createVehicleId(p.getId().toString()));

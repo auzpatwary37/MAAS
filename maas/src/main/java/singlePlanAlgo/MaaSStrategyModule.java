@@ -48,8 +48,8 @@ public class MaaSStrategyModule implements   ActivityEndEventHandler,PlanStrateg
 
 	@Override
 	public void handlePlan(Plan plan) {
-		this.intelligentMaaSSelection(plan);
-		//this.randomMaaSSelection(plan);
+		//this.intelligentMaaSSelection(plan);
+		this.randomMaaSSelection(plan);
 	}
 
 	@Override

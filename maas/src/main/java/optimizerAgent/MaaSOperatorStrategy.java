@@ -14,6 +14,7 @@ import org.matsim.core.replanning.PlanStrategy;
 import org.matsim.core.replanning.PlanStrategyImpl;
 import org.matsim.core.replanning.ReplanningContext;
 import org.matsim.core.replanning.selectors.BestPlanSelector;
+import org.matsim.core.replanning.selectors.KeepSelected;
 import org.matsim.withinday.controller.ExecutedPlansService;
 import org.matsim.withinday.controller.ExecutedPlansServiceImpl;
 
@@ -48,7 +49,7 @@ public class MaaSOperatorStrategy implements PlanStrategy{
         // one module added here, then the plan is copied and then modified.
 
 		
-		PlanStrategyImpl.Builder builder = new PlanStrategyImpl.Builder(new BestPlanSelector());
+		PlanStrategyImpl.Builder builder = new PlanStrategyImpl.Builder(new KeepSelected());
         builder.addStrategyModule(new MaaSOperatorStrategyModule(packages, scenario, timeBeans, fareCalculators,executedPlans));
 
         // these modules may, at the same time, be events listeners (so that they can collect information):

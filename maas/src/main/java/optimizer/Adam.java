@@ -13,7 +13,7 @@ import optimizerAgent.VariableDetails;
 
 public class Adam implements Optimizer{
 
-	private double alpha = .1;
+	private double alpha = .5;
 	private double beta1 = .9;
 	private double beta2 = 0.999;
 	private double eta = 10e-8;
@@ -65,8 +65,8 @@ public class Adam implements Optimizer{
 		gradient.entrySet().parallelStream().forEach(g->{
 			m.compute(g.getKey(), (k,v)->this.beta1*v+(1-beta1)*g.getValue());
 			v.compute(g.getKey(), (k,v)->this.beta2*v+(1-this.beta2)*g.getValue()*g.getValue());
-			double m_h = m.get(g.getKey())/(1-this.beta1);
-			double v_h = v.get(g.getKey())/(1-this.beta2);
+			double m_h = m.get(g.getKey())/(1-Math.pow(this.beta1,this.counter));
+			double v_h = v.get(g.getKey())/(1-Math.pow(this.beta2,this.counter));
 			double var = this.variables.get(g.getKey()).getCurrentValue() + this.alpha*m_h/((Math.sqrt(v_h))+this.eta);
 			Tuple<Double,Double> limit = this.variables.get(g.getKey()).getLimit();
 			if(var<limit.getFirst()) var = limit.getFirst();

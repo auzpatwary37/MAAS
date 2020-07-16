@@ -21,7 +21,7 @@ class MaaSPackagesWriterTest {
 		TransitSchedule ts = scenario.getTransitSchedule();
 		
 		MaaSPackages packages = null;
-		packages = new MaaSPackages(ts, true, 100, 3, FareCalculatorCreator.getHKFareCalculators(), 0, true);
+		packages = new MaaSPackages(ts, true, 0, 3, FareCalculatorCreator.getHKFareCalculators(), 0, true);
 		
 		new MaaSPackagesWriter(packages).write("test/packaes_June2020.xml");
 		

@@ -18,10 +18,11 @@ public class RunUtils {
 //		ConfigUtils.loadConfig(initialConfig, "data/toyScenarioLargeData/configToyLargeMod.xml");
 		
 		Config initialConfig = RunTCS.setupConfig();
-		//initialConfig.plans().setInsistingOnUsingDeprecatedPersonAttributeFile(true);
-		initialConfig.plans().setInputFile("new Data/data/populationHKI.xml");
+		initialConfig.plans().setInsistingOnUsingDeprecatedPersonAttributeFile(true);
+		initialConfig.plans().setInputPersonAttributeFile("new Data/core/personAttributesHKI.xml");
+		initialConfig.plans().setInputFile("new Data/core/populationHKI.xml");
 		initialConfig.network().setInputFile("new Data/cal/output_network.xml.gz");
-		initialConfig.vehicles().setVehiclesFile("new Data/data/VehiclesHKI.xml");
+		initialConfig.vehicles().setVehiclesFile("new Data/core/VehiclesHKI.xml");
 		
 		initialConfig.network().setLaneDefinitionsFile("new Data/cal/output_lanes.xml");
 		ConfigGroup sscg = initialConfig.getModule("signalsystems");
@@ -38,8 +39,8 @@ public class RunUtils {
 		
 		//VehicleUtils.insertVehicleIdIntoAttributes(person, mode, vehicleId);
 		initialConfig.strategy().setFractionOfIterationsToDisableInnovation(0.85);
-//		initialConfig.qsim().setFlowCapFactor(0.14);
-//		initialConfig.qsim().setStorageCapFactor(0.2);
+		//initialConfig.qsim().setFlowCapFactor(0.14);// this has to be applied physically for the internal model to work
+		//initialConfig.qsim().setStorageCapFactor(0.2);
 
 		
 //		LinkedHashMap<String,Double>initialParams=loadInitialParam(pReader,new double[] {-200,-240});

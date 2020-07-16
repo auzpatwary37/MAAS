@@ -60,7 +60,7 @@ public class MaaSDataLoader extends AbstractModule{
 		public MaaSPackages get() {
 			String path = config.getPackagesFileURL(matsimConfig.getContext()).toString();
 			MaaSPackages packages = new MaaSPackagesReader().readPackagesFile(path);
-			insertRandomMaaSPackage(scenario.getPopulation(),packages);
+			//insertRandomMaaSPackage(scenario.getPopulation(),packages);
 			return packages;
 			
 		}

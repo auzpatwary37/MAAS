@@ -116,7 +116,11 @@ public class IntelligentOperatorDecisionEngine {
 					for(Entry<String, Map<String, Map<String, Double>>> timeFl:this.flow.getMaaSSpecificFareLinkFlow().entrySet()) volume+=timeFl.getValue().get(pacakgeId).get(farelink.toString());//subtract froom gradient
 					volume=volume*-1;
 				}else if(MaaSUtil.ifMaaSPackageCostVariableDetails(key)) {
-					volume = this.flow.getMaaSPackageUsage().get(pacakgeId);
+					if(this.flow.getMaaSPackageUsage().get(pacakgeId)==null) {
+						volume = 0;
+					}else {
+						volume = this.flow.getMaaSPackageUsage().get(pacakgeId);
+					}
 				}
 				
 				double grad = volume;
