@@ -68,49 +68,57 @@ class MaaSDiscountAndChargeHandlerTest {
 
 	@Test
 	void test() {
+		
+		String PersonChangeWithCar_NAME = "person_TCSwithCar";
+		String PersonChangeWithoutCar_NAME = "person_TCSwithoutCar";
+		
+		String PersonFixed_NAME = "trip_TCS";
+		String GVChange_NAME = "person_GV";
+		String GVFixed_NAME = "trip_GV";
+		
 		// This will test the optimization agent insertion
 				Config config = singlePlanAlgo.RunUtils.provideConfig();
 				new ConfigWriter(config).write("RunUtilsConfig.xml");
 				//OutputDirectoryLogging.catchLogEntries();
 				config.addModule(new MaaSConfigGroup());
 				config.controler().setLastIteration(250);
-				config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"test/packages_June2020.xml");
+				config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"test/packages_July2020.xml");
 				
 				config.plans().setInsistingOnUsingDeprecatedPersonAttributeFile(true);
 //				config.plans().setInputPersonAttributeFile("new Data/core/personAttributesHKI.xml");
-				config.plans().setInputFile("new Data/core/0.plans.xml.gz");
-				config.controler().setOutputDirectory("toyScenarioLarge/output");
-				
+				config.plans().setInputFile("new Data/core/20.plans.xml.gz");
+				config.controler().setOutputDirectory("toyScenarioLarge/output2");
+				config.controler().setWritePlansInterval(10);
 				
 //				
+				RunUtils.createStrategies(config, PersonChangeWithCar_NAME, 0.015, 0.01, 0.005, 0);
+				RunUtils.createStrategies(config, PersonChangeWithoutCar_NAME, 0.015, 0.01, 0.005, 0);
+				RunUtils.addStrategy(config, DefaultPlanStrategiesModule.DefaultStrategy.ChangeTripMode.toString(), PersonChangeWithCar_NAME, 
+						0.01, 100);
+				RunUtils.addStrategy(config, DefaultPlanStrategiesModule.DefaultStrategy.TimeAllocationMutator_ReRoute.toString(), PersonChangeWithCar_NAME, 
+						0.01, 100);
+				
+				RunUtils.addStrategy(config, DefaultPlanStrategiesModule.DefaultStrategy.ChangeTripMode.toString(), PersonChangeWithoutCar_NAME, 
+						0.01, 100);
+				RunUtils.addStrategy(config, DefaultPlanStrategiesModule.DefaultStrategy.TimeAllocationMutator_ReRoute.toString(), PersonChangeWithoutCar_NAME, 
+						0.01, 100);
+				
+				RunUtils.addStrategy(config, DefaultPlanStrategiesModule.DefaultStrategy.ReRoute.toString(), PersonFixed_NAME, 
+						0.02, 125);
+				RunUtils.addStrategy(config, DefaultPlanStrategiesModule.DefaultStrategy.ReRoute.toString(), GVFixed_NAME, 
+						0.02, 125);
+				
+				RunUtils.createStrategies(config, PersonFixed_NAME, 0.02, 0.01, 0, 40);
+				RunUtils.createStrategies(config, GVChange_NAME, 0.02, 0.005, 0, 0);
+				RunUtils.createStrategies(config, GVFixed_NAME, 0.02, 0.005, 0, 40);
+				
 				//Add the MaaS package choice strategy
-				StrategySettings stratSets = new StrategySettings();
-				stratSets.setStrategyName(MaaSPlanStrategy.class.getName());
-				stratSets.setWeight(0.20);
-				stratSets.setDisableAfter(200);
-				stratSets.setSubpopulation("person_TCSwithCar");
-				config.strategy().addStrategySettings(stratSets);
+				config.strategy().addStrategySettings(createStrategySettings(MaaSPlanStrategy.class.getName(),.05,200,"person_TCSwithCar"));
+				config.strategy().addStrategySettings(createStrategySettings(MaaSPlanStrategy.class.getName(),.05,200,"person_TCSwithoutCar"));
+				config.strategy().addStrategySettings(createStrategySettings(MaaSPlanStrategy.class.getName(),.05,200,"trip_TCS"));
+				config.strategy().addStrategySettings(createStrategySettings(MaaSOperatorStrategy.class.getName(),.20,200,MaaSUtil.MaaSOperatorAgentSubPopulationName));
 				
-				stratSets = new StrategySettings();
-				stratSets.setStrategyName(MaaSPlanStrategy.class.getName());
-				stratSets.setWeight(0.20);
-				stratSets.setDisableAfter(200);
-				stratSets.setSubpopulation("person_TCSwithoutCar");
-				config.strategy().addStrategySettings(stratSets);
 				
-				stratSets = new StrategySettings();
-				stratSets.setStrategyName(MaaSPlanStrategy.class.getName());
-				stratSets.setWeight(0.20);
-				stratSets.setDisableAfter(200);
-				stratSets.setSubpopulation("trip_TCS");
-				config.strategy().addStrategySettings(stratSets);
-				
-				stratSets = new StrategySettings();
-				stratSets.setStrategyName(MaaSOperatorStrategy.class.getName());
-				stratSets.setWeight(1);
-				stratSets.setDisableAfter(200);
-				stratSets.setSubpopulation(MaaSUtil.MaaSOperatorAgentSubPopulationName);
-				config.strategy().addStrategySettings(stratSets);
 				//___________________
 				
 				RunUtils.addStrategy(config, "KeepLastSelected", MaaSUtil.MaaSOperatorAgentSubPopulationName, 
@@ -147,12 +155,7 @@ class MaaSDiscountAndChargeHandlerTest {
 					for(PlanElement pe :person.getSelectedPlan().getPlanElements()) {
 						if (pe instanceof Activity) {
 							Activity act = (Activity)pe;
-							String PersonChangeWithCar_NAME = "person_TCSwithCar";
-							String PersonChangeWithoutCar_NAME = "person_TCSwithoutCar";
 							
-							String PersonFixed_NAME = "trip_TCS";
-							String GVChange_NAME = "person_GV";
-							String GVFixed_NAME = "trip_GV";
 							if(scenario.getConfig().planCalcScore().getScoringParameters(PersonChangeWithCar_NAME).getActivityParams(act.getType()) == null) {
 								ActivityParams params = new ActivityParams(act.getType());
 								params.setTypicalDurationScoreComputation(TypicalDurationScoreComputation.uniform);
@@ -168,13 +171,13 @@ class MaaSDiscountAndChargeHandlerTest {
 					}
 				}
 				
-				for(Link link:scenario.getNetwork().getLinks().values()) {
-					link.setCapacity(link.getCapacity()*.14);
-				}
+//				for(Link link:scenario.getNetwork().getLinks().values()) {
+//					link.setCapacity(link.getCapacity()*.14);
+//				}
 				
 				MaaSPackages packages = new MaaSPackagesReader().readPackagesFile(scenario.getConfig().getModules().get(MaaSConfigGroup.GROUP_NAME).getParams().get(MaaSConfigGroup.INPUT_FILE)); //It has to be consistent with the config.
 				
-				Activity act = MaaSUtil.createMaaSOperator(packages, scenario.getPopulation(), "test/agentPop.xml",new Tuple<>(.5,2.));
+				Activity act = MaaSUtil.createMaaSOperator(packages, scenario.getPopulation(), "test/agentPop.xml",new Tuple<>(.5,2.5));
 				
 				ActivityParams param = new ActivityParams(act.getType());
 				param.setTypicalDuration(20*3600);
@@ -195,8 +198,8 @@ class MaaSDiscountAndChargeHandlerTest {
 				for(VehicleType vt:scenario.getTransitVehicles().getVehicleTypes().values()) {
 					vt.setPcuEquivalents(vt.getPcuEquivalents()*.14);
 					VehicleCapacity vc = vt.getCapacity();
-					vc.setSeats(Math.max((int)(vc.getSeats()*.14),1));
-					vc.setStandingRoom(Math.max((int)(vc.getStandingRoom()*.14),1));
+					vc.setSeats(Math.max((int)(vc.getSeats()*.1),1));
+					vc.setStandingRoom(Math.max((int)(vc.getStandingRoom()*.1),1));
 				}
 				
 //				for(Person p:scenario.getPopulation().getPersons().values()) {
@@ -235,4 +238,13 @@ class MaaSDiscountAndChargeHandlerTest {
 		fail("Not yet implemented");
 	}
 
+	
+	public static StrategySettings createStrategySettings(String name,double weight,int disableAfter,String subPop) {
+		StrategySettings stratSets = new StrategySettings();
+		stratSets.setStrategyName(name);
+		stratSets.setWeight(weight);
+		stratSets.setDisableAfter(disableAfter);
+		stratSets.setSubpopulation(subPop);
+		return stratSets;
+	}
 }

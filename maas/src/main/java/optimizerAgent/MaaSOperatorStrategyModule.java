@@ -34,7 +34,7 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 	@Inject
 	private @Named(MaaSUtil.MaaSPackagesAttributeName) MaaSPackages packages;
 	
-	private int MaaSPacakgeInertia = 5;
+	private int MaaSPacakgeInertia = 15;
 	private Scenario scenario;
 	private int maxCounter = 10;
 

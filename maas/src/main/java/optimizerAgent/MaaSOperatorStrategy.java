@@ -49,6 +49,7 @@ public class MaaSOperatorStrategy implements PlanStrategy{
         // one module added here, then the plan is copied and then modified.
 
 		
+		@SuppressWarnings({ "rawtypes", "unchecked" })
 		PlanStrategyImpl.Builder builder = new PlanStrategyImpl.Builder(new KeepSelected());
         builder.addStrategyModule(new MaaSOperatorStrategyModule(packages, scenario, timeBeans, fareCalculators,executedPlans));
 

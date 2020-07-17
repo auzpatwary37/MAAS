@@ -122,32 +122,13 @@ public class RunTCS {
 		
 		config.vehicles().setVehiclesFile("new Data/data/VehiclesHKI.xml");
 		config.qsim().setNumberOfThreads(10);
-		config.qsim().setStorageCapFactor(2);
-		config.qsim().setFlowCapFactor(1.2);
+//		config.qsim().setStorageCapFactor(2);
+//		config.qsim().setFlowCapFactor(1.2);
 		config.global().setNumberOfThreads(24);
 		config.parallelEventHandling().setNumberOfThreads(14);
 		config.parallelEventHandling().setEstimatedNumberOfEvents((long) 1000000000);
 		
-		RunUtils.createStrategies(config, PersonChangeWithCar_NAME, 0.015, 0.01, 0.005, 0);
-		RunUtils.createStrategies(config, PersonChangeWithoutCar_NAME, 0.015, 0.01, 0.005, 0);
-		RunUtils.addStrategy(config, DefaultPlanStrategiesModule.DefaultStrategy.ChangeTripMode.toString(), PersonChangeWithCar_NAME, 
-				0.02, 40);
-		RunUtils.addStrategy(config, DefaultPlanStrategiesModule.DefaultStrategy.TimeAllocationMutator_ReRoute.toString(), PersonChangeWithCar_NAME, 
-				0.03, 40);
-		
-		RunUtils.addStrategy(config, DefaultPlanStrategiesModule.DefaultStrategy.ChangeTripMode.toString(), PersonChangeWithoutCar_NAME, 
-				0.02, 40);
-		RunUtils.addStrategy(config, DefaultPlanStrategiesModule.DefaultStrategy.TimeAllocationMutator_ReRoute.toString(), PersonChangeWithoutCar_NAME, 
-				0.03, 40);
-		
-		RunUtils.addStrategy(config, DefaultPlanStrategiesModule.DefaultStrategy.ReRoute.toString(), PersonFixed_NAME, 
-				0.02, 125);
-		RunUtils.addStrategy(config, DefaultPlanStrategiesModule.DefaultStrategy.ReRoute.toString(), GVFixed_NAME, 
-				0.02, 125);
-		
-		RunUtils.createStrategies(config, PersonFixed_NAME, 0.02, 0.01, 0, 40);
-		RunUtils.createStrategies(config, GVChange_NAME, 0.02, 0.005, 0, 0);
-		RunUtils.createStrategies(config, GVFixed_NAME, 0.02, 0.005, 0, 40);
+
 		
 //        EmissionsConfigGroup ecg = new EmissionsConfigGroup() ;
 //        config.addModule(ecg);

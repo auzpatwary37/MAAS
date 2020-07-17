@@ -39,7 +39,7 @@ public class RunUtils {
 		
 		//VehicleUtils.insertVehicleIdIntoAttributes(person, mode, vehicleId);
 		initialConfig.strategy().setFractionOfIterationsToDisableInnovation(0.85);
-		//initialConfig.qsim().setFlowCapFactor(0.14);// this has to be applied physically for the internal model to work
+		initialConfig.qsim().setFlowCapFactor(0.14);// this has to be applied physically for the internal model to work
 		//initialConfig.qsim().setStorageCapFactor(0.2);
 
 		
@@ -61,12 +61,14 @@ public class RunUtils {
 		config.controler().setWritePlansInterval(50);
 		config.qsim().setStartTime(0.0);
 		config.qsim().setEndTime(28*3600);
-		config.qsim().setStorageCapFactor(.14);
+		config.qsim().setStorageCapFactor(.17);
 		config.controler().setWriteEventsInterval(20);
 		config.planCalcScore().setWriteExperiencedPlans(false);
 		//config.plans().setInsistingOnUsingDeprecatedPersonAttributeFile(true);
 		TransitRouterFareDynamicImpl.aStarSetting='c';
 		TransitRouterFareDynamicImpl.distanceFactor=.01;
+		
+		
 		 return config;
 	}
 	

@@ -935,9 +935,10 @@ public class PersonPlanSueModel {
 				});
 			}
 			
-			for(Entry<String, Map<Id<TransitLink>, Map<String, Double>>> timeMap:this.trLinkTravelTimeGradient.entrySet()) {
+			this.trLinkTravelTimeGradient.entrySet().parallelStream().forEach(timeMap->{
+//			for(Entry<String, Map<Id<TransitLink>, Map<String, Double>>> timeMap:this.trLinkTravelTimeGradient.entrySet()) {
 				//for(Entry<Id<TransitLink>,Map<String,Double>> linkGradientMap:timeMap.getValue().entrySet()) {
-				timeMap.getValue().entrySet().parallelStream().forEach(linkGradientMap->{	
+				timeMap.getValue().entrySet().stream().forEach(linkGradientMap->{	
 					TransitLink link = this.transitLinks.get(timeMap.getKey()).get(linkGradientMap.getKey());
 					for(Entry<String, Double> var:linkGradientMap.getValue().entrySet()) {
 						
@@ -989,7 +990,7 @@ public class PersonPlanSueModel {
 						}
 					}
 				});
-			}
+			});
 			
 		}
 		//Now we calculate the plan probability gradients
