@@ -27,9 +27,6 @@ public class MaaSPackages{
 	private Map<String,String> fareLinkToOperatorMap = new HashMap<>();//This Assumes fare links are unique to operators, this might not be true
 	//TODO: fix this issue.
 	
-	
-	public Map<String,List<MaaSPackages>> packages= new HashMap<>();
-	
 	/**
 	 * Creating empty packages
 	 */

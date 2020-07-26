@@ -750,8 +750,11 @@ public class PersonPlanSueModel {
 			if(counter == 1)this.createIncidenceMaps(population);
 			
 			flow  = this.performNetworkLoading(population, params, anaParams,counter);//link incidences are ready after this step
+			logger.info("Finished network loading.");
 			this.caclulateGradient(population, counter, params, anaParams);
+			logger.info("Finished calculating gradient");
 			boolean shouldStop = this.updateVolume(flow.getLinkVolume(), flow.getLinkTransitVolume(), counter);//transit link dependencies are ready after this step
+			logger.info("Finished flow update.");
 			if(shouldStop) {
 				break;
 			}

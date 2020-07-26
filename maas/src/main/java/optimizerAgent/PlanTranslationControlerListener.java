@@ -3,6 +3,8 @@ package optimizerAgent;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.matsim.api.core.v01.Id;
@@ -36,6 +38,8 @@ public class PlanTranslationControlerListener implements IterationStartsListener
 	private OutputDirectoryHierarchy controlerIO;
 	
 	public final String FileName = "maas.csv";
+	public final String varFileName  = "vars.csv";
+	private Map<Id<Person>,Person> operators = new HashMap<>();
 	
 	@Inject
 	PlanTranslationControlerListener(){
@@ -44,7 +48,11 @@ public class PlanTranslationControlerListener implements IterationStartsListener
 	
 	@Override
 	public void notifyStartup(StartupEvent event) {
-
+		for(Person p:scenario.getPopulation().getPersons().values()) {
+			if(PopulationUtils.getSubpopulation(p).equals(MaaSUtil.MaaSOperatorAgentSubPopulationName)) {
+				this.operators.put(p.getId(),p);
+			}
+		}
 	}
 	
 	@Override
@@ -68,38 +76,39 @@ public class PlanTranslationControlerListener implements IterationStartsListener
 
 	@Override
 	public void notifyAfterMobsim(AfterMobsimEvent event) {
-		String fileName = controlerIO.getIterationFilename(event.getIteration(), FileName);
 		String fileNameFull = controlerIO.getOutputFilename(FileName);
-		File file = new File(fileName);
+		String varFile = controlerIO.getOutputFilename(varFileName);
 		File fullFile = new File(fileNameFull);
-		FileWriter fw = null;
 		FileWriter fwFull = null;
+		FileWriter varFw = null;
 		try {
-			fw= new FileWriter(file);
-			fw.append("Operator,revenue,var_name,varCurrent,varlowerLimit,varUpperLimit\n");
 			fwFull = new FileWriter(fullFile,true);
+			varFw = new FileWriter(new File(varFile),true);
 			if(event.getIteration() == 0) {
-				fwFull.append("Operator,Iteration,Revenue\n");
+				fwFull.append("Operator,iteartion,revenue,packageSold,pacakgeTrips,totalTrips\n");
+				varFw.append("Operator,iteartion,var_name,varCurrent,varlowerLimit,varUpperLimit,revenue\n");
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		for(Person p:scenario.getPopulation().getPersons().values()) {
-			if(PopulationUtils.getSubpopulation(p).equals(MaaSUtil.MaaSOperatorAgentSubPopulationName)) {
-				Plan plan = p.getSelectedPlan();
-				for(Entry<String, Object> a:plan.getAttributes().getAsMap().entrySet()) {
+		for(Person p:this.operators.values()) {
+		
+			Plan plan = p.getSelectedPlan();
+			
+			try {
+				fwFull.append(p.getId().toString()+","+event.getIteration()+","+plan.getAttributes().getAttribute(MaaSUtil.operatorRevenueName)+","+plan.getAttributes().getAttribute(MaaSUtil.PackageSoldKeyName)+","+
+						plan.getAttributes().getAttribute(MaaSUtil.PackageTripKeyName)+","+plan.getAttributes().getAttribute(MaaSUtil.operatorTripKeyName)+"\n");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+				
+			for(Object a:plan.getAttributes().getAsMap().values()) {
+				if(a instanceof VariableDetails) {
+					VariableDetails var = (VariableDetails)a;
 					try {
-					if(a.getValue() instanceof VariableDetails) {
-						
-							fw.append(p.getId().toString()+","+""+","+((VariableDetails)a.getValue()).getVariableName()+","+
-									((VariableDetails)a.getValue()).getCurrentValue()+","+((VariableDetails)a.getValue()).getLimit().getFirst()+","+((VariableDetails)a.getValue()).getLimit().getSecond()+"\n");
-						
-					}else if(a.getKey().contains(MaaSUtil.operatorRevenueName)){
-						fw.append(p.getId().toString()+","+a.getValue()+","+""+","+
-								""+","+""+","+""+"\n");
-						fwFull.append(p.getId().toString()+","+event.getIteration()+","+a.getValue()+"\n");
-					}
+						varFw.append(p.getId().toString()+","+event.getIteration()+","+var.getCurrentValue()+","+var.getLimit().getFirst()+","+var.getLimit().getSecond()+","+plan.getAttributes().getAttribute(MaaSUtil.operatorRevenueName)+"\n");
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -107,11 +116,13 @@ public class PlanTranslationControlerListener implements IterationStartsListener
 				}
 			}
 		}
+		
+		
 		try {
-			fw.flush();
+			varFw.flush();
 			fwFull.flush();
 			fwFull.close();
-			fw.close();
+			varFw.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -52,6 +52,7 @@ public class MaaSPlanStrategy implements PlanStrategy{
         // one module added here, then the plan is copied and then modified.
 		this.packages=packages;
 		MaaSStrategyModule mod = new MaaSStrategyModule(packages);
+		@SuppressWarnings({ "rawtypes", "unchecked" })
 		PlanStrategyImpl.Builder builder = new PlanStrategyImpl.Builder(new RandomPlanSelector());
 		//PlanStrategyImpl.Builder builder = new PlanStrategyImpl.Builder(new ExpBetaPlanSelector(config.planCalcScore()));
         builder.addStrategyModule(mod);

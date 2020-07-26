@@ -8,6 +8,7 @@ import java.util.Map;
 import org.matsim.api.core.v01.Id;
 import org.matsim.pt.transitSchedule.api.TransitLine;
 import org.matsim.pt.transitSchedule.api.TransitRoute;
+import org.matsim.pt.transitSchedule.api.TransitRouteStop;
 import org.matsim.pt.transitSchedule.api.TransitSchedule;
 import org.matsim.pt.transitSchedule.api.TransitStopFacility;
 
@@ -124,9 +125,8 @@ public class MaaSPackage {
 		for(TransitLine tl:ts.getTransitLines().values()) {
 			for(TransitRoute tr:tl.getRoutes().values()) {
 				if(tr.getTransportMode().equals(mode)) {
-				
 				tr.getStops().stream().forEach((stop)->{
-					if(stops.contains(stop.getStopFacility())) {
+					if(!stops.contains(stop.getStopFacility())) {
 						stops.add(stop.getStopFacility());
 						}
 					});

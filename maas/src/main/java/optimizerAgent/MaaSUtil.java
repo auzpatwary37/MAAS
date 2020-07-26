@@ -35,6 +35,9 @@ public final class MaaSUtil {
 	public static final String operatorRevenueName = "revenue";
 	public static final String dummyActivityTypeForMaasOperator = "maasOperatorAct";
 	public static final String nullMaaSPacakgeKeyName = "noMass";
+	public static final String PackageSoldKeyName = "packageSold";
+	public static final String PackageTripKeyName = "packageTrip";
+	public static final String operatorTripKeyName = "totalTrip";
 
 	public static Activity createMaaSOperator(MaaSPackages packages, Population population, String popOutLoc, 
 			Tuple<Double,Double> boundsMultiplier) {
@@ -58,8 +61,11 @@ public final class MaaSUtil {
 				variableLimit.put(MaaSUtil.generateMaaSPackageCostKey(m.getId()),new Tuple<>(boundsMultiplier.getFirst()*m.getPackageCost(),boundsMultiplier.getSecond()*m.getPackageCost()));
 			}
 			MaaSOperator agent = new MaaSOperator(person, variable, variableLimit,act);
-			population.addPerson(agent);
-					
+			if(population.getPersons().containsKey(agent.getId())) {
+				population.getPersons().remove(agent.getId());
+				
+			}
+			population.addPerson(agent);	
 			
 			//plan.getAttributes().putAttribute("variableName", value)
 			
