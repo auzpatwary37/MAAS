@@ -2,14 +2,18 @@ package matsimIntegrate;
 
 import java.util.Map;
 
+import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.pt.router.CustomDataManager;
 import org.matsim.pt.router.PreparedTransitSchedule;
+import org.matsim.pt.transitSchedule.api.TransitLine;
 import org.matsim.pt.transitSchedule.api.TransitRoute;
 
 import MaaSPackages.MaaSPackage;
+import MaaSPackages.MaaSPackages;
 import dynamicTransitRouter.FareDynamicTransitTimeAndDisutility;
 import dynamicTransitRouter.RouteHelper;
+import dynamicTransitRouter.TransitStop;
 import dynamicTransitRouter.TransitRouterNetworkHR.TransitRouterNetworkLink;
 import dynamicTransitRouter.costs.StopStopTime;
 import dynamicTransitRouter.costs.VehicleOccupancy;
@@ -21,10 +25,12 @@ import transitCalculatorsWithFare.FareTransitRouterConfig;
 
 public class FareDynamicTransitTimeAndDisutilityMaaS extends FareDynamicTransitTimeAndDisutility{
 
+	private final MaaSPackages mps;
 	public FareDynamicTransitTimeAndDisutilityMaaS(FareTransitRouterConfig config, WaitingTime waitTime,
 			StopStopTime stopStopTime, VehicleOccupancy vehicleOccupancy, Map<String, FareCalculator> fareCalculators,
-			TransferDiscountCalculator tdc, PreparedTransitSchedule preparedTransitSchedule) {
+			TransferDiscountCalculator tdc, PreparedTransitSchedule preparedTransitSchedule, MaaSPackages mps) {
 		super(config, waitTime, stopStopTime, vehicleOccupancy, fareCalculators, tdc, preparedTransitSchedule);
+		this.mps = mps;
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -53,18 +59,35 @@ public class FareDynamicTransitTimeAndDisutilityMaaS extends FareDynamicTransitT
 		} else
 			newHelper = fromNodeHelper.clone();
 
-		MaaSPackage mp = (MaaSPackage) person.getSelectedPlan().getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName);
+		String attributeName = (String) person.getSelectedPlan().getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName);
+		MaaSPackage mp = mps.getMassPackages().get(attributeName);
 		
 		// If it is a transfer link, we will calculate the transfer disutility for the transfer.
 		if (wrapped.getRoute() == null) {
 			if (wrapped.toNode.getRoute() != null) {  // A boarding link
 				fare = getBoardingLinkFare(wrapped, isFirstTrip, fromNodeHelper, newHelper, time);
-				double discount = mp.getDiscounts().get(wrapped.toNode.line.getId());
-				if(fare<discount) { //If the discount is too high.
-					newHelper.addUnrealizedDiscount(discount);
+//				if(mp!=null) {
+//					double discount = mp.getDiscounts().get(wrapped.toNode.line.getId());
+//					if(fare<discount) { //If the discount is too high.
+//						newHelper.addUnrealizedDiscount(discount);
+//						fare = 0;
+//					}else {
+//						fare-=discount;
+//					}
+//				}
+				if(fare<Double.MAX_VALUE && attributeName!= null && attributeName.equals("bus") && wrapped.toNode.getRoute().getTransportMode().equals("bus")) {
 					fare = 0;
-				}else {
-					fare-=discount;
+				}else if(fare<Double.MAX_VALUE && attributeName!= null && attributeName.equals("train") && wrapped.toNode.getRoute().getTransportMode().equals("train")) {
+					fare = 0;
+				}else if(fare<Double.MAX_VALUE && attributeName!= null && attributeName.equals("ferry") && wrapped.toNode.getRoute().getTransportMode().equals("ferry")) {
+					fare = 0;
+				}
+				
+				if(isFirstTrip) {
+					Id<TransitLine> toLineId = wrapped.toNode.line.getId();
+					TransitStop fromStop = wrapped.toNode.tStop;
+					String toTransportMode = wrapped.toNode.getRoute().getTransportMode();
+					newHelper = new RouteHelper(toLineId, fromStop, toTransportMode, time);	
 				}
 			
 			} else if (wrapped.fromNode.getRoute() != null) {  // Egress link
@@ -77,6 +100,13 @@ public class FareDynamicTransitTimeAndDisutilityMaaS extends FareDynamicTransitT
 			}
 		} else {
 			fareDiff = getTravelFareDiff(wrapped, newHelper);
+			if(fareDiff<Double.MAX_VALUE && attributeName!= null && attributeName.equals("bus") && wrapped.getRoute().getTransportMode().equals("bus")) {
+				fareDiff = 0;
+			}else if(fareDiff<Double.MAX_VALUE && attributeName!= null && attributeName.equals("train") && wrapped.getRoute().getTransportMode().equals("train")) {
+				fareDiff = 0;
+			}else if(fareDiff<Double.MAX_VALUE && attributeName!= null && attributeName.equals("ferry") && wrapped.getRoute().getTransportMode().equals("ferry")) {
+				fareDiff = 0;
+			}
 		}
 		if (fare < 0) {
 			throw new RuntimeException("The fare is negative, not valid!");	

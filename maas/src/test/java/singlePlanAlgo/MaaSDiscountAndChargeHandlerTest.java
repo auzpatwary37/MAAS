@@ -51,6 +51,7 @@ import MaaSPackages.MaaSPackages;
 import MaaSPackages.MaaSPackagesReader;
 import dynamicTransitRouter.DynamicRoutingModule;
 import dynamicTransitRouter.fareCalculators.ZonalFareXMLParserV2;
+import matsimIntegrate.DynamicRoutingModuleWithMaas;
 import optimizerAgent.MaaSOperator;
 import optimizerAgent.MaaSOperatorOptimizationModule;
 import optimizerAgent.MaaSOperatorStrategy;
@@ -87,19 +88,19 @@ class MaaSDiscountAndChargeHandlerTest {
 				config.plans().setInsistingOnUsingDeprecatedPersonAttributeFile(true);
 				config.plans().setInputPersonAttributeFile("new Data/core/personAttributesHKI.xml");
 //				config.plans().setInputFile("new Data/core/20.plans.xml.gz");
-				config.controler().setOutputDirectory("toyScenarioLarge/output_WithMaaSwithoutOptim");
+				config.controler().setOutputDirectory("toyScenarioLarge/output_WithMaaSwithoutOptim_IntelligentAgent2");
 				config.controler().setWritePlansInterval(10);
 				
 //				
 				RunUtils.createStrategies(config, PersonChangeWithCar_NAME, 0.015, 0.01, 0.005, 0);
 				RunUtils.createStrategies(config, PersonChangeWithoutCar_NAME, 0.015, 0.01, 0.005, 0);
 				RunUtils.addStrategy(config, DefaultPlanStrategiesModule.DefaultStrategy.ChangeTripMode.toString(), PersonChangeWithCar_NAME, 
-						0.01, 100);
+						0.05, 100);
 				RunUtils.addStrategy(config, DefaultPlanStrategiesModule.DefaultStrategy.TimeAllocationMutator_ReRoute.toString(), PersonChangeWithCar_NAME, 
 						0.01, 100);
 				
 				RunUtils.addStrategy(config, DefaultPlanStrategiesModule.DefaultStrategy.ChangeTripMode.toString(), PersonChangeWithoutCar_NAME, 
-						0.01, 100);
+						0.05, 100);
 				RunUtils.addStrategy(config, DefaultPlanStrategiesModule.DefaultStrategy.TimeAllocationMutator_ReRoute.toString(), PersonChangeWithoutCar_NAME, 
 						0.01, 100);
 				
@@ -176,7 +177,7 @@ class MaaSDiscountAndChargeHandlerTest {
 //				}
 				
 				MaaSPackages packages = new MaaSPackagesReader().readPackagesFile(scenario.getConfig().getModules().get(MaaSConfigGroup.GROUP_NAME).getParams().get(MaaSConfigGroup.INPUT_FILE)); //It has to be consistent with the config.
-				
+				//RunUtils.scaleDownPopulation(scenario.getPopulation(), 0.1);
 				Activity act = MaaSUtil.createMaaSOperator(packages, scenario.getPopulation(), "test/agentPop.xml",new Tuple<>(.5,2.5));
 				
 				ActivityParams param = new ActivityParams(act.getType());
@@ -216,7 +217,7 @@ class MaaSDiscountAndChargeHandlerTest {
 				try {
 					saxParser = SAXParserFactory.newInstance().newSAXParser();
 					saxParser.parse("new Data/data/busFare.xml", busFareGetter);
-					controler.addOverridingModule(new DynamicRoutingModule(busFareGetter.get(), "fare/mtr_lines_fares.csv", 
+					controler.addOverridingModule(new DynamicRoutingModuleWithMaas(busFareGetter.get(), "fare/mtr_lines_fares.csv", 
 							"fare/transitDiscount.json", "fare/light_rail_fares.csv", "fare/busFareGTFS.json", "fare/ferryFareGTFS.json"));
 					
 //					controler.addOverridingModule(new DynamicRoutingModule(busFareGetter.get(), "fare/mtr_lines_fares.csv", 

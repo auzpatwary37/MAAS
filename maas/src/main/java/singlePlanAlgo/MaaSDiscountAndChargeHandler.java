@@ -37,7 +37,7 @@ import transitCalculatorsWithFare.FareLink;
 public class MaaSDiscountAndChargeHandler implements PersonMoneyEventHandler, PersonDepartureEventHandler{
 
 	
-	private Scenario sceanrio;
+	private Scenario scenario;
 	@Inject
 	private @Named(MaaSUtil.MaaSPackagesAttributeName) MaaSPackages packages;
 	private final EventsManager eventManager;
@@ -46,8 +46,8 @@ public class MaaSDiscountAndChargeHandler implements PersonMoneyEventHandler, Pe
 	MaaSDiscountAndChargeHandler(final MatsimServices controler, final TransitSchedule transitSchedule,
 			Map<String, FareCalculator> fareCals, TransferDiscountCalculator tdc) {
 		eventManager = controler.getEvents();
-		this.sceanrio = controler.getScenario();
-		this.sceanrio.getPopulation().getPersons().values().forEach(p->{
+		this.scenario = controler.getScenario();
+		this.scenario.getPopulation().getPersons().values().forEach(p->{
 			if(PopulationUtils.getSubpopulation(p).equals(MaaSUtil.MaaSOperatorAgentSubPopulationName)) {
 				this.operatorMap.put(p.getId(),p);
 			}
@@ -67,7 +67,7 @@ public class MaaSDiscountAndChargeHandler implements PersonMoneyEventHandler, Pe
 	public void handleEvent(PersonMoneyEvent event) {
 		if(event.getAttributes().get(PersonMoneyEvent.ATTRIBUTE_PURPOSE).equals(FareLink.FareTransactionName)) {//So, this is a fare payment event
 			FareLink fl = new FareLink(event.getAttributes().get(PersonMoneyEvent.ATTRIBUTE_TRANSACTION_PARTNER));
-			Plan plan = this.sceanrio.getPopulation().getPersons().get(event.getPersonId()).getSelectedPlan();
+			Plan plan = this.scenario.getPopulation().getPersons().get(event.getPersonId()).getSelectedPlan();
 			if(plan.getScore()==null) {
 				if(plan.getAttributes().getAttribute("FareLinks")==null) {
 					plan.getAttributes().putAttribute("FareLinks", new HashMap<String,Double>());
@@ -90,7 +90,7 @@ public class MaaSDiscountAndChargeHandler implements PersonMoneyEventHandler, Pe
 			if(this.packages.getOperatorId(fl)!=null) {//the fare link might not be under any operators that are being optimized
 				String fareLinkOperatorId = this.packages.getOperatorId(fl)+MaaSUtil.MaaSOperatorSubscript;
 				this.eventManager.processEvent(new PersonMoneyEvent(time,Id.createPersonId(fareLinkOperatorId), fareRevenue, MaaSUtil.MaaSOperatorFareRevenueTransactionName,fl.toString()+"__"+event.getPersonId()));//Operator fare revenue event.
-				Plan selectedOperatorPlan =  this.sceanrio.getPopulation().getPersons().get(Id.createPersonId(fareLinkOperatorId)).getSelectedPlan();
+				Plan selectedOperatorPlan =  this.scenario.getPopulation().getPersons().get(Id.createPersonId(fareLinkOperatorId)).getSelectedPlan();
 				Double oldReveneue = (Double)selectedOperatorPlan.getAttributes().getAttribute(MaaSUtil.operatorRevenueName);
 				
 				if(oldReveneue == null) {
@@ -107,11 +107,11 @@ public class MaaSDiscountAndChargeHandler implements PersonMoneyEventHandler, Pe
 
 	@Override
 	public void handleEvent(PersonDepartureEvent event) {
-		if(!this.sceanrio.getPopulation().getPersons().containsKey(event.getPersonId())) {
+		if(!this.scenario.getPopulation().getPersons().containsKey(event.getPersonId())) {
 			return; //Ignore the 'person' that is not actually a person (e.g. A bus driver) 
 		}
 		
-		Plan plan = this.sceanrio.getPopulation().getPersons().get(event.getPersonId()).getSelectedPlan();
+		Plan plan = this.scenario.getPopulation().getPersons().get(event.getPersonId()).getSelectedPlan();
 		String selectedMaaSid = (String) plan.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName);
 		if(selectedMaaSid!=null) {
 			MaaSPackage m = this.packages.getMassPackages().get(selectedMaaSid);
@@ -120,7 +120,7 @@ public class MaaSDiscountAndChargeHandler implements PersonMoneyEventHandler, Pe
 			this.eventManager.processEvent(new PersonMoneyEvent(event.getTime(),event.getPersonId(), -maasCost, MaaSUtil.AgentpayForMaaSPackageTransactionName,m.getId()));//Agent buying package
 			this.eventManager.processEvent(new PersonMoneyEvent(event.getTime(),Id.createPersonId(packageOperatorId), maasCost, MaaSUtil.MaaSOperatorpacakgeRevenueTransactionName,m.getId()+"__"+event.getPersonId()));//Operator earning revenue by selling package.
 			
-			Plan selectedOperatorPlan =  this.sceanrio.getPopulation().getPersons().get(Id.createPersonId(packageOperatorId)).getSelectedPlan();
+			Plan selectedOperatorPlan =  this.scenario.getPopulation().getPersons().get(Id.createPersonId(packageOperatorId)).getSelectedPlan();
 			int soldPackage = (int)selectedOperatorPlan.getAttributes().getAttribute(MaaSUtil.PackageSoldKeyName);
 			Double oldReveneue = (Double)selectedOperatorPlan.getAttributes().getAttribute(MaaSUtil.operatorRevenueName);
 			soldPackage++;

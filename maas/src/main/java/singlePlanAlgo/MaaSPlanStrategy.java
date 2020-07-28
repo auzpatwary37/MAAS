@@ -56,8 +56,8 @@ public class MaaSPlanStrategy implements PlanStrategy{
 		PlanStrategyImpl.Builder builder = new PlanStrategyImpl.Builder(new RandomPlanSelector());
 		//PlanStrategyImpl.Builder builder = new PlanStrategyImpl.Builder(new ExpBetaPlanSelector(config.planCalcScore()));
         builder.addStrategyModule(mod);
-        builder.addStrategyModule(new TripsToLegsModule(tripRouterProvider, globalConfigGroup));
-		builder.addStrategyModule(new ChangeLegMode(globalConfigGroup, changeLegModeConfigGroup));
+//      builder.addStrategyModule(new TripsToLegsModule(tripRouterProvider, globalConfigGroup));
+//		builder.addStrategyModule(new ChangeLegMode(globalConfigGroup, changeLegModeConfigGroup));
 		builder.addStrategyModule(new ReRoute(activityFacilities, tripRouterProvider, globalConfigGroup));
          
         // these modules may, at the same time, be events listeners (so that they can collect information):

@@ -3,11 +3,13 @@ package singlePlanAlgo;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
+import java.util.Set;
 
 import org.jboss.logging.Logger;
 import org.matsim.api.core.v01.events.ActivityEndEvent;
@@ -16,8 +18,11 @@ import org.matsim.api.core.v01.population.Plan;
 import org.matsim.api.core.v01.replanning.PlanStrategyModule;
 import org.matsim.core.replanning.ReplanningContext;
 
+import com.google.common.collect.Sets;
+
 import MaaSPackages.MaaSPackage;
 import MaaSPackages.MaaSPackages;
+import optimizer.MultinomialLogit;
 import optimizerAgent.MaaSUtil;
 import transitCalculatorsWithFare.FareLink;
 
@@ -27,7 +32,7 @@ public class MaaSStrategyModule implements   ActivityEndEventHandler,PlanStrateg
 	public LinkedHashMap<String,MaaSPackage> maasPackages= new LinkedHashMap<>();
 	private Random rnd;
 	private static Logger logger = Logger.getLogger(MaaSStrategyModule.class);	
-	
+	private Set<Plan> plans = new HashSet<>();
 	public MaaSStrategyModule(MaaSPackages packages){
 		this.maasPackages = new LinkedHashMap<>(packages.getMassPackages());
 		rnd = new Random();
@@ -48,14 +53,17 @@ public class MaaSStrategyModule implements   ActivityEndEventHandler,PlanStrateg
 
 	@Override
 	public void handlePlan(Plan plan) {
-		//this.intelligentMaaSSelection(plan);
-		this.randomMaaSSelection(plan);
+		this.plans.add(plan);
+		
 	}
 
 	@Override
 	public void finishReplanning() {
 		// For actual execution of replanning 
-		
+		this.plans.parallelStream().forEach(plan->{
+			this.intelligentMaaSSelection(plan);
+			//this.randomMaaSSelection(plan);
+		});
 	}
 	
 	private void randomMaaSSelection(Plan plan) {
@@ -82,31 +90,41 @@ public class MaaSStrategyModule implements   ActivityEndEventHandler,PlanStrateg
 	
 	
 	private void intelligentMaaSSelection(Plan plan) {
-		Map<String,Double> fareLinkUsage = new HashMap<>();
-		
+		String currentPlan = (String) plan.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName);
+		Map<String,Double> usedfareLinks = new HashMap<>();
 		plan.getPerson().getPlans().forEach(pl->{
 			Map<String,Double> fls = (Map<String, Double>) pl.getAttributes().getAttribute("FareLinks");
 			//Currently we do not take score as weight. So, the weighting is equal or there is no weight on the fareLinks
 			if(fls==null)//this means no fare links in this plan
 				return;
 			fls.entrySet().forEach(e->{
-				fareLinkUsage.compute(e.getKey(),(k,v)->v==null?e.getValue():Math.max(v, e.getValue()));
+				usedfareLinks.compute(e.getKey(),(k,v)->v==null?e.getValue():v+e.getValue());
 			});
 		});
-		Map<String,Double>expectedSavings = new HashMap<>();
+		Map<String,Double> scores = new LinkedHashMap<>();
+		double maxScore = 0;
+		scores.put(MaaSUtil.nullMaaSPacakgeKeyName, 0.);
 		for(Entry<String, MaaSPackage> pac:this.maasPackages.entrySet()) {
-			double savings = 0;
-			for(Entry<String, Double> fl:fareLinkUsage.entrySet()){
-				savings+=pac.getValue().getDiscountForFareLink(new FareLink(fl.getKey()))*fl.getValue();
-			};
-			expectedSavings.put(pac.getKey(), savings-pac.getValue().getPackageCost());
+			Set<String> packageFareLinks = new HashSet<>(pac.getValue().getDiscounts().keySet());
+			Set<String> interSet = Sets.intersection(new HashSet<>(usedfareLinks.keySet()), packageFareLinks);
+			double useScore = 0;
+			
+			for(String s:interSet){
+				useScore+=usedfareLinks.get(s);
+			}
+			if(useScore!=0)scores.put(pac.getKey(),useScore);
+			if(useScore>maxScore) maxScore = useScore;
 		}
-		double maxSavings = Collections.max(expectedSavings.values());
-		for(Entry<String, Double> d:expectedSavings.entrySet()) {
-			if(d.getValue()>0 && Double.compare(d.getValue(), maxSavings)==0)
-				plan.getAttributes().putAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName,d.getKey());
-				return;
+		if(currentPlan!=null) {
+			scores.remove(currentPlan);
 		}
-		plan.getAttributes().removeAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName);
+		//logit
+		String key = new MultinomialLogit(scores).sample();
+		if(key.equals(MaaSUtil.nullMaaSPacakgeKeyName)) {
+			plan.getAttributes().removeAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName);
+		}else {
+			plan.getAttributes().putAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName, key);
+		}
+		
 	}
 }

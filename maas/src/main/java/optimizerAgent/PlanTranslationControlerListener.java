@@ -108,7 +108,7 @@ public class PlanTranslationControlerListener implements IterationStartsListener
 				if(a instanceof VariableDetails) {
 					VariableDetails var = (VariableDetails)a;
 					try {
-						varFw.append(p.getId().toString()+","+event.getIteration()+","+var.getCurrentValue()+","+var.getLimit().getFirst()+","+var.getLimit().getSecond()+","+plan.getAttributes().getAttribute(MaaSUtil.operatorRevenueName)+"\n");
+						varFw.append(p.getId().toString()+","+event.getIteration()+","+var.getVariableName()+","+var.getCurrentValue()+","+var.getLimit().getFirst()+","+var.getLimit().getSecond()+","+plan.getAttributes().getAttribute(MaaSUtil.operatorRevenueName)+"\n");
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

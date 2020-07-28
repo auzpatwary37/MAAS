@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
@@ -27,6 +28,7 @@ import org.matsim.pt.transitSchedule.api.TransitRoute;
 import org.matsim.pt.transitSchedule.api.TransitRouteStop;
 import org.matsim.pt.transitSchedule.api.TransitStopFacility;
 
+import MaaSPackages.MaaSPackages;
 import dynamicTransitRouter.FareDynamicTransitTimeAndDisutility;
 import dynamicTransitRouter.TransitRouterFareDynamicImpl;
 import dynamicTransitRouter.TransitRouterNetworkHR;
@@ -36,6 +38,7 @@ import dynamicTransitRouter.costs.VehicleOccupancy;
 import dynamicTransitRouter.costs.WaitingTime;
 import dynamicTransitRouter.fareCalculators.FareCalculator;
 import dynamicTransitRouter.transfer.TransferDiscountCalculator;
+import optimizerAgent.MaaSUtil;
 import running.RunUtils;
 import transitCalculatorsWithFare.FareLink;
 import transitCalculatorsWithFare.FareTransitRouterConfig;
@@ -45,11 +48,12 @@ public class TransitRouterFareDynamicMaasImpl extends TransitRouterFareDynamicIm
 	@Inject
 	public TransitRouterFareDynamicMaasImpl(final Scenario scenario, final WaitingTime waitTime, 
 			final StopStopTime stopStopTime, final VehicleOccupancy vehicleOccupancy, 
-			final Map<String, FareCalculator> fareCals, TransferDiscountCalculator tdc){
+			final Map<String, FareCalculator> fareCals, TransferDiscountCalculator tdc, 
+			@Named(MaaSUtil.MaaSPackagesAttributeName) MaaSPackages mps){
 		super(scenario);
 		TransitRouterNetworkTravelTimeAndDisutility ttCalculator = new FareDynamicTransitTimeAndDisutilityMaaS((FareTransitRouterConfig) tConfig, 
 				waitTime, stopStopTime, vehicleOccupancy, fareCals, tdc,
-				new PreparedTransitSchedule(scenario.getTransitSchedule()));
+				new PreparedTransitSchedule(scenario.getTransitSchedule()), mps);
 		setFareCalculatorAndDijkstra(ttCalculator);
 	}
 	
@@ -63,6 +67,7 @@ public class TransitRouterFareDynamicMaasImpl extends TransitRouterFareDynamicIm
 		TransitRouteStop stop = null;
 		double time = departureTime;
 		boolean lastLegIsInSystem = false;
+		Id<TransitStopFacility> enterSystemStopFacility = null;
 		
 		for (Link link : p.links) {
 			TransitRouterNetworkHR.TransitRouterNetworkLink l = (TransitRouterNetworkHR.TransitRouterNetworkLink) link;
@@ -87,17 +92,22 @@ public class TransitRouterFareDynamicMaasImpl extends TransitRouterFareDynamicIm
 				String mode = l.fromNode.route.getTransportMode();
 				String fareLinkType = (mode.equals("train") || mode.equals("LR"))?FareLink.NetworkWideFare:FareLink.InVehicleFare;
 				
-				
 				List<FareLink> fareLinkList = (List<FareLink>) person.getSelectedPlan().getAttributes().getAttribute(FareLink.FareLinkAttributeName);  //TODO: It may have some information on the old one, need to fix
 				if( fareLinkList == null) {
 					fareLinkList = new ArrayList<FareLink>();
+					person.getSelectedPlan().getAttributes().putAttribute(FareLink.FareLinkAttributeName, fareLinkList);
 				}
 				FareLink f = null;
 				if(fareLinkType.equals(FareLink.NetworkWideFare)) {
 					if(lastLegIsInSystem) { //Replace the old link by new fare link with new stop facility
-						FareLink oldF = fareLinkList.remove(fareLinkList.size()-1);
-						f = new FareLink(fareLinkType, null, null, oldF.getBoardingStopFacility(), 
-								l.fromNode.stop.getStopFacility().getId(), mode);
+						//if(fareLinkList.size() > 0) {
+							FareLink oldF = fareLinkList.remove(fareLinkList.size()-1);
+							f = new FareLink(fareLinkType, null, null, oldF.getBoardingStopFacility(), 
+									l.fromNode.stop.getStopFacility().getId(), mode);
+//						}else {
+//							f = new FareLink(fareLinkType, null, null, enterSystemStopFacility, 
+//									l.fromNode.stop.getStopFacility().getId(), mode);							
+//						}
 					}else {
 						f = new FareLink(fareLinkType, null, null, stop.getStopFacility().getId(), 
 							l.fromNode.stop.getStopFacility().getId(), mode);
@@ -124,6 +134,7 @@ public class TransitRouterFareDynamicMaasImpl extends TransitRouterFareDynamicIm
 				legs.add(leg);
 				stop = l.toNode.stop;
 				time += walkWaitTime;
+				enterSystemStopFacility = stop.getStopFacility().getId();
 			}
 			
 		}
