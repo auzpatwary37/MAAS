@@ -9,6 +9,7 @@ import dynamicTransitRouter.TransitRouterFareDynamicImpl;
 import dynamicTransitRouter.fareCalculators.FareCalculator;
 import dynamicTransitRouter.transfer.AllPTTransferDiscount;
 import dynamicTransitRouter.transfer.TransferDiscountCalculator;
+import transitCalculatorsWithFare.TransitFareControlerListener;
 
 public class DynamicRoutingModuleWithMaas extends DynamicRoutingModule{
 
@@ -25,6 +26,7 @@ public class DynamicRoutingModuleWithMaas extends DynamicRoutingModule{
 			// Bind the fare to new dynamic and fare calculator
 			bind(TransitRouter.class).to(TransitRouterFareDynamicMaasImpl.class);
 			bind(TransferDiscountCalculator.class).to(NoTransferDiscount.class).in(Singleton.class);
+			addControlerListenerBinding().to(MaaSFareControlerListener.class);
 		}
 	}
 }

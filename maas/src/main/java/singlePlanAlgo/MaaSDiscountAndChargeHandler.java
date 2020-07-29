@@ -1,8 +1,10 @@
 package singlePlanAlgo;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -42,6 +44,7 @@ public class MaaSDiscountAndChargeHandler implements PersonMoneyEventHandler, Pe
 	private @Named(MaaSUtil.MaaSPackagesAttributeName) MaaSPackages packages;
 	private final EventsManager eventManager;
 	private final Map<Id<Person>,Person> operatorMap = new HashMap<>();
+	private final Set<Id<Person>> personIdWithPlan = new HashSet<>();
 	@Inject
 	MaaSDiscountAndChargeHandler(final MatsimServices controler, final TransitSchedule transitSchedule,
 			Map<String, FareCalculator> fareCals, TransferDiscountCalculator tdc) {
@@ -61,6 +64,7 @@ public class MaaSDiscountAndChargeHandler implements PersonMoneyEventHandler, Pe
 			p.getSelectedPlan().getAttributes().putAttribute(MaaSUtil.PackageTripKeyName, 0);
 			p.getSelectedPlan().getAttributes().putAttribute(MaaSUtil.operatorTripKeyName, 0);
 		});
+		personIdWithPlan.clear();
 	}
 	
 	@Override
@@ -109,11 +113,11 @@ public class MaaSDiscountAndChargeHandler implements PersonMoneyEventHandler, Pe
 	public void handleEvent(PersonDepartureEvent event) {
 		if(!this.scenario.getPopulation().getPersons().containsKey(event.getPersonId())) {
 			return; //Ignore the 'person' that is not actually a person (e.g. A bus driver) 
-		}
-		
+		}		
 		Plan plan = this.scenario.getPopulation().getPersons().get(event.getPersonId()).getSelectedPlan();
 		String selectedMaaSid = (String) plan.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName);
-		if(selectedMaaSid!=null) {
+		
+		if(selectedMaaSid!=null && !personIdWithPlan.contains(event.getPersonId())) {
 			MaaSPackage m = this.packages.getMassPackages().get(selectedMaaSid);
 			double maasCost = m.getPackageCost();
 			String packageOperatorId = m.getOperatorId()+MaaSUtil.MaaSOperatorSubscript;
@@ -130,16 +134,8 @@ public class MaaSDiscountAndChargeHandler implements PersonMoneyEventHandler, Pe
 			}else {
 				selectedOperatorPlan.getAttributes().putAttribute(MaaSUtil.operatorRevenueName, oldReveneue+maasCost);
 			}
+			personIdWithPlan.add(event.getPersonId());
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
 }

@@ -9,6 +9,8 @@ import org.matsim.pt.router.PreparedTransitSchedule;
 import org.matsim.pt.transitSchedule.api.TransitLine;
 import org.matsim.pt.transitSchedule.api.TransitRoute;
 
+import com.google.common.util.concurrent.AtomicDouble;
+
 import MaaSPackages.MaaSPackage;
 import MaaSPackages.MaaSPackages;
 import dynamicTransitRouter.FareDynamicTransitTimeAndDisutility;
@@ -26,6 +28,10 @@ import transitCalculatorsWithFare.FareTransitRouterConfig;
 public class FareDynamicTransitTimeAndDisutilityMaaS extends FareDynamicTransitTimeAndDisutility{
 
 	private final MaaSPackages mps;
+	//private static AtomicDouble busFareSaved = new AtomicDouble();
+	//private static AtomicDouble trainFareSaved = new AtomicDouble();
+	//private static AtomicDouble ferryFareSaved = new AtomicDouble();
+	
 	public FareDynamicTransitTimeAndDisutilityMaaS(FareTransitRouterConfig config, WaitingTime waitTime,
 			StopStopTime stopStopTime, VehicleOccupancy vehicleOccupancy, Map<String, FareCalculator> fareCalculators,
 			TransferDiscountCalculator tdc, PreparedTransitSchedule preparedTransitSchedule, MaaSPackages mps) {
@@ -66,20 +72,15 @@ public class FareDynamicTransitTimeAndDisutilityMaaS extends FareDynamicTransitT
 		if (wrapped.getRoute() == null) {
 			if (wrapped.toNode.getRoute() != null) {  // A boarding link
 				fare = getBoardingLinkFare(wrapped, isFirstTrip, fromNodeHelper, newHelper, time);
-//				if(mp!=null) {
-//					double discount = mp.getDiscounts().get(wrapped.toNode.line.getId());
-//					if(fare<discount) { //If the discount is too high.
-//						newHelper.addUnrealizedDiscount(discount);
-//						fare = 0;
-//					}else {
-//						fare-=discount;
-//					}
-//				}
+				//TODO: Add the discount based on the fare link.
 				if(fare<Double.MAX_VALUE && attributeName!= null && attributeName.equals("bus") && wrapped.toNode.getRoute().getTransportMode().equals("bus")) {
+					//busFareSaved.getAndAdd(fare);
 					fare = 0;
 				}else if(fare<Double.MAX_VALUE && attributeName!= null && attributeName.equals("train") && wrapped.toNode.getRoute().getTransportMode().equals("train")) {
+					//trainFareSaved.getAndAdd(fare);
 					fare = 0;
 				}else if(fare<Double.MAX_VALUE && attributeName!= null && attributeName.equals("ferry") && wrapped.toNode.getRoute().getTransportMode().equals("ferry")) {
+					//ferryFareSaved.getAndAdd(fare);
 					fare = 0;
 				}
 				
@@ -101,10 +102,13 @@ public class FareDynamicTransitTimeAndDisutilityMaaS extends FareDynamicTransitT
 		} else {
 			fareDiff = getTravelFareDiff(wrapped, newHelper);
 			if(fareDiff<Double.MAX_VALUE && attributeName!= null && attributeName.equals("bus") && wrapped.getRoute().getTransportMode().equals("bus")) {
+				//busFareSaved.getAndAdd(fareDiff);
 				fareDiff = 0;
 			}else if(fareDiff<Double.MAX_VALUE && attributeName!= null && attributeName.equals("train") && wrapped.getRoute().getTransportMode().equals("train")) {
+				//trainFareSaved.getAndAdd(fareDiff);
 				fareDiff = 0;
 			}else if(fareDiff<Double.MAX_VALUE && attributeName!= null && attributeName.equals("ferry") && wrapped.getRoute().getTransportMode().equals("ferry")) {
+				//ferryFareSaved.getAndAdd(fareDiff);
 				fareDiff = 0;
 			}
 		}
@@ -118,5 +122,26 @@ public class FareDynamicTransitTimeAndDisutilityMaaS extends FareDynamicTransitT
 		dataManager.setToNodeCustomData(newHelper);
 		return (fare + fareDiff) * config.getMarginalUtilityOfMoney(); // The return value is definitely negative
 	}
+//	
+//	public static double getBusFareSaved() {
+//		return busFareSaved.doubleValue();
+//	}
+//
+//	public static double getTrainFareSaved() {
+//		return trainFareSaved.doubleValue();
+//	}
+//
+//	public static double getFerryFareSaved() {
+//		return ferryFareSaved.doubleValue();
+//	}
+//
+//	/**
+//	 * This function resets the fare saved, would be called before iteration.
+//	 */
+//	public static void resetFareSaved() {
+//		busFareSaved = new AtomicDouble();
+//		trainFareSaved = new AtomicDouble();
+//		ferryFareSaved = new AtomicDouble();
+//	}
 
 }
