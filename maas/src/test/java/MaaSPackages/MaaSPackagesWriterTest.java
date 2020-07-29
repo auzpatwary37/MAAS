@@ -23,12 +23,7 @@ class MaaSPackagesWriterTest {
 		MaaSPackages packages = null;
 		packages = new MaaSPackages(ts, true, 20, 3, FareCalculatorCreator.getHKFareCalculators(), 0, true);
 		
-		new MaaSPackagesWriter(packages).write("test/packaes_June2020.xml");
-		
-		MaaSPackages packages1 = new MaaSPackagesReader().readPackagesFile("test/packaes_June2020.xml");
-		
-		new MaaSPackagesWriter(packages1).write("test/packages_July2020.xml");
-		fail("Not yet implemented");
+		new MaaSPackagesWriter(packages).write("test/packages_July2020_20.xml");
 	}
 
 }

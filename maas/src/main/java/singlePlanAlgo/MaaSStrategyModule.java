@@ -43,6 +43,7 @@ public class MaaSStrategyModule implements   ActivityEndEventHandler,PlanStrateg
 		// TODO Auto-generated method stub
 		
 	}
+	
 
 	@Override
 	public void prepareReplanning(ReplanningContext replanningContext) {
@@ -64,6 +65,7 @@ public class MaaSStrategyModule implements   ActivityEndEventHandler,PlanStrateg
 			this.intelligentMaaSSelection(plan);
 			//this.randomMaaSSelection(plan);
 		});
+		this.plans.clear();
 	}
 	
 	private void randomMaaSSelection(Plan plan) {
@@ -102,7 +104,6 @@ public class MaaSStrategyModule implements   ActivityEndEventHandler,PlanStrateg
 			});
 		});
 		Map<String,Double> scores = new LinkedHashMap<>();
-		double maxScore = 0;
 		scores.put(MaaSUtil.nullMaaSPacakgeKeyName, 0.);
 		for(Entry<String, MaaSPackage> pac:this.maasPackages.entrySet()) {
 			Set<String> packageFareLinks = new HashSet<>(pac.getValue().getDiscounts().keySet());
@@ -113,7 +114,6 @@ public class MaaSStrategyModule implements   ActivityEndEventHandler,PlanStrateg
 				useScore+=usedfareLinks.get(s);
 			}
 			if(useScore!=0)scores.put(pac.getKey(),useScore);
-			if(useScore>maxScore) maxScore = useScore;
 		}
 		if(currentPlan!=null) {
 			scores.remove(currentPlan);

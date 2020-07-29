@@ -36,6 +36,7 @@ import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.core.utils.collections.Tuple;
 import org.matsim.lanes.Lane;
 import org.matsim.lanes.LanesToLinkAssignment;
+import org.matsim.pt.transitSchedule.api.TransitSchedule;
 import org.matsim.utils.objectattributes.ObjectAttributes;
 import org.matsim.utils.objectattributes.ObjectAttributesXmlReader;
 import org.matsim.utils.objectattributes.attributable.Attributes;
@@ -47,8 +48,10 @@ import org.xml.sax.SAXException;
 
 import com.google.common.collect.Maps;
 
+import MaaSPackages.FareCalculatorCreator;
 import MaaSPackages.MaaSPackages;
 import MaaSPackages.MaaSPackagesReader;
+import MaaSPackages.MaaSPackagesWriter;
 import dynamicTransitRouter.DynamicRoutingModule;
 import dynamicTransitRouter.fareCalculators.ZonalFareXMLParserV2;
 import matsimIntegrate.DynamicRoutingModuleWithMaas;
@@ -83,12 +86,13 @@ class MaaSDiscountAndChargeHandlerTest {
 				//OutputDirectoryLogging.catchLogEntries();
 				config.addModule(new MaaSConfigGroup());
 				config.controler().setLastIteration(250);
-				config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"test/packages_July2020.xml");
+				config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"test/packages_July2020_20.xml");
+				//config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"packages_July2020_400.xml");
 				
 				config.plans().setInsistingOnUsingDeprecatedPersonAttributeFile(true);
 				config.plans().setInputPersonAttributeFile("new Data/core/personAttributesHKI.xml");
 //				config.plans().setInputFile("new Data/core/20.plans.xml.gz");
-				config.controler().setOutputDirectory("toyScenarioLarge/output_WithMaaSwithoutOptim_IntelligentAgent2");
+				config.controler().setOutputDirectory("toyScenarioLarge/output_WithMaaSwithoutOptim_IntelligentAgent3");
 				config.controler().setWritePlansInterval(10);
 				
 //				
@@ -142,6 +146,8 @@ class MaaSDiscountAndChargeHandlerTest {
 				new ConfigWriter(config).write("test/config.xml");
 				
 				Scenario scenario = ScenarioUtils.loadScenario(config);
+				
+				
 				ObjectAttributes obj = new ObjectAttributes();
 				new ObjectAttributesXmlReader(obj).readFile("new Data/core/personAttributesHKI.xml");
 				

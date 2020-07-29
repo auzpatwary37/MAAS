@@ -43,7 +43,7 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 
 	private Map<String,FareCalculator>fareCalculators;
 	
-	private List<Plan> plans = new ArrayList<>();//this is for keeping last selected plan
+	
 	
 	private static Logger logger = Logger.getLogger(MaaSOperatorStrategyModule.class);
 	
@@ -80,8 +80,6 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 			Map<String,VariableDetails> variables = this.optimizers.get(plan.getPerson().getId().toString()).getVarables();
 			this.variables.putAll(variables);
 			this.decisionEngine.addOperatorAgent(plan);
-		}else {
-			this.plans.add(plan);
 		}
 	}
 	
