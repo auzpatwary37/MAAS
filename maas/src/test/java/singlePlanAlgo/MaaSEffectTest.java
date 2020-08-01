@@ -68,7 +68,7 @@ public class MaaSEffectTest {
 	private void setupNetworkTransitAndSignals(Config config) {
 		//config.plans().setInsistingOnUsingDeprecatedPersonAttributeFile(true);
 		//config.plans().setInputPersonAttributeFile("new Data/core/personAttributesHKI.xml");
-		config.plans().setInputFile("new Data/core/60.plans.xml.gz");
+		config.plans().setInputFile("new Data/core/50.plans.xml.gz");
 		config.network().setInputFile("new Data/cal/output_network.xml.gz");
 		config.vehicles().setVehiclesFile("new Data/core/VehiclesHKI.xml");
 		
@@ -108,10 +108,9 @@ public class MaaSEffectTest {
 		RunUtils.createStrategies(config, GVChange_NAME, 0.02, 0.005, 0, 0);
 		RunUtils.createStrategies(config, GVFixed_NAME, 0.02, 0.005, 0, 40);
 		
-		config.strategy().addStrategySettings(createStrategySettings(MaaSPlanStrategy.class.getName(),.05,200,"person_TCSwithCar"));
-		config.strategy().addStrategySettings(createStrategySettings(MaaSPlanStrategy.class.getName(),.05,200,"person_TCSwithoutCar"));
-		config.strategy().addStrategySettings(createStrategySettings(MaaSPlanStrategy.class.getName(),.05,200,"trip_TCS"));
-		RunUtils.addStrategy(config, "KeepLastSelected", MaaSUtil.MaaSOperatorAgentSubPopulationName, 1, 400);
+		config.strategy().addStrategySettings(createStrategySettings(MaaSPlanStrategy.class.getName(),.05,200,PersonChangeWithCar_NAME));
+		config.strategy().addStrategySettings(createStrategySettings(MaaSPlanStrategy.class.getName(),.05,200,PersonChangeWithoutCar_NAME));
+		config.strategy().addStrategySettings(createStrategySettings(MaaSPlanStrategy.class.getName(),.05,200,PersonFixed_NAME));
 		
 		config.strategy().setFractionOfIterationsToDisableInnovation(0.85);
 	}
@@ -139,31 +138,16 @@ public class MaaSEffectTest {
 		setupNetworkTransitAndSignals(config);
 		setupStrategies(config);
 		
-		config.addModule(new MaaSConfigGroup());
-		
-		config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"test/packages_July2020.xml");
-		
-		config.controler().setOutputDirectory("toyScenarioLarge/output_WithMaaSwithoutOptim_IntelligentAgent3");
+		config.controler().setOutputDirectory("toyScenarioLarge/output_WithMaaSwithoutOptim_IntelligentAgent4");
 		config.controler().setLastIteration(250);
 		config.parallelEventHandling().setNumberOfThreads(7);
 		config.controler().setWritePlansInterval(10);
 		config.controler().setWriteEventsInterval(20);
+		config.controler().setOverwriteFileSetting(OutputDirectoryHierarchy.OverwriteFileSetting.overwriteExistingFiles);
 		config.global().setNumberOfThreads(23);
 		config.planCalcScore().setWriteExperiencedPlans(false);
 		config.removeModule("emissions");
 		config.removeModule("roadpricing");
-		
-		ScoringParameterSet s = config.planCalcScore().getOrCreateScoringParameters(MaaSOperator.type);
-		ScoringParameterSet ss = config.planCalcScore().getScoringParameters("person_TCSwithCar");
-
-		s.getOrCreateModeParams("car").setMarginalUtilityOfTraveling(ss.getOrCreateModeParams("car").getMarginalUtilityOfTraveling());
-		s.getOrCreateModeParams("car").setMarginalUtilityOfDistance(ss.getOrCreateModeParams("car").getMarginalUtilityOfDistance());
-		s.setMarginalUtilityOfMoney(ss.getMarginalUtilityOfMoney());
-		s.getOrCreateModeParams("car").setMonetaryDistanceRate(ss.getOrCreateModeParams("car").getMonetaryDistanceRate());
-		s.getOrCreateModeParams("walk").setMarginalUtilityOfTraveling(ss.getOrCreateModeParams("walk").getMarginalUtilityOfTraveling());
-		s.getOrCreateModeParams("walk").setMonetaryDistanceRate(ss.getOrCreateModeParams("walk").getMarginalUtilityOfDistance());
-		s.setPerforming_utils_hr(ss.getPerforming_utils_hr());
-		s.setMarginalUtlOfWaitingPt_utils_hr(ss.getMarginalUtlOfWaitingPt_utils_hr());
 		
 		new ConfigWriter(config).write("test/config.xml");
 		
@@ -196,16 +180,7 @@ public class MaaSEffectTest {
 				}
 			}
 		}
-		MaaSPackages packages = new MaaSPackagesReader().readPackagesFile(scenario.getConfig().getModules().get(MaaSConfigGroup.GROUP_NAME).
-									getParams().get(MaaSConfigGroup.INPUT_FILE)); //It has to be consistent with the config.
-		
-		//Create activity for MaaS operator
-		Activity act = MaaSUtil.createMaaSOperator(packages, scenario.getPopulation(), "test/agentPop.xml",new Tuple<>(.5,2.5));
-		ActivityParams param = new ActivityParams(act.getType());
-		param.setTypicalDuration(20*3600);
-		param.setMinimalDuration(8*3600);
-		param.setScoringThisActivityAtAll(false);			
-		scenario.getConfig().planCalcScore().getScoringParameters(MaaSUtil.MaaSOperatorAgentSubPopulationName).addActivityParams(param);
+		SmallExample.additionalSettingsForMaaS(scenario, PersonChangeWithCar_NAME, "test/packages_July2020_20.xml");
 		RunUtils.scaleDownPt(scenario.getTransitVehicles(), .1);
 		
 		scenario.addScenarioElement(SignalsData.ELEMENT_NAME, new SignalsDataLoader(config).loadSignalsData());	
@@ -235,7 +210,6 @@ public class MaaSEffectTest {
 			e.printStackTrace();
 		}
 		Signals.configure(controler);
-		controler.getConfig().controler().setOverwriteFileSetting(OutputDirectoryHierarchy.OverwriteFileSetting.overwriteExistingFiles);
 		controler.run();
 		fail("Not yet implemented");
 	}

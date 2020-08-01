@@ -38,6 +38,7 @@ public final class MaaSUtil {
 	public static final String PackageSoldKeyName = "packageSold";
 	public static final String PackageTripKeyName = "packageTrip";
 	public static final String operatorTripKeyName = "totalTrip";
+	public static final String fareSavedAttrName = "fareSaved";
 
 	public static Activity createMaaSOperator(MaaSPackages packages, Population population, String popOutLoc, 
 			Tuple<Double,Double> boundsMultiplier) {

@@ -12,7 +12,7 @@
 	</module>
 	<module name="MAAS" >
 		<!-- Use the xml file format reader and writer. -->
-		<param name="inputPacakgesFile" value="test/packages_July2020.xml" />
+		<param name="inputPacakgesFile" value="test/packages_July2020_20.xml" />
 	</module>
 	<module name="TimeAllocationMutator" >
 		<!-- Default:true; Defines whether time mutation changes an activity's duration. -->
@@ -48,7 +48,7 @@
 		Depending on the chosen mobsim, you'll have to add additional config modules to configure the corresponding mobsim.
 		For 'qsim', add a module 'qsim' to the config. -->
 		<param name="mobsim" value="qsim" />
-		<param name="outputDirectory" value="toyScenarioLarge/output_WithMaaSwithoutOptim_IntelligentAgent2" />
+		<param name="outputDirectory" value="toyScenarioLarge/output_WithMaaSOptim" />
 		<!-- Possible values: failIfDirectoryExists, overwriteExistingFiles, deleteDirectoryIfExists -->
 		<param name="overwriteFiles" value="overwriteExistingFiles" />
 		<!-- The type of routing (least cost path) algorithm used, may have the values: Dijkstra, FastDijkstra, AStarLandmarks or FastAStarLandmarks -->
@@ -6004,11 +6004,32 @@
 			<param name="weight" value="0.05" />
 		</parameterset>
 		<parameterset type="strategysettings" >
-			<param name="disableAfterIteration" value="400" />
+			<param name="disableAfterIteration" value="250" />
+			<param name="executionPath" value="null" />
+			<param name="strategyName" value="optimizerAgent.MaaSOperatorStrategy" />
+			<param name="subpopulation" value="MaaSOperator" />
+			<param name="weight" value="1.0" />
+		</parameterset>
+		<parameterset type="strategysettings" >
+			<param name="disableAfterIteration" value="-1" />
 			<param name="executionPath" value="null" />
 			<param name="strategyName" value="KeepLastSelected" />
 			<param name="subpopulation" value="MaaSOperator" />
 			<param name="weight" value="1.0" />
+		</parameterset>
+		<parameterset type="strategysettings" >
+			<param name="disableAfterIteration" value="100" />
+			<param name="executionPath" value="null" />
+			<param name="strategyName" value="KeepLastSelected" />
+			<param name="subpopulation" value="MaaSOperator" />
+			<param name="weight" value="20.0" />
+		</parameterset>
+		<parameterset type="strategysettings" >
+			<param name="disableAfterIteration" value="150" />
+			<param name="executionPath" value="null" />
+			<param name="strategyName" value="KeepLastSelected" />
+			<param name="subpopulation" value="MaaSOperator" />
+			<param name="weight" value="10.0" />
 		</parameterset>
 	</module>
 	<module name="subtourModeChoice" >

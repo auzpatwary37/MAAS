@@ -1,5 +1,7 @@
 package matsimIntegrate;
 
+import java.util.Map;
+
 import javax.inject.Singleton;
 
 import org.matsim.pt.router.TransitRouter;
@@ -16,9 +18,16 @@ public class DynamicRoutingModuleWithMaas extends DynamicRoutingModule{
 	public DynamicRoutingModuleWithMaas(FareCalculator minibusFareCalculator, String MTRFareFilePath,
 			String transferDiscountJson, String LRFareFilePath, String busFareJsonPath, String ferryFareJsonPath) {
 		super(minibusFareCalculator, MTRFareFilePath, transferDiscountJson, LRFareFilePath, busFareJsonPath, ferryFareJsonPath);
-		// TODO Auto-generated constructor stub
 	}
 	
+	/**
+	 * This is a setting for directly use the fareCal to open the dynamic routing.
+	 * @param fareCalMap
+	 */
+	public DynamicRoutingModuleWithMaas(Map<String, FareCalculator> fareCalMap) {
+		super(fareCalMap);
+	}
+
 	@Override
 	public void install() {
 		if (getConfig().transit().isUseTransit()) {

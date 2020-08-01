@@ -45,6 +45,7 @@ public class MaaSDiscountAndChargeHandler implements PersonMoneyEventHandler, Pe
 	private final EventsManager eventManager;
 	private final Map<Id<Person>,Person> operatorMap = new HashMap<>();
 	private final Set<Id<Person>> personIdWithPlan = new HashSet<>();
+	//private final Map<Id<Person>, Double> fareSaved = new HashMap<>();
 	@Inject
 	MaaSDiscountAndChargeHandler(final MatsimServices controler, final TransitSchedule transitSchedule,
 			Map<String, FareCalculator> fareCals, TransferDiscountCalculator tdc) {
@@ -65,13 +66,16 @@ public class MaaSDiscountAndChargeHandler implements PersonMoneyEventHandler, Pe
 			p.getSelectedPlan().getAttributes().putAttribute(MaaSUtil.operatorTripKeyName, 0);
 		});
 		personIdWithPlan.clear();
+		
 	}
 	
 	@Override
 	public void handleEvent(PersonMoneyEvent event) {
+		Id<Person> personId = event.getPersonId();
 		if(event.getAttributes().get(PersonMoneyEvent.ATTRIBUTE_PURPOSE).equals(FareLink.FareTransactionName)) {//So, this is a fare payment event
 			FareLink fl = new FareLink(event.getAttributes().get(PersonMoneyEvent.ATTRIBUTE_TRANSACTION_PARTNER));
-			Plan plan = this.scenario.getPopulation().getPersons().get(event.getPersonId()).getSelectedPlan();
+			Person person = this.scenario.getPopulation().getPersons().get(personId);
+			Plan plan = person.getSelectedPlan();
 			if(plan.getScore()==null) {
 				if(plan.getAttributes().getAttribute("FareLinks")==null) {
 					plan.getAttributes().putAttribute("FareLinks", new HashMap<String,Double>());
@@ -89,6 +93,13 @@ public class MaaSDiscountAndChargeHandler implements PersonMoneyEventHandler, Pe
 				discount = Math.min(this.packages.getMassPackages().get(chosenMaaSid).getDiscountForFareLink(fl),-1*fare);
 				fareRevenue -= discount;
 				this.eventManager.processEvent(new PersonMoneyEvent(time,event.getPersonId(), discount,MaaSUtil.MaaSDiscountReimbursementTransactionName,fl.toString()));//Reimbursement Event
+				double fareSaved = discount;
+				if(person.getAttributes().getAttribute(MaaSUtil.fareSavedAttrName)!=null) {
+					fareSaved += (Double) person.getAttributes().getAttribute(MaaSUtil.fareSavedAttrName);
+				}				
+				person.getAttributes().putAttribute(MaaSUtil.fareSavedAttrName, fareSaved);
+			}else {
+				person.getAttributes().putAttribute(MaaSUtil.fareSavedAttrName, 0.); //If they didn't choose a plan, they saved nothing.
 			}
 			
 			if(this.packages.getOperatorId(fl)!=null) {//the fare link might not be under any operators that are being optimized
@@ -105,23 +116,24 @@ public class MaaSDiscountAndChargeHandler implements PersonMoneyEventHandler, Pe
 				selectedOperatorPlan.getAttributes().putAttribute(MaaSUtil.operatorTripKeyName, (int)selectedOperatorPlan.getAttributes().getAttribute(MaaSUtil.operatorTripKeyName)+1);
 				if(discount>0)selectedOperatorPlan.getAttributes().putAttribute(MaaSUtil.PackageTripKeyName, (int)selectedOperatorPlan.getAttributes().getAttribute(MaaSUtil.PackageTripKeyName)+1);
 			}
-			
 		}
 	}
 
 	@Override
 	public void handleEvent(PersonDepartureEvent event) {
-		if(!this.scenario.getPopulation().getPersons().containsKey(event.getPersonId())) {
+		Id<Person> personId = event.getPersonId();
+		if(!this.scenario.getPopulation().getPersons().containsKey(personId)) {
 			return; //Ignore the 'person' that is not actually a person (e.g. A bus driver) 
-		}		
-		Plan plan = this.scenario.getPopulation().getPersons().get(event.getPersonId()).getSelectedPlan();
+		}
+		Person person = this.scenario.getPopulation().getPersons().get(personId);
+		Plan plan = person.getSelectedPlan();
 		String selectedMaaSid = (String) plan.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName);
 		
-		if(selectedMaaSid!=null && !personIdWithPlan.contains(event.getPersonId())) {
+		if(selectedMaaSid!=null && !personIdWithPlan.contains(personId)) {
 			MaaSPackage m = this.packages.getMassPackages().get(selectedMaaSid);
 			double maasCost = m.getPackageCost();
 			String packageOperatorId = m.getOperatorId()+MaaSUtil.MaaSOperatorSubscript;
-			this.eventManager.processEvent(new PersonMoneyEvent(event.getTime(),event.getPersonId(), -maasCost, MaaSUtil.AgentpayForMaaSPackageTransactionName,m.getId()));//Agent buying package
+			this.eventManager.processEvent(new PersonMoneyEvent(event.getTime(),personId, -maasCost, MaaSUtil.AgentpayForMaaSPackageTransactionName,m.getId()));//Agent buying package
 			this.eventManager.processEvent(new PersonMoneyEvent(event.getTime(),Id.createPersonId(packageOperatorId), maasCost, MaaSUtil.MaaSOperatorpacakgeRevenueTransactionName,m.getId()+"__"+event.getPersonId()));//Operator earning revenue by selling package.
 			
 			Plan selectedOperatorPlan =  this.scenario.getPopulation().getPersons().get(Id.createPersonId(packageOperatorId)).getSelectedPlan();
@@ -134,7 +146,8 @@ public class MaaSDiscountAndChargeHandler implements PersonMoneyEventHandler, Pe
 			}else {
 				selectedOperatorPlan.getAttributes().putAttribute(MaaSUtil.operatorRevenueName, oldReveneue+maasCost);
 			}
-			personIdWithPlan.add(event.getPersonId());
+			person.getAttributes().putAttribute(MaaSUtil.fareSavedAttrName, 0.);
+			personIdWithPlan.add(personId);
 		}
 	}
 
