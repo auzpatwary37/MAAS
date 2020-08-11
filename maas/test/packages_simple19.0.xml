@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<MaaSPackages>
+    <MaaSPackage Cost="20.0" ExpTime="86400.0" MaxTaxiTrip="3" PackageId="bus" operatorId="2">
+	<fareLink Description="InVehicleFare___bus___bus___busStopB___work_bus___bus" Discount="19" FullFare="19"/>
+	<fareLink Description="InVehicleFare___bus___bus___busStopA___work_bus___bus" Discount="22" FullFare="22"/>
+	</MaaSPackage>
+    <MaaSPackage Cost="20.0" ExpTime="86400.0" MaxTaxiTrip="3" PackageId="ferry" operatorId="3">
+    </MaaSPackage>
+    <MaaSPackage Cost="20.0" ExpTime="86400.0" MaxTaxiTrip="3" PackageId="train" operatorId="1">
+	<fareLink Description="NetworkWideFare___trainStopB___work_train___train" Discount="19" FullFare="19"/>
+	<fareLink Description="NetworkWideFare___trainStopA___work_train___train" Discount="22" FullFare="22"/>
+    </MaaSPackage>
+</MaaSPackages>
