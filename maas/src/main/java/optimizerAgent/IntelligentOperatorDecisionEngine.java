@@ -151,8 +151,15 @@ public class IntelligentOperatorDecisionEngine {
 							
 						}//finish timebean
 					}//finish farelinks
-					
-					grad+=maasPackage.getPackageCost()*model.getPacakgeUserGradient().get(maasPackage.getId()).get(key);
+					try {
+						if(model.getPacakgeUserGradient().containsKey(maasPackage.getId())) {
+							grad+=maasPackage.getPackageCost()*model.getPacakgeUserGradient().get(maasPackage.getId()).get(key);
+						}else {
+							grad+=0;
+						}
+					}catch(NullPointerException e) {
+						throw new NullPointerException("A null pointer exception is thrown!");
+					}
 					
 				}//finish maaspackage
 				//Save the gradient
