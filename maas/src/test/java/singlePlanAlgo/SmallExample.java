@@ -52,13 +52,17 @@ import MaaSPackages.MaaSPackages;
 import MaaSPackages.MaaSPackagesReader;
 import dynamicTransitRouter.costs.PTRecordHandler;
 import dynamicTransitRouter.fareCalculators.FareCalculator;
+import dynamicTransitRouter.fareCalculators.ODFareCalculator;
+import dynamicTransitRouter.fareCalculators.UniformFareCalculator;
 import dynamicTransitRouter.fareCalculators.ZonalFareCalculator;
 import dynamicTransitRouter.fareCalculators.ZonalFareXMLParserV2;
 import matsimIntegrate.DynamicRoutingModuleWithMaas;
 import optimizerAgent.MaaSOperator;
 import optimizerAgent.MaaSOperatorOptimizationModule;
+import optimizerAgent.MaaSOperatorStrategy;
 import optimizerAgent.MaaSUtil;
 import running.RunUtils;
+import ust.hk.praisehk.metamodelcalibration.analyticalModelImpl.CNLTransitRoute;
 
 /**
  * A small example to ensure that the MaaS model works
@@ -139,7 +143,34 @@ public class SmallExample {
 		return fareCal;
 	}
 	
-	private ZonalFareCalculator createTrainLine(Network net, TransitSchedule ts, Vehicles transitVehicles, double sectionFare) {
+	private FareCalculator createTramLine(Network net, TransitSchedule ts, Vehicles transitVehicles, double sectionFare) {
+		TransitScheduleFactory factory = ts.getFactory();
+
+		// Create and add stop facilities and route stop.
+		TransitStopFacility work_bus = ts.getFacilities().get(Id.create("work_bus", TransitStopFacility.class));
+		TransitRouteStop routeStopC = factory.createTransitRouteStop(work_bus, 200, 220);
+
+		TransitStopFacility busStopA = ts.getFacilities().get(Id.create("busStopA", TransitStopFacility.class));
+		TransitRouteStop routeStopA = factory.createTransitRouteStop(busStopA, 0, 20);
+
+		TransitStopFacility busStopB = ts.getFacilities().get(Id.create("busStopB", TransitStopFacility.class));
+		TransitRouteStop routeStopB = factory.createTransitRouteStop(busStopB, 100, 120);
+		
+		// Create and add transitline
+		TransitLine tl = factory.createTransitLine(Id.create("tram", TransitLine.class));
+		ts.addTransitLine(tl);
+
+		// Create and add transitRoute
+		NetworkRoute nr = RouteUtils.createNetworkRoute(Lists.newArrayList(Id.createLinkId("bl1"), Id.createLinkId("bl2")), net);
+		TransitRoute tr = factory.createTransitRoute(Id.create("bus", TransitRoute.class), nr,
+				Lists.newArrayList(routeStopA, routeStopB, routeStopC), "tram");
+		tl.addRoute(tr);
+		addVehicleAndDeparture(factory, transitVehicles, tr, "tram");
+		
+		return new UniformFareCalculator(sectionFare);
+	}
+	
+	private FareCalculator createTrainLine(Network net, TransitSchedule ts, Vehicles transitVehicles, double sectionFare) {
 		Node train1 = NetworkUtils.createAndAddNode(net, Id.createNodeId("train_1"), new Coord(0, 10000));
 		Node train2 = NetworkUtils.createAndAddNode(net, Id.createNodeId("train_2"), new Coord(0, 5000));
 		Node train3 = NetworkUtils.createAndAddNode(net, Id.createNodeId("train_3"), new Coord(0,0));
@@ -168,7 +199,6 @@ public class SmallExample {
 		ts.addStopFacility(trainStopB);
 		TransitRouteStop routeStopB = factory.createTransitRouteStop(trainStopB, 100, 120);
 		
-		ZonalFareCalculator fareCal = new ZonalFareCalculator(ts);
 		// Create and add transitline
 		TransitLine tl = factory.createTransitLine(Id.create("train", TransitLine.class));
 		ts.addTransitLine(tl);
@@ -181,10 +211,13 @@ public class SmallExample {
 		
 		addVehicleAndDeparture(factory, transitVehicles, tr, "train");
 		
-		fareCal.setFullFare(tl.getId(), 22);
-		fareCal.addRoute(tl.getId(), tr.getId(), 22);
-		fareCal.addSectionFare(tl.getId(), tr.getId(), 1, sectionFare);
-		
+		ODFareCalculator fareCal = new ODFareCalculator();
+		fareCal.addODFare(trainStopA.getId(), work_bus.getId(), 22);
+		fareCal.addODFare(trainStopA.getId(), trainStopB.getId(), sectionFare);
+		fareCal.addODFare(trainStopB.getId(), work_bus.getId(), sectionFare);
+		fareCal.addODFare(trainStopA.getId(), trainStopA.getId(), sectionFare);
+		fareCal.addODFare(trainStopB.getId(), trainStopB.getId(), sectionFare);
+		fareCal.addODFare(work_bus.getId(), work_bus.getId(), sectionFare);
 		return fareCal;
 	}
 	
@@ -306,7 +339,7 @@ public class SmallExample {
 		RunUtils.addStrategy(config, "KeepLastSelected", MaaSUtil.MaaSOperatorAgentSubPopulationName, 1, 400);
 	}
 	
-	@Test
+	//@Test
 	/**
 	 * It is a test for running the controler to see if the agents would converge to the desired result
 	 */
@@ -320,7 +353,7 @@ public class SmallExample {
 		controler.run();
 	}
 	
-	@Test
+	//@Test
 	/**
 	 * It is a test for running the controler to see if the agents would converge to the desired result
 	 */
@@ -334,7 +367,45 @@ public class SmallExample {
 		controler.run();
 	}
 	
+//	@Test
+	/**
+	 * It is a test for optimization of the package price.
+	 */
+	void testPackageOptimization() {
+		Scenario scenario = createSimpleScenario(19);
+		additionalSettingsForMaaS(scenario, PlanCalcScoreConfigGroup.DEFAULT_SUBPOPULATION, "src/test/resources/packages/packages_simple19.0.xml");
+		scenario.getConfig().strategy().addStrategySettings(MaaSEffectTest.createStrategySettings(
+				MaaSOperatorStrategy.class.getName(), 1, 200, MaaSUtil.MaaSOperatorAgentSubPopulationName));
+		scenario.getConfig().controler().setOutputDirectory("./output/smallTestOptimizePackage");
+		final Controler controler = new Controler(scenario);
+		controler.addOverridingModule(new MaaSDataLoader());
+		controler.addOverridingModule(new MaaSOperatorOptimizationModule());
+		controler.addOverridingModule(new DynamicRoutingModuleWithMaas(fareCalMap));
+		controler.run();
+	}
+	
 	@Test
+	/**
+	 * It is a test for optimization of the package price.
+	 * It is suppose that the bus package fare would be close to 15, which is the fare of tram, to get more passengers.
+	 */
+	void testPackageOptimizationWithTram() {
+		Scenario scenario = createSimpleScenario(19);
+		additionalSettingsForMaaS(scenario, PlanCalcScoreConfigGroup.DEFAULT_SUBPOPULATION, "src/test/resources/packages/packages_simple19.0.xml");
+		scenario.getConfig().strategy().addStrategySettings(MaaSEffectTest.createStrategySettings(
+				MaaSOperatorStrategy.class.getName(), 1, 200, MaaSUtil.MaaSOperatorAgentSubPopulationName));
+		scenario.getConfig().controler().setOutputDirectory("./output/smallTestOptimizeWithTram");
+		scenario.getConfig().controler().setLastIteration(400);
+		FareCalculator tramFareCal = createTramLine(scenario.getNetwork(), scenario.getTransitSchedule(), scenario.getTransitVehicles(), 15);
+		fareCalMap.put("tram", tramFareCal);
+		final Controler controler = new Controler(scenario);
+		controler.addOverridingModule(new MaaSDataLoader());
+		controler.addOverridingModule(new MaaSOperatorOptimizationModule());
+		controler.addOverridingModule(new DynamicRoutingModuleWithMaas(fareCalMap));
+		controler.run();
+	}
+	
+	//@Test
 	/**
 	 * Test whether the initialization is going to suits some parameters, such as no subscription to plans.
 	 */
