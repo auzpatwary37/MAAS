@@ -109,11 +109,11 @@ public class TransitRouterFareDynamicMaasImpl extends TransitRouterFareDynamicIm
 //									l.fromNode.stop.getStopFacility().getId(), mode);							
 //						}
 					}else {
-						f = new FareLink(fareLinkType, null, null, stop.getStopFacility().getId(), 
+						f = new FareLink(fareLinkType, null, null, enterSystemStopFacility, 
 							l.fromNode.stop.getStopFacility().getId(), mode);
 					}
 				}else {
-					f = new FareLink(fareLinkType,l.fromNode.line.getId(), l.fromNode.route.getId(), stop.getStopFacility().getId(), 
+					f = new FareLink(fareLinkType,l.fromNode.line.getId(), l.fromNode.route.getId(), enterSystemStopFacility, 
 							l.fromNode.stop.getStopFacility().getId(), mode);
 				}
 				fareLinkList.add(f);
@@ -138,6 +138,7 @@ public class TransitRouterFareDynamicMaasImpl extends TransitRouterFareDynamicIm
 			}
 			
 		}
+		Object o = person.getSelectedPlan().getAttributes().getAttribute("fareLink");
 		leg = PopulationUtils.createLeg(TransportMode.transit_walk);
 		walkDistance = CoordUtils.calcEuclideanDistance(coord, toCoord); 
 		walkWaitTime = walkDistance/tConfig.getBeelineWalkSpeed();

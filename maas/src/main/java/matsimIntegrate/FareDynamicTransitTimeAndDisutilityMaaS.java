@@ -72,7 +72,7 @@ public class FareDynamicTransitTimeAndDisutilityMaaS extends FareDynamicTransitT
 		if (wrapped.getRoute() == null) {
 			if (wrapped.toNode.getRoute() != null) {  // A boarding link
 				fare = getBoardingLinkFare(wrapped, isFirstTrip, fromNodeHelper, newHelper, time);
-				//TODO: Add the discount based on the fare link.
+				//TODO: Make the discount based on the fare link.
 				if(fare<Double.MAX_VALUE && attributeName!= null && attributeName.equals("bus") && wrapped.toNode.getRoute().getTransportMode().equals("bus")) {
 					//busFareSaved.getAndAdd(fare);
 					fare = 0;

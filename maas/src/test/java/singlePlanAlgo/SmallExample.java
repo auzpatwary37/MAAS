@@ -343,7 +343,7 @@ public class SmallExample {
 	/**
 	 * It is a test for running the controler to see if the agents would converge to the desired result
 	 */
-	void testUsePackage() {
+	void testHalfUsePackage() {
 		Scenario scenario = createSimpleScenario(19);
 		additionalSettingsForMaaS(scenario, PlanCalcScoreConfigGroup.DEFAULT_SUBPOPULATION, "src/test/resources/packages/packages_simple19.0.xml");
 		final Controler controler = new Controler(scenario);
@@ -353,7 +353,7 @@ public class SmallExample {
 		controler.run();
 	}
 	
-	//@Test
+	@Test
 	/**
 	 * It is a test for running the controler to see if the agents would converge to the desired result
 	 */
@@ -384,7 +384,7 @@ public class SmallExample {
 		controler.run();
 	}
 	
-	@Test
+//	@Test
 	/**
 	 * It is a test for optimization of the package price.
 	 * It is suppose that the bus package fare would be close to 15, which is the fare of tram, to get more passengers.
