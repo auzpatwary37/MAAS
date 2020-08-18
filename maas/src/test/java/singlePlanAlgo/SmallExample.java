@@ -1,5 +1,8 @@
 package singlePlanAlgo;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,8 +18,10 @@ import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.network.Network;
 import org.matsim.api.core.v01.network.Node;
 import org.matsim.api.core.v01.population.Activity;
+import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.Plan;
+import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.api.core.v01.population.Population;
 import org.matsim.api.core.v01.population.PopulationFactory;
 import org.matsim.core.config.Config;
@@ -247,7 +252,7 @@ public class SmallExample {
 	 * A simple function to create a small scenario for demonstration.
 	 * @return
 	 */
-	private Scenario createSimpleScenario(double sectionFare) {
+	private Scenario createSimpleScenario(double sectionFare, int populationCount) {
 		Scenario scenario = ScenarioUtils.createMutableScenario(ConfigUtils.createConfig());
 	
 		Network net = scenario.getNetwork();
@@ -297,10 +302,12 @@ public class SmallExample {
 		
 		//Create several persons who always take pt, at 4 points
 		Population popu = scenario.getPopulation();
-		createPeople(popu, new Coord(10000, 0), 20);
-		createPeople(popu, new Coord(5000, 0), 20);
-		createPeople(popu, new Coord(0, 5000), 20);
-		createPeople(popu, new Coord(0, 10000), 20);
+		if(populationCount > 0){
+			createPeople(popu, new Coord(10000, 0), populationCount);
+			createPeople(popu, new Coord(5000, 0), populationCount);
+			createPeople(popu, new Coord(0, 5000), populationCount);
+			createPeople(popu, new Coord(0, 10000), populationCount);
+		}
 		
 		return scenario;
 	}
@@ -344,7 +351,7 @@ public class SmallExample {
 	 * It is a test for running the controler to see if the agents would converge to the desired result
 	 */
 	void testHalfUsePackage() {
-		Scenario scenario = createSimpleScenario(19);
+		Scenario scenario = createSimpleScenario(19, 20);
 		additionalSettingsForMaaS(scenario, PlanCalcScoreConfigGroup.DEFAULT_SUBPOPULATION, "src/test/resources/packages/packages_simple19.0.xml");
 		final Controler controler = new Controler(scenario);
 		controler.addOverridingModule(new MaaSDataLoader());
@@ -353,12 +360,12 @@ public class SmallExample {
 		controler.run();
 	}
 	
-	@Test
+//	@Test
 	/**
 	 * It is a test for running the controler to see if the agents would converge to the desired result
 	 */
 	void testStickPackage() {
-		Scenario scenario = createSimpleScenario(21);
+		Scenario scenario = createSimpleScenario(21, 20);
 		additionalSettingsForMaaS(scenario, PlanCalcScoreConfigGroup.DEFAULT_SUBPOPULATION, "src/test/resources/packages/packages_simple21.0.xml");
 		final Controler controler = new Controler(scenario);
 		controler.addOverridingModule(new MaaSDataLoader());
@@ -372,7 +379,7 @@ public class SmallExample {
 	 * It is a test for optimization of the package price.
 	 */
 	void testPackageOptimization() {
-		Scenario scenario = createSimpleScenario(19);
+		Scenario scenario = createSimpleScenario(19, 20);
 		additionalSettingsForMaaS(scenario, PlanCalcScoreConfigGroup.DEFAULT_SUBPOPULATION, "src/test/resources/packages/packages_simple19.0.xml");
 		scenario.getConfig().strategy().addStrategySettings(MaaSEffectTest.createStrategySettings(
 				MaaSOperatorStrategy.class.getName(), 1, 200, MaaSUtil.MaaSOperatorAgentSubPopulationName));
@@ -390,7 +397,7 @@ public class SmallExample {
 	 * It is suppose that the bus package fare would be close to 15, which is the fare of tram, to get more passengers.
 	 */
 	void testPackageOptimizationWithTram() {
-		Scenario scenario = createSimpleScenario(19);
+		Scenario scenario = createSimpleScenario(19, 20);
 		additionalSettingsForMaaS(scenario, PlanCalcScoreConfigGroup.DEFAULT_SUBPOPULATION, "src/test/resources/packages/packages_simple19.0.xml");
 		scenario.getConfig().strategy().addStrategySettings(MaaSEffectTest.createStrategySettings(
 				MaaSOperatorStrategy.class.getName(), 1, 200, MaaSUtil.MaaSOperatorAgentSubPopulationName));
@@ -403,6 +410,45 @@ public class SmallExample {
 		controler.addOverridingModule(new MaaSOperatorOptimizationModule());
 		controler.addOverridingModule(new DynamicRoutingModuleWithMaas(fareCalMap));
 		controler.run();
+	}
+	
+	private static boolean checkIfContainTram(Person person) {
+		Plan plan = person.getSelectedPlan();
+		for(PlanElement pe: plan.getPlanElements()) {
+			if(pe instanceof Leg) {
+				if (((Leg) pe).getRoute().getRouteDescription()!=null && ((Leg) pe).getRoute().getRouteDescription().contains("tram")) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	@Test
+	/**
+	 * It is a test for the shortest path algorithm, what is the shortest path.
+	 */
+	void testShortestPath() {
+		Scenario scenario = createSimpleScenario(19, 2);
+		additionalSettingsForMaaS(scenario, PlanCalcScoreConfigGroup.DEFAULT_SUBPOPULATION, "src/test/resources/packages/packages_simple19.0.xml");
+		scenario.getConfig().strategy().addStrategySettings(MaaSEffectTest.createStrategySettings(
+				MaaSOperatorStrategy.class.getName(), 1, 200, MaaSUtil.MaaSOperatorAgentSubPopulationName));
+		scenario.getConfig().controler().setOutputDirectory("./output/testShortestPath");
+		scenario.getConfig().controler().setLastIteration(0);
+		FareCalculator tramFareCal = createTramLine(scenario.getNetwork(), scenario.getTransitSchedule(), scenario.getTransitVehicles(), 15);
+		fareCalMap.put("tram", tramFareCal);
+		
+		scenario.getPopulation().getPersons().get(Id.create("[x=10000.0 | y=0.0]0", Person.class)).getSelectedPlan().
+				getAttributes().putAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName, "bus");
+		
+		final Controler controler = new Controler(scenario);
+		controler.addOverridingModule(new MaaSDataLoader());
+		controler.addOverridingModule(new MaaSOperatorOptimizationModule());
+		controler.addOverridingModule(new DynamicRoutingModuleWithMaas(fareCalMap));
+		controler.run();
+		
+		assertFalse(checkIfContainTram(scenario.getPopulation().getPersons().get(Id.create("[x=10000.0 | y=0.0]0", Person.class))));
+		assertTrue(checkIfContainTram(scenario.getPopulation().getPersons().get(Id.create("[x=10000.0 | y=0.0]1", Person.class))));
 	}
 	
 	//@Test
