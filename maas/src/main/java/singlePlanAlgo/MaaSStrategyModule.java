@@ -62,8 +62,8 @@ public class MaaSStrategyModule implements   ActivityEndEventHandler,PlanStrateg
 	public void finishReplanning() {
 		// For actual execution of replanning 
 		this.plans.parallelStream().forEach(plan->{
-			this.intelligentMaaSSelection(plan);
-			//this.randomMaaSSelection(plan);
+			//this.intelligentMaaSSelection(plan);
+			this.randomMaaSSelection(plan);
 		});
 		this.plans.clear();
 	}
@@ -71,15 +71,21 @@ public class MaaSStrategyModule implements   ActivityEndEventHandler,PlanStrateg
 	private void randomMaaSSelection(Plan plan) {
 		List<String> MaaSKeys=new ArrayList<>(this.maasPackages.keySet());
 		String currentMaaSPackage = (String) plan.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName);
-		if(currentMaaSPackage==null) {
-			plan.getAttributes().putAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName,MaaSKeys.get(rnd.nextInt(MaaSKeys.size())));
-		}else {
+		Set<String> irreleventMaaSPackages =  (Set<String>) plan.getPerson().getAttributes().getAttribute(MaaSUtil.irreleventPlanFlag);
+		if(irreleventMaaSPackages==null)irreleventMaaSPackages = new HashSet<>();
+		
 			boolean repeat = true;
 			int ind=0;
 			while(repeat) {
 				ind=rnd.nextInt(MaaSKeys.size()+1);
-				if(ind == MaaSKeys.size() || !currentMaaSPackage.equals(MaaSKeys.get(ind))) {
+				if(currentMaaSPackage == null) {
+					if(ind != MaaSKeys.size() && !irreleventMaaSPackages.contains(MaaSKeys.get(ind))) {
+						repeat = false;
+					}
+				} else {
+					if(ind == MaaSKeys.size() || (!currentMaaSPackage.equals(MaaSKeys.get(ind)) && !irreleventMaaSPackages.contains(MaaSKeys.get(ind)))) {
 					repeat = false;
+				}
 				}
 			}
 			if(ind == MaaSKeys.size()) {
@@ -87,7 +93,7 @@ public class MaaSStrategyModule implements   ActivityEndEventHandler,PlanStrateg
 			}else {
 				plan.getAttributes().putAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName,MaaSKeys.get(ind));
 			}
-		}
+		
 	}
 	
 	

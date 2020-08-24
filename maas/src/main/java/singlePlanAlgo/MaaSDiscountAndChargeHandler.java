@@ -76,13 +76,13 @@ public class MaaSDiscountAndChargeHandler implements PersonMoneyEventHandler, Pe
 			FareLink fl = new FareLink(event.getAttributes().get(PersonMoneyEvent.ATTRIBUTE_TRANSACTION_PARTNER));
 			Person person = this.scenario.getPopulation().getPersons().get(personId);
 			Plan plan = person.getSelectedPlan();
-			if(plan.getScore()==null) {
-				if(plan.getAttributes().getAttribute("FareLinks")==null) {
-					plan.getAttributes().putAttribute("FareLinks", new HashMap<String,Double>());
-				}
-				Map<String,Double> fareLinks = (Map<String, Double>) plan.getAttributes().getAttribute("FareLinks");
-				fareLinks.compute(fl.toString(),(k,v)->(v==null)?1:v+1);//It will keep increasing. We should update it only once
-			}
+//			if(plan.getScore()==null) {
+//				if(plan.getAttributes().getAttribute("FareLinks")==null) {
+//					plan.getAttributes().putAttribute("FareLinks", new HashMap<String,Double>());
+//				}
+//				Map<String,Double> fareLinks = (Map<String, Double>) plan.getAttributes().getAttribute("FareLinks");
+//				fareLinks.compute(fl.toString(),(k,v)->(v==null)?1:v+1);//It will keep increasing. We should update it only once
+//			}
 			
 			double fare = Double.parseDouble(event.getAttributes().get(PersonMoneyEvent.ATTRIBUTE_AMOUNT));
 			double time = event.getTime(); // Obtain the time

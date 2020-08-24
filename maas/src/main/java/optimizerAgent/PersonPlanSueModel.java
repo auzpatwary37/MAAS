@@ -19,6 +19,7 @@ import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.network.Network;
 import org.matsim.api.core.v01.population.Activity;
+import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.Plan;
 import org.matsim.api.core.v01.population.PlanElement;
@@ -27,6 +28,7 @@ import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.config.groups.PlanCalcScoreConfigGroup;
 import org.matsim.core.config.groups.PlanCalcScoreConfigGroup.ActivityParams;
+import org.matsim.core.population.PersonUtils;
 import org.matsim.core.population.PopulationUtils;
 import org.matsim.core.scoring.functions.ActivityUtilityParameters;
 import org.matsim.core.scoring.functions.ScoringParameters;
@@ -38,6 +40,7 @@ import org.matsim.pt.transitSchedule.api.TransitSchedule;
 import org.matsim.vehicles.VehicleCapacity;
 import org.matsim.vehicles.Vehicles;
 
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
 import MaaSPackages.MaaSPackage;
@@ -178,6 +181,7 @@ public class PersonPlanSueModel {
 	public static final String TransferalphaName="Transferalpha";
 	public static final String TransferbetaName="Transferbeta";
 	public static final String PlanKeyIdentifierName = "planKey";
+	private Map<Id<Person>,List<Plan>> feasibleplans = new HashMap<>();
 	
 	//______________________BackPropogationVariables______________________________________
 	
@@ -232,6 +236,45 @@ public class PersonPlanSueModel {
 		MaaSUtil.updateMaaSVariables(this.maasPakages, params);
 		SUEModelOutput flow = this.performAssignment(population, params,this.AnalyticalModelInternalParams);
 		return flow;
+	} 
+	
+	private Map<Id<Person>, List<Plan>> extractFeasiblePlans(Population population) {
+		for(Entry<Id<Person>, ? extends Person> p:population.getPersons().entrySet()) {
+			List<Plan> plans = new ArrayList<>();
+			for(Plan pl:p.getValue().getPlans()) {
+				String selectedPlan = (String) pl.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName);
+				List<FareLink> fareLinksOriginal = (List<FareLink>) pl.getAttributes().getAttribute("fareLink");
+				Set<String> fareLinks = new HashSet<>();
+				if(fareLinksOriginal!=null) {
+					for(FareLink fl:fareLinksOriginal) {
+						fareLinks.add(fl.toString());
+					}
+				}
+				boolean relevant = false ;
+				if(selectedPlan!=null) {
+					if(Sets.intersection(fareLinks, this.maasPakages.getMassPackages().get(selectedPlan).getDiscounts().keySet()).size()!=0) {
+						relevant = true;
+					}
+				}else {
+					relevant = true;
+				}
+				boolean duplicate = false;
+				for(Plan plan:plans) {
+					if(MaaSUtil.planEquals(plan, pl)) {
+						duplicate = true;
+						break;
+					}
+				}
+				if(relevant && !duplicate) {
+					plans.add(pl);
+				}
+					
+				
+				
+			}
+			this.feasibleplans.put(p.getKey(), plans);	
+		}
+		return feasibleplans;
 	}
 	
 	
@@ -369,7 +412,7 @@ public class PersonPlanSueModel {
 		this.farecalculators = fareCalculator;
 		this.maasPakages = packages;
 		this.ts = scenario.getTransitSchedule();
-		
+		this.extractFeasiblePlans(population);
 	}
 	
 
@@ -389,7 +432,7 @@ public class PersonPlanSueModel {
 		//This should handle for the basic params per subpopulation
 		LinkedHashMap<String,Double> params = this.handleBasicParams(Oparams, subpopulation, this.scenario.getConfig());
 		//Calculate the utility, Should we move the utility calculation part inside the simple translated plan itself? makes more sense. (April 2020)
-		for(Plan plan:person.getPlans()) {
+		for(Plan plan:this.feasibleplans.get(person.getId())) {
 
 			//Give an identifier to the plan. We will give a String identifier which will be saved as plan attribute
 			SimpleTranslatedPlan trPlan = (SimpleTranslatedPlan) plan.getAttributes().getAttribute(SimpleTranslatedPlan.SimplePlanAttributeName);//extract the translated plan first
@@ -439,7 +482,7 @@ public class PersonPlanSueModel {
 			
 			
 		}
-		if(utilities.size()!=person.getPlans().size()) {
+		if(utilities.size()!=this.feasibleplans.get(person.getId()).size()) {
 			throw new IllegalArgumentException("Not same dimension. Please check");
 		}
 		//Apply the soft-max
@@ -524,7 +567,7 @@ public class PersonPlanSueModel {
 		for(Person p:population.getPersons().values()) {
 			int planNo = 0;
 			if(!(PopulationUtils.getSubpopulation(p)).equals(MaaSUtil.MaaSOperatorAgentSubPopulationName)) {
-				for(Plan plan:p.getPlans()) {
+				for(Plan plan:this.feasibleplans.get(p.getId())) {
 					
 					MaaSPackage maas = this.maasPakages.getMassPackages().get(plan.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName));
 					SimpleTranslatedPlan trPlan = (SimpleTranslatedPlan) plan.getAttributes().getAttribute(SimpleTranslatedPlan.SimplePlanAttributeName);
@@ -1024,7 +1067,7 @@ public class PersonPlanSueModel {
 			String subpopulation = PopulationUtils.getSubpopulation(p.getValue());
 			if(subpopulation.equals(MaaSUtil.MaaSOperatorAgentSubPopulationName))return;
 			LinkedHashMap<String,Double> params = this.handleBasicParams(Oparams, subpopulation, this.scenario.getConfig());
-			for(Plan plan:p.getValue().getPlans()) {
+			for(Plan plan:this.feasibleplans.get(p.getValue().getId())) {
 				for(String var:this.gradientKeys) {
 					SimpleTranslatedPlan trPlan = (SimpleTranslatedPlan) plan.getAttributes().getAttribute(SimpleTranslatedPlan.SimplePlanAttributeName);
 					//extract the translated plan first

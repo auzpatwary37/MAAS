@@ -151,14 +151,11 @@ public class IntelligentOperatorDecisionEngine {
 							
 						}//finish timebean
 					}//finish farelinks
-					try {
-						if(model.getPacakgeUserGradient().containsKey(maasPackage.getId())) {
-							grad+=maasPackage.getPackageCost()*model.getPacakgeUserGradient().get(maasPackage.getId()).get(key);
-						}else {
-							grad+=0;
-						}
-					}catch(NullPointerException e) {
-						throw new NullPointerException("A null pointer exception is thrown!");
+					
+					if(model.getPacakgeUserGradient().containsKey(maasPackage.getId())) {
+						grad+=maasPackage.getPackageCost()*model.getPacakgeUserGradient().get(maasPackage.getId()).get(key);
+					}else {
+						grad+=0;// The package was not used in any of the plans
 					}
 					
 				}//finish maaspackage

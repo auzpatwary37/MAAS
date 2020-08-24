@@ -9,13 +9,17 @@ import java.util.Random;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.population.Activity;
+import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
+import org.matsim.api.core.v01.population.Plan;
 import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.api.core.v01.population.Population;
 import org.matsim.api.core.v01.population.PopulationFactory;
 import org.matsim.api.core.v01.population.PopulationWriter;
 import org.matsim.core.population.PopulationUtils;
+import org.matsim.core.router.TripStructureUtils;
 import org.matsim.core.utils.collections.Tuple;
+import org.matsim.utils.objectattributes.attributable.AttributesUtils;
 
 import MaaSPackages.MaaSPackage;
 import MaaSPackages.MaaSPackages;
@@ -39,6 +43,7 @@ public final class MaaSUtil {
 	public static final String PackageTripKeyName = "packageTrip";
 	public static final String operatorTripKeyName = "totalTrip";
 	public static final String fareSavedAttrName = "fareSaved";
+	public static final String irreleventPlanFlag = "irrelevantPlan";
 
 	public static Activity createMaaSOperator(MaaSPackages packages, Population population, String popOutLoc, 
 			Tuple<Double,Double> boundsMultiplier) {
@@ -138,4 +143,46 @@ public final class MaaSUtil {
 		}
 	}
 	
+	
+	private static boolean actEquals(Activity act1,Activity act2) {
+		Coord coord1 = act1.getCoord();
+		Coord coord2 = act2.getCoord();
+		if(!(coord1.getX()==coord2.getX() && coord1.getY()==coord2.getY())) {
+			return false;
+		}
+		if(!act1.getType().equals(act2.getType())) return false;
+		if(!act1.getLinkId().equals(act2.getLinkId())) return false;
+		if(!(act1.getStartTime().isDefined()&& act2.getStartTime().isDefined() && act1.getStartTime().seconds()==act2.getStartTime().seconds()))return false;
+		if(!(act1.getEndTime().isDefined()&& act2.getEndTime().isDefined() && act1.getEndTime().seconds()==act2.getEndTime().seconds()))return false;
+		if(!(act1.getMaximumDuration().isDefined()&& act2.getMaximumDuration().isDefined() && act1.getMaximumDuration().seconds()==act2.getMaximumDuration().seconds()))return false;
+		if(!act1.getFacilityId().equals(act2.getFacilityId())) return false;
+		return true;
+	}
+	
+	private static boolean legEquals(Leg leg1,Leg leg2) {
+		if(!TripStructureUtils.getRoutingMode( leg1 ).equals(TripStructureUtils.getRoutingMode( leg2 )))return false;
+		if(!(leg1.getDepartureTime().isDefined()&& leg2.getDepartureTime().isDefined() && leg1.getDepartureTime().seconds()==leg2.getDepartureTime().seconds()))return false;
+		if(!(leg1.getTravelTime().isDefined()&& leg2.getTravelTime().isDefined() && leg1.getTravelTime().seconds()==leg2.getTravelTime().seconds()))return false;
+		if (!(leg1.getRoute().getRouteDescription().equals(leg2.getRoute().getRouteDescription()))) return false;
+		return true;
+	}
+	
+	public static boolean planEquals(Plan p1, Plan p2) {
+		boolean isequal = true;
+		String maas1 = (String) p1.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName);
+		String maas2 = (String) p2.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName);
+		if((maas1==null && maas2!=null)||(maas1!=null && maas2==null)) {
+			return false;
+		}else if(maas1!=null && maas2!=null && !maas1.equals(maas2)) {
+			return false;
+		}
+		for(int i=0; i<p1.getPlanElements().size();i++) {
+			if(!(p1.getPlanElements().get(i) instanceof Activity && p2.getPlanElements().get(i) instanceof Activity && actEquals((Activity)p1.getPlanElements().get(i),(Activity)p2.getPlanElements().get(i)))){
+				return false;
+			}else if(!(p1.getPlanElements().get(i) instanceof Leg && p2.getPlanElements().get(i) instanceof Leg && legEquals((Leg)p1.getPlanElements().get(i),(Leg)p2.getPlanElements().get(i)))) {
+				return false;
+			}
+		}
+		return isequal;
+	}
 }
