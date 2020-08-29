@@ -80,6 +80,7 @@ public class TransitRouterFareDynamicMaasImpl extends TransitRouterFareDynamicIm
 			else if(l.fromNode.route!=null) {
 				//inside link (egress link)
 				leg = PopulationUtils.createLeg(TransportMode.pt);
+				@SuppressWarnings("deprecation")
 				ExperimentalTransitRoute ptRoute = new ExperimentalTransitRoute(stop.getStopFacility(), l.fromNode.line, l.fromNode.route, l.fromNode.stop.getStopFacility());
 				leg.setRoute(ptRoute);
 				leg.setTravelTime(travelTime);
@@ -117,6 +118,9 @@ public class TransitRouterFareDynamicMaasImpl extends TransitRouterFareDynamicIm
 							l.fromNode.stop.getStopFacility().getId(), mode);
 				}
 				fareLinkList.add(f);
+//				if(fareLinkList.size()>1) {
+//					System.out.println("Debug");
+//				}
 				if(fareLinkType.equals(FareLink.NetworkWideFare)) {
 					lastLegIsInSystem = true;
 				}

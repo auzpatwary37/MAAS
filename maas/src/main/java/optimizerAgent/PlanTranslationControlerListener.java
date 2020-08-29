@@ -3,7 +3,9 @@ package optimizerAgent;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -62,16 +64,26 @@ public class PlanTranslationControlerListener implements IterationStartsListener
 
 	@Override
 	public void notifyBeforeMobsim(BeforeMobsimEvent event) {
-//		for(Person p:scenario.getPopulation().getPersons().values()) {
-//			if(!PopulationUtils.getSubpopulation(p).equals(MaaSUtil.MaaSOperatorAgentSubPopulationName)) {
-//				if(p.getSelectedPlan().getScore()==null ||p.getSelectedPlan().getScore()==0) {
-//					Plan plan = p.getSelectedPlan();
-//					if(p.getPlans().size()>1)
-//						System.out.println();
-//					plan.getAttributes().putAttribute(SimpleTranslatedPlan.SimplePlanAttributeName, new SimpleTranslatedPlan(timeBeansWrapped.timeBeans, plan, scenario));
-//				}
-//			}
-//		}
+		//save the unique plans inside a list of plans inside the person attribute
+		scenario.getPopulation().getPersons().entrySet().parallelStream().forEach(p->{
+			if(!this.operators.containsKey(p.getKey())) {
+				List<Plan> plans;
+				if((plans = (List<Plan>)p.getValue().getAttributes().getAttribute(MaaSUtil.uniqueMaaSIncludedPlanAttributeName))==null) {
+					plans = new ArrayList<>();
+					p.getValue().getAttributes().putAttribute(MaaSUtil.uniqueMaaSIncludedPlanAttributeName,plans);
+				}
+				boolean unique = true;
+				for(Plan pl: plans) {
+					if(MaaSUtil.planEquals(pl, p.getValue().getSelectedPlan())) {
+						unique = false;
+						break;
+					}
+				}
+				if(unique) {
+					plans.add(p.getValue().getSelectedPlan());
+				}
+			}
+		});
 	}
 
 	@Override

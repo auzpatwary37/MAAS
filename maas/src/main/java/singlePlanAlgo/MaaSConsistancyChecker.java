@@ -47,6 +47,14 @@ public class MaaSConsistancyChecker implements PlanStrategyModule{
 		Set<String> fareLinks = new HashSet<>();
 		if(originalfareLinks!=null)originalfareLinks.forEach(fl->fareLinks.add(fl.toString()));
 		String packId = (String) plan.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName);
+//		if(packId.equals("bus")) {
+//			fareLinks.forEach(a-> {
+//				if(a.contains("tram")) {
+//					System.out.println();
+//				}
+//				});
+//			}
+		
 		if(packId!=null) {
 			MaaSPackage pack = this.packages.getMassPackages().get(packId);
 		
@@ -55,9 +63,12 @@ public class MaaSConsistancyChecker implements PlanStrategyModule{
 				Set<String> irrelevantPackages = (Set<String>) plan.getPerson().getAttributes().getAttribute(MaaSUtil.irreleventPlanFlag);
 				if(irrelevantPackages == null) {
 					irrelevantPackages = new HashSet<>();
-					plan.getAttributes().putAttribute(MaaSUtil.irreleventPlanFlag, irrelevantPackages);
+					plan.getPerson().getAttributes().putAttribute(MaaSUtil.irreleventPlanFlag, irrelevantPackages);
 				}
 				irrelevantPackages.add(pack.getId());
+//				if(irrelevantPackages.size()==this.packages.getMassPackages().size()) {
+//					System.out.println();
+//				}
 			}
 		}
 	}

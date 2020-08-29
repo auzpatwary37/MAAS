@@ -240,38 +240,7 @@ public class PersonPlanSueModel {
 	
 	private Map<Id<Person>, List<Plan>> extractFeasiblePlans(Population population) {
 		for(Entry<Id<Person>, ? extends Person> p:population.getPersons().entrySet()) {
-			List<Plan> plans = new ArrayList<>();
-			for(Plan pl:p.getValue().getPlans()) {
-				String selectedPlan = (String) pl.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName);
-				List<FareLink> fareLinksOriginal = (List<FareLink>) pl.getAttributes().getAttribute("fareLink");
-				Set<String> fareLinks = new HashSet<>();
-				if(fareLinksOriginal!=null) {
-					for(FareLink fl:fareLinksOriginal) {
-						fareLinks.add(fl.toString());
-					}
-				}
-				boolean relevant = false ;
-				if(selectedPlan!=null) {
-					if(Sets.intersection(fareLinks, this.maasPakages.getMassPackages().get(selectedPlan).getDiscounts().keySet()).size()!=0) {
-						relevant = true;
-					}
-				}else {
-					relevant = true;
-				}
-				boolean duplicate = false;
-				for(Plan plan:plans) {
-					if(MaaSUtil.planEquals(plan, pl)) {
-						duplicate = true;
-						break;
-					}
-				}
-				if(relevant && !duplicate) {
-					plans.add(pl);
-				}
-					
-				
-				
-			}
+			List<Plan> plans = (List<Plan>) p.getValue().getAttributes().getAttribute(MaaSUtil.uniqueMaaSIncludedPlanAttributeName);
 			this.feasibleplans.put(p.getKey(), plans);	
 		}
 		return feasibleplans;
@@ -444,7 +413,7 @@ public class PersonPlanSueModel {
 			Map<String,Object> additionalInfo = new HashMap<>();
 			additionalInfo.put(MaaSUtil.CurrentSelectedMaaSPackageAttributeName, maas);
 			if(maas!=null)
-				utility+=params.get(CNLSUEModel.MarginalUtilityofMoneyName)*maas.getPackageCost();
+				utility-=params.get(CNLSUEModel.MarginalUtilityofMoneyName)*maas.getPackageCost();
 			else{
 				logger.debug("Debug");
 			}
@@ -461,7 +430,7 @@ public class PersonPlanSueModel {
 			
 			for(Entry<String, Map<Id<AnalyticalModelTransitRoute>, AnalyticalModelTransitRoute>> trRouteMap:trPlan.getTrroutes().entrySet()) {
 				for(AnalyticalModelTransitRoute trRoute : trRouteMap.getValue().values()) {
-					utility += trRoute.calcRouteUtility(params, anaParams, this.networks.get(trRouteMap.getKey()), this.farecalculators,additionalInfo, this.timeBeans.get(trRouteMap.getKey()));
+					utility += trRoute.calcRouteUtility(params, anaParams, this.networks.get(trRouteMap.getKey()),this.transitLinks.get(trRouteMap.getKey()), this.farecalculators,additionalInfo, this.timeBeans.get(trRouteMap.getKey()));
 				}
 				
 				if(Double.isNaN(utility)||!Double.isFinite(utility))
@@ -572,7 +541,7 @@ public class PersonPlanSueModel {
 					MaaSPackage maas = this.maasPakages.getMassPackages().get(plan.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName));
 					SimpleTranslatedPlan trPlan = (SimpleTranslatedPlan) plan.getAttributes().getAttribute(SimpleTranslatedPlan.SimplePlanAttributeName);
 					String planKey = new String(p.getId().toString()+"_^_"+planNo);
-					this.plans.put(planKey, trPlan);
+					
 					
 					//if(trPlan==null) {
 						//System.out.println("I am currently just applying a patch. Please fix it asap.");
@@ -582,6 +551,7 @@ public class PersonPlanSueModel {
 					//}
 					//System.out.println(this.scenario.getNetwork().getLinks().get(this.scenario.getNetwork().getLinks().keySet().toArray()[0]).getClass());	
 					trPlan.setPlanKey(planKey);
+					this.plans.put(planKey, trPlan);
 					planNo++;
 					if(maas!=null) {trPlan.setMaasPacakgeId(maas.getId());}
 					else {trPlan.setMaasPacakgeId(MaaSUtil.nullMaaSPacakgeKeyName);}
@@ -790,7 +760,9 @@ public class PersonPlanSueModel {
 	private SUEModelOutput performAssignment(Population population, LinkedHashMap<String,Double> params, LinkedHashMap<String,Double> anaParams) {
 		SUEModelOutput flow = null;
 		for(int counter = 1; counter < this.maxIter; counter++) {
-			if(counter == 1)this.createIncidenceMaps(population);
+			if(counter == 1) {
+				this.createIncidenceMaps(population);
+				}
 			
 			flow  = this.performNetworkLoading(population, params, anaParams,counter);//link incidences are ready after this step
 			logger.info("Finished network loading.");
@@ -877,7 +849,7 @@ public class PersonPlanSueModel {
 		double utility = scParam.marginalUtilityOfPerforming_s*typicalDuration*Math.log((duration+1)/minDuration);
 		if(!Double.isFinite(utility)||Double.isNaN(utility))
 			logger.debug("Utility is nan or infinity. Debug!!!");
-		
+		utility = 0;// Change this
 		return utility;
 		
 		
@@ -945,7 +917,7 @@ public class PersonPlanSueModel {
 		}
 	
 		for(String planKey:this.planProbability.keySet()) {
-			this.planProbabilityGradient.put(planKey, zeroGrad);
+			this.planProbabilityGradient.put(planKey, new HashMap<>(zeroGrad));
 		}
 		
 		logger.info("Finished initializing gradients");
@@ -1019,12 +991,17 @@ public class PersonPlanSueModel {
 								double beta = anaParam.get(PersonPlanSueModel.TransferbetaName);
 								double passengerTobeBorded = transferLink.getPassangerCount();
 								double passengerOnBord = plink.getTransitPassengerVolume(dlink.getLineId()+"_"+dlink.getRouteId());
-								double volume = passengerTobeBorded+passengerOnBord;
+								//double volume = passengerTobeBorded+passengerOnBord;
+								double volume = passengerOnBord;
 								double grad1 = beta*headway/Math.pow(cap*freq, beta)*Math.pow(volume, beta-1);//if both the second and first term is 
 								if(Double.isInfinite(grad1)||Double.isNaN(grad1))grad1 = 0;
 								double grad2 = this.trLinkGradient.get(timeMap.getKey()).get(transferLink.getTrLinkId()).get(var.getKey());
+								
 								for(Id<TransitLink> l:transferLink.getIncidentLinkIds()){
 									grad2+=this.trLinkGradient.get(timeMap.getKey()).get(l).get(var.getKey());
+								}
+								if(grad2!=0) {
+									logger.debug("Debug here");
 								}
 								grad = grad1*grad2;
 							}else {
@@ -1067,6 +1044,8 @@ public class PersonPlanSueModel {
 			String subpopulation = PopulationUtils.getSubpopulation(p.getValue());
 			if(subpopulation.equals(MaaSUtil.MaaSOperatorAgentSubPopulationName))return;
 			LinkedHashMap<String,Double> params = this.handleBasicParams(Oparams, subpopulation, this.scenario.getConfig());
+			Map<String,Map<String,Double>> utilityGradient = new HashMap<>();
+			Map<String,Double> sumTerm = this.gradientKeys.stream().collect(Collectors.toMap(k->k, k->0.));
 			for(Plan plan:this.feasibleplans.get(p.getValue().getId())) {
 				for(String var:this.gradientKeys) {
 					SimpleTranslatedPlan trPlan = (SimpleTranslatedPlan) plan.getAttributes().getAttribute(SimpleTranslatedPlan.SimplePlanAttributeName);
@@ -1087,7 +1066,7 @@ public class PersonPlanSueModel {
 							for(Id<Link>linkId: route.getLinkIds()) {
 								routeGradient+=this.linkTravelTimeGradient.get(trRouteMap.getKey()).get(linkId).get(var);
 							}
-							routeGradient*=(params.get(CNLSUEModel.MarginalUtilityofTravelCarName)-params.get(CNLSUEModel.MarginalUtilityofPerformName));
+							routeGradient*=(params.get(CNLSUEModel.MarginalUtilityofTravelCarName)/3600.-params.get(CNLSUEModel.MarginalUtilityofPerformName)/3600.);
 							if(Double.isNaN(routeGradient))
 								logger.debug("Debug point. Gradient is NAN");
 							planGradient+=routeGradient;
@@ -1102,18 +1081,20 @@ public class PersonPlanSueModel {
 							if(MaaSUtil.ifFareLinkVariableDetails(var)) {
 								String fl = MaaSUtil.retrieveFareLink(var);
 								if(trRoute.getFareLinks().contains(new FareLink(fl)))
-									routeGradient+=params.get(CNLSUEModel.MarginalUtilityofMoneyName);
+									routeGradient-=params.get(CNLSUEModel.MarginalUtilityofMoneyName);//Should It be minus
 							}
 							for(TransitDirectLink dlink:trRoute.getTransitDirectLinks()) {
 								routeGradientDlink += this.trLinkTravelTimeGradient.get(trRouteMap.getKey()).get(dlink.getTrLinkId()).get(var);
 							}
-							routeGradientDlink*=params.get(CNLSUEModel.MarginalUtilityofTravelptName)-params.get(CNLSUEModel.MarginalUtilityofPerformName);
+							routeGradientDlink*=params.get(CNLSUEModel.MarginalUtilityofTravelptName)/3600.-params.get(CNLSUEModel.MarginalUtilityofPerformName)/3600.;
 							for(TransitTransferLink trlink:trRoute.getTransitTransferLinks()) {
 								routeGradientTRLink += this.trLinkTravelTimeGradient.get(trRouteMap.getKey()).get(trlink.getTrLinkId()).get(var);
 							}
-							routeGradientTRLink*=params.get(CNLSUEModel.MarginalUtilityofWaitingName)-params.get(CNLSUEModel.MarginalUtilityofPerformName);
+							routeGradientTRLink*=params.get(CNLSUEModel.MarginalUtilityofWaitingName)/3600.-params.get(CNLSUEModel.MarginalUtilityofPerformName)/3600.;
 							double grad = routeGradient+routeGradientDlink+routeGradientTRLink;
-							
+							if(counter==1 && grad!=0) {
+								logger.debug("Bug Here");
+							}
 							if(Double.isNaN(grad))
 								logger.debug("Debug point. Gradient is NAN");
 							
@@ -1122,15 +1103,31 @@ public class PersonPlanSueModel {
 								logger.debug("Debug point. Gradient is NAN..");
 						}
 					}
+					
+					if(!utilityGradient.containsKey(planKey))utilityGradient.put(planKey, new HashMap<>());
+					utilityGradient.get(planKey).put(var, planGradient);
 					double planProb = this.planProbability.get(planKey);
-					planGradient = planGradient*planProb*(1-this.planProbability.get(planKey));
-					if(planGradient!=0)this.nonZeroPlanGrad++;
+					sumTerm.compute(var, (k,v)->v=v+planProb*utilityGradient.get(planKey).get(var));
+				}
+			}
+			for(Plan plan:this.feasibleplans.get(p.getValue().getId())) {
+				for(String var:this.gradientKeys) {
+					SimpleTranslatedPlan trPlan = (SimpleTranslatedPlan) plan.getAttributes().getAttribute(SimpleTranslatedPlan.SimplePlanAttributeName);
+					//extract the translated plan first
+					
+					String planKey = trPlan.getPlanKey();
+					double planProb = this.planProbability.get(planKey);
+					double planGradient = planProb*(utilityGradient.get(planKey).get(var)-sumTerm.get(var));
+					if(planGradient!=0)
+						{
+						this.nonZeroPlanGrad++;
+						}
 					if(Double.isNaN(planGradient))
 						logger.debug("Debug point. Gradient is NAN");
 					
 					this.planProbabilityGradient.get(planKey).put(var, planGradient);
+					}
 				}
-			}
 		});
 		
 		logger.info("Non zero plan probability gradient = "+this.nonZeroPlanGrad);
@@ -1199,7 +1196,7 @@ public class PersonPlanSueModel {
 				this.pacakgeUserGradient.get(packageIncidence.getKey()).put(var, grad);
 			}
 		}
-		
+		logger.info("Finished Gradient Calculation.");
 	}
 	
 	private Map<String,Double> calculateMaaSPackageUsage() {

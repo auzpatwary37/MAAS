@@ -73,6 +73,10 @@ public class IntelligentOperatorDecisionEngine {
 		this.flow = model.performAssignment(scenario.getPopulation(),variables);
 	}
 	
+	public void runMetamodel(LinkedHashMap<String,Double> variables) {
+		this.flow = model.performAssignment(scenario.getPopulation(),variables);
+	}
+	
 	
 	public void addOperatorAgent(Plan maaSOperatorPlan) {
 		Person agent = maaSOperatorPlan.getPerson();
@@ -101,7 +105,13 @@ public class IntelligentOperatorDecisionEngine {
 	 * @return
 	 */
 	public Map<String,Map<String,Double>> calcApproximateObjectiveGradient(LinkedHashMap<String,Double> variables) {
-		if(this.flow==null)this.setupAndRunMetaModel(variables);
+//		if(this.flow==null) {
+//			this.setupAndRunMetaModel(variables);
+//		}else {
+//			this.runMetamodel(variables);
+//		}
+		
+		this.setupAndRunMetaModel(variables);
 		//System.out.println(this.scenario.getNetwork().getLinks().get(this.scenario.getNetwork().getLinks().keySet().toArray()[0]).getClass());
 		Map<String,Map<String,Double>>operatorGradient = new HashMap<>();
 		this.operator.entrySet().forEach(operator->{

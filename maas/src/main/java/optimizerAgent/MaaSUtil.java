@@ -44,6 +44,7 @@ public final class MaaSUtil {
 	public static final String operatorTripKeyName = "totalTrip";
 	public static final String fareSavedAttrName = "fareSaved";
 	public static final String irreleventPlanFlag = "irrelevantPlan";
+	public static final String uniqueMaaSIncludedPlanAttributeName = "UniquePlans";
 
 	public static Activity createMaaSOperator(MaaSPackages packages, Population population, String popOutLoc, 
 			Tuple<Double,Double> boundsMultiplier) {
@@ -151,20 +152,16 @@ public final class MaaSUtil {
 			return false;
 		}
 		if(!act1.getType().equals(act2.getType())) return false;
-		if(!act1.getLinkId().equals(act2.getLinkId())) return false;
-		if(!(act1.getStartTime().isDefined()&& act2.getStartTime().isDefined() && act1.getStartTime().seconds()==act2.getStartTime().seconds()))return false;
-		if(!(act1.getEndTime().isDefined()&& act2.getEndTime().isDefined() && act1.getEndTime().seconds()==act2.getEndTime().seconds()))return false;
-		if(!(act1.getMaximumDuration().isDefined()&& act2.getMaximumDuration().isDefined() && act1.getMaximumDuration().seconds()==act2.getMaximumDuration().seconds()))return false;
-		if(!act1.getFacilityId().equals(act2.getFacilityId())) return false;
 		return true;
 	}
 	
 	private static boolean legEquals(Leg leg1,Leg leg2) {
-		if(!TripStructureUtils.getRoutingMode( leg1 ).equals(TripStructureUtils.getRoutingMode( leg2 )))return false;
-		if(!(leg1.getDepartureTime().isDefined()&& leg2.getDepartureTime().isDefined() && leg1.getDepartureTime().seconds()==leg2.getDepartureTime().seconds()))return false;
-		if(!(leg1.getTravelTime().isDefined()&& leg2.getTravelTime().isDefined() && leg1.getTravelTime().seconds()==leg2.getTravelTime().seconds()))return false;
-		if (!(leg1.getRoute().getRouteDescription().equals(leg2.getRoute().getRouteDescription()))) return false;
-		return true;
+		if (leg1.getRoute().getRouteDescription()==null && leg2.getRoute().getRouteDescription()==null ) {
+			return true;
+		}else if(leg1.getRoute().getRouteDescription()!=null && leg2.getRoute().getRouteDescription()!=null && leg1.getRoute().getRouteDescription().equals(leg2.getRoute().getRouteDescription())) {
+			return true;
+		}
+		return false;
 	}
 	
 	public static boolean planEquals(Plan p1, Plan p2) {
@@ -176,13 +173,19 @@ public final class MaaSUtil {
 		}else if(maas1!=null && maas2!=null && !maas1.equals(maas2)) {
 			return false;
 		}
+	
 		for(int i=0; i<p1.getPlanElements().size();i++) {
-			if(!(p1.getPlanElements().get(i) instanceof Activity && p2.getPlanElements().get(i) instanceof Activity && actEquals((Activity)p1.getPlanElements().get(i),(Activity)p2.getPlanElements().get(i)))){
-				return false;
-			}else if(!(p1.getPlanElements().get(i) instanceof Leg && p2.getPlanElements().get(i) instanceof Leg && legEquals((Leg)p1.getPlanElements().get(i),(Leg)p2.getPlanElements().get(i)))) {
+			if(p1.getPlanElements().get(i) instanceof Activity && p2.getPlanElements().get(i) instanceof Activity && actEquals((Activity)p1.getPlanElements().get(i),(Activity)p2.getPlanElements().get(i))){
+				isequal = true;
+			}else if(p1.getPlanElements().get(i) instanceof Leg && p2.getPlanElements().get(i) instanceof Leg && legEquals((Leg)p1.getPlanElements().get(i),(Leg)p2.getPlanElements().get(i))) {
+				isequal = true;
+			}else {
+				
 				return false;
 			}
 		}
 		return isequal;
 	}
+	
+	
 }

@@ -342,7 +342,7 @@ public class SmallExample {
 		s.setMarginalUtlOfWaitingPt_utils_hr(ss.getMarginalUtlOfWaitingPt_utils_hr());
 		
 		config.strategy().addStrategySettings(MaaSEffectTest.createStrategySettings(
-							MaaSPlanStrategy.class.getName(),.2,200,PlanCalcScoreConfigGroup.DEFAULT_SUBPOPULATION));
+							MaaSPlanStrategy.class.getName(),.2,400,PlanCalcScoreConfigGroup.DEFAULT_SUBPOPULATION));
 		RunUtils.addStrategy(config, "KeepLastSelected", MaaSUtil.MaaSOperatorAgentSubPopulationName, 1, 400);
 	}
 	
@@ -360,7 +360,7 @@ public class SmallExample {
 		controler.run();
 	}
 	
-//	@Test
+	//@Test
 	/**
 	 * It is a test for running the controler to see if the agents would converge to the desired result
 	 */
@@ -391,7 +391,7 @@ public class SmallExample {
 		controler.run();
 	}
 	
-//	@Test
+	@Test
 	/**
 	 * It is a test for optimization of the package price.
 	 * It is suppose that the bus package fare would be close to 15, which is the fare of tram, to get more passengers.
@@ -400,7 +400,7 @@ public class SmallExample {
 		Scenario scenario = createSimpleScenario(19, 20);
 		additionalSettingsForMaaS(scenario, PlanCalcScoreConfigGroup.DEFAULT_SUBPOPULATION, "src/test/resources/packages/packages_simple19.0.xml");
 		scenario.getConfig().strategy().addStrategySettings(MaaSEffectTest.createStrategySettings(
-				MaaSOperatorStrategy.class.getName(), 1, 200, MaaSUtil.MaaSOperatorAgentSubPopulationName));
+				MaaSOperatorStrategy.class.getName(), 100, 350, MaaSUtil.MaaSOperatorAgentSubPopulationName));
 		scenario.getConfig().controler().setOutputDirectory("./output/smallTestOptimizeWithTram");
 		scenario.getConfig().controler().setLastIteration(400);
 		FareCalculator tramFareCal = createTramLine(scenario.getNetwork(), scenario.getTransitSchedule(), scenario.getTransitVehicles(), 15);
@@ -424,7 +424,7 @@ public class SmallExample {
 		return false;
 	}
 	
-	@Test
+	//@Test
 	/**
 	 * It is a test for the shortest path algorithm, what is the shortest path.
 	 */

@@ -73,27 +73,24 @@ public class MaaSStrategyModule implements   ActivityEndEventHandler,PlanStrateg
 		String currentMaaSPackage = (String) plan.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName);
 		Set<String> irreleventMaaSPackages =  (Set<String>) plan.getPerson().getAttributes().getAttribute(MaaSUtil.irreleventPlanFlag);
 		if(irreleventMaaSPackages==null)irreleventMaaSPackages = new HashSet<>();
+		MaaSKeys.removeAll(irreleventMaaSPackages);
 		
-			boolean repeat = true;
-			int ind=0;
-			while(repeat) {
+		int ind=0;
+		if(!MaaSKeys.isEmpty()) {
+			if(currentMaaSPackage == null) {
+				ind=rnd.nextInt(MaaSKeys.size());
+			} else {
+				MaaSKeys.remove(currentMaaSPackage);
 				ind=rnd.nextInt(MaaSKeys.size()+1);
-				if(currentMaaSPackage == null) {
-					if(ind != MaaSKeys.size() && !irreleventMaaSPackages.contains(MaaSKeys.get(ind))) {
-						repeat = false;
-					}
-				} else {
-					if(ind == MaaSKeys.size() || (!currentMaaSPackage.equals(MaaSKeys.get(ind)) && !irreleventMaaSPackages.contains(MaaSKeys.get(ind)))) {
-					repeat = false;
-				}
-				}
 			}
-			if(ind == MaaSKeys.size()) {
-				plan.getAttributes().removeAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName);
-			}else {
-				plan.getAttributes().putAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName,MaaSKeys.get(ind));
-			}
-		
+		}
+			
+		if(ind == MaaSKeys.size()) {
+			plan.getAttributes().removeAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName);
+		}else {
+			plan.getAttributes().putAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName,MaaSKeys.get(ind));
+		}
+		plan.getAttributes().removeAttribute(FareLink.FareLinkAttributeName);
 	}
 	
 	

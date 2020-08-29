@@ -16,7 +16,7 @@ import ust.hk.praisehk.metamodelcalibration.analyticalModelImpl.CNLTransitTransf
 
 public class CNLTransitRouteMaaS extends CNLTransitRoute{
 	
-	
+	public boolean debugSwitch = true;
 	
 	public CNLTransitRouteMaaS(ArrayList<CNLTransitTransferLink> transferLinks, ArrayList<CNLTransitDirectLink> dlinks,
 			Scenario scenario, TransitSchedule ts, double routeWalkingDistance, String routeId) {
