@@ -105,12 +105,93 @@ public class IntelligentOperatorDecisionEngine {
 	 * @return
 	 */
 	public Map<String,Map<String,Double>> calcApproximateObjectiveGradient(LinkedHashMap<String,Double> variables) {
+		//return this.calcOperatorObjectiveGrad(variables);
+		return this.calcPlatformObjGrad(variables);
+	}
+	
+	/**
+	 * This assumes the packages are made out of different modes and the integrator is a platform who only benefits from the package price.
+	 * However, the platform pays the company a fraction of the original price of the discounted fare links 
+	 * @param variables
+	 * @return
+	 */
+	private Map<String,Map<String,Double>> calcPlatformObjGrad(LinkedHashMap<String,Double> variables) {
 //		if(this.flow==null) {
 //			this.setupAndRunMetaModel(variables);
 //		}else {
 //			this.runMetamodel(variables);
 //		}
 		
+		this.setupAndRunMetaModel(variables);
+		//System.out.println(this.scenario.getNetwork().getLinks().get(this.scenario.getNetwork().getLinks().keySet().toArray()[0]).getClass());
+		Map<String,Map<String,Double>>operatorGradient = new HashMap<>();
+		
+		this.operator.entrySet().forEach(operator->{
+			Double alpha = variables.get(MaaSUtil.createPlanformReimbursementVariableName(operator.getKey()));
+			if(alpha==null)alpha = 1.;
+			final double a = alpha;
+			operatorGradient.put(operator.getKey(),new HashMap<>());
+			operator.getValue().entrySet().forEach(var->{//for one variable
+				
+				String key = var.getKey();
+				String pacakgeId = MaaSUtil.retrievePackageId(key);//packageId of that variable
+				double volume = 0;
+				if(MaaSUtil.ifFareLinkVariableDetails(key)) {//if the variable is a fare link variable
+					FareLink farelink = new FareLink(MaaSUtil.retrieveFareLink(key));
+					for(Entry<String, Map<String, Map<String, Double>>> timeFl:this.flow.getMaaSSpecificFareLinkFlow().entrySet()) volume+=timeFl.getValue().get(pacakgeId).get(farelink.toString());//subtract froom gradient
+					volume=volume*-1*a;
+				}else if(MaaSUtil.ifMaaSPackageCostVariableDetails(key)) {
+					if(this.flow.getMaaSPackageUsage().get(pacakgeId)==null) {
+						volume = 0;
+					}else {
+						volume = this.flow.getMaaSPackageUsage().get(pacakgeId);
+					}
+				}
+				
+				double grad = volume;
+				for(MaaSPackage maasPackage:this.packages.getMassPackagesPerOperator().get(operator.getKey())) {//maasPackage belonging to the operator
+					for(String fl:maasPackage.getFareLinks().keySet()) {//fare link in that maas package
+						for(Entry<String, Map<String, Map<String, Map<String, Double>>>> fareGrad:model.getFareLinkGradient().entrySet()) {//timeBeans
+							double timeMaasSpecificFareLinkGrad = 0;
+							//double nullPackageGrad = 0;
+							try {//The try catch block is necessary as we created the incidence matrix based on usage rather than exhaustive enumeration. 
+								//So, there can be null values for any specific keys maasPackage and fareLink and evem for timeBeans in case of flow
+								timeMaasSpecificFareLinkGrad = fareGrad.getValue().get(maasPackage.getId()).get(fl).get(key);//The fare link can be not used at a timeBean by anyone belonging to that specific maas pacakge  
+								//nullPackageGrad = fareGrad.getValue().get(MaaSUtil.nullMaaSPacakgeKeyName).get(fl).get(key);//check
+							}catch(Exception e) {//This means either nobody holding that maas package travelled in that time step, or the former
+								if(fareGrad.getValue().get(maasPackage.getId())==null) {//case1
+									//logger.debug("MaaS Package holder did not travel on any fare link in that timeBean");
+								}
+								else if(fareGrad.getValue().get(maasPackage.getId()).get(fl)==null) {//case 2
+									//logger.debug("The fare link was not used by any maas package holder in that time step");
+								}
+								else if(fareGrad.getValue().get(MaaSUtil.nullMaaSPacakgeKeyName)==null) {//case3
+									//logger.debug("MaaS Package holder did not travel on any fare link in that timeBean");
+								}else if(fareGrad.getValue().get(MaaSUtil.nullMaaSPacakgeKeyName).get(fl)==null) {//case4
+									//logger.debug("The fare link was not used by any maas package holder in that time step");
+								}else //case5
+									logger.debug("Should investigate. Might be other issues.");
+							}
+							grad+=-1*a*maasPackage.getDiscounts().get(fl)*timeMaasSpecificFareLinkGrad;
+							
+						}//finish timebean
+					}//finish farelinks
+					
+					if(model.getPacakgeUserGradient().containsKey(maasPackage.getId())) {
+						grad+=maasPackage.getPackageCost()*model.getPacakgeUserGradient().get(maasPackage.getId()).get(key);
+					}else {
+						grad+=0;// The package was not used in any of the plans
+					}
+					
+				}//finish maaspackage
+				//Save the gradient
+				operatorGradient.get(operator.getKey()).put(key, grad);
+			});
+		});
+		return operatorGradient;
+	}
+	
+	private Map<String,Map<String,Double>> calcOperatorObjectiveGrad(LinkedHashMap<String,Double> variables){
 		this.setupAndRunMetaModel(variables);
 		//System.out.println(this.scenario.getNetwork().getLinks().get(this.scenario.getNetwork().getLinks().keySet().toArray()[0]).getClass());
 		Map<String,Map<String,Double>>operatorGradient = new HashMap<>();

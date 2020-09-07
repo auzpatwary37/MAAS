@@ -50,6 +50,7 @@ public final class MaaSUtil {
 	public static final String irreleventPlanFlag = "irrelevantPlan";
 	public static final String uniqueMaaSIncludedPlanAttributeName = "UniquePlans";
 	public static final String detourRatio = "dr";
+	public static final String platformReimbursementFactorName = "alpha";
 
 	public static Activity createMaaSOperator(MaaSPackages packages, Population population, String popOutLoc, 
 			Tuple<Double,Double> boundsMultiplier) {
@@ -204,23 +205,26 @@ public final class MaaSUtil {
             } 
         }); 
         return plans; 
- }
- 
- public static void calcDetaourRatio(Plan plan) {
-	double distAct = 0;
-	double distLeg = 0;
-	Coord lastActCoord = null;
-	for(PlanElement pe:plan.getPlanElements()){
-		if(pe instanceof Leg) {
-			distLeg+=((Leg)pe).getRoute().getDistance();
-		}else {
-			if(lastActCoord !=null) {
-				distAct += NetworkUtils.getEuclideanDistance(((Activity)pe).getCoord(),lastActCoord);
-			}
-			lastActCoord = ((Activity)pe).getCoord();
-		}
 	}
-	plan.getAttributes().putAttribute(MaaSUtil.detourRatio, distLeg/distAct);
- }
+ 
+	public static void calcDetaourRatio(Plan plan) {
+		double distAct = 0;
+		double distLeg = 0;
+		Coord lastActCoord = null;
+		for(PlanElement pe:plan.getPlanElements()){
+			if(pe instanceof Leg) {
+				distLeg+=((Leg)pe).getRoute().getDistance();
+			}else {
+				if(lastActCoord !=null) {
+					distAct += NetworkUtils.getEuclideanDistance(((Activity)pe).getCoord(),lastActCoord);
+				}
+				lastActCoord = ((Activity)pe).getCoord();
+			}
+		}
+		plan.getAttributes().putAttribute(MaaSUtil.detourRatio, distLeg/distAct);
+ 	}
 
+	public static String createPlanformReimbursementVariableName(String operatorId) {
+		return platformReimbursementFactorName+"___"+operatorId;
+	}
 }

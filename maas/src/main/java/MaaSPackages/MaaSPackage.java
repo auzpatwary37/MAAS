@@ -63,10 +63,10 @@ public class MaaSPackage {
 	 */
 	private double packageExpairyTime;
 	
-	public MaaSPackage(String Id,String operatorId,Map<String,FareLink> fareLinks,  Map<String,Double> discountedFare, Map<String,Double> fullFare, int maxTaxiTrip, double packageCost, double packageExpTime) {
+	public MaaSPackage(String Id,String operatorId,Map<String,FareLink> fareLinks,  Map<String,Double> fareDiscount, Map<String,Double> fullFare, int maxTaxiTrip, double packageCost, double packageExpTime) {
 		this.id=Id;
 		this.fareLinks = fareLinks;
-		this.discounts = discountedFare;
+		this.discounts = fareDiscount;
 		this.fullFare = fullFare;
 		this.maxTaxiTrip=maxTaxiTrip;
 		this.packageCost=packageCost;
