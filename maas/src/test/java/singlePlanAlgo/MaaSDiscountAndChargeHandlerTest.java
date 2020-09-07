@@ -92,7 +92,7 @@ class MaaSDiscountAndChargeHandlerTest {
 				config.plans().setInsistingOnUsingDeprecatedPersonAttributeFile(true);
 				config.plans().setInputPersonAttributeFile("new Data/core/personAttributesHKI.xml");
 //				config.plans().setInputFile("new Data/core/20.plans.xml.gz");
-				config.controler().setOutputDirectory("toyScenarioLarge/output_WithMaaSwithoutOptim_IntelligentAgent3");
+				config.controler().setOutputDirectory("toyScenarioLarge/output_optim_stable_1");
 				config.controler().setWritePlansInterval(10);
 				
 //				
@@ -121,13 +121,13 @@ class MaaSDiscountAndChargeHandlerTest {
 				config.strategy().addStrategySettings(createStrategySettings(MaaSPlanStrategy.class.getName(),.05,200,"person_TCSwithCar"));
 				config.strategy().addStrategySettings(createStrategySettings(MaaSPlanStrategy.class.getName(),.05,200,"person_TCSwithoutCar"));
 				config.strategy().addStrategySettings(createStrategySettings(MaaSPlanStrategy.class.getName(),.05,200,"trip_TCS"));
-				//config.strategy().addStrategySettings(createStrategySettings(MaaSOperatorStrategy.class.getName(),1,200,MaaSUtil.MaaSOperatorAgentSubPopulationName));
+				config.strategy().addStrategySettings(createStrategySettings(MaaSOperatorStrategy.class.getName(),1,200,MaaSUtil.MaaSOperatorAgentSubPopulationName));
 				
 				
 				//___________________
 				
-				RunUtils.addStrategy(config, "KeepLastSelected", MaaSUtil.MaaSOperatorAgentSubPopulationName, 
-						1, 400);
+//				RunUtils.addStrategy(config, "KeepLastSelected", MaaSUtil.MaaSOperatorAgentSubPopulationName, 
+//						1, 400);
 				
 				ScoringParameterSet s = config.planCalcScore().getOrCreateScoringParameters(MaaSOperator.type);
 				

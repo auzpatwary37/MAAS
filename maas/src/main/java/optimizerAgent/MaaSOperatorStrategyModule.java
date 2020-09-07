@@ -33,8 +33,8 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 	
 	@Inject
 	private @Named(MaaSUtil.MaaSPackagesAttributeName) MaaSPackages packages;
-	
-	private int MaaSPacakgeInertia = 15;
+	private int MaaSPacakgeOptimizationStartingCounter = 50;
+	private int MaaSPacakgeInertia = 25;
 	private Scenario scenario;
 	private int maxCounter = 10;
 
@@ -86,7 +86,7 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 
 	@Override
 	public void finishReplanning() {
-		if(this.currentMatsimIteration>0 && this.currentMatsimIteration%this.MaaSPacakgeInertia==0) {
+		if(this.currentMatsimIteration>=this.MaaSPacakgeOptimizationStartingCounter && this.currentMatsimIteration%this.MaaSPacakgeInertia==0) {
 		//this.takeSingleStep();//use either this or the following 
 		this.takeOptimizedStep();
 		}
@@ -139,6 +139,7 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 					variableValues.put(vd.getKey(), vd.getValue().getCurrentValue());
 				}
 				MaaSUtil.updateMaaSVariables(packages, variableValues);
+				
 			}
 			this.decisionEngine = null;
 			this.optimizers.entrySet().forEach(o->o.getValue().reset());

@@ -1,6 +1,9 @@
 package optimizerAgent;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -16,6 +19,7 @@ import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.api.core.v01.population.Population;
 import org.matsim.api.core.v01.population.PopulationFactory;
 import org.matsim.api.core.v01.population.PopulationWriter;
+import org.matsim.core.network.NetworkUtils;
 import org.matsim.core.population.PopulationUtils;
 import org.matsim.core.router.TripStructureUtils;
 import org.matsim.core.utils.collections.Tuple;
@@ -45,6 +49,7 @@ public final class MaaSUtil {
 	public static final String fareSavedAttrName = "fareSaved";
 	public static final String irreleventPlanFlag = "irrelevantPlan";
 	public static final String uniqueMaaSIncludedPlanAttributeName = "UniquePlans";
+	public static final String detourRatio = "dr";
 
 	public static Activity createMaaSOperator(MaaSPackages packages, Population population, String popOutLoc, 
 			Tuple<Double,Double> boundsMultiplier) {
@@ -187,5 +192,35 @@ public final class MaaSUtil {
 		return isequal;
 	}
 	
-	
+	public static List<Plan> sortPlan(List<Plan> plans) {
+        // Sort the list 
+        Collections.sort(plans, new Comparator<Plan>() { 
+            public int compare(Plan o1,  
+                               Plan o2) 
+            { 
+            	if((Double)o1.getAttributes().getAttribute(MaaSUtil.detourRatio) == null) calcDetaourRatio(o1);
+            	if((Double)o2.getAttributes().getAttribute(MaaSUtil.detourRatio) == null) calcDetaourRatio(o2);
+                return ((Double)o1.getAttributes().getAttribute(MaaSUtil.detourRatio)).compareTo((Double)o2.getAttributes().getAttribute(MaaSUtil.detourRatio)); 
+            } 
+        }); 
+        return plans; 
+ }
+ 
+ public static void calcDetaourRatio(Plan plan) {
+	double distAct = 0;
+	double distLeg = 0;
+	Coord lastActCoord = null;
+	for(PlanElement pe:plan.getPlanElements()){
+		if(pe instanceof Leg) {
+			distLeg+=((Leg)pe).getRoute().getDistance();
+		}else {
+			if(lastActCoord !=null) {
+				distAct += NetworkUtils.getEuclideanDistance(((Activity)pe).getCoord(),lastActCoord);
+			}
+			lastActCoord = ((Activity)pe).getCoord();
+		}
+	}
+	plan.getAttributes().putAttribute(MaaSUtil.detourRatio, distLeg/distAct);
+ }
+
 }

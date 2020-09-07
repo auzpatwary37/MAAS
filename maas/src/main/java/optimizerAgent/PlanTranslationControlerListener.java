@@ -43,6 +43,7 @@ public class PlanTranslationControlerListener implements IterationStartsListener
 	private Map<Id<Person>,Person> operators = new HashMap<>();
 	
 	public final String customerFileName = "customer.csv";
+	public final int maxPlansPerAgent = 5;
 	
 	@Inject
 	PlanTranslationControlerListener(){
@@ -81,6 +82,10 @@ public class PlanTranslationControlerListener implements IterationStartsListener
 				}
 				if(unique) {
 					plans.add(p.getValue().getSelectedPlan());
+				}
+				if(plans.size()>this.maxPlansPerAgent) {
+					MaaSUtil.sortPlan(plans);
+					plans.remove(plans.size()-1);
 				}
 			}
 		});
