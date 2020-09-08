@@ -19,6 +19,7 @@ import com.google.inject.name.Names;
 
 import MaaSPackages.MaaSPackages;
 import MaaSPackages.MaaSPackagesReader;
+import optimizerAgent.MaaSDiscountAndChargeHandlerPlatform;
 import optimizerAgent.MaaSUtil;
 
 public class MaaSDataLoader extends AbstractModule{
@@ -46,7 +47,8 @@ public class MaaSDataLoader extends AbstractModule{
 		
 		
 		//bind the maas handler
-		this.addEventHandlerBinding().to(MaaSDiscountAndChargeHandler.class).asEagerSingleton();
+		//this.addEventHandlerBinding().to(MaaSDiscountAndChargeHandler.class).asEagerSingleton();
+		this.addEventHandlerBinding().to(MaaSDiscountAndChargeHandlerPlatform.class).asEagerSingleton();
 		bind(MaaSDiscountAndChargeHandler.class).in(Singleton.class);
 		
 		

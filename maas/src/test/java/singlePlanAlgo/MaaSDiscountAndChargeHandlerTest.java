@@ -86,7 +86,7 @@ class MaaSDiscountAndChargeHandlerTest {
 				//OutputDirectoryLogging.catchLogEntries();
 				config.addModule(new MaaSConfigGroup());
 				config.controler().setLastIteration(250);
-				config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"test/packages_July2020_20.xml");
+				config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"test/packages_all.xml");
 				//config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"packages_July2020_400.xml");
 				
 				config.plans().setInsistingOnUsingDeprecatedPersonAttributeFile(true);
