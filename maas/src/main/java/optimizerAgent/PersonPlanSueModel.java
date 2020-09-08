@@ -401,7 +401,9 @@ public class PersonPlanSueModel {
 		Map<String, SimpleTranslatedPlan> trPlans = new HashMap<>();
 		
 		//This should handle for the basic params per subpopulation
+		long t1 = System.currentTimeMillis();
 		LinkedHashMap<String,Double> params = this.handleBasicParams(Oparams, subpopulation, this.scenario.getConfig());
+		t1 = System.currentTimeMillis()-t1;
 		//Calculate the utility, Should we move the utility calculation part inside the simple translated plan itself? makes more sense. (April 2020)
 		for(Plan plan:this.feasibleplans.get(person.getId())) {
 
@@ -421,11 +423,11 @@ public class PersonPlanSueModel {
 			}
 						
 			trPlans.put(planKey, trPlan);
-			Activity f = trPlan.getActivities().get(0);
-			Activity l = trPlan.getActivities().get(trPlan.getActivities().size()-1);
-			for(Activity ac:trPlan.getActivities()) {// for now this class is not implemented: done may 2 2020
-				utility += this.calcActivityUtility(ac, this.scenario.getConfig(),subpopulation,f,l);
-			}
+//			Activity f = trPlan.getActivities().get(0);
+//			Activity l = trPlan.getActivities().get(trPlan.getActivities().size()-1);
+//			for(Activity ac:trPlan.getActivities()) {// for now this class is not implemented: done may 2 2020
+//				utility += this.calcActivityUtility(ac, this.scenario.getConfig(),subpopulation,f,l);
+//			}
 			
 			if(Double.isNaN(utility)||!Double.isFinite(utility))
 				logger.debug("utility is nan or infinite. Debug!!!");
@@ -774,14 +776,16 @@ public class PersonPlanSueModel {
 			if(counter == 1) {
 				this.createIncidenceMaps(population);
 				}
-			
+			long t1 = System.currentTimeMillis();
 			flow  = this.performNetworkLoading(population, params, anaParams,counter);//link incidences are ready after this step
-			logger.info("Finished network loading.");
+			logger.info("Finished network loading. Time required = "+(System.currentTimeMillis()-t1)+"ms.");
 			boolean shouldStop = this.calcUpdateAndWeight(flow.getLinkVolume(), flow.getLinkTransitVolume(), counter);
+			t1 = System.currentTimeMillis();
 			this.caclulateGradient(population, counter, params, anaParams);
-			logger.info("Finished calculating gradient");
+			logger.info("Finished calculating gradient. Time required = "+(System.currentTimeMillis()-t1)+"ms.");
+			t1 = System.currentTimeMillis();
 			this.updateVolume(this.linkFlowUpdates,this.trLinkFlowUpdates, counter);//transit link dependencies are ready after this step
-			logger.info("Finished flow update.");
+			logger.info("Finished flow update. Time required = "+(System.currentTimeMillis()-t1)+"ms.");
 			if(shouldStop) {
 				break;
 			}
@@ -858,7 +862,7 @@ public class PersonPlanSueModel {
 		/**
 		 * This is the bare-bone activity utility from matsim book; refer to page 25, Ch:3 A Closer Look at Scoring 
 		 */
-		double utility = scParam.marginalUtilityOfPerforming_s*typicalDuration*Math.log((duration+1)/minDuration);
+		double utility = scParam.marginalUtilityOfPerforming_s*typicalDuration*Math.log((duration+1)/(minDuration*3600));
 		if(!Double.isFinite(utility)||Double.isNaN(utility))
 			logger.debug("Utility is nan or infinity. Debug!!!");
 		utility = 0;// Change this
@@ -954,6 +958,7 @@ public class PersonPlanSueModel {
 				//for(Entry<Id<Link>,Map<String,Double>> linkGradientMap:timeMap.getValue().entrySet()) {
 				timeMap.getValue().entrySet().parallelStream().forEach(linkGradientMap->{		
 					CNLLink link = (CNLLink) this.networks.get(timeMap.getKey()).getLinks().get(linkGradientMap.getKey());
+					if(link.getAllowedModes().contains("train"))return;
 					for(Entry<String, Double> var:linkGradientMap.getValue().entrySet()) {
 						double flow = link.getLinkCarVolume()+link.getLinkTransitVolume();
 						double t_0 = link.getLength()/link.getFreespeed();//should be in sec
@@ -1001,7 +1006,7 @@ public class PersonPlanSueModel {
 								double cap = dlink.getCapacity();
 								double freq = dlink.getFrequency();
 								double beta = anaParam.get(PersonPlanSueModel.TransferbetaName);
-								double passengerTobeBorded = transferLink.getPassangerCount();
+								double passengerTobeBorded = transferLink.getPassangerCount();//This should not be necessary
 								double passengerOnBord = plink.getTransitPassengerVolume(dlink.getLineId()+"_"+dlink.getRouteId());
 								//double volume = passengerTobeBorded+passengerOnBord;
 								double volume = passengerOnBord;
