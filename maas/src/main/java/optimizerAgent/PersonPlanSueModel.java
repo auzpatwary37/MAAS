@@ -152,6 +152,8 @@ public class PersonPlanSueModel {
 	private LinkedHashMap<String,Double> Params = new LinkedHashMap<>();
 	private LinkedHashMap<String,Double> AnalyticalModelInternalParams = new LinkedHashMap<>();
 	private LinkedHashMap<String,Tuple<Double,Double>> AnalyticalModelParamsLimit=new LinkedHashMap<>();
+	private Map<String,List<Tuple<AnalyticalModelLink,Double>>> linkFlowUpdates;
+	private Map<String,List<Tuple<TransitLink,Double>>> trLinkFlowUpdates;
 	
 	private double alphaMSA=1.9;//parameter for decreasing MSA step size
 	private double gammaMSA=.1;//parameter for decreasing MSA step size
@@ -661,14 +663,8 @@ public class PersonPlanSueModel {
 		return out;
 	}
 	
-	/**
-	 * 
-	 * @param linkFlow the linkFlow to update
-	 * @param transitLinkFlow the transitLinkFlow to update
-	 * @param counter counter of the MSA iteration. Here, we assume that, the counter starts from 1. 
-	 * @return if should stop msa step i.e. if model has converged
-	 */
-	private boolean updateVolume(Map<String,Map<Id<Link>,Double>>linkFlow, Map<String,Map<Id<TransitLink>,Double>>transitLinkFlow, int counter) {
+	private boolean calcUpdateAndWeight(Map<String,Map<Id<Link>,Double>>linkFlow, Map<String,Map<Id<TransitLink>,Double>>transitLinkFlow, int counter) {
+		List<Map> updates = new ArrayList<>();//the first term will be link update
 		double squareSum=0;
 		double linkAboveTol=0;
 		double linkAbove1=0;
@@ -707,6 +703,8 @@ public class PersonPlanSueModel {
 			}
 		}
 		
+		this.linkFlowUpdates = linkFlowUpdates;
+		this.trLinkFlowUpdates = trLinkFlowUpdates;
 		
 		if(counter==1) {
 			this.beta.clear();
@@ -729,6 +727,26 @@ public class PersonPlanSueModel {
 		logger.info("Link above " + this.tolleranceLink + "percent error = " + linkAboveTol);
 		logger.info("Consecutive sue error increase = " + this.consecutiveErrorIncrease);
 		
+		squareSum = error;
+		
+		//Return if should stop
+		if(squareSum < this.tollerance || linkAboveTol == 0 || linkAbove1== 0) {
+			return true;
+		}else {
+			return false;
+		}	
+	}
+	
+	/**
+	 * 
+	 * @param linkFlow the linkFlow to update
+	 * @param transitLinkFlow the transitLinkFlow to update
+	 * @param counter counter of the MSA iteration. Here, we assume that, the counter starts from 1. 
+	 * @return if should stop msa step i.e. if model has converged
+	 */
+	private void updateVolume(Map<String,List<Tuple<AnalyticalModelLink,Double>>> linkFlowUpdates, Map<String,List<Tuple<TransitLink,Double>>> trLinkFlowUpdates, int counter) {
+		
+		
 		double counterPart=1/beta.get(counter-1);
 		//counterPart=1./counter; //turn this on for normal msa
 		
@@ -745,14 +763,7 @@ public class PersonPlanSueModel {
 				link.getFirst().addPassanger(counterPart*link.getSecond(),this.networks.get(timeId));
 			}
 		}
-		squareSum = error;
 		
-		//Return if should stop
-		if(squareSum < this.tollerance || linkAboveTol == 0 || linkAbove1== 0) {
-			return true;
-		}else {
-			return false;
-		}
 	}
 	
 	
@@ -766,9 +777,10 @@ public class PersonPlanSueModel {
 			
 			flow  = this.performNetworkLoading(population, params, anaParams,counter);//link incidences are ready after this step
 			logger.info("Finished network loading.");
+			boolean shouldStop = this.calcUpdateAndWeight(flow.getLinkVolume(), flow.getLinkTransitVolume(), counter);
 			this.caclulateGradient(population, counter, params, anaParams);
 			logger.info("Finished calculating gradient");
-			boolean shouldStop = this.updateVolume(flow.getLinkVolume(), flow.getLinkTransitVolume(), counter);//transit link dependencies are ready after this step
+			this.updateVolume(this.linkFlowUpdates,this.trLinkFlowUpdates, counter);//transit link dependencies are ready after this step
 			logger.info("Finished flow update.");
 			if(shouldStop) {
 				break;
@@ -933,7 +945,7 @@ public class PersonPlanSueModel {
 	 */
 	public void caclulateGradient(Population population, int counter, LinkedHashMap<String,Double> Oparams, LinkedHashMap<String,Double>anaParam) {
 		this.nonZeroPlanGrad=0;
-		
+		double counterPart=1/beta.get(counter-1);
 		if(counter == 1) {
 			this.initializeGradients(Oparams);
 		}else {
@@ -1138,6 +1150,7 @@ public class PersonPlanSueModel {
 		for(Entry<String, Map<Id<Link>, Map<String, Double>>> timeMap:this.linkPlanIncidence.entrySet()) {
 			timeMap.getValue().entrySet().parallelStream().forEach(linkId->{
 				for(String var:this.gradientKeys) {
+					double oldGrad = this.linkGradient.get(timeMap.getKey()).get(linkId.getKey()).get(var);
 					double grad = 0;
 					for(Entry<String, Double> planInc:linkId.getValue().entrySet()) {
 						if(this.planProbabilityGradient.get(planInc.getKey())==null) {
@@ -1150,7 +1163,8 @@ public class PersonPlanSueModel {
 						}
 						grad+=this.planProbabilityGradient.get(planInc.getKey()).get(var)*planInc.getValue();
 					}
-					this.linkGradient.get(timeMap.getKey()).get(linkId.getKey()).put(var, grad);
+					double newGrad = oldGrad + counterPart*(grad-oldGrad);
+					this.linkGradient.get(timeMap.getKey()).get(linkId.getKey()).put(var, newGrad);
 				}
 			});
 		}
@@ -1158,11 +1172,13 @@ public class PersonPlanSueModel {
 		for(Entry<String, Map<Id<TransitLink>, Map<String, Double>>> timeMap:this.trLinkPlanIncidence.entrySet()) {
 			timeMap.getValue().entrySet().parallelStream().forEach(linkId->{
 				for(String var:this.gradientKeys) {
+					double oldGrad = this.trLinkGradient.get(timeMap.getKey()).get(linkId.getKey()).get(var);
 					double grad = 0;
 					for(Entry<String, Double> planInc:linkId.getValue().entrySet()) {
 						grad+=this.planProbabilityGradient.get(planInc.getKey()).get(var)*planInc.getValue();
 					}
-					this.trLinkGradient.get(timeMap.getKey()).get(linkId.getKey()).put(var, grad);
+					double newGrad = oldGrad + counterPart*(grad-oldGrad);
+					this.trLinkGradient.get(timeMap.getKey()).get(linkId.getKey()).put(var, newGrad);
 				}
 			});
 		}
