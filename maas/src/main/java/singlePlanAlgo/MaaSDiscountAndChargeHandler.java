@@ -94,12 +94,12 @@ public class MaaSDiscountAndChargeHandler implements PersonMoneyEventHandler, Pe
 				fareRevenue -= discount;
 				this.eventManager.processEvent(new PersonMoneyEvent(time,event.getPersonId(), discount,MaaSUtil.MaaSDiscountReimbursementTransactionName,fl.toString()));//Reimbursement Event
 				double fareSaved = discount;
-				if(person.getAttributes().getAttribute(MaaSUtil.fareSavedAttrName)!=null) {
-					fareSaved += (Double) person.getAttributes().getAttribute(MaaSUtil.fareSavedAttrName);
+				if(person.getSelectedPlan().getAttributes().getAttribute(MaaSUtil.fareSavedAttrName)!=null) {
+					fareSaved += (Double) person.getSelectedPlan().getAttributes().getAttribute(MaaSUtil.fareSavedAttrName);
 				}				
-				person.getAttributes().putAttribute(MaaSUtil.fareSavedAttrName, fareSaved);
+				person.getSelectedPlan().getAttributes().putAttribute(MaaSUtil.fareSavedAttrName, fareSaved);
 			}else {
-				person.getAttributes().putAttribute(MaaSUtil.fareSavedAttrName, 0.); //If they didn't choose a plan, they saved nothing.
+				person.getSelectedPlan().getAttributes().putAttribute(MaaSUtil.fareSavedAttrName, 0.); //If they didn't choose a plan, they saved nothing.
 			}
 			
 			if(this.packages.getOperatorId(fl)!=null) {//the fare link might not be under any operators that are being optimized
@@ -146,7 +146,7 @@ public class MaaSDiscountAndChargeHandler implements PersonMoneyEventHandler, Pe
 			}else {
 				selectedOperatorPlan.getAttributes().putAttribute(MaaSUtil.operatorRevenueName, oldReveneue+maasCost);
 			}
-			person.getAttributes().putAttribute(MaaSUtil.fareSavedAttrName, 0.);
+			plan.getAttributes().putAttribute(MaaSUtil.fareSavedAttrName, 0.);
 			personIdWithPlan.add(personId);
 		}
 	}

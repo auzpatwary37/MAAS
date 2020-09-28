@@ -140,6 +140,7 @@ public class PersonPlanSueModel {
 	//
 	
 	Logger logger = Logger.getLogger(PersonPlanSueModel.class);
+	private boolean createLinkIncidence = true;
 	
 	private Population population;
 	private Map<String,Tuple<Double,Double>>timeBeans;
@@ -248,9 +249,14 @@ public class PersonPlanSueModel {
 		return feasibleplans;
 	}
 	
+	public void setCreateLinkIncidence(boolean createLinkIncidence) {
+		this.createLinkIncidence = createLinkIncidence;
+	}
+
 	
 	//___________________________________________________________________________________
 	//Constructor
+	
 	
 	public PersonPlanSueModel(Map<String, Tuple<Double, Double>> timeBean,Config config) {
 		this.timeBeans=timeBean;
@@ -473,6 +479,12 @@ public class PersonPlanSueModel {
 		
 		for(Entry<String, Double> d: utilities.entrySet()) {
 			double v = planProb.get(d.getKey())/utilSum;
+			if(counter == 1) {
+				v = 1./this.feasibleplans.get(person.getId()).size();
+				if(v == 0) {
+ 					System.out.println(this.feasibleplans.get(person.getId()).size());
+				}
+			}
 			planProb.put(d.getKey(), v);
 			trPlans.get(d.getKey()).setProbability(v);
 			if(Double.isNaN(v))
@@ -773,7 +785,7 @@ public class PersonPlanSueModel {
 	private SUEModelOutput performAssignment(Population population, LinkedHashMap<String,Double> params, LinkedHashMap<String,Double> anaParams) {
 		SUEModelOutput flow = null;
 		for(int counter = 1; counter < this.maxIter; counter++) {
-			if(counter == 1) {
+			if(counter == 1 && this.createLinkIncidence == true) {
 				this.createIncidenceMaps(population);
 				}
 			long t1 = System.currentTimeMillis();
@@ -1063,6 +1075,7 @@ public class PersonPlanSueModel {
 			LinkedHashMap<String,Double> params = this.handleBasicParams(Oparams, subpopulation, this.scenario.getConfig());
 			Map<String,Map<String,Double>> utilityGradient = new HashMap<>();
 			Map<String,Double> sumTerm = this.gradientKeys.stream().collect(Collectors.toMap(k->k, k->0.));
+			Map<String,Double> planProbSum = this.gradientKeys.stream().collect(Collectors.toMap(k->k, k->0.));
 			for(Plan plan:this.feasibleplans.get(p.getValue().getId())) {
 				for(String var:this.gradientKeys) {
 					SimpleTranslatedPlan trPlan = (SimpleTranslatedPlan) plan.getAttributes().getAttribute(SimpleTranslatedPlan.SimplePlanAttributeName);
@@ -1125,16 +1138,24 @@ public class PersonPlanSueModel {
 					utilityGradient.get(planKey).put(var, planGradient);
 					double planProb = this.planProbability.get(planKey);
 					sumTerm.compute(var, (k,v)->v=v+planProb*utilityGradient.get(planKey).get(var));
+					planProbSum.compute(var, (k,v)->v=v+planProb);
 				}
+				
 			}
 			for(Plan plan:this.feasibleplans.get(p.getValue().getId())) {
 				for(String var:this.gradientKeys) {
+					if(Math.abs(planProbSum.get(var)-1.)>.00001) {
+						logger.debug("planProb sum is not 1!!! debug!!!");
+					}
 					SimpleTranslatedPlan trPlan = (SimpleTranslatedPlan) plan.getAttributes().getAttribute(SimpleTranslatedPlan.SimplePlanAttributeName);
 					//extract the translated plan first
 					
 					String planKey = trPlan.getPlanKey();
 					double planProb = this.planProbability.get(planKey);
 					double planGradient = planProb*(utilityGradient.get(planKey).get(var)-sumTerm.get(var));
+					if(planGradient>1) {
+						logger.debug("plan probability gradient cannot be larger than 1!!! debug!!!");
+					}
 					if(planGradient!=0)
 						{
 						this.nonZeroPlanGrad++;

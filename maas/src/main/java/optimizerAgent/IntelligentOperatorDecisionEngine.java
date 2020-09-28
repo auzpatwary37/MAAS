@@ -71,6 +71,7 @@ public class IntelligentOperatorDecisionEngine {
 		model = new PersonPlanSueModel(TimeBeans.timeBeans, scenario.getConfig());
 		model.populateModel(scenario, fareCalculators, packages);
 		this.flow = model.performAssignment(scenario.getPopulation(),variables);
+		this.model.setCreateLinkIncidence(false);
 	}
 	
 	public void runMetamodel(LinkedHashMap<String,Double> variables) {
@@ -122,7 +123,12 @@ public class IntelligentOperatorDecisionEngine {
 //			this.runMetamodel(variables);
 //		}
 		
-		this.setupAndRunMetaModel(variables);
+		//this.setupAndRunMetaModel(variables);
+		if(model!=null) {
+			this.runMetamodel(variables);
+		}else {
+			this.setupAndRunMetaModel(variables);
+		}
 		//System.out.println(this.scenario.getNetwork().getLinks().get(this.scenario.getNetwork().getLinks().keySet().toArray()[0]).getClass());
 		Map<String,Map<String,Double>>operatorGradient = new HashMap<>();
 		
