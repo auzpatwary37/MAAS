@@ -499,6 +499,7 @@ public class PersonPlanSueModel {
 		
 		for(Entry<String, Double> d: utilities.entrySet()) {
 			double v = planProb.get(d.getKey())/utilSum;
+			if(counter == 1) v = 1/utilities.size();
 			planProb.put(d.getKey(), v);
 			trPlans.get(d.getKey()).setProbability(v);
 			if(Double.isNaN(v))
