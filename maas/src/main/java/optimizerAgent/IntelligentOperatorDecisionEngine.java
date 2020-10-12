@@ -40,6 +40,8 @@ public class IntelligentOperatorDecisionEngine {
 	@Inject
 	private @Named("MaaSPackages") MaaSPackages packages;
 	
+	private PopulationCompressor populationCompressor = null;
+	
 	private static final Logger logger = Logger.getLogger(IntelligentOperatorDecisionEngine.class);
 	
 	private PersonPlanSueModel model;
@@ -57,11 +59,12 @@ public class IntelligentOperatorDecisionEngine {
 	}
 	
 	
-	public IntelligentOperatorDecisionEngine(Scenario scenario, MaaSPackages packages, timeBeansWrapper timeBeans, Map<String, FareCalculator> fareCalculators) {
+	public IntelligentOperatorDecisionEngine(Scenario scenario, MaaSPackages packages, timeBeansWrapper timeBeans, Map<String, FareCalculator> fareCalculators, PopulationCompressor populationCompressor) {
 		this.scenario = scenario;
 		this.TimeBeans = timeBeans;
 		this.packages = packages;
 		this.fareCalculators = fareCalculators;
+		this.populationCompressor = populationCompressor;
 	}
 	
 
@@ -69,6 +72,7 @@ public class IntelligentOperatorDecisionEngine {
 	
 	public void setupAndRunMetaModel(LinkedHashMap<String,Double> variables) {
 		model = new PersonPlanSueModel(TimeBeans.timeBeans, scenario.getConfig());
+		model.setPopulationCompressor(populationCompressor);
 		model.populateModel(scenario, fareCalculators, packages);
 		this.flow = model.performAssignment(scenario.getPopulation(),variables);
 		this.model.setCreateLinkIncidence(false);
@@ -123,25 +127,26 @@ public class IntelligentOperatorDecisionEngine {
 //			this.runMetamodel(variables);
 //		}
 		
-		//this.setupAndRunMetaModel(variables);
-		if(model!=null) {
-			this.runMetamodel(variables);
-		}else {
-			this.setupAndRunMetaModel(variables);
-		}
+		this.setupAndRunMetaModel(variables);
+//		if(model!=null) {
+//			this.runMetamodel(variables);
+//		}else {
+//			this.setupAndRunMetaModel(variables);
+//		}
 		//System.out.println(this.scenario.getNetwork().getLinks().get(this.scenario.getNetwork().getLinks().keySet().toArray()[0]).getClass());
 		Map<String,Map<String,Double>>operatorGradient = new HashMap<>();
 		
 		this.operator.entrySet().forEach(operator->{
 			Double alpha = variables.get(MaaSUtil.createPlanformReimbursementVariableName(operator.getKey()));
 			if(alpha==null)alpha = 1.;
-			final double a = alpha;
+			
 			operatorGradient.put(operator.getKey(),new HashMap<>());
 			operator.getValue().entrySet().forEach(var->{//for one variable
 				
 				String key = var.getKey();
 				String pacakgeId = MaaSUtil.retrievePackageId(key);//packageId of that variable
 				double volume = 0;
+				double a = this.packages.getMassPackages().get(pacakgeId).getReimbursementRatio();
 				if(MaaSUtil.ifFareLinkVariableDetails(key)) {//if the variable is a fare link variable
 					FareLink farelink = new FareLink(MaaSUtil.retrieveFareLink(key));
 					for(Entry<String, Map<String, Map<String, Double>>> timeFl:this.flow.getMaaSSpecificFareLinkFlow().entrySet()) volume+=timeFl.getValue().get(pacakgeId).get(farelink.toString());//subtract froom gradient
@@ -194,6 +199,45 @@ public class IntelligentOperatorDecisionEngine {
 				operatorGradient.get(operator.getKey()).put(key, grad);
 			});
 		});
+		return operatorGradient;
+	}
+	
+	public Map<String,Double> calcPlatformObjective(LinkedHashMap<String,Double> variables){
+		if(model!=null) {
+			this.runMetamodel(variables);
+		}else {
+			this.setupAndRunMetaModel(variables);
+		}
+		Map<String,Double>operatorObjective = new HashMap<>();
+		this.operator.entrySet().forEach(o->{
+			double revenue = 0;
+			for(MaaSPackage pac:this.model.getMaasPakages().getMassPackagesPerOperator().get(o.getKey())) {
+				revenue+=this.flow.getMaaSPackageUsage().get(pac.getId())*pac.getPackageCost();
+				for(Entry<String, Map<String, Double>> timeId:this.flow.getFareLinkVolume().entrySet()) {
+					for(String fl:pac.getFareLinks().keySet()) {
+						revenue-=timeId.getValue().get(fl)*pac.getDiscountForFareLink(new FareLink(fl));
+					}
+				}
+			}
+			operatorObjective.put(o.getKey(),revenue);
+		});
+		return operatorObjective;
+	}
+	
+	public Map<String,Map<String,Double>> calcPlatformFDGrad(LinkedHashMap<String,Double> variables){
+		Map<String,Map<String,Double>>operatorGradient = new HashMap<>();
+		double c = 0.0005;
+		Map<String,Double> operatorObj = calcPlatformObjective(variables);
+		for(Entry<String, Map<String, VariableDetails>> o:this.operator.entrySet()) {
+			operatorGradient.put(o.getKey(), new HashMap<>());
+			for(String var:o.getValue().keySet()) {
+				LinkedHashMap<String,Double>vars = new LinkedHashMap<>(variables);
+				vars.compute(var,(k,v)->v+c);
+				Map<String,Double> newObj = this.calcPlatformObjective(vars);
+				operatorGradient.get(o.getKey()).put(var, (newObj.get(o.getKey())-operatorObj.get(o.getKey()))/c);
+			}
+		}
+		
 		return operatorGradient;
 	}
 	

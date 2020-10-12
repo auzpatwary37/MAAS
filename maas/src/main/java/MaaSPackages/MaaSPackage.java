@@ -63,6 +63,8 @@ public class MaaSPackage {
 	 */
 	private double packageExpairyTime;
 	
+	private double reimbursementRatio = 1;
+	
 	public MaaSPackage(String Id,String operatorId,Map<String,FareLink> fareLinks,  Map<String,Double> discountedFare, Map<String,Double> fullFare, int maxTaxiTrip, double packageCost, double packageExpTime) {
 		this.id=Id;
 		this.fareLinks = fareLinks;
@@ -240,5 +242,13 @@ public class MaaSPackage {
 		return operatorId;
 	}
 
+	public double getReimbursementRatio() {
+		return reimbursementRatio;
+	}
+
+	public void setReimbursementRatio(double reimbursementRatio) {
+		this.reimbursementRatio = reimbursementRatio;
+	}
+	
 	
 }

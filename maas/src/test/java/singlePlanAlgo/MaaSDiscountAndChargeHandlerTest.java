@@ -86,6 +86,9 @@ class MaaSDiscountAndChargeHandlerTest {
 				//OutputDirectoryLogging.catchLogEntries();
 				config.addModule(new MaaSConfigGroup());
 				config.controler().setLastIteration(250);
+				MaaSPackages pac = new MaaSPackagesReader().readPackagesFile("test/packages_all.xml");
+				pac.getMassPackages().values().forEach(p->p.setReimbursementRatio(0.9));
+				new MaaSPackagesWriter(pac).write("test/packages_all.xml");
 				config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"test/packages_all.xml");
 				//config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"packages_July2020_400.xml");
 				
@@ -111,8 +114,7 @@ class MaaSDiscountAndChargeHandlerTest {
 				RunUtils.addStrategy(config, DefaultPlanStrategiesModule.DefaultStrategy.ReRoute.toString(), PersonFixed_NAME, 
 						0.02, 125);
 				RunUtils.addStrategy(config, DefaultPlanStrategiesModule.DefaultStrategy.ReRoute.toString(), GVFixed_NAME, 
-						0.02, 125);
-				
+						0.02, 125); 
 				RunUtils.createStrategies(config, PersonFixed_NAME, 0.02, 0.01, 0, 40);
 				RunUtils.createStrategies(config, GVChange_NAME, 0.02, 0.005, 0, 0);
 				RunUtils.createStrategies(config, GVFixed_NAME, 0.02, 0.005, 0, 40);
@@ -123,9 +125,9 @@ class MaaSDiscountAndChargeHandlerTest {
 				config.strategy().addStrategySettings(createStrategySettings(MaaSPlanStrategy.class.getName(),.05,200,"trip_TCS"));
 				config.strategy().addStrategySettings(createStrategySettings(MaaSOperatorStrategy.class.getName(),1,200,MaaSUtil.MaaSOperatorAgentSubPopulationName));
 				
-				config.strategy().addStrategySettings(createStrategySettings(UnnecessaryMaaSPlanRemovalStrategy.class.getName(),.05,200,"person_TCSwithCar"));
-				config.strategy().addStrategySettings(createStrategySettings(UnnecessaryMaaSPlanRemovalStrategy.class.getName(),.05,200,"person_TCSwithoutCar"));
-				config.strategy().addStrategySettings(createStrategySettings(UnnecessaryMaaSPlanRemovalStrategy.class.getName(),.05,200,"trip_TCS"));
+				config.strategy().addStrategySettings(createStrategySettings(UnnecessaryMaaSPlanRemovalStrategy.class.getName(),.05,230,"person_TCSwithCar"));
+				config.strategy().addStrategySettings(createStrategySettings(UnnecessaryMaaSPlanRemovalStrategy.class.getName(),.05,230,"person_TCSwithoutCar"));
+				config.strategy().addStrategySettings(createStrategySettings(UnnecessaryMaaSPlanRemovalStrategy.class.getName(),.05,230,"trip_TCS"));
 				
 				
 				//___________________
@@ -220,6 +222,7 @@ class MaaSDiscountAndChargeHandlerTest {
 				scenario.addScenarioElement(SignalsData.ELEMENT_NAME, new SignalsDataLoader(config).loadSignalsData());	
 				Controler controler = new Controler(scenario);
 				controler.addOverridingModule(new MaaSDataLoader());
+				//controler.addOverridingModule(new MaaSOperatorOptimizationModule("new Data/data/odNetwork.xml",5));
 				controler.addOverridingModule(new MaaSOperatorOptimizationModule());
 				ZonalFareXMLParserV2 busFareGetter = new ZonalFareXMLParserV2(scenario.getTransitSchedule());
 				SAXParser saxParser;
@@ -245,7 +248,7 @@ class MaaSDiscountAndChargeHandlerTest {
 				}
 				Signals.configure(controler);
 				controler.getConfig().controler().setOverwriteFileSetting(OutputDirectoryHierarchy.OverwriteFileSetting.overwriteExistingFiles);
-				controler.run();
+ 				controler.run();
 		fail("Not yet implemented");
 	}
 

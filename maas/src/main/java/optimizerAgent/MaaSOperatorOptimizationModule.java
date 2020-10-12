@@ -7,21 +7,35 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
+import org.matsim.api.core.v01.network.Network;
 import org.matsim.core.config.Config;
 import org.matsim.core.controler.AbstractModule;
+import org.matsim.core.network.NetworkUtils;
 import org.matsim.core.utils.collections.Tuple;
 import org.matsim.withinday.controller.ExecutedPlansServiceImpl;
 import org.matsim.withinday.mobsim.MobsimDataProvider;
+
+import com.google.inject.util.Providers;
 
 
 public class MaaSOperatorOptimizationModule extends AbstractModule{
 	
 	private Map<String,Tuple<Double,Double>> timeBeans;
+	private PopulationCompressor populationCompressor = null;
 	
 	//Currently we will bind the planTranslator here
 	
 	public MaaSOperatorOptimizationModule() {
 		
+	}
+	/**
+	 * This creates a population compressor to aid the internal simplified traffic model
+	 * @param odNetwork
+	 * @param maxPlanSize
+	 */
+	public MaaSOperatorOptimizationModule(String odNetworkLoc, int maxPlanSize) {
+		Network odNet = NetworkUtils.readNetwork(odNetworkLoc);
+		this.populationCompressor = new PopulationCompressor(odNet,maxPlanSize);
 	}
 	
 	public MaaSOperatorOptimizationModule(Map<String,Tuple<Double,Double>> timeBeans) {
@@ -43,6 +57,7 @@ public class MaaSOperatorOptimizationModule extends AbstractModule{
 		this.addControlerListenerBinding().to(PlanTranslationControlerListener.class).asEagerSingleton();
 		bind(ExecutedPlansServiceImpl.class).asEagerSingleton();
 		bind(MobsimDataProvider.class).asEagerSingleton();
+		bind(PopulationCompressor.class).toProvider(Providers.of(this.populationCompressor));
 		//Bind Attribute Handlers
 		this.addAttributeConverterBinding(VariableDetails.class).toInstance(VariableDetails.getAttributeConverter());
 		this.addAttributeConverterBinding(SimpleTranslatedPlan.class).toInstance(SimpleTranslatedPlan.getAttributeConverter());
@@ -64,6 +79,8 @@ public class MaaSOperatorOptimizationModule extends AbstractModule{
 			return new timeBeansWrapper(timeBeans);
 		}
 	}
+	
+    
 
 }
 

@@ -94,7 +94,7 @@ public class MaaSDiscountAndChargeHandlerPlatform implements PersonMoneyEventHan
 			double discount = 0;
 			if(chosenMaaSid!=null) {
 				discount = Math.min(this.packages.getMassPackages().get(chosenMaaSid).getDiscountForFareLink(fl),-1*fare);
-				fareRevenue -= discount*alpha;
+				fareRevenue -= discount*this.packages.getMassPackages().get(chosenMaaSid).getReimbursementRatio();
 				this.eventManager.processEvent(new PersonMoneyEvent(time,event.getPersonId(), discount,MaaSUtil.MaaSDiscountReimbursementTransactionName,fl.toString()));//Reimbursement Event
 				double fareSaved = discount;
 				if(person.getSelectedPlan().getAttributes().getAttribute(MaaSUtil.fareSavedAttrName)!=null) {

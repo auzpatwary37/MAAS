@@ -1,5 +1,6 @@
 package optimizer;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.matsim.api.core.v01.population.Plan;
@@ -12,7 +13,7 @@ public class GD implements Optimizer{
 	private double alpha = .001;
 	private int counter;
 	private final String id;
-	private Map<String,VariableDetails> variables;
+	private Map<String,VariableDetails> variables= new HashMap<>();
 
 	public GD(String id, Map<String,VariableDetails> variables) {
 		this.variables = variables;

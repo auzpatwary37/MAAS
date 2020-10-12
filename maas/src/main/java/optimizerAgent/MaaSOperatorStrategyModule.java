@@ -29,6 +29,7 @@ import com.google.inject.name.Named;
 import MaaSPackages.MaaSPackages;
 import dynamicTransitRouter.fareCalculators.FareCalculator;
 import optimizer.Adam;
+import optimizer.GD;
 import optimizer.Optimizer;
 import optimizer.RandomOptimizer;
 
@@ -48,7 +49,7 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 
 	private Map<String,FareCalculator>fareCalculators;
 	
-	
+	private PopulationCompressor compressor;
 	
 	private static Logger logger = Logger.getLogger(MaaSOperatorStrategyModule.class);
 	
@@ -58,12 +59,13 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 	//private ExecutedPlansService executedPlans;
 	
 	public MaaSOperatorStrategyModule(MaaSPackages packages, Scenario scenario, timeBeansWrapper timeBeans,
-			Map<String, FareCalculator> fareCalculators,ExecutedPlansServiceImpl executedPlans, OutputDirectoryHierarchy controlerIO) {
+			Map<String, FareCalculator> fareCalculators,ExecutedPlansServiceImpl executedPlans, OutputDirectoryHierarchy controlerIO, PopulationCompressor compressor) {
 		this.packages = packages;
 		this.scenario = scenario;
 		this.timeBeans = timeBeans;
 		this.fareCalculators = fareCalculators;
 		this.controlerIO = controlerIO;
+		this.compressor = compressor;
 		//this.executedPlans = executedPlans;
 	}
 
@@ -72,7 +74,7 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 	public void prepareReplanning(ReplanningContext replanningContext) {
 		this.currentMatsimIteration = replanningContext.getIteration();
 		logger.info("Entering into the replaning context in MaaSOperatorStrategyModule class.");
- 		this.decisionEngine = new IntelligentOperatorDecisionEngine(this.scenario,this.packages,this.timeBeans,this.fareCalculators);
+ 		this.decisionEngine = new IntelligentOperatorDecisionEngine(this.scenario,this.packages,this.timeBeans,this.fareCalculators,compressor);
  		this.variables.clear();
  		this.optimizers.clear();
 	}
@@ -95,6 +97,7 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 		if(this.currentMatsimIteration>=this.MaaSPacakgeOptimizationStartingCounter && this.currentMatsimIteration%this.MaaSPacakgeInertia==0) {
 		//this.takeSingleStep();//use either this or the following 
 		this.takeOptimizedStep();
+		if(this.compressor!=null)this.compressor.reset();
 		}
 //		else {
 //			for(Plan plan:this.plans) {
@@ -150,15 +153,21 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 					if(grad==null)
 						logger.debug("Gradient is null. Debug!!!");
 					
-					for(String s:vName) {
-						fw.append(","+grad.get(s));
-					}
+					
 					
 					this.optimizers.entrySet().forEach(o->{
 						o.getValue().takeStep(grad.get(MaaSUtil.retrieveOperatorIdFromOperatorPersonId(Id.createPersonId(o.getKey()))));//This step 
 						//already decides the new variable values and replace the old one with the new values. As, the same variable details instances
 						//are used in decision engine and also here, the change should be broadcasted automatically. (Make a check if possible)Ashraf July 11, 2020
 						//o.getValue().takeStep(null);
+						for(String s:vName) {
+							try {
+								fw.append(","+grad.get(MaaSUtil.retrieveOperatorIdFromOperatorPersonId(Id.createPersonId(o.getKey()))).get(s));
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
 					});
 					Map<String,Double> variableValues = new HashMap<>();
 					for(Entry<String, VariableDetails> vd:this.variables.entrySet()) {
