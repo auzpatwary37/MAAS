@@ -93,7 +93,8 @@ public class MaaSPackages{
 	}
 	
 	public void removeMaaSPackage(MaaSPackage pac) {
-		this.massPackages.remove(pac);
+		this.massPackages.remove(pac.getId());
+		pac.getFareLinks().keySet().forEach(f->this.fareLinkToOperatorMap.remove(f));
 		this.massPackagesPerOperator.get(pac.getOperatorId()).remove(pac);
 		if(this.massPackagesPerOperator.get(pac.getOperatorId()).isEmpty())this.massPackagesPerOperator.remove(pac.getOperatorId());
 	}

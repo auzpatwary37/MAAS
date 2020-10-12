@@ -3,6 +3,7 @@ package singlePlanAlgo;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -91,15 +92,15 @@ class MaaSDiscountAndChargeHandlerTest {
 				//MaaSPackages pac = new MaaSPackagesReader().readPackagesFile("test/packages_all.xml");
 				//pac.getMassPackages().values().forEach(p->p.setReimbursementRatio(0.9));
 				//new MaaSPackagesWriter(pac).write("test/packages_all.xml");
-				MaaSPackages pac = new MaaSPackagesReader().readPackagesFile("test/packages_July2020_400.xm");
+				MaaSPackages pac = new MaaSPackagesReader().readPackagesFile("test/packages_July2020_400.xml");
 				Set<MaaSPackage> pacIds = pac.getMassPackagesPerOperator().get("train");
 				
 				//config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"test/packages_all.xml");
 				//config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"packages_July2020_400.xml");
 				
-				String operatorID = "train";
+				String operatorID = "1";
 				
-				pac.getMassPackagesPerOperator().entrySet().forEach(oPacs->{
+				new HashMap<>(pac.getMassPackagesPerOperator()).entrySet().forEach(oPacs->{
 					if(!oPacs.getKey().equals(operatorID)) {
 						oPacs.getValue().forEach(p->{
 							pac.removeMaaSPackage(p);

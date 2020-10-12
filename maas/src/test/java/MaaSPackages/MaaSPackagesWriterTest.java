@@ -28,7 +28,7 @@ class MaaSPackagesWriterTest {
 		MaaSPackages packages = null;
 		packages = new MaaSPackages(ts, true, 20, 3, FareCalculatorCreator.getHKFareCalculators(), 0, true);
 		
-		new MaaSPackagesWriter(packages).write("test/packages_July2020_20.xml");
+		new MaaSPackagesWriter(packages).write("test/packages_July2020_400.xml");
 
 		MaaSPackages allPack = new MaaSPackages();
 		String operatorId = "allPack";

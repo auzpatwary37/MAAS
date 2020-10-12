@@ -110,8 +110,8 @@ public class IntelligentOperatorDecisionEngine {
 	 * @return
 	 */
 	public Map<String,Map<String,Double>> calcApproximateObjectiveGradient(LinkedHashMap<String,Double> variables) {
-		//return this.calcOperatorObjectiveGrad(variables);
-		return this.calcPlatformObjGrad(variables);
+		return this.calcOperatorObjectiveGrad(variables);
+		//return this.calcPlatformObjGrad(variables);
 	}
 	
 	/**
