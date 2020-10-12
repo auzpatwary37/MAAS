@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -49,6 +50,7 @@ import org.xml.sax.SAXException;
 import com.google.common.collect.Maps;
 
 import MaaSPackages.FareCalculatorCreator;
+import MaaSPackages.MaaSPackage;
 import MaaSPackages.MaaSPackages;
 import MaaSPackages.MaaSPackagesReader;
 import MaaSPackages.MaaSPackagesWriter;
@@ -86,16 +88,32 @@ class MaaSDiscountAndChargeHandlerTest {
 				//OutputDirectoryLogging.catchLogEntries();
 				config.addModule(new MaaSConfigGroup());
 				config.controler().setLastIteration(250);
-				MaaSPackages pac = new MaaSPackagesReader().readPackagesFile("test/packages_all.xml");
-				pac.getMassPackages().values().forEach(p->p.setReimbursementRatio(0.9));
-				new MaaSPackagesWriter(pac).write("test/packages_all.xml");
-				config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"test/packages_all.xml");
+				//MaaSPackages pac = new MaaSPackagesReader().readPackagesFile("test/packages_all.xml");
+				//pac.getMassPackages().values().forEach(p->p.setReimbursementRatio(0.9));
+				//new MaaSPackagesWriter(pac).write("test/packages_all.xml");
+				MaaSPackages pac = new MaaSPackagesReader().readPackagesFile("test/packages_July2020_400.xm");
+				Set<MaaSPackage> pacIds = pac.getMassPackagesPerOperator().get("train");
+				
+				//config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"test/packages_all.xml");
 				//config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"packages_July2020_400.xml");
+				
+				String operatorID = "train";
+				
+				pac.getMassPackagesPerOperator().entrySet().forEach(oPacs->{
+					if(!oPacs.getKey().equals(operatorID)) {
+						oPacs.getValue().forEach(p->{
+							pac.removeMaaSPackage(p);
+						});
+					}
+				});
+				new MaaSPackagesWriter(pac).write("test/packages_"+operatorID+".xml");
+				
+				config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"test/packages_"+operatorID+".xml");
 				
 				config.plans().setInsistingOnUsingDeprecatedPersonAttributeFile(true);
 				config.plans().setInputPersonAttributeFile("new Data/core/personAttributesHKI.xml");
 //				config.plans().setInputFile("new Data/core/20.plans.xml.gz");
-				config.controler().setOutputDirectory("toyScenarioLarge/output_optim_platform_trial");
+				config.controler().setOutputDirectory("toyScenarioLarge/output_optim"+operatorID);
 				config.controler().setWritePlansInterval(10);
 				
 //				
@@ -123,11 +141,11 @@ class MaaSDiscountAndChargeHandlerTest {
 				config.strategy().addStrategySettings(createStrategySettings(MaaSPlanStrategy.class.getName(),.05,200,"person_TCSwithCar"));
 				config.strategy().addStrategySettings(createStrategySettings(MaaSPlanStrategy.class.getName(),.05,200,"person_TCSwithoutCar"));
 				config.strategy().addStrategySettings(createStrategySettings(MaaSPlanStrategy.class.getName(),.05,200,"trip_TCS"));
-				config.strategy().addStrategySettings(createStrategySettings(MaaSOperatorStrategy.class.getName(),1,200,MaaSUtil.MaaSOperatorAgentSubPopulationName));
+				config.strategy().addStrategySettings(createStrategySettings(MaaSOperatorStrategy.class.getName(),1,225,MaaSUtil.MaaSOperatorAgentSubPopulationName));
 				
-				config.strategy().addStrategySettings(createStrategySettings(UnnecessaryMaaSPlanRemovalStrategy.class.getName(),.05,230,"person_TCSwithCar"));
-				config.strategy().addStrategySettings(createStrategySettings(UnnecessaryMaaSPlanRemovalStrategy.class.getName(),.05,230,"person_TCSwithoutCar"));
-				config.strategy().addStrategySettings(createStrategySettings(UnnecessaryMaaSPlanRemovalStrategy.class.getName(),.05,230,"trip_TCS"));
+				config.strategy().addStrategySettings(createStrategySettings(UnnecessaryMaaSPlanRemovalStrategy.class.getName(),.05,200,"person_TCSwithCar"));
+				config.strategy().addStrategySettings(createStrategySettings(UnnecessaryMaaSPlanRemovalStrategy.class.getName(),.05,200,"person_TCSwithoutCar"));
+				config.strategy().addStrategySettings(createStrategySettings(UnnecessaryMaaSPlanRemovalStrategy.class.getName(),.05,200,"trip_TCS"));
 				
 				
 				//___________________

@@ -47,8 +47,8 @@ public class MaaSDataLoader extends AbstractModule{
 		
 		
 		//bind the maas handler
-		//this.addEventHandlerBinding().to(MaaSDiscountAndChargeHandler.class).asEagerSingleton();
-		this.addEventHandlerBinding().to(MaaSDiscountAndChargeHandlerPlatform.class).asEagerSingleton();
+		this.addEventHandlerBinding().to(MaaSDiscountAndChargeHandler.class).asEagerSingleton();
+		//this.addEventHandlerBinding().to(MaaSDiscountAndChargeHandlerPlatform.class).asEagerSingleton();
 		bind(MaaSDiscountAndChargeHandler.class).in(Singleton.class);
 		
 		

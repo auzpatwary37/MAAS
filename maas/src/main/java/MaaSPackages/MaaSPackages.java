@@ -92,5 +92,11 @@ public class MaaSPackages{
 		return this.fareLinkToOperatorMap.get(fl.toString());
 	}
 	
+	public void removeMaaSPackage(MaaSPackage pac) {
+		this.massPackages.remove(pac);
+		this.massPackagesPerOperator.get(pac.getOperatorId()).remove(pac);
+		if(this.massPackagesPerOperator.get(pac.getOperatorId()).isEmpty())this.massPackagesPerOperator.remove(pac.getOperatorId());
+	}
+	
 	
 }

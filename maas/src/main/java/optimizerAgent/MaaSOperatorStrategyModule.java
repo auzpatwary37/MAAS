@@ -38,10 +38,10 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 	
 	@Inject
 	private @Named(MaaSUtil.MaaSPackagesAttributeName) MaaSPackages packages;
-	private int MaaSPacakgeOptimizationStartingCounter = 50;
-	private int MaaSPacakgeInertia = 25;
+	private int MaaSPacakgeOptimizationStartingCounter = 75;
+	private int MaaSPacakgeInertia = 50;
 	private Scenario scenario;
-	private int maxCounter = 10;
+	private int maxCounter = 15;
 	private OutputDirectoryHierarchy controlerIO;
 
 	private int currentMatsimIteration = 0;

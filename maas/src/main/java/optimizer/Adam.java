@@ -13,7 +13,7 @@ import optimizerAgent.VariableDetails;
 
 public class Adam implements Optimizer{
 
-	private double alpha = .7;
+	private double alpha = .8;
 	private double beta1 = .9;
 	private double beta2 = 0.999;
 	private double eta = 10e-8;
