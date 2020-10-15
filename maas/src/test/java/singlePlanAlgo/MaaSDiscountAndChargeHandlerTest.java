@@ -114,7 +114,7 @@ class MaaSDiscountAndChargeHandlerTest {
 				config.plans().setInsistingOnUsingDeprecatedPersonAttributeFile(true);
 				config.plans().setInputPersonAttributeFile("new Data/core/personAttributesHKI.xml");
 //				config.plans().setInputFile("new Data/core/20.plans.xml.gz");
-				config.controler().setOutputDirectory("toyScenarioLarge/output_optim"+operatorID);
+				config.controler().setOutputDirectory("/disk/r067/eleead/toyScenarioLarge/output_optim"+operatorID);
 				config.controler().setWritePlansInterval(10);
 				
 //				

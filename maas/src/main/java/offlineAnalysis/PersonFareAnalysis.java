@@ -20,6 +20,7 @@ import org.matsim.core.scenario.ScenarioUtils;
 
 import com.google.protobuf.compiler.PluginProtos.CodeGeneratorResponse.File;
 
+import createPTGTFS.FareCalculatorPTGTFS;
 import dynamicTransitRouter.fareCalculators.FareCalculator;
 import dynamicTransitRouter.fareCalculators.MTRFareCalculator;
 import dynamicTransitRouter.fareCalculators.UniformFareCalculator;
@@ -29,29 +30,31 @@ import optimizerAgent.MaaSUtil;
 import transitCalculatorsWithFare.TransitFareHandler;
 
 public class PersonFareAnalysis {
-	private final static String dir = "C:/Users/eleead/Desktop/Simulation results/withoutDiscount/";
+	private final static String dir = "/disk/r067/eleead/workspace/matsim-playground/analysis/";
 	private final static String configFile = dir + "output_config.xml";
-	private static final String eventsFile = dir + "output_events.xml.gz";
+	
+	private static final String eventsFile = dir + "platformOptimized/output_events.xml.gz";
 
 	public static void main(String[] args) throws IOException, Exception {
 		Config config = ConfigUtils.createConfig();
 		ConfigUtils.loadConfig(config, configFile);
+		config.plans().setInputFile(dir+"platformOptimized/output_plans.xml.gz");
 
 		Scenario scenario = ScenarioUtils.loadScenario(config);
 		ZonalFareXMLParserV2 busFareGetter = new ZonalFareXMLParserV2(scenario.getTransitSchedule());
 		SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
-		saxParser.parse("data/busFare.xml", busFareGetter);
+		saxParser.parse("fare/busFare.xml", busFareGetter);
 		
 		Map<String, FareCalculator> fareCalculator = new HashMap<>();
-		fareCalculator.put("bus", busFareGetter.get());
+		fareCalculator.put("bus", FareCalculatorPTGTFS.loadFareCalculatorPTGTFS("fare/busFareGTFS.json"));
 		fareCalculator.put("minibus", busFareGetter.get()); 
-		fareCalculator.put("train", new MTRFareCalculator("input/mtr_lines_fares.csv", scenario.getTransitSchedule()));
+		fareCalculator.put("train", new MTRFareCalculator("fare/mtr_lines_fares.csv", scenario.getTransitSchedule()));
 
 		// The tram fare calculator
-		fareCalculator.put("tram",new UniformFareCalculator(2.3));
-		fareCalculator.put("ship",new UniformFareCalculator(3));
+		fareCalculator.put("tram",new UniformFareCalculator(2.6));
+		fareCalculator.put("ferry",FareCalculatorPTGTFS.loadFareCalculatorPTGTFS("fare/ferryFareGTFS.json"));
 		
-		AllPTTransferDiscount discount = new AllPTTransferDiscount("data/GMB.csv");
+		AllPTTransferDiscount discount = new AllPTTransferDiscount("fare/transitDiscount.json");
 		EventsManager eventsManager = EventsUtils.createEventsManager();
 		TransitFareHandler tfh = new TransitFareHandler(eventsManager, fareCalculator, 
 				scenario.getTransitSchedule().getTransitLines(), discount);
@@ -64,8 +67,8 @@ public class PersonFareAnalysis {
 		Map<Id<Person>, Double> mtrFareSaved = tfh.getPersonMTRFareCollected();
 		Map<Id<Person>, Double> otherFareSaved = tfh.getPersonOtherFareCollected();
 		
-		FileWriter fileWriter = new FileWriter("output/fare_analysis.csv");
-		fileWriter.write("person_id,plan,busFareSaved,mtrFareSaved,otherFareSaved");
+		FileWriter fileWriter = new FileWriter("output/fare_analysisOptimized.csv");
+		fileWriter.write("person_id,plan,busFareSaved,mtrFareSaved,otherFareSaved\n");
 		for(Person p: scenario.getPopulation().getPersons().values()) {
 			String packageName = (String) p.getSelectedPlan().getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName);
 			StringBuilder sb = new StringBuilder();
