@@ -136,7 +136,10 @@ public class FareDynamicTransitTimeAndDisutilityMaaS extends FareDynamicTransitT
 			}
 			previousFareWithoutPackage = currFareCal.getFare(routeId, lineId, startStop.getFacilityId(), startStop.getOccurrence(),
 					fromStop.getFacilityId(), fromStop.getOccurrence());
-			previousFare = previousFareWithoutPackage - mp.getDiscountForFareLink(from_fl);
+			if(startStop.getFacilityId()!=fromStop.getFacilityId())
+				previousFare = previousFareWithoutPackage - mp.getDiscountForFareLink(from_fl);
+			else
+				previousFare = 0; //XXX: It is completely wrong, but should work.
 		}
 		
 		//Obtain the to fare link
@@ -151,6 +154,10 @@ public class FareDynamicTransitTimeAndDisutilityMaaS extends FareDynamicTransitT
 		double toFareWithoutPackage = currFareCal.getFare(routeId, lineId, startStop.getFacilityId(), startStop.getOccurrence(),
 				toStop.getFacilityId(), toStop.getOccurrence()) ;
 		double toFare = toFareWithoutPackage - mp.getDiscountForFareLink(to_fl);
+		
+		if(toFare < 0) {
+			toFare = 0;
+		}
 		
 		double fareDiff = toFare - previousFare;
 		double normalFareDiff = toFareWithoutPackage - previousFareWithoutPackage;
