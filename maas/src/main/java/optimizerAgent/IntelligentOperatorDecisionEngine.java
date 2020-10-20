@@ -203,9 +203,7 @@ public class IntelligentOperatorDecisionEngine {
 	}
 	
 	public Map<String,Double> calcPlatformObjective(LinkedHashMap<String,Double> variables){
-		if(model!=null) {
-			this.runMetamodel(variables);
-		}else {
+		if(model==null) {
 			this.setupAndRunMetaModel(variables);
 		}
 		Map<String,Double>operatorObjective = new HashMap<>();
@@ -242,7 +240,12 @@ public class IntelligentOperatorDecisionEngine {
 	}
 	
 	private Map<String,Map<String,Double>> calcOperatorObjectiveGrad(LinkedHashMap<String,Double> variables){
-		this.setupAndRunMetaModel(variables);
+//		this.setupAndRunMetaModel(variables);
+		if(model!=null) {
+			this.runMetamodel(variables);
+		}else {
+			this.setupAndRunMetaModel(variables);
+		}
 		//System.out.println(this.scenario.getNetwork().getLinks().get(this.scenario.getNetwork().getLinks().keySet().toArray()[0]).getClass());
 		Map<String,Map<String,Double>>operatorGradient = new HashMap<>();
 		this.operator.entrySet().forEach(operator->{
@@ -342,7 +345,10 @@ public class IntelligentOperatorDecisionEngine {
 	}
 	
 	public Map<String,Double> calcApproximateObjective(LinkedHashMap<String,Double>variables){
-		this.setupAndRunMetaModel(variables);
+		//this.setupAndRunMetaModel(variables);
+		if(model==null) {
+			this.setupAndRunMetaModel(variables);
+		}
 		Map<String,Double> operatorObj = new HashMap<>();
 		
 		this.operator.keySet().forEach(o->{

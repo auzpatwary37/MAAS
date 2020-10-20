@@ -92,8 +92,8 @@ class MaaSDiscountAndChargeHandlerTest {
 				//MaaSPackages pac = new MaaSPackagesReader().readPackagesFile("test/packages_all.xml");
 				//pac.getMassPackages().values().forEach(p->p.setReimbursementRatio(0.9));
 				//new MaaSPackagesWriter(pac).write("test/packages_all.xml");
-				MaaSPackages pac = new MaaSPackagesReader().readPackagesFile("test/packages_July2020_400.xml");
-				Set<MaaSPackage> pacIds = pac.getMassPackagesPerOperator().get("train");
+				MaaSPackages pac = new MaaSPackagesReader().readPackagesFile("test/packages_July2020_20.xml");
+				//Set<MaaSPackage> pacIds = pac.getMassPackagesPerOperator().get("train");
 				
 				//config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"test/packages_all.xml");
 				//config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"packages_July2020_400.xml");
@@ -153,6 +153,10 @@ class MaaSDiscountAndChargeHandlerTest {
 				
 //				RunUtils.addStrategy(config, "KeepLastSelected", MaaSUtil.MaaSOperatorAgentSubPopulationName, 
 //						1, 400);
+				
+				
+				config.global().setNumberOfThreads(12);
+				config.qsim().setNumberOfThreads(6);				
 				
 				ScoringParameterSet s = config.planCalcScore().getOrCreateScoringParameters(MaaSOperator.type);
 				

@@ -141,7 +141,7 @@ public class PersonPlanSueModel {
 	
 	Logger logger = Logger.getLogger(PersonPlanSueModel.class);
 	private boolean createLinkIncidence = true;
-	
+	private boolean initializeGradient = true;
 	private Population population;
 	private Map<String,Tuple<Double,Double>>timeBeans;
 	private Map<String,FareCalculator> farecalculators;
@@ -156,8 +156,8 @@ public class PersonPlanSueModel {
 	private Map<String,List<Tuple<AnalyticalModelLink,Double>>> linkFlowUpdates;
 	private Map<String,List<Tuple<TransitLink,Double>>> trLinkFlowUpdates;
 	
-	private double alphaMSA=1.9;//parameter for decreasing MSA step size
-	private double gammaMSA=.1;//parameter for decreasing MSA step size
+	private double alphaMSA=1.7;//parameter for decreasing MSA step size
+	private double gammaMSA=.3;//parameter for decreasing MSA step size
 	
 	//other Parameters for the Calibration Process
 	private double tollerance= 1;
@@ -496,20 +496,23 @@ public class PersonPlanSueModel {
 			utilSum += v;
 		}
 		
+		double p = 0.;
+		double vv = 0.;
 		
-		for(Entry<String, Double> d: utilities.entrySet()) {
-			double v = planProb.get(d.getKey())/utilSum;
-			if(counter == 1) v = 1/utilities.size();
-			planProb.put(d.getKey(), v);
-			trPlans.get(d.getKey()).setProbability(v);
-			if(Double.isNaN(v))
+		for(Entry<String, Double> d : utilities.entrySet()) {
+			p = planProb.get(d.getKey());
+			vv = p/utilSum;
+			//if(counter == 1) v = 1/utilities.size();
+			planProb.put(d.getKey(), vv);
+			trPlans.get(d.getKey()).setProbability(vv);
+			if(Double.isNaN(vv))
 				logger.debug("Probability is nan. Debug!!!");
-			this.planProbability.put(d.getKey(), v);
+			this.planProbability.put(d.getKey(), vv);
 		}
 		
 		// Collect the flow
 		
-		for(Entry<String, SimpleTranslatedPlan> plan:trPlans.entrySet()) {
+ 		for(Entry<String, SimpleTranslatedPlan> plan:trPlans.entrySet()) {
 			SimpleTranslatedPlan trPlan = plan.getValue();
 			for(Entry<String, List<Id<Link>>> s: trPlan.getCarUsage().entrySet()) {	
 				
@@ -701,6 +704,7 @@ public class PersonPlanSueModel {
 		double squareSum=0;
 		double linkAboveTol=0;
 		double linkAbove1=0;
+		double oldVolumeZero = 0;
 		
 		Map<String,List<Tuple<AnalyticalModelLink,Double>>> linkFlowUpdates = new HashMap<>();
 		Map<String,List<Tuple<TransitLink,Double>>> trLinkFlowUpdates = new HashMap<>();
@@ -714,6 +718,7 @@ public class PersonPlanSueModel {
 				double newVolume=timeSpecificLinkFlow.getValue();
 				AnalyticalModelLink link = ((AnalyticalModelLink) this.networks.get(linkFlowPerTimeBean.getKey()).getLinks().get(timeSpecificLinkFlow.getKey()));
 				double oldVolume=link.getLinkCarVolume();
+				if(oldVolume==0)oldVolumeZero++;
 				double update = newVolume - oldVolume;
 				linkFlowUpdates.get(linkFlowPerTimeBean.getKey()).add(new Tuple<>(link, update));
 				error += update*update; 
@@ -728,6 +733,7 @@ public class PersonPlanSueModel {
 				double newVolume=timeSpecificLinkFlow.getValue();
 				TransitLink link = this.transitLinks.get(linkFlowPerTimeBean.getKey()).get(timeSpecificLinkFlow.getKey());
 				double oldVolume=link.getPassangerCount();
+				if(oldVolume==0)oldVolumeZero++;
 				double update = newVolume - oldVolume;
 				trLinkFlowUpdates.get(linkFlowPerTimeBean.getKey()).add(new Tuple<>(link, update));					
 				error += update*update; 
@@ -810,6 +816,7 @@ public class PersonPlanSueModel {
 			long t1 = System.currentTimeMillis();
 			flow  = this.performNetworkLoading(population, params, anaParams,counter);//link incidences are ready after this step
 			logger.info("Finished network loading. Time required = "+(System.currentTimeMillis()-t1)+"ms.");
+			System.out.println("");
 			boolean shouldStop = this.calcUpdateAndWeight(flow.getLinkVolume(), flow.getLinkTransitVolume(), counter);
 			t1 = System.currentTimeMillis();
 			this.caclulateGradient(population, counter, params, anaParams);
@@ -967,7 +974,7 @@ public class PersonPlanSueModel {
 		for(String planKey:this.planProbability.keySet()) {
 			this.planProbabilityGradient.put(planKey, new HashMap<>(zeroGrad));
 		}
-		
+		this.initializeGradient = false;
 		logger.info("Finished initializing gradients");
 	}
 	
@@ -982,7 +989,7 @@ public class PersonPlanSueModel {
 	public void caclulateGradient(Population population, int counter, LinkedHashMap<String,Double> Oparams, LinkedHashMap<String,Double>anaParam) {
 		this.nonZeroPlanGrad=0;
 		double counterPart=1/beta.get(counter-1);
-		if(counter == 1) {
+		if(this.initializeGradient==true) {
 			this.initializeGradients(Oparams);
 		}else {
 			//Calculate the travel time gradients

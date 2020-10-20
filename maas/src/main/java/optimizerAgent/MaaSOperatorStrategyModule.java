@@ -38,8 +38,8 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 	
 	@Inject
 	private @Named(MaaSUtil.MaaSPackagesAttributeName) MaaSPackages packages;
-	private int MaaSPacakgeOptimizationStartingCounter = 75;
-	private int MaaSPacakgeInertia = 50;
+	private int MaaSPacakgeOptimizationStartingCounter = 15;
+	private int MaaSPacakgeInertia = 15;
 	private Scenario scenario;
 	private int maxCounter = 15;
 	private OutputDirectoryHierarchy controlerIO;
@@ -143,13 +143,23 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 			for(String s:vName) {
 				fw.append(","+s);
 			}
+			List<String> operators = new ArrayList<>();
+			this.optimizers.entrySet().forEach(o->{
+				try {
+					fw.append(","+MaaSUtil.retrieveOperatorIdFromOperatorPersonId(Id.createPersonId(o.getKey()))+"_Objective");
+					operators.add(MaaSUtil.retrieveOperatorIdFromOperatorPersonId(Id.createPersonId(o.getKey())));
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			});
 			fw.append("\n");
 			if(variables.size()!=0) {
 				for(int counter = 0;counter<=maxCounter;counter++) {
 					fw.append(counter+"");
 					Map<String,Map<String,Double>>grad =  this.decisionEngine.calcApproximateObjectiveGradient();
 					//Map<String,Map<String,Double>>fdgrad =  this.decisionEngine.calcFDGradient();//This line is for testing only. 
-
+					Map<String,Double> obj = this.decisionEngine.calcApproximateObjective();
 					if(grad==null)
 						logger.debug("Gradient is null. Debug!!!");
 					
@@ -176,6 +186,9 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 					MaaSUtil.updateMaaSVariables(packages, variableValues);
 					for(String s:vName) {
 						fw.append(","+variableValues.get(s));
+					}
+					for(String s:operators) {
+						fw.append(","+obj.get(s));
 					}
 					fw.append("\n");
 					fw.flush();
