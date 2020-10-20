@@ -23,14 +23,15 @@ import dynamicTransitRouter.costs.WaitingTime;
 import dynamicTransitRouter.fareCalculators.FareCalculator;
 import dynamicTransitRouter.transfer.TransferDiscountCalculator;
 import optimizerAgent.MaaSUtil;
+import transitCalculatorsWithFare.FareLink;
 import transitCalculatorsWithFare.FareTransitRouterConfig;
 
 public class FareDynamicTransitTimeAndDisutilityMaaS extends FareDynamicTransitTimeAndDisutility{
 
 	private final MaaSPackages mps;
-	//private static AtomicDouble busFareSaved = new AtomicDouble();
-	//private static AtomicDouble trainFareSaved = new AtomicDouble();
-	//private static AtomicDouble ferryFareSaved = new AtomicDouble();
+	private static AtomicDouble busFareSaved = new AtomicDouble();
+	private static AtomicDouble trainFareSaved = new AtomicDouble();
+	private static AtomicDouble ferryFareSaved = new AtomicDouble();
 	
 	public FareDynamicTransitTimeAndDisutilityMaaS(FareTransitRouterConfig config, WaitingTime waitTime,
 			StopStopTime stopStopTime, VehicleOccupancy vehicleOccupancy, Map<String, FareCalculator> fareCalculators,
@@ -62,8 +63,7 @@ public class FareDynamicTransitTimeAndDisutilityMaaS extends FareDynamicTransitT
 		boolean isFirstTrip = false;
 		if(fromNodeHelper==null) {
 			isFirstTrip = true; //If it is the first node, it is a first trip.
-		} else
-			newHelper = fromNodeHelper.clone();
+		} else newHelper = fromNodeHelper.clone();
 
 		String attributeName = (String) person.getSelectedPlan().getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName);
 		MaaSPackage mp = mps.getMassPackages().get(attributeName);
@@ -73,17 +73,9 @@ public class FareDynamicTransitTimeAndDisutilityMaaS extends FareDynamicTransitT
 			if (wrapped.toNode.getRoute() != null) {  // A boarding link
 				fare = getBoardingLinkFare(wrapped, isFirstTrip, fromNodeHelper, newHelper, time);
 				//TODO: Make the discount based on the fare link.
-				if(fare<Double.MAX_VALUE && attributeName!= null && attributeName.equals("bus") && wrapped.toNode.getRoute().getTransportMode().equals("bus")) {
-					//busFareSaved.getAndAdd(fare);
-					fare = 0;
-				}else if(fare<Double.MAX_VALUE && attributeName!= null && attributeName.equals("train") && wrapped.toNode.getRoute().getTransportMode().equals("train")) {
-					//trainFareSaved.getAndAdd(fare);
-					fare = 0;
-				}else if(fare<Double.MAX_VALUE && attributeName!= null && attributeName.equals("ferry") && wrapped.toNode.getRoute().getTransportMode().equals("ferry")) {
-					//ferryFareSaved.getAndAdd(fare);
-					fare = 0;
-				}
-				
+				if(attributeName!=null && fare < Double.MAX_VALUE) {
+					fare = 0; //As we have no information about the minimum fare, the min fare is always 0.
+				}				
 				if(isFirstTrip) {
 					Id<TransitLine> toLineId = wrapped.toNode.line.getId();
 					TransitStop fromStop = wrapped.toNode.tStop;
@@ -99,17 +91,11 @@ public class FareDynamicTransitTimeAndDisutilityMaaS extends FareDynamicTransitT
 				if(isFirstTrip) //To disallow transfers at start node(s)
 					return Double.MAX_VALUE;
 			}
-		} else {
-			fareDiff = getTravelFareDiff(wrapped, newHelper);
-			if(fareDiff<Double.MAX_VALUE && attributeName!= null && attributeName.equals("bus") && wrapped.getRoute().getTransportMode().equals("bus")) {
-				//busFareSaved.getAndAdd(fareDiff);
-				fareDiff = 0;
-			}else if(fareDiff<Double.MAX_VALUE && attributeName!= null && attributeName.equals("train") && wrapped.getRoute().getTransportMode().equals("train")) {
-				//trainFareSaved.getAndAdd(fareDiff);
-				fareDiff = 0;
-			}else if(fareDiff<Double.MAX_VALUE && attributeName!= null && attributeName.equals("ferry") && wrapped.getRoute().getTransportMode().equals("ferry")) {
-				//ferryFareSaved.getAndAdd(fareDiff);
-				fareDiff = 0;
+		} else { //Travel link
+			if(attributeName == null){ // If no package
+				fareDiff = getTravelFareDiff(wrapped, newHelper);
+			}else { //If with a package
+				fareDiff = getTravelFareDiffMAAS(wrapped, newHelper, mp);
 			}
 		}
 		if (fare < 0) {
@@ -122,26 +108,89 @@ public class FareDynamicTransitTimeAndDisutilityMaaS extends FareDynamicTransitT
 		dataManager.setToNodeCustomData(newHelper);
 		return (fare + fareDiff) * config.getMarginalUtilityOfMoney(); // The return value is definitely negative
 	}
-//	
-//	public static double getBusFareSaved() {
-//		return busFareSaved.doubleValue();
-//	}
-//
-//	public static double getTrainFareSaved() {
-//		return trainFareSaved.doubleValue();
-//	}
-//
-//	public static double getFerryFareSaved() {
-//		return ferryFareSaved.doubleValue();
-//	}
-//
-//	/**
-//	 * This function resets the fare saved, would be called before iteration.
-//	 */
-//	public static void resetFareSaved() {
-//		busFareSaved = new AtomicDouble();
-//		trainFareSaved = new AtomicDouble();
-//		ferryFareSaved = new AtomicDouble();
-//	}
+	
+	protected double getTravelFareDiffMAAS(final TransitRouterNetworkLink wrapped, RouteHelper newHelper, 
+			MaaSPackage mp) {
+		// Travel Link 	(i.e.If it is not a transfer link)
+		Id<TransitRoute> routeId = wrapped.route.getId();
+		Id<TransitLine> lineId = wrapped.line.getId();
+		String transportMode = wrapped.route.getTransportMode();
+		
+		FareCalculator currFareCal = getFareCalculator(transportMode);
 
+		TransitStop fromStop = wrapped.fromNode.tStop;
+		TransitStop toStop = wrapped.toNode.tStop;
+
+		TransitStop startStop = newHelper.entryStop;
+		double previousFare = 0;
+		double previousFareWithoutPackage = 0;
+		String fareLinkType = (transportMode.equals("train") || transportMode.equals("LR"))?FareLink.NetworkWideFare:FareLink.InVehicleFare;
+		if(startStop.getFacilityId() != fromStop.getFacilityId() || startStop.getOccurrence() != fromStop.getOccurrence()) {
+			FareLink from_fl;
+			if(fareLinkType.equals(FareLink.NetworkWideFare)) { //The fare link from start to 'from'
+				from_fl = new FareLink(fareLinkType, null, null, startStop.getFacilityId(), 
+					fromStop.getFacilityId(), transportMode);
+			}else {
+				from_fl = new FareLink(fareLinkType, lineId, routeId, 
+						startStop.getFacilityId(), fromStop.getFacilityId(), transportMode);
+			}
+			previousFareWithoutPackage = currFareCal.getFare(routeId, lineId, startStop.getFacilityId(), startStop.getOccurrence(),
+					fromStop.getFacilityId(), fromStop.getOccurrence());
+			if(startStop.getFacilityId()!=fromStop.getFacilityId())
+				previousFare = previousFareWithoutPackage - mp.getDiscountForFareLink(from_fl);
+			else
+				previousFare = 0; //XXX: It is completely wrong, but should work.
+		}
+		
+		//Obtain the to fare link
+		FareLink to_fl;
+		if(fareLinkType.equals(FareLink.NetworkWideFare)) {
+			to_fl = new FareLink(fareLinkType, null, null, startStop.getFacilityId(), 
+					toStop.getFacilityId(), transportMode);
+		}else {
+			to_fl = new FareLink(fareLinkType,lineId, routeId, 
+					startStop.getFacilityId(), toStop.getFacilityId(), transportMode);
+		}
+		double toFareWithoutPackage = currFareCal.getFare(routeId, lineId, startStop.getFacilityId(), startStop.getOccurrence(),
+				toStop.getFacilityId(), toStop.getOccurrence()) ;
+		double toFare = toFareWithoutPackage - mp.getDiscountForFareLink(to_fl);
+		
+		if(toFare < 0) {
+			toFare = 0;
+		}
+		
+		double fareDiff = toFare - previousFare;
+		double normalFareDiff = toFareWithoutPackage - previousFareWithoutPackage;
+		
+		if(wrapped.getRoute().getTransportMode().equals("bus")) {
+			busFareSaved.getAndAdd(normalFareDiff- fareDiff);
+		}else if(wrapped.getRoute().getTransportMode().equals("train")) {
+			trainFareSaved.getAndAdd(normalFareDiff- fareDiff);
+		}else if(wrapped.getRoute().getTransportMode().equals("ferry")) {
+			ferryFareSaved.getAndAdd(normalFareDiff- fareDiff);
+		}
+		
+		if (transportMode.equals(RouteHelper.MTRMode) || transportMode.equals(RouteHelper.LRMode)) {
+			// To avoid going backward, for train
+			if (newHelper.isStationVisited(toStop.getFacilityId())) {
+				return Double.MAX_VALUE;
+			} else if (fareDiff < 0) {
+				//this could happen in MTR e.g. you can cross harbour more than 1 way 
+				return Double.MAX_VALUE;
+			}
+			if(fareDiff!=0) {
+				System.nanoTime();
+			}
+			
+			//Deal with the helper
+			newHelper.addStation(fromStop);
+			//check if all the discount is realised
+			if(transportMode.equals(RouteHelper.LRMode))	//from LR to MTR discount is checked inside the discount calculator JLo
+				fareDiff = newHelper.realiseUnrealisedLRFare(fareDiff);
+			else
+				fareDiff = newHelper.realiseUnrealisedDiscount(fareDiff);
+		} else	//check if all the discount is realised
+			fareDiff = newHelper.realiseUnrealisedDiscount(fareDiff);
+		return fareDiff;
+	}
 }
