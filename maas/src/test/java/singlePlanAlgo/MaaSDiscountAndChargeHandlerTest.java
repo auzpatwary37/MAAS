@@ -139,14 +139,14 @@ class MaaSDiscountAndChargeHandlerTest {
 				RunUtils.createStrategies(config, GVFixed_NAME, 0.02, 0.005, 0, 40);
 				
 				//Add the MaaS package choice strategy
-				config.strategy().addStrategySettings(createStrategySettings(MaaSPlanStrategy.class.getName(),.05,200,"person_TCSwithCar"));
-				config.strategy().addStrategySettings(createStrategySettings(MaaSPlanStrategy.class.getName(),.05,200,"person_TCSwithoutCar"));
-				config.strategy().addStrategySettings(createStrategySettings(MaaSPlanStrategy.class.getName(),.05,200,"trip_TCS"));
-				config.strategy().addStrategySettings(createStrategySettings(MaaSOperatorStrategy.class.getName(),1,225,MaaSUtil.MaaSOperatorAgentSubPopulationName));
+				config.strategy().addStrategySettings(createStrategySettings(MaaSPlanStrategy.class.getName(),.05,225,"person_TCSwithCar"));
+				config.strategy().addStrategySettings(createStrategySettings(MaaSPlanStrategy.class.getName(),.05,225,"person_TCSwithoutCar"));
+				config.strategy().addStrategySettings(createStrategySettings(MaaSPlanStrategy.class.getName(),.05,225,"trip_TCS"));
+				config.strategy().addStrategySettings(createStrategySettings(MaaSOperatorStrategy.class.getName(),1,200,MaaSUtil.MaaSOperatorAgentSubPopulationName));
 				
-				config.strategy().addStrategySettings(createStrategySettings(UnnecessaryMaaSPlanRemovalStrategy.class.getName(),.05,200,"person_TCSwithCar"));
-				config.strategy().addStrategySettings(createStrategySettings(UnnecessaryMaaSPlanRemovalStrategy.class.getName(),.05,200,"person_TCSwithoutCar"));
-				config.strategy().addStrategySettings(createStrategySettings(UnnecessaryMaaSPlanRemovalStrategy.class.getName(),.05,200,"trip_TCS"));
+				config.strategy().addStrategySettings(createStrategySettings(UnnecessaryMaaSPlanRemovalStrategy.class.getName(),.05,225,"person_TCSwithCar"));
+				config.strategy().addStrategySettings(createStrategySettings(UnnecessaryMaaSPlanRemovalStrategy.class.getName(),.05,225,"person_TCSwithoutCar"));
+				config.strategy().addStrategySettings(createStrategySettings(UnnecessaryMaaSPlanRemovalStrategy.class.getName(),.05,225,"trip_TCS"));
 				
 				
 				//___________________
