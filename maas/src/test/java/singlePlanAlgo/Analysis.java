@@ -50,4 +50,9 @@ public class Analysis {
 		System.out.println("Total number of sub optimal plan choice = " + subOptimalPlans);
 		System.out.println("Total number of agents that saved money = " + moneySaved);
 	}
+	
+	
+	
+	
+	
 }

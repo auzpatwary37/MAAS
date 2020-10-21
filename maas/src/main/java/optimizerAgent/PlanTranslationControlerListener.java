@@ -26,6 +26,9 @@ import org.matsim.core.controler.listener.StartupListener;
 import org.matsim.core.population.PopulationUtils;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
+
+import MaaSPackages.MaaSPackages;
 
 public class PlanTranslationControlerListener implements IterationStartsListener, StartupListener, BeforeMobsimListener, AfterMobsimListener{
 	
@@ -37,6 +40,9 @@ public class PlanTranslationControlerListener implements IterationStartsListener
 	
 	@Inject
 	private OutputDirectoryHierarchy controlerIO;
+	
+	@Inject
+	private @Named(MaaSUtil.MaaSPackagesAttributeName) MaaSPackages packages;
 	
 	public final String FileName = "maas.csv";
 	public final String varFileName  = "vars.csv";
@@ -66,6 +72,33 @@ public class PlanTranslationControlerListener implements IterationStartsListener
 	@Override
 	public void notifyBeforeMobsim(BeforeMobsimEvent event) {
 		//save the unique plans inside a list of plans inside the person attribute
+//		scenario.getPopulation().getPersons().entrySet().parallelStream().forEach(p->{
+//			if(!this.operators.containsKey(p.getKey())) {
+//				List<Plan> plans;
+//				if((plans = (List<Plan>)p.getValue().getAttributes().getAttribute(MaaSUtil.uniqueMaaSIncludedPlanAttributeName))==null) {
+//					plans = new ArrayList<>();
+//					p.getValue().getAttributes().putAttribute(MaaSUtil.uniqueMaaSIncludedPlanAttributeName,plans);
+//				}
+//				boolean unique = true;
+//				for(Plan pl: plans) {
+//					if(MaaSUtil.planEquals(pl, p.getValue().getSelectedPlan())) {
+//						unique = false;
+//						break;
+//					}
+//				}
+//				if((unique && ((Double)p.getValue().getAttributes().getAttribute("fareSaved"))>0)||plans.isEmpty()) {
+//					plans.add(p.getValue().getSelectedPlan());
+//				}
+//				if(plans.size()>this.maxPlansPerAgent) {
+//					MaaSUtil.sortPlan(plans);
+//					plans.remove(plans.size()-1);
+//				}
+//			}
+//		});
+	}
+
+	@Override
+	public void notifyAfterMobsim(AfterMobsimEvent event) {
 		scenario.getPopulation().getPersons().entrySet().parallelStream().forEach(p->{
 			if(!this.operators.containsKey(p.getKey())) {
 				List<Plan> plans;
@@ -80,7 +113,12 @@ public class PlanTranslationControlerListener implements IterationStartsListener
 						break;
 					}
 				}
-				if(unique) {
+				Double fareSaved  = (Double) p.getValue().getSelectedPlan().getAttributes().getAttribute("fareSaved");
+				String currentPac = (String)p.getValue().getSelectedPlan().getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName);
+				Double packageCost = 0.;
+				if(currentPac != null) packageCost = this.packages.getMassPackages().get(currentPac).getPackageCost();
+				if(fareSaved == null) fareSaved = 0.;
+				if((unique && fareSaved-packageCost>=0)||plans.isEmpty()) {
 					plans.add(p.getValue().getSelectedPlan());
 				}
 				if(plans.size()>this.maxPlansPerAgent) {
@@ -89,10 +127,8 @@ public class PlanTranslationControlerListener implements IterationStartsListener
 				}
 			}
 		});
-	}
-
-	@Override
-	public void notifyAfterMobsim(AfterMobsimEvent event) {
+		
+		//________________________________________________________
 		String fileNameFull = controlerIO.getOutputFilename(FileName);
 		String varFile = controlerIO.getOutputFilename(varFileName);
 		String customerFile = controlerIO.getIterationFilename(event.getIteration(), customerFileName);

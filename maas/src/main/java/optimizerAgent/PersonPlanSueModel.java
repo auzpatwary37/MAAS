@@ -156,8 +156,8 @@ public class PersonPlanSueModel {
 	private Map<String,List<Tuple<AnalyticalModelLink,Double>>> linkFlowUpdates;
 	private Map<String,List<Tuple<TransitLink,Double>>> trLinkFlowUpdates;
 	
-	private double alphaMSA=1.7;//parameter for decreasing MSA step size
-	private double gammaMSA=.3;//parameter for decreasing MSA step size
+	private double alphaMSA=1.9;//parameter for decreasing MSA step size
+	private double gammaMSA=.1;//parameter for decreasing MSA step size
 	
 	//other Parameters for the Calibration Process
 	private double tollerance= 1;
@@ -830,6 +830,8 @@ public class PersonPlanSueModel {
 		}
 		flow.setMaaSPackageUsage(this.calculateMaaSPackageUsage());
 		//this.calculateFareLinkFlowAndGradient(flow);
+		this.alphaMSA = 1.5;
+		this.gammaMSA = 0.5;
 		return flow;
 	}
 	

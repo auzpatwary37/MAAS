@@ -39,7 +39,7 @@ public class UnnecessaryMaaSPackRemovalStrategyModule implements PlanStrategyMod
 				double fareSavings = (double) pl.getAttributes().getAttribute(MaaSUtil.fareSavedAttrName);
 				if(fareSavings<packageCost) {
 					pl.getAttributes().removeAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName);
-					pl.getAttributes().putAttribute(MaaSUtil.fareSavedAttrName, 0.);
+					pl.getPerson().getAttributes().putAttribute(MaaSUtil.fareSavedAttrName, 0.);
 				}
 		
 			}
