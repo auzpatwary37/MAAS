@@ -110,8 +110,8 @@ public class IntelligentOperatorDecisionEngine {
 	 * @return
 	 */
 	public Map<String,Map<String,Double>> calcApproximateObjectiveGradient(LinkedHashMap<String,Double> variables) {
-		return this.calcOperatorObjectiveGrad(variables);
-		//return this.calcPlatformObjGrad(variables);
+		//return this.calcOperatorObjectiveGrad(variables);
+		return this.calcPlatformObjGrad(variables);
 	}
 	
 	/**
@@ -209,13 +209,31 @@ public class IntelligentOperatorDecisionEngine {
 		Map<String,Double>operatorObjective = new HashMap<>();
 		this.operator.entrySet().forEach(o->{
 			double revenue = 0;
-			for(MaaSPackage pac:this.model.getMaasPakages().getMassPackagesPerOperator().get(o.getKey())) {
-				revenue+=this.flow.getMaaSPackageUsage().get(pac.getId())*pac.getPackageCost();
-				for(Entry<String, Map<String, Double>> timeId:this.flow.getFareLinkVolume().entrySet()) {
-					for(String fl:pac.getFareLinks().keySet()) {
-						revenue-=timeId.getValue().get(fl)*pac.getDiscountForFareLink(new FareLink(fl));
-					}
-				}
+			
+			for(MaaSPackage maasPackage:this.packages.getMassPackagesPerOperator().get(o.getKey())) {//maasPackage belonging to the operator
+				for(String fl:maasPackage.getFareLinks().keySet()) {//fare link in that maas package
+					for(Entry<String, Map<String, Map<String, Double>>> timefareLinkFlow:flow.getMaaSSpecificFareLinkFlow().entrySet()) {//timeBeans
+						double flow = 0;
+						double nullPackageFlow = 0;
+						try {//The try catch block is necessary as we created the incidence matrix based on usage rather than exhaustive enumeration. 
+							//So, there can be null values for any specific keys maasPackage and fareLink and evem for timeBeans in case of flow
+							flow = timefareLinkFlow.getValue().get(maasPackage.getId()).get(fl);//get flow in that fare link at a time step with maas package 
+							//nullPackageFlow = timefareLinkFlow.getValue().get(MaaSUtil.nullMaaSPacakgeKeyName).get(fl);
+						}catch(Exception e) {//This means either nobody holding that maas package travelled in that time step, or the former
+							if(timefareLinkFlow.getValue().get(maasPackage.getId())==null) {
+								//logger.debug("MaaS Package holder did not travel on any fare link in that timeBean");
+							}
+							else if(timefareLinkFlow.getValue().get(maasPackage.getId()).get(fl)==null) {
+								//logger.debug("The fare link was not used by any maas package holder in that time bean");
+							}
+							else {
+								logger.debug("Should investigate. Might be other issues.");//The noMass is not present? 
+							}
+						}
+						revenue -= maasPackage.getDiscounts().get(fl)*flow*maasPackage.getReimbursementRatio();
+						
+					}//finish timebean
+				}//finish farelinks
 			}
 			operatorObjective.put(o.getKey(),revenue);
 		});
@@ -341,7 +359,8 @@ public class IntelligentOperatorDecisionEngine {
 		this.variables.values().stream().forEach(vd->{
 			variables.put(vd.getVariableName(), vd.getCurrentValue());
 		});
-		return this.calcApproximateObjective(variables);
+		//return this.calcApproximateObjective(variables);
+		return this.calcPlatformObjective(variables);
 	}
 	
 	public Map<String,Double> calcApproximateObjective(LinkedHashMap<String,Double>variables){
