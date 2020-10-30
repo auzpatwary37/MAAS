@@ -5,7 +5,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import org.matsim.api.core.v01.Id;
@@ -45,10 +47,11 @@ public class MaaSDiscountAndChargeHandler implements PersonMoneyEventHandler, Pe
 	private final EventsManager eventManager;
 	private final Map<Id<Person>,Person> operatorMap = new HashMap<>();
 	private final Set<Id<Person>> personIdWithPlan = new HashSet<>();
+	private Map<String,Double> govSubsidyRatio = null;
 	//private final Map<Id<Person>, Double> fareSaved = new HashMap<>();
 	@Inject
 	MaaSDiscountAndChargeHandler(final MatsimServices controler, final TransitSchedule transitSchedule,
-			Map<String, FareCalculator> fareCals, TransferDiscountCalculator tdc) {
+			Map<String, FareCalculator> fareCals, TransferDiscountCalculator tdc, @Nullable @Named("SubsidyRatio")Map<String,Double> govSubsidyRatio) {
 		eventManager = controler.getEvents();
 		this.scenario = controler.getScenario();
 		this.scenario.getPopulation().getPersons().values().forEach(p->{
@@ -56,14 +59,19 @@ public class MaaSDiscountAndChargeHandler implements PersonMoneyEventHandler, Pe
 				this.operatorMap.put(p.getId(),p);
 			}
 		});
+		this.govSubsidyRatio = govSubsidyRatio;
 	}
 	@Override
 	public void reset(int reset){
+		if(govSubsidyRatio.isEmpty()) {
+			this.govSubsidyRatio = this.packages.getMassPackages().keySet().stream().collect(Collectors.toMap(k->k.toString(), k->0.));
+		}
 		this.operatorMap.values().forEach(p->{
 			p.getSelectedPlan().getAttributes().putAttribute(MaaSUtil.operatorRevenueName, 0.);
 			p.getSelectedPlan().getAttributes().putAttribute(MaaSUtil.PackageSoldKeyName, 0);
 			p.getSelectedPlan().getAttributes().putAttribute(MaaSUtil.PackageTripKeyName, 0);
 			p.getSelectedPlan().getAttributes().putAttribute(MaaSUtil.operatorTripKeyName, 0);
+			p.getSelectedPlan().getAttributes().putAttribute(MaaSUtil.govSubsidyName, 0.);
 		});
 		personIdWithPlan.clear();
 		
@@ -106,15 +114,9 @@ public class MaaSDiscountAndChargeHandler implements PersonMoneyEventHandler, Pe
 				String fareLinkOperatorId = this.packages.getOperatorId(fl)+MaaSUtil.MaaSOperatorSubscript;
 				this.eventManager.processEvent(new PersonMoneyEvent(time,Id.createPersonId(fareLinkOperatorId), fareRevenue, MaaSUtil.MaaSOperatorFareRevenueTransactionName,fl.toString()+"__"+event.getPersonId()));//Operator fare revenue event.
 				Plan selectedOperatorPlan =  this.scenario.getPopulation().getPersons().get(Id.createPersonId(fareLinkOperatorId)).getSelectedPlan();
-				Double oldReveneue = (Double)selectedOperatorPlan.getAttributes().getAttribute(MaaSUtil.operatorRevenueName);
-				
-				if(oldReveneue == null) {
-					selectedOperatorPlan.getAttributes().putAttribute(MaaSUtil.operatorRevenueName, fareRevenue);
-				}else {
-					selectedOperatorPlan.getAttributes().putAttribute(MaaSUtil.operatorRevenueName, oldReveneue+fareRevenue);
-				}
-				selectedOperatorPlan.getAttributes().putAttribute(MaaSUtil.operatorTripKeyName, (int)selectedOperatorPlan.getAttributes().getAttribute(MaaSUtil.operatorTripKeyName)+1);
-				if(discount>0)selectedOperatorPlan.getAttributes().putAttribute(MaaSUtil.PackageTripKeyName, (int)selectedOperatorPlan.getAttributes().getAttribute(MaaSUtil.PackageTripKeyName)+1);
+				this.updateRevenue(fareRevenue, selectedOperatorPlan);
+				this.updateOperatorTrip(selectedOperatorPlan);
+				if(discount>0)this.updatePackageTrip(selectedOperatorPlan);
 			}
 		}
 	}
@@ -132,23 +134,43 @@ public class MaaSDiscountAndChargeHandler implements PersonMoneyEventHandler, Pe
 		if(selectedMaaSid!=null && !personIdWithPlan.contains(personId)) {
 			MaaSPackage m = this.packages.getMassPackages().get(selectedMaaSid);
 			double maasCost = m.getPackageCost();
+			Double subsidyRatio = this.govSubsidyRatio.get(m.getId());
+			if(subsidyRatio == null) subsidyRatio = 0.;
 			String packageOperatorId = m.getOperatorId()+MaaSUtil.MaaSOperatorSubscript;
-			this.eventManager.processEvent(new PersonMoneyEvent(event.getTime(),personId, -maasCost, MaaSUtil.AgentpayForMaaSPackageTransactionName,m.getId()));//Agent buying package
+			this.eventManager.processEvent(new PersonMoneyEvent(event.getTime(),personId, -maasCost*(1-subsidyRatio), MaaSUtil.AgentpayForMaaSPackageTransactionName,m.getId()));//Agent buying package
 			this.eventManager.processEvent(new PersonMoneyEvent(event.getTime(),Id.createPersonId(packageOperatorId), maasCost, MaaSUtil.MaaSOperatorpacakgeRevenueTransactionName,m.getId()+"__"+event.getPersonId()));//Operator earning revenue by selling package.
 			
 			Plan selectedOperatorPlan =  this.scenario.getPopulation().getPersons().get(Id.createPersonId(packageOperatorId)).getSelectedPlan();
-			int soldPackage = (int)selectedOperatorPlan.getAttributes().getAttribute(MaaSUtil.PackageSoldKeyName);
-			Double oldReveneue = (Double)selectedOperatorPlan.getAttributes().getAttribute(MaaSUtil.operatorRevenueName);
-			soldPackage++;
-			selectedOperatorPlan.getAttributes().putAttribute(MaaSUtil.PackageSoldKeyName,soldPackage);
-			if(oldReveneue == null) {
-				selectedOperatorPlan.getAttributes().putAttribute(MaaSUtil.operatorRevenueName, maasCost);
-			}else {
-				selectedOperatorPlan.getAttributes().putAttribute(MaaSUtil.operatorRevenueName, oldReveneue+maasCost);
-			}
+			this.updateSoldPackage(selectedOperatorPlan);
+			this.updateRevenue(maasCost, selectedOperatorPlan);
+			this.updateSubsidy(subsidyRatio, maasCost, selectedOperatorPlan);
 			plan.getAttributes().putAttribute(MaaSUtil.fareSavedAttrName, 0.);
 			personIdWithPlan.add(personId);
 		}
 	}
 
+	
+	private synchronized void updateRevenue(double maasCost, Plan selectedOperatorPlan) {
+	
+		Double oldReveneue = (Double)selectedOperatorPlan.getAttributes().getAttribute(MaaSUtil.operatorRevenueName);
+		selectedOperatorPlan.getAttributes().putAttribute(MaaSUtil.operatorRevenueName, oldReveneue+maasCost);
+	}
+	
+	private synchronized void updateSubsidy(double subsidyRatio, double maasCost, Plan selectedOperatorPlan) {
+		Double oldSubsidy = (Double)selectedOperatorPlan.getAttributes().getAttribute(MaaSUtil.govSubsidyName);
+		selectedOperatorPlan.getAttributes().putAttribute(MaaSUtil.govSubsidyName, oldSubsidy+maasCost*subsidyRatio);
+	}
+	
+	private synchronized void updateSoldPackage(Plan selectedOperatorPlan) {
+		int soldPackage = (int)selectedOperatorPlan.getAttributes().getAttribute(MaaSUtil.PackageSoldKeyName);
+		soldPackage++;
+		selectedOperatorPlan.getAttributes().putAttribute(MaaSUtil.PackageSoldKeyName,soldPackage);
+	}
+	private synchronized void updateOperatorTrip(Plan selectedOperatorPlan) {
+		selectedOperatorPlan.getAttributes().putAttribute(MaaSUtil.operatorTripKeyName, (int)selectedOperatorPlan.getAttributes().getAttribute(MaaSUtil.operatorTripKeyName)+1);
+	}
+	
+	private synchronized void updatePackageTrip(Plan selectedOperatorPlan) {
+		selectedOperatorPlan.getAttributes().putAttribute(MaaSUtil.PackageTripKeyName, (int)selectedOperatorPlan.getAttributes().getAttribute(MaaSUtil.PackageTripKeyName)+1);
+	}
 }

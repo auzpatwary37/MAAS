@@ -769,7 +769,7 @@ public class PersonPlanSueModel {
 		squareSum = error;
 		
 		//Return if should stop
-		if(squareSum < this.tollerance || linkAboveTol == 0 || linkAbove1== 0) {
+		if(squareSum < this.tollerance && (linkAboveTol == 0 || linkAbove1== 0)) {
 			return true;
 		}else {
 			return false;

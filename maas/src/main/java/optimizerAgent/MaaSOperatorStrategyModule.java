@@ -52,20 +52,21 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 	private PopulationCompressor compressor;
 	
 	private static Logger logger = Logger.getLogger(MaaSOperatorStrategyModule.class);
-	
+	private String type = null;
 	private IntelligentOperatorDecisionEngine decisionEngine;
 	private Map<String,VariableDetails> variables = new HashMap<>();
 	private Map<String,Optimizer> optimizers = new HashMap<>();
 	//private ExecutedPlansService executedPlans;
 	
 	public MaaSOperatorStrategyModule(MaaSPackages packages, Scenario scenario, timeBeansWrapper timeBeans,
-			Map<String, FareCalculator> fareCalculators,ExecutedPlansServiceImpl executedPlans, OutputDirectoryHierarchy controlerIO, PopulationCompressor compressor) {
+			Map<String, FareCalculator> fareCalculators,ExecutedPlansServiceImpl executedPlans, OutputDirectoryHierarchy controlerIO, PopulationCompressor compressor, String type) {
 		this.packages = packages;
 		this.scenario = scenario;
 		this.timeBeans = timeBeans;
 		this.fareCalculators = fareCalculators;
 		this.controlerIO = controlerIO;
 		this.compressor = compressor;
+		this.type = type;
 		//this.executedPlans = executedPlans;
 	}
 
@@ -74,7 +75,7 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 	public void prepareReplanning(ReplanningContext replanningContext) {
 		this.currentMatsimIteration = replanningContext.getIteration();
 		logger.info("Entering into the replaning context in MaaSOperatorStrategyModule class.");
- 		this.decisionEngine = new IntelligentOperatorDecisionEngine(this.scenario,this.packages,this.timeBeans,this.fareCalculators,compressor);
+ 		this.decisionEngine = new IntelligentOperatorDecisionEngine(this.scenario,this.packages,this.timeBeans,this.fareCalculators,compressor, type);
  		this.variables.clear();
  		this.optimizers.clear();
 	}
@@ -158,7 +159,12 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 				for(int counter = 0;counter<=maxCounter;counter++) {
 					fw.append(counter+"");
 					Map<String,Map<String,Double>>grad =  this.decisionEngine.calcApproximateObjectiveGradient();
-					//Map<String,Map<String,Double>>fdgrad =  this.decisionEngine.calcFDGradient();//This line is for testing only. 
+					if(counter == 0) {
+						Map<String,Map<String,Double>>fdgrad =  this.decisionEngine.calcFDGradient();//This line is for testing only. 
+						
+						System.out.println("grad = "+ grad);
+						System.out.println("FD Grad = "+ fdgrad);
+					}
 					Map<String,Double> obj = this.decisionEngine.calcApproximateObjective();
 					if(grad==null)
 						logger.debug("Gradient is null. Debug!!!");

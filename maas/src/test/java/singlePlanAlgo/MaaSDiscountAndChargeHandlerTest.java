@@ -114,12 +114,12 @@ class MaaSDiscountAndChargeHandlerTest {
 				config.plans().setInsistingOnUsingDeprecatedPersonAttributeFile(true);
 				config.plans().setInputPersonAttributeFile("new Data/core/personAttributesHKI.xml");
 //				config.plans().setInputFile("new Data/core/20.plans.xml.gz");
-				config.controler().setOutputDirectory("toyScenarioLarge/output_optim"+operatorID);
-				config.controler().setWritePlansInterval(10);
+				config.controler().setOutputDirectory("toyScenarioLarge/output_optim"+operatorID+"_secondTry");
+				config.controler().setWritePlansInterval(50);
 				
 //				
-				RunUtils.createStrategies(config, PersonChangeWithCar_NAME, 0.015, 0.01, 0.005, 0);
-				RunUtils.createStrategies(config, PersonChangeWithoutCar_NAME, 0.015, 0.01, 0.005, 0);
+				RunUtils.createStrategies(config, PersonChangeWithCar_NAME, 0.015, 0.015, 0.01, 0);
+				RunUtils.createStrategies(config, PersonChangeWithoutCar_NAME, 0.015, 0.015, 0.01, 0);
 				RunUtils.addStrategy(config, DefaultPlanStrategiesModule.DefaultStrategy.ChangeTripMode.toString(), PersonChangeWithCar_NAME, 
 						0.05, 100);
 				RunUtils.addStrategy(config, DefaultPlanStrategiesModule.DefaultStrategy.TimeAllocationMutator_ReRoute.toString(), PersonChangeWithCar_NAME, 
@@ -155,8 +155,8 @@ class MaaSDiscountAndChargeHandlerTest {
 //						1, 400);
 				
 				
-				config.global().setNumberOfThreads(12);
-				config.qsim().setNumberOfThreads(6);				
+				config.global().setNumberOfThreads(20);
+				config.qsim().setNumberOfThreads(10);				
 				
 				ScoringParameterSet s = config.planCalcScore().getOrCreateScoringParameters(MaaSOperator.type);
 				
@@ -213,7 +213,7 @@ class MaaSDiscountAndChargeHandlerTest {
 				
 				MaaSPackages packages = new MaaSPackagesReader().readPackagesFile(scenario.getConfig().getModules().get(MaaSConfigGroup.GROUP_NAME).getParams().get(MaaSConfigGroup.INPUT_FILE)); //It has to be consistent with the config.
 				//RunUtils.scaleDownPopulation(scenario.getPopulation(), 0.1);
-				Activity act = MaaSUtil.createMaaSOperator(packages, scenario.getPopulation(), "test/agentPop.xml",new Tuple<>(.5,2.5));
+				Activity act = MaaSUtil.createMaaSOperator(packages, scenario.getPopulation(), "test/agentPop.xml",new Tuple<>(.5,4.5));
 				
 				ActivityParams param = new ActivityParams(act.getType());
 				param.setTypicalDuration(20*3600);
@@ -244,7 +244,7 @@ class MaaSDiscountAndChargeHandlerTest {
 				
 				scenario.addScenarioElement(SignalsData.ELEMENT_NAME, new SignalsDataLoader(config).loadSignalsData());	
 				Controler controler = new Controler(scenario);
-				controler.addOverridingModule(new MaaSDataLoader());
+				controler.addOverridingModule(new MaaSDataLoader(MaaSDataLoader.typeOperator));
 				//controler.addOverridingModule(new MaaSOperatorOptimizationModule("new Data/data/odNetwork.xml",5));
 				controler.addOverridingModule(new MaaSOperatorOptimizationModule());
 				ZonalFareXMLParserV2 busFareGetter = new ZonalFareXMLParserV2(scenario.getTransitSchedule());

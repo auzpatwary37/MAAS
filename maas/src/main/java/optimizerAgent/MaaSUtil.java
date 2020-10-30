@@ -51,6 +51,7 @@ public final class MaaSUtil {
 	public static final String uniqueMaaSIncludedPlanAttributeName = "UniquePlans";
 	public static final String detourRatio = "dr";
 	public static final String platformReimbursementFactorName = "alpha";
+	public static final String govSubsidyName = "Subsidy";
 
 	public static Activity createMaaSOperator(MaaSPackages packages, Population population, String popOutLoc, 
 			Tuple<Double,Double> boundsMultiplier) {

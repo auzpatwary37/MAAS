@@ -37,9 +37,11 @@ public class MaaSOperatorStrategy implements PlanStrategy{
 	private PopulationCompressor compressor;
 	
 	
+	
+	
 	@Inject // The constructor must be annotated so that the framework knows which one to use.
 	MaaSOperatorStrategy(Config config,Scenario scenario, @Named(MaaSUtil.MaaSPackagesAttributeName) MaaSPackages packages, timeBeansWrapper timeBeans, Map<String,FareCalculator>fareCalculators,
-			EventsManager eventsManager, ExecutedPlansServiceImpl executedPlans, OutputDirectoryHierarchy controlerIO, @Nullable PopulationCompressor compressor) {
+			EventsManager eventsManager, ExecutedPlansServiceImpl executedPlans, OutputDirectoryHierarchy controlerIO, @Nullable PopulationCompressor compressor, @Named("MaaSType") String type) {
 		// A PlanStrategy is something that can be applied to a Person (not a Plan).
         // It first selects one of the plans:
         //MyPlanSelector planSelector = new MyPlanSelector();
@@ -57,7 +59,7 @@ public class MaaSOperatorStrategy implements PlanStrategy{
 		
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		PlanStrategyImpl.Builder builder = new PlanStrategyImpl.Builder(new KeepSelected());
-        builder.addStrategyModule(new MaaSOperatorStrategyModule(packages, scenario, timeBeans, fareCalculators,executedPlans,controlerIO, compressor));
+        builder.addStrategyModule(new MaaSOperatorStrategyModule(packages, scenario, timeBeans, fareCalculators,executedPlans,controlerIO, compressor, type));
 
         // these modules may, at the same time, be events listeners (so that they can collect information):
         //eventsManager.addHandler(mod);

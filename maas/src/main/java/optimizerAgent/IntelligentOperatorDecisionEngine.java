@@ -18,6 +18,7 @@ import com.google.inject.name.Named;
 import MaaSPackages.MaaSPackage;
 import MaaSPackages.MaaSPackages;
 import dynamicTransitRouter.fareCalculators.FareCalculator;
+import singlePlanAlgo.MaaSDataLoader;
 import transitCalculatorsWithFare.FareLink;
 import ust.hk.praisehk.metamodelcalibration.analyticalModel.SUEModelOutput;
 
@@ -49,6 +50,8 @@ public class IntelligentOperatorDecisionEngine {
 	private Map<String,VariableDetails> variables = new HashMap<>();
 	
 	private SUEModelOutput flow;
+	
+	private String type = null;
 	/**
 	 * Variable Details already contain the key as variable name. Maybe the key is not necessary
 	 * @param key
@@ -59,12 +62,13 @@ public class IntelligentOperatorDecisionEngine {
 	}
 	
 	
-	public IntelligentOperatorDecisionEngine(Scenario scenario, MaaSPackages packages, timeBeansWrapper timeBeans, Map<String, FareCalculator> fareCalculators, PopulationCompressor populationCompressor) {
+	public IntelligentOperatorDecisionEngine(Scenario scenario, MaaSPackages packages, timeBeansWrapper timeBeans, Map<String, FareCalculator> fareCalculators, PopulationCompressor populationCompressor, String type ) {
 		this.scenario = scenario;
 		this.TimeBeans = timeBeans;
 		this.packages = packages;
 		this.fareCalculators = fareCalculators;
 		this.populationCompressor = populationCompressor;
+		this.type = type;
 	}
 	
 
@@ -110,8 +114,13 @@ public class IntelligentOperatorDecisionEngine {
 	 * @return
 	 */
 	public Map<String,Map<String,Double>> calcApproximateObjectiveGradient(LinkedHashMap<String,Double> variables) {
-		return this.calcOperatorObjectiveGrad(variables);
-		//return this.calcPlatformObjGrad(variables);
+		if(type.equals(MaaSDataLoader.typeOperator)) {
+			return this.calcOperatorObjectiveGrad(variables);
+		}else if(type.equals(MaaSDataLoader.typePlatform)) {
+			return this.calcPlatformObjGrad(variables);
+		}else {
+			return null;
+		}
 	}
 	
 	/**
@@ -209,13 +218,31 @@ public class IntelligentOperatorDecisionEngine {
 		Map<String,Double>operatorObjective = new HashMap<>();
 		this.operator.entrySet().forEach(o->{
 			double revenue = 0;
-			for(MaaSPackage pac:this.model.getMaasPakages().getMassPackagesPerOperator().get(o.getKey())) {
-				revenue+=this.flow.getMaaSPackageUsage().get(pac.getId())*pac.getPackageCost();
-				for(Entry<String, Map<String, Double>> timeId:this.flow.getFareLinkVolume().entrySet()) {
-					for(String fl:pac.getFareLinks().keySet()) {
-						revenue-=timeId.getValue().get(fl)*pac.getDiscountForFareLink(new FareLink(fl));
-					}
-				}
+			
+			for(MaaSPackage maasPackage:this.packages.getMassPackagesPerOperator().get(o.getKey())) {//maasPackage belonging to the operator
+				for(String fl:maasPackage.getFareLinks().keySet()) {//fare link in that maas package
+					for(Entry<String, Map<String, Map<String, Double>>> timefareLinkFlow:flow.getMaaSSpecificFareLinkFlow().entrySet()) {//timeBeans
+						double flow = 0;
+						double nullPackageFlow = 0;
+						try {//The try catch block is necessary as we created the incidence matrix based on usage rather than exhaustive enumeration. 
+							//So, there can be null values for any specific keys maasPackage and fareLink and evem for timeBeans in case of flow
+							flow = timefareLinkFlow.getValue().get(maasPackage.getId()).get(fl);//get flow in that fare link at a time step with maas package 
+							//nullPackageFlow = timefareLinkFlow.getValue().get(MaaSUtil.nullMaaSPacakgeKeyName).get(fl);
+						}catch(Exception e) {//This means either nobody holding that maas package travelled in that time step, or the former
+							if(timefareLinkFlow.getValue().get(maasPackage.getId())==null) {
+								//logger.debug("MaaS Package holder did not travel on any fare link in that timeBean");
+							}
+							else if(timefareLinkFlow.getValue().get(maasPackage.getId()).get(fl)==null) {
+								//logger.debug("The fare link was not used by any maas package holder in that time bean");
+							}
+							else {
+								logger.debug("Should investigate. Might be other issues.");//The noMass is not present? 
+							}
+						}
+						revenue -= maasPackage.getDiscounts().get(fl)*flow*maasPackage.getReimbursementRatio();
+						
+					}//finish timebean
+				}//finish farelinks
 			}
 			operatorObjective.put(o.getKey(),revenue);
 		});
@@ -231,6 +258,7 @@ public class IntelligentOperatorDecisionEngine {
 			for(String var:o.getValue().keySet()) {
 				LinkedHashMap<String,Double>vars = new LinkedHashMap<>(variables);
 				vars.compute(var,(k,v)->v+c);
+				this.runMetamodel(vars);
 				Map<String,Double> newObj = this.calcPlatformObjective(vars);
 				operatorGradient.get(o.getKey()).put(var, (newObj.get(o.getKey())-operatorObj.get(o.getKey()))/c);
 			}
@@ -310,25 +338,22 @@ public class IntelligentOperatorDecisionEngine {
 		return operatorGradient;
 	}
 	
-	public Map<String,Map<String,Double>> calcFDGradient(){
+	public Map<String,Map<String,Double>> calcOperatorFDGradient(LinkedHashMap<String,Double> variables){
 		Map<String,Map<String,Double>>operatorGradient = new HashMap<>();
-		//Calcualte x0
 		
-		LinkedHashMap<String,Double> variables = new LinkedHashMap<>();
-		this.variables.values().stream().forEach(vd->{
-			variables.put(vd.getVariableName(), vd.getCurrentValue());
-		});
 		Map<String,Double> y0 = this.calcApproximateObjective(variables);
 		
 		this.operator.entrySet().forEach(operator->{
 			operator.getValue().entrySet().forEach(var->{
 				variables.compute(var.getKey(), (k,v)->v=v+.025);
+				this.runMetamodel(variables);
 				Map<String,Double> yplus = this.calcApproximateObjective(variables);
 				variables.compute(var.getKey(), (k,v)->v=v-.05);
+				this.runMetamodel(variables);
 				Map<String,Double> yminus = this.calcApproximateObjective(variables);
 				yplus.entrySet().forEach(op->{
 					if(operatorGradient.get(op.getKey())==null)operatorGradient.put(op.getKey(), new HashMap<>());
-					double grad = 1/(2*.025)*(yplus.get(op.getKey())-yminus.get(op.getKey()));
+					double grad = 1./(2*.025)*(yplus.get(op.getKey())-yminus.get(op.getKey()));
 					operatorGradient.get(op.getKey()).put(var.getKey(), grad);
 				});
 			});
@@ -336,12 +361,31 @@ public class IntelligentOperatorDecisionEngine {
 		return operatorGradient;
 	}
 	
+	public Map<String,Map<String,Double>> calcFDGradient(){
+		LinkedHashMap<String,Double> variables = new LinkedHashMap<>();
+		this.variables.values().stream().forEach(vd->{
+			variables.put(vd.getVariableName(), vd.getCurrentValue());
+		});
+		if(this.type.equals(MaaSDataLoader.typeOperator)) {
+			this.calcOperatorFDGradient(variables);
+		}else if(this.type.equals(MaaSDataLoader.typePlatform)) {
+			this.calcPlatformFDGrad(variables);
+		}
+		return null;
+	}
+	
 	public Map<String,Double> calcApproximateObjective(){
 		LinkedHashMap<String,Double> variables = new LinkedHashMap<>();
 		this.variables.values().stream().forEach(vd->{
 			variables.put(vd.getVariableName(), vd.getCurrentValue());
 		});
-		return this.calcApproximateObjective(variables);
+		if(this.type.equals(MaaSDataLoader.typeOperator)) {
+			this.calcApproximateObjective(variables);
+		}else if(this.type.equals(MaaSDataLoader.typePlatform)) {
+			return this.calcPlatformObjective(variables);
+		}
+		return null;
+		
 	}
 	
 	public Map<String,Double> calcApproximateObjective(LinkedHashMap<String,Double>variables){

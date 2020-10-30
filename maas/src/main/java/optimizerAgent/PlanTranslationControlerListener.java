@@ -46,6 +46,7 @@ public class PlanTranslationControlerListener implements IterationStartsListener
 	
 	public final String FileName = "maas.csv";
 	public final String varFileName  = "vars.csv";
+	public final String subsudyFileName = "subsidy.csv";
 	private Map<Id<Person>,Person> operators = new HashMap<>();
 	
 	public final String customerFileName = "customer.csv";
@@ -131,18 +132,22 @@ public class PlanTranslationControlerListener implements IterationStartsListener
 		//________________________________________________________
 		String fileNameFull = controlerIO.getOutputFilename(FileName);
 		String varFile = controlerIO.getOutputFilename(varFileName);
+		String subsidyFileNameFull =  controlerIO.getOutputFilename(this.subsudyFileName);
 		String customerFile = controlerIO.getIterationFilename(event.getIteration(), customerFileName);
 		File fullFile = new File(fileNameFull);
 		FileWriter fwFull = null;
 		FileWriter varFw = null;
+		FileWriter subsidyFw = null;
 		FileWriter customerFw = null;
 		try {
 			fwFull = new FileWriter(fullFile,true);
 			varFw = new FileWriter(new File(varFile),true);
+			subsidyFw = new FileWriter(new File(subsidyFileNameFull),true);
 			customerFw = new FileWriter(new File(customerFile), true);
 			if(event.getIteration() == 0) {
 				fwFull.append("Operator,iteartion,revenue,packageSold,pacakgeTrips,totalTrips\n");
 				varFw.append("Operator,iteartion,var_name,varCurrent,varlowerLimit,varUpperLimit,revenue\n");
+				subsidyFw.append("Operator,Iteration,subsidy,totalSystemTravelTime\n");
 				customerFw.append("personId, packageType, fareSaved\n");
 			}
 		} catch (IOException e) {
@@ -154,6 +159,7 @@ public class PlanTranslationControlerListener implements IterationStartsListener
 			try {
 				fwFull.append(p.getId().toString()+","+event.getIteration()+","+plan.getAttributes().getAttribute(MaaSUtil.operatorRevenueName)+","+plan.getAttributes().getAttribute(MaaSUtil.PackageSoldKeyName)+","+
 						plan.getAttributes().getAttribute(MaaSUtil.PackageTripKeyName)+","+plan.getAttributes().getAttribute(MaaSUtil.operatorTripKeyName)+"\n");
+				subsidyFw.append(p.getId()+","+event.getIteration()+","+p.getSelectedPlan().getAttributes().getAttribute(MaaSUtil.govSubsidyName)+"\n");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -185,8 +191,10 @@ public class PlanTranslationControlerListener implements IterationStartsListener
 		try {
 			varFw.flush();
 			fwFull.flush();
+			subsidyFw.flush();
 			fwFull.close();
 			varFw.close();
+			subsidyFw.close(); 
 			customerFw.flush();
 			customerFw.close();
 		} catch (IOException e) {
