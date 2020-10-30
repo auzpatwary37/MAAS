@@ -114,6 +114,7 @@ public class IntelligentOperatorDecisionEngine {
 	 * @return
 	 */
 	public Map<String,Map<String,Double>> calcApproximateObjectiveGradient(LinkedHashMap<String,Double> variables) {
+
 		if(type.equals(MaaSDataLoader.typeOperator)) {
 			return this.calcOperatorObjectiveGrad(variables);
 		}else if(type.equals(MaaSDataLoader.typePlatform)) {
@@ -121,6 +122,7 @@ public class IntelligentOperatorDecisionEngine {
 		}else {
 			return null;
 		}
+
 	}
 	
 	/**
@@ -379,13 +381,13 @@ public class IntelligentOperatorDecisionEngine {
 		this.variables.values().stream().forEach(vd->{
 			variables.put(vd.getVariableName(), vd.getCurrentValue());
 		});
+
 		if(this.type.equals(MaaSDataLoader.typeOperator)) {
 			this.calcApproximateObjective(variables);
 		}else if(this.type.equals(MaaSDataLoader.typePlatform)) {
 			return this.calcPlatformObjective(variables);
 		}
 		return null;
-		
 	}
 	
 	public Map<String,Double> calcApproximateObjective(LinkedHashMap<String,Double>variables){
