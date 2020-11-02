@@ -347,15 +347,15 @@ public class IntelligentOperatorDecisionEngine {
 		
 		this.operator.entrySet().forEach(operator->{
 			operator.getValue().entrySet().forEach(var->{
-				variables.compute(var.getKey(), (k,v)->v=v+.025);
+				variables.compute(var.getKey(), (k,v)->v=v+.0025);
 				this.runMetamodel(variables);
 				Map<String,Double> yplus = this.calcApproximateObjective(variables);
-				variables.compute(var.getKey(), (k,v)->v=v-.05);
+				variables.compute(var.getKey(), (k,v)->v=v-.005);
 				this.runMetamodel(variables);
 				Map<String,Double> yminus = this.calcApproximateObjective(variables);
 				yplus.entrySet().forEach(op->{
 					if(operatorGradient.get(op.getKey())==null)operatorGradient.put(op.getKey(), new HashMap<>());
-					double grad = 1./(2*.025)*(yplus.get(op.getKey())-yminus.get(op.getKey()));
+					double grad = 1./(2*.0025)*(yplus.get(op.getKey())-yminus.get(op.getKey()));
 					operatorGradient.get(op.getKey()).put(var.getKey(), grad);
 				});
 			});
@@ -369,9 +369,9 @@ public class IntelligentOperatorDecisionEngine {
 			variables.put(vd.getVariableName(), vd.getCurrentValue());
 		});
 		if(this.type.equals(MaaSDataLoader.typeOperator)) {
-			this.calcOperatorFDGradient(variables);
+			return this.calcOperatorFDGradient(variables);
 		}else if(this.type.equals(MaaSDataLoader.typePlatform)) {
-			this.calcPlatformFDGrad(variables);
+			return this.calcPlatformFDGrad(variables);
 		}
 		return null;
 	}
@@ -383,7 +383,7 @@ public class IntelligentOperatorDecisionEngine {
 		});
 
 		if(this.type.equals(MaaSDataLoader.typeOperator)) {
-			this.calcApproximateObjective(variables);
+			return this.calcApproximateObjective(variables);
 		}else if(this.type.equals(MaaSDataLoader.typePlatform)) {
 			return this.calcPlatformObjective(variables);
 		}

@@ -89,11 +89,11 @@ class MaaSDiscountAndChargeHandlerTest {
 				//OutputDirectoryLogging.catchLogEntries();
 				config.addModule(new MaaSConfigGroup());
 				config.controler().setLastIteration(250);
-				//MaaSPackages pac = new MaaSPackagesReader().readPackagesFile("test/packages_all.xml");
-				//pac.getMassPackages().values().forEach(p->p.setReimbursementRatio(0.9));
-				//new MaaSPackagesWriter(pac).write("test/packages_all.xml");
+//				MaaSPackages pac = new MaaSPackagesReader().readPackagesFile("test/packages_all.xml");
+//				pac.getMassPackages().values().forEach(p->p.setReimbursementRatio(0.9));
+//				new MaaSPackagesWriter(pac).write("test/packages_all.xml");
 				MaaSPackages pac = new MaaSPackagesReader().readPackagesFile("test/packages_July2020_20.xml");
-				//Set<MaaSPackage> pacIds = pac.getMassPackagesPerOperator().get("train");
+//				Set<MaaSPackage> pacIds = pac.getMassPackagesPerOperator().get("train");
 				
 				//config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"test/packages_all.xml");
 				//config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"packages_July2020_400.xml");
@@ -104,6 +104,10 @@ class MaaSDiscountAndChargeHandlerTest {
 					if(!oPacs.getKey().equals(operatorID)) {
 						oPacs.getValue().forEach(p->{
 							pac.removeMaaSPackage(p);
+						});
+					}else {
+						oPacs.getValue().forEach(p->{
+							p.setPackageCost(52.5);
 						});
 					}
 				});

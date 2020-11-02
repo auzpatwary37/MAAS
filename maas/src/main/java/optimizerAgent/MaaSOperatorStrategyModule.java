@@ -159,11 +159,11 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 				for(int counter = 0;counter<=maxCounter;counter++) {
 					fw.append(counter+"");
 					Map<String,Map<String,Double>>grad =  this.decisionEngine.calcApproximateObjectiveGradient();
-					if(counter == 0) {
+					if(counter == 1) {
 						Map<String,Map<String,Double>>fdgrad =  this.decisionEngine.calcFDGradient();//This line is for testing only. 
 						
-						System.out.println("grad = "+ grad);
-						System.out.println("FD Grad = "+ fdgrad);
+						logger.info("grad = "+ grad);
+						logger.info("FD Grad = "+ fdgrad);
 					}
 					Map<String,Double> obj = this.decisionEngine.calcApproximateObjective();
 					if(grad==null)

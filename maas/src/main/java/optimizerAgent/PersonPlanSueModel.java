@@ -1006,6 +1006,9 @@ public class PersonPlanSueModel {
 						double cap = link.getCapacity()*(this.timeBeans.get(timeMap.getKey()).getSecond()-this.timeBeans.get(timeMap.getKey()).getFirst())/3600;
 						double beta = anaParam.get(PersonPlanSueModel.BPRbetaName);
 						double grad = anaParam.get(PersonPlanSueModel.BPRalphaName)*beta*t_0/Math.pow(cap, beta)*Math.pow(flow,beta-1)*this.linkGradient.get(timeMap.getKey()).get(link.getId()).get(var.getKey());
+						if(grad>1000) {
+							logger.debug("High Gradient");
+						}
 						this.linkTravelTimeGradient.get(timeMap.getKey()).get(link.getId()).put(var.getKey(),grad);
 					}
 				});
@@ -1062,6 +1065,9 @@ public class PersonPlanSueModel {
 									logger.debug("Debug here");
 								}
 								grad = grad1*grad2;
+								if(grad>1000) {
+									logger.debug("High Gradient");
+								}
 							}else {
 								grad = 0;
 							}
@@ -1165,6 +1171,9 @@ public class PersonPlanSueModel {
 					
 					if(!utilityGradient.containsKey(planKey))utilityGradient.put(planKey, new HashMap<>());
 					utilityGradient.get(planKey).put(var, planGradient);
+					if(planGradient>1000) {
+						logger.debug("High Gradient");
+					}
 					double planProb = this.planProbability.get(planKey);
 					sumTerm.compute(var, (k,v)->v=v+planProb*utilityGradient.get(planKey).get(var));
 					planProbSum.compute(var, (k,v)->v=v+planProb);
