@@ -176,24 +176,9 @@ public class IntelligentOperatorDecisionEngine {
 						for(Entry<String, Map<String, Map<String, Map<String, Double>>>> fareGrad:model.getFareLinkGradient().entrySet()) {//timeBeans
 							double timeMaasSpecificFareLinkGrad = 0;
 							//double nullPackageGrad = 0;
-							try {//The try catch block is necessary as we created the incidence matrix based on usage rather than exhaustive enumeration. 
-								//So, there can be null values for any specific keys maasPackage and fareLink and evem for timeBeans in case of flow
+							if(fareGrad.getValue().get(maasPackage.getId())!=null && fareGrad.getValue().get(maasPackage.getId()).get(fl)!=null)
 								timeMaasSpecificFareLinkGrad = fareGrad.getValue().get(maasPackage.getId()).get(fl).get(key);//The fare link can be not used at a timeBean by anyone belonging to that specific maas pacakge  
 								//nullPackageGrad = fareGrad.getValue().get(MaaSUtil.nullMaaSPacakgeKeyName).get(fl).get(key);//check
-							}catch(Exception e) {//This means either nobody holding that maas package travelled in that time step, or the former
-								if(fareGrad.getValue().get(maasPackage.getId())==null) {//case1
-									//logger.debug("MaaS Package holder did not travel on any fare link in that timeBean");
-								}
-								else if(fareGrad.getValue().get(maasPackage.getId()).get(fl)==null) {//case 2
-									//logger.debug("The fare link was not used by any maas package holder in that time step");
-								}
-								else if(fareGrad.getValue().get(MaaSUtil.nullMaaSPacakgeKeyName)==null) {//case3
-									//logger.debug("MaaS Package holder did not travel on any fare link in that timeBean");
-								}else if(fareGrad.getValue().get(MaaSUtil.nullMaaSPacakgeKeyName).get(fl)==null) {//case4
-									//logger.debug("The fare link was not used by any maas package holder in that time step");
-								}else //case5
-									logger.debug("Should investigate. Might be other issues.");
-							}
 							grad+=-1*a*maasPackage.getDiscounts().get(fl)*timeMaasSpecificFareLinkGrad;
 							
 						}//finish timebean
@@ -226,21 +211,9 @@ public class IntelligentOperatorDecisionEngine {
 					for(Entry<String, Map<String, Map<String, Double>>> timefareLinkFlow:flow.getMaaSSpecificFareLinkFlow().entrySet()) {//timeBeans
 						double flow = 0;
 						double nullPackageFlow = 0;
-						try {//The try catch block is necessary as we created the incidence matrix based on usage rather than exhaustive enumeration. 
-							//So, there can be null values for any specific keys maasPackage and fareLink and evem for timeBeans in case of flow
+						if(timefareLinkFlow.getValue().get(maasPackage.getId())!=null && timefareLinkFlow.getValue().get(maasPackage.getId()).get(fl)!=null)
 							flow = timefareLinkFlow.getValue().get(maasPackage.getId()).get(fl);//get flow in that fare link at a time step with maas package 
 							//nullPackageFlow = timefareLinkFlow.getValue().get(MaaSUtil.nullMaaSPacakgeKeyName).get(fl);
-						}catch(Exception e) {//This means either nobody holding that maas package travelled in that time step, or the former
-							if(timefareLinkFlow.getValue().get(maasPackage.getId())==null) {
-								//logger.debug("MaaS Package holder did not travel on any fare link in that timeBean");
-							}
-							else if(timefareLinkFlow.getValue().get(maasPackage.getId()).get(fl)==null) {
-								//logger.debug("The fare link was not used by any maas package holder in that time bean");
-							}
-							else {
-								logger.debug("Should investigate. Might be other issues.");//The noMass is not present? 
-							}
-						}
 						revenue -= maasPackage.getDiscounts().get(fl)*flow*maasPackage.getReimbursementRatio();
 						
 					}//finish timebean
@@ -303,24 +276,13 @@ public class IntelligentOperatorDecisionEngine {
 						for(Entry<String, Map<String, Map<String, Map<String, Double>>>> fareGrad:model.getFareLinkGradient().entrySet()) {//timeBeans
 							double timeMaasSpecificFareLinkGrad = 0;
 							double nullPackageGrad = 0;
-							try {//The try catch block is necessary as we created the incidence matrix based on usage rather than exhaustive enumeration. 
-								//So, there can be null values for any specific keys maasPackage and fareLink and evem for timeBeans in case of flow
+							if((fareGrad.getValue().get(maasPackage.getId()))!=null && fareGrad.getValue().get(maasPackage.getId()).get(fl)!= null)
 								timeMaasSpecificFareLinkGrad = fareGrad.getValue().get(maasPackage.getId()).get(fl).get(key);//The fare link can be not used at a timeBean by anyone belonging to that specific maas pacakge  
+								
+							
+							if(fareGrad.getValue().get(MaaSUtil.nullMaaSPacakgeKeyName)!=null && fareGrad.getValue().get(MaaSUtil.nullMaaSPacakgeKeyName).get(fl)!=null)
 								nullPackageGrad = fareGrad.getValue().get(MaaSUtil.nullMaaSPacakgeKeyName).get(fl).get(key);//check
-							}catch(Exception e) {//This means either nobody holding that maas package travelled in that time step, or the former
-								if(fareGrad.getValue().get(maasPackage.getId())==null) {//case1
-									//logger.debug("MaaS Package holder did not travel on any fare link in that timeBean");
-								}
-								else if(fareGrad.getValue().get(maasPackage.getId()).get(fl)==null) {//case 2
-									//logger.debug("The fare link was not used by any maas package holder in that time step");
-								}
-								else if(fareGrad.getValue().get(MaaSUtil.nullMaaSPacakgeKeyName)==null) {//case3
-									//logger.debug("MaaS Package holder did not travel on any fare link in that timeBean");
-								}else if(fareGrad.getValue().get(MaaSUtil.nullMaaSPacakgeKeyName).get(fl)==null) {//case4
-									//logger.debug("The fare link was not used by any maas package holder in that time step");
-								}else //case5
-									logger.debug("Should investigate. Might be other issues.");
-							}
+							
 							grad+=(maasPackage.getFullFare().get(fl)-maasPackage.getDiscounts().get(fl))*timeMaasSpecificFareLinkGrad+maasPackage.getFullFare().get(fl)*nullPackageGrad;
 							
 						}//finish timebean
@@ -404,21 +366,15 @@ public class IntelligentOperatorDecisionEngine {
 					for(Entry<String, Map<String, Map<String, Double>>> timefareLinkFlow:flow.getMaaSSpecificFareLinkFlow().entrySet()) {//timeBeans
 						double flow = 0;
 						double nullPackageFlow = 0;
-						try {//The try catch block is necessary as we created the incidence matrix based on usage rather than exhaustive enumeration. 
-							//So, there can be null values for any specific keys maasPackage and fareLink and evem for timeBeans in case of flow
+						if(timefareLinkFlow.getValue().get(maasPackage.getId())!=null && timefareLinkFlow.getValue().get(maasPackage.getId()).get(fl)!=null)
 							flow = timefareLinkFlow.getValue().get(maasPackage.getId()).get(fl);//get flow in that fare link at a time step with maas package 
+							
+						
+						
+						
+						if(timefareLinkFlow.getValue().get(MaaSUtil.nullMaaSPacakgeKeyName)!=null && timefareLinkFlow.getValue().get(MaaSUtil.nullMaaSPacakgeKeyName).get(fl)!=null)
 							nullPackageFlow = timefareLinkFlow.getValue().get(MaaSUtil.nullMaaSPacakgeKeyName).get(fl);
-						}catch(Exception e) {//This means either nobody holding that maas package travelled in that time step, or the former
-							if(timefareLinkFlow.getValue().get(maasPackage.getId())==null) {
-								//logger.debug("MaaS Package holder did not travel on any fare link in that timeBean");
-							}
-							else if(timefareLinkFlow.getValue().get(maasPackage.getId()).get(fl)==null) {
-								//logger.debug("The fare link was not used by any maas package holder in that time bean");
-							}
-							else {
-								logger.debug("Should investigate. Might be other issues.");//The noMass is not present? 
-							}
-						}
+						
 						obj+=(maasPackage.getFullFare().get(fl)-maasPackage.getDiscounts().get(fl))*flow+maasPackage.getFullFare().get(fl)*nullPackageFlow;
 						
 					}//finish timebean
