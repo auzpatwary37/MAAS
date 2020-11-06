@@ -1,6 +1,4 @@
-/**
- * 
- */
+
 package optimizerAgent;
 
 import static org.junit.Assert.assertEquals;

@@ -18,7 +18,7 @@ import org.matsim.core.events.EventsUtils;
 import org.matsim.core.events.MatsimEventsReader;
 import org.matsim.core.scenario.ScenarioUtils;
 
-import com.google.protobuf.compiler.PluginProtos.CodeGeneratorResponse.File;
+
 
 import createPTGTFS.FareCalculatorPTGTFS;
 import dynamicTransitRouter.fareCalculators.FareCalculator;

@@ -14,7 +14,7 @@ public class ToyScenarioTestCase {
 		config.vehicles().setVehiclesFile("src/main/resources/toyScenarioData/vehicles.xml");
 		config.transit().setVehiclesFile("src/main/resources/toyScenarioData/transitVehicles.xml");
 		config.transit().setUseTransit(true);
-		config.plansCalcRoute().setInsertingAccessEgressWalk(false);
+		//config.plansCalcRoute().setInsertingAccessEgressWalk(false);
 		//PopulationGenerator.addPlanParameter(config.planCalcScore(), "home", 16*60*60);
 		//PopulationGenerator.addPlanParameter(config.planCalcScore(), "work", 8*60*60);
 		config.qsim().setUsePersonIdForMissingVehicleId(true);
