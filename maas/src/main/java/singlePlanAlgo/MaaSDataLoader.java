@@ -79,6 +79,8 @@ public class MaaSDataLoader extends AbstractModule{
 			this.addEventHandlerBinding().to(MaaSDiscountAndChargeHandler.class).asEagerSingleton();
 		}else if(type.equals(MaaSDataLoader.typePlatform)){
 			this.addEventHandlerBinding().to(MaaSDiscountAndChargeHandlerPlatform.class).asEagerSingleton();
+		}else if(type.equals(MaaSDataLoader.typeOperatorPlatform)) {
+			this.addEventHandlerBinding().to(MaaSDiscountAndHandlerOperatorPlatform.class).asEagerSingleton();
 		}
 		
 		

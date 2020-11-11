@@ -45,6 +45,14 @@ public class MaaSPackagesWriter extends DefaultHandler{
 				maas.setAttribute("ExpTime", Double.toString(mm.getPackageExpairyTime()));
 				maas.setAttribute("MaxTaxiTrip", Integer.toString(mm.getMaxTaxiTrip()));
 				maas.setAttribute("operatorId", mm.getOperatorId());
+				maas.setAttribute("ReimbursementRatio", Double.toString(mm.getReimbursementRatio()));
+				String selfLinks = "";
+				String seperator = "";
+				for(String s:mm.getSelfFareLinks()) {
+					selfLinks = selfLinks+seperator+s;
+					seperator = ",";
+				}
+				maas.setAttribute("selfFareLinks", selfLinks);
 				mm.getFareLinks().values().forEach((fl)->{
 					Element fareLink = document.createElement(FareLink.FareLinkAttributeName);
 					fareLink.setAttribute("Description", fl.toString());

@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -93,6 +94,8 @@ class MaaSDiscountAndChargeHandlerTest {
 //				pac.getMassPackages().values().forEach(p->p.setReimbursementRatio(0.9));
 //				new MaaSPackagesWriter(pac).write("test/packages_all.xml");
 				MaaSPackages pac = new MaaSPackagesReader().readPackagesFile("test/packages_July2020_20.xml");
+				MaaSPackages pacAll = new MaaSPackagesReader().readPackagesFile("test/packages_all.xml");
+				pacAll.getMassPackages().get("platform").setSelfFareLinks(new HashSet<>());
 //				Set<MaaSPackage> pacIds = pac.getMassPackagesPerOperator().get("train");
 				
 				//config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"test/packages_all.xml");
@@ -100,25 +103,38 @@ class MaaSDiscountAndChargeHandlerTest {
 				
 				String operatorID = "1";
 				
+//				new HashMap<>(pac.getMassPackagesPerOperator()).entrySet().forEach(oPacs->{
+//					if(!oPacs.getKey().equals(operatorID)) {
+//						oPacs.getValue().forEach(p->{
+//							pac.removeMaaSPackage(p);
+//						});
+//					}else {
+//						oPacs.getValue().forEach(p->{
+//							p.setPackageCost(30);
+//						});
+//					}
+//				});
+				
 				new HashMap<>(pac.getMassPackagesPerOperator()).entrySet().forEach(oPacs->{
-					if(!oPacs.getKey().equals(operatorID)) {
+					if(oPacs.getKey().equals(operatorID)) {
 						oPacs.getValue().forEach(p->{
-							pac.removeMaaSPackage(p);
-						});
-					}else {
-						oPacs.getValue().forEach(p->{
-							p.setPackageCost(52.5);
+							
+							pacAll.getMassPackages().get("platform").getSelfFareLinks().addAll(p.getFareLinks().keySet());
+							
 						});
 					}
 				});
-				new MaaSPackagesWriter(pac).write("test/packages_"+operatorID+".xml");
+				pacAll.getMassPackages().get("platform").setReimbursementRatio(0.9);
+				new MaaSPackagesWriter(pacAll).write("test/packages_operator_platform"+operatorID+".xml");
+				config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"test/packages_operator_platform"+operatorID+".xml");
+				//new MaaSPackagesWriter(pac).write("test/packages_"+operatorID+".xml");
 				
-				config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"test/packages_"+operatorID+".xml");
+				//config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"test/packages_"+operatorID+".xml");
 				
 				config.plans().setInsistingOnUsingDeprecatedPersonAttributeFile(true);
 				config.plans().setInputPersonAttributeFile("new Data/core/personAttributesHKI.xml");
 //				config.plans().setInputFile("new Data/core/20.plans.xml.gz");
-				config.controler().setOutputDirectory("toyScenarioLarge/output_optim"+operatorID+"_secondTry");
+				config.controler().setOutputDirectory("toyScenarioLarge/output_optim_operatorPlatform"+operatorID);
 				config.controler().setWritePlansInterval(50);
 				
 //				
@@ -248,7 +264,7 @@ class MaaSDiscountAndChargeHandlerTest {
 				
 				scenario.addScenarioElement(SignalsData.ELEMENT_NAME, new SignalsDataLoader(config).loadSignalsData());	
 				Controler controler = new Controler(scenario);
-				controler.addOverridingModule(new MaaSDataLoader(MaaSDataLoader.typeOperator));
+				controler.addOverridingModule(new MaaSDataLoader(MaaSDataLoader.typeOperatorPlatform));
 				//controler.addOverridingModule(new MaaSOperatorOptimizationModule("new Data/data/odNetwork.xml",5));
 				controler.addOverridingModule(new MaaSOperatorOptimizationModule());
 				ZonalFareXMLParserV2 busFareGetter = new ZonalFareXMLParserV2(scenario.getTransitSchedule());
