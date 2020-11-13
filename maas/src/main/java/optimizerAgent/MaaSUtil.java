@@ -45,6 +45,7 @@ public final class MaaSUtil {
 	public static final String nullMaaSPacakgeKeyName = "noMass";
 	public static final String PackageSoldKeyName = "packageSold";
 	public static final String PackageTripKeyName = "packageTrip";
+	public static final String SelfPackageTripKeyName = "selfPackageTrip";
 	public static final String operatorTripKeyName = "totalTrip";
 	public static final String fareSavedAttrName = "fareSaved";
 	public static final String irreleventPlanFlag = "irrelevantPlan";
@@ -52,6 +53,8 @@ public final class MaaSUtil {
 	public static final String detourRatio = "dr";
 	public static final String platformReimbursementFactorName = "alpha";
 	public static final String govSubsidyName = "Subsidy";
+	public static final String fareLinkOperatorReimbursementTransactionName = "fareLinkOperatorTransaction";
+	public static final String maasOperatorToFareLinkOperatorReimbursementTransactionName = "maasLooseFlgain";
 
 	public static Activity createMaaSOperator(MaaSPackages packages, Population population, String popOutLoc, 
 			Tuple<Double,Double> boundsMultiplier) {

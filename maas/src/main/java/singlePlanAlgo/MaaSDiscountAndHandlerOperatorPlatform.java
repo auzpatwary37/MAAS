@@ -16,6 +16,7 @@ import com.google.inject.name.Named;
 import dynamicTransitRouter.fareCalculators.FareCalculator;
 import dynamicTransitRouter.transfer.TransferDiscountCalculator;
 import optimizerAgent.MaaSUtil;
+import MaaSPackages.MaaSPackage;
 import transitCalculatorsWithFare.FareLink;
 
 public class MaaSDiscountAndHandlerOperatorPlatform extends MaaSDiscountAndChargeHandler{
@@ -46,7 +47,16 @@ public class MaaSDiscountAndHandlerOperatorPlatform extends MaaSDiscountAndCharg
 			double time = event.getTime(); // Obtain the time
 			String chosenMaaSid = (String) plan.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName);
 			boolean selfFl = false;
-			if(chosenMaaSid!=null)selfFl = this.packages.getMassPackages().get(chosenMaaSid).getSelfFareLinks().contains(fl.toString());
+			//if(chosenMaaSid!=null)selfFl = this.packages.getMassPackages().get(chosenMaaSid).getSelfFareLinks().contains(fl.toString());
+			String operatorId = this.packages.getOperatorId(fl);
+			if(operatorId!=null) {
+				for(MaaSPackage pac:this.packages.getMassPackagesPerOperator().get(operatorId)) {
+					if(pac.getSelfFareLinks().contains(fl.toString())) {
+						selfFl = true;
+						break;
+					}
+				}
+			}
 			double fareRevenue = 0;
 			
 			if(selfFl) {
