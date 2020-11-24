@@ -54,7 +54,7 @@ public class RunUtils {
 		config.controler().setLastIteration(50);
 		config.controler().setOutputDirectory("toyScenarioLarge/output"+1222);
 		config.transit().setUseTransit(true);
-		config.plansCalcRoute().setInsertingAccessEgressWalk(false);
+		//config.plansCalcRoute().setInsertingAccessEgressWalk(false);
 		config.qsim().setUsePersonIdForMissingVehicleId(true);
 		//config.controler().setLastIteration(50);
 		config.parallelEventHandling().setNumberOfThreads(7);

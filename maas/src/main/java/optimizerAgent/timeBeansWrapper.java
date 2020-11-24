@@ -10,8 +10,8 @@ import dynamicTransitRouter.fareCalculators.FareCalculator;
 
 public class timeBeansWrapper{
 	@Inject
-	Map<String,FareCalculator> fareCalculators;
-	final Map<String,Tuple<Double,Double>>timeBeans;
+	public Map<String,FareCalculator> fareCalculators;
+	public final Map<String,Tuple<Double,Double>>timeBeans;
 	
 	public timeBeansWrapper(final Map<String,Tuple<Double,Double>>timeBean) {
 		this.timeBeans = timeBean;

@@ -43,12 +43,11 @@ public class MaaSDiscountAndChargeHandler implements PersonMoneyEventHandler, Pe
 	
 	protected Scenario scenario;
 	@Inject
-	@Named(MaaSUtil.MaaSPackagesAttributeName)
-	protected MaaSPackages packages;
+	protected @Named(MaaSUtil.MaaSPackagesAttributeName) MaaSPackages packages;
 	protected final EventsManager eventManager;
-	private final Map<Id<Person>,Person> operatorMap = new HashMap<>();
-	private final Set<Id<Person>> personIdWithPlan = new HashSet<>();
-	private Map<String,Double> govSubsidyRatio = null;
+	protected final Map<Id<Person>,Person> operatorMap = new HashMap<>();
+	protected final Set<Id<Person>> personIdWithPlan = new HashSet<>();
+	protected Map<String,Double> govSubsidyRatio = null;
 	//private final Map<Id<Person>, Double> fareSaved = new HashMap<>();
 	@Inject
 	MaaSDiscountAndChargeHandler(final MatsimServices controler, final TransitSchedule transitSchedule,
@@ -157,12 +156,12 @@ public class MaaSDiscountAndChargeHandler implements PersonMoneyEventHandler, Pe
 		selectedOperatorPlan.getAttributes().putAttribute(MaaSUtil.operatorRevenueName, oldReveneue+maasCost);
 	}
 	
-	private synchronized void updateSubsidy(double subsidyRatio, double maasCost, Plan selectedOperatorPlan) {
+	protected synchronized void updateSubsidy(double subsidyRatio, double maasCost, Plan selectedOperatorPlan) {
 		Double oldSubsidy = (Double)selectedOperatorPlan.getAttributes().getAttribute(MaaSUtil.govSubsidyName);
 		selectedOperatorPlan.getAttributes().putAttribute(MaaSUtil.govSubsidyName, oldSubsidy+maasCost*subsidyRatio);
 	}
 	
-	private synchronized void updateSoldPackage(Plan selectedOperatorPlan) {
+	protected synchronized void updateSoldPackage(Plan selectedOperatorPlan) {
 		int soldPackage = (int)selectedOperatorPlan.getAttributes().getAttribute(MaaSUtil.PackageSoldKeyName);
 		soldPackage++;
 		selectedOperatorPlan.getAttributes().putAttribute(MaaSUtil.PackageSoldKeyName,soldPackage);
