@@ -278,8 +278,8 @@ public class PersonPlanSueModel{
 				List<Plan> feasiblePlans = new ArrayList<>();
 				for(Plan pl:plans) {
 					String maasId = (String)pl.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName);	
-					if(maasId!=null && 
-							(Double)pl.getAttributes().getAttribute("fareSaved")>this.maasPakages.getMassPackages().get(maasId).getPackageCost()) {
+					if(maasId!=null &&( 
+							(Double)pl.getAttributes().getAttribute("fareSaved")>this.maasPakages.getMassPackages().get(maasId).getPackageCost()||plans.size()==1)) {
 						feasiblePlans.add(pl);
 					}else if(maasId==null) {
 						feasiblePlans.add(pl);
