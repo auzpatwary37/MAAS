@@ -20,8 +20,8 @@ import org.matsim.core.replanning.ReplanningContext;
 
 import com.google.common.collect.Sets;
 
-import MaaSPackages.MaaSPackage;
-import MaaSPackages.MaaSPackages;
+import maasPackagesV2.MaaSPackage;
+import maasPackagesV2.MaaSPackages;
 import optimizer.MultinomialLogit;
 import optimizerAgent.MaaSUtil;
 import transitCalculatorsWithFare.FareLink;

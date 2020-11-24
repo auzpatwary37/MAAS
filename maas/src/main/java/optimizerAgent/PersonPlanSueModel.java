@@ -41,10 +41,12 @@ import org.matsim.vehicles.VehicleCapacity;
 import org.matsim.vehicles.Vehicles;
 
 import com.google.common.collect.Sets;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import com.google.inject.Inject;
 
-import MaaSPackages.MaaSPackage;
-import MaaSPackages.MaaSPackages;
+import maasPackagesV2.MaaSPackage;
+import maasPackagesV2.MaaSPackages;
 import dynamicTransitRouter.fareCalculators.FareCalculator;
 import transitCalculatorsWithFare.FareLink;
 import ust.hk.praisehk.metamodelcalibration.analyticalModel.AnalyticalModelLink;
@@ -133,7 +135,7 @@ import ust.hk.praisehk.metamodelcalibration.measurements.Measurements;
  *  Should be easier if we used the ScoringParameters from matsim group. 
  * 
  */
-public class PersonPlanSueModel {
+public class PersonPlanSueModel{
 	
 	
 	//TODO: add sub-population support
@@ -188,7 +190,11 @@ public class PersonPlanSueModel {
 	private PopulationCompressor populationCompressor = null;
 	private Map<Id<Person>,Double> personEquivalence = new HashMap<>();
 	private Map<Id<Person>, ? extends Person> compressedPersons = new HashMap<>();
-	
+	private Map<String,Set<FareLink>> transitLineFareLinkMap = new HashMap<>();
+	private BiMap<String,String>simpleVarKeys = HashBiMap.create();
+	private boolean fixGradient = false;
+	private boolean ifNeedToFixIncidenceMap = false;
+	private boolean ifNeedToCreateIncidenceMap = true;
 	//______________________BackPropogationVariables______________________________________
 	
 	
@@ -233,7 +239,13 @@ public class PersonPlanSueModel {
 	
 
 	public Measurements performAssignment(Population population, LinkedHashMap<String,Double> params, Measurements originalMeasurements) {
-		MaaSUtil.updateMaaSVariables(this.maasPakages, params);
+		MaaSUtil.updateMaaSVariables(this.maasPakages, params,ts,this.simpleVarKeys);
+		this.extractFeasiblePlans(population);
+		if(this.ifNeedToCreateIncidenceMap) {
+			this.createIncidenceMaps(population);
+		}else if(this.ifNeedToFixIncidenceMap) {
+			this.fixIncidenceMaps(population);
+		}
 		Measurements m = this.performAssignment(population, params,this.AnalyticalModelInternalParams, originalMeasurements);
 		return m;
 	}
@@ -247,7 +259,13 @@ public class PersonPlanSueModel {
 	}
 
 	public SUEModelOutput performAssignment(Population population, LinkedHashMap<String,Double> params) {
-		MaaSUtil.updateMaaSVariables(this.maasPakages, params);
+		MaaSUtil.updateMaaSVariables(this.maasPakages, params,ts, this.simpleVarKeys);
+		this.extractFeasiblePlans(population);
+		if(this.ifNeedToCreateIncidenceMap) {
+			this.createIncidenceMaps(population);
+		}else if(this.ifNeedToFixIncidenceMap) {
+			this.fixIncidenceMaps(population);
+		}
 		SUEModelOutput flow = this.performAssignment(population, params,this.AnalyticalModelInternalParams);
 		return flow;
 	} 
@@ -255,8 +273,19 @@ public class PersonPlanSueModel {
 	private Map<Id<Person>, List<Plan>> extractFeasiblePlans(Population population) {
 		if(this.populationCompressor == null) {
 			for(Entry<Id<Person>, ? extends Person> p:population.getPersons().entrySet()) {
+				if(PopulationUtils.getSubpopulation(p.getValue()).equals(MaaSUtil.MaaSOperatorAgentSubPopulationName))continue;
 				List<Plan> plans = (List<Plan>) p.getValue().getAttributes().getAttribute(MaaSUtil.uniqueMaaSIncludedPlanAttributeName);
-				this.feasibleplans.put(p.getKey(), plans);
+				List<Plan> feasiblePlans = new ArrayList<>();
+				for(Plan pl:plans) {
+					String maasId = (String)pl.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName);	
+					if(maasId!=null && 
+							(Double)pl.getAttributes().getAttribute("fareSaved")>this.maasPakages.getMassPackages().get(maasId).getPackageCost()) {
+						feasiblePlans.add(pl);
+					}else if(maasId==null) {
+						feasiblePlans.add(pl);
+					}
+				}
+				this.feasibleplans.put(p.getKey(), feasiblePlans);
 				this.personEquivalence.put(p.getKey(), 1.0);
 			}
 			this.compressedPersons = population.getPersons();
@@ -265,7 +294,9 @@ public class PersonPlanSueModel {
 			this.feasibleplans = this.populationCompressor.getFeasiblePlans();
 			this.personEquivalence = this.populationCompressor.getEquivalentPerson();
 		}
-			
+		this.ifNeedToFixIncidenceMap = true;
+		this.fixGradient = true;
+		
   		return feasibleplans;
 	}
 	
@@ -278,6 +309,10 @@ public class PersonPlanSueModel {
 	//Constructor
 	
 	
+	public BiMap<String, String> getSimpleVarKeys() {
+		return simpleVarKeys;
+	}
+
 	public PersonPlanSueModel(Map<String, Tuple<Double, Double>> timeBean,Config config) {
 		this.timeBeans=timeBean;
 		//this.defaultParameterInitiation(null);
@@ -409,7 +444,7 @@ public class PersonPlanSueModel {
 		this.farecalculators = fareCalculator;
 		this.maasPakages = packages;
 		this.ts = scenario.getTransitSchedule();
-		this.extractFeasiblePlans(population);
+		//this.extractFeasiblePlans(population);
 	}
 	
 
@@ -481,6 +516,7 @@ public class PersonPlanSueModel {
 			
 			
 		}
+		List<Plan> pls = this.feasibleplans.get(person.getId());
 		if(utilities.size()!=this.feasibleplans.get(person.getId()).size()) {
 			throw new IllegalArgumentException("Not same dimension. Please check");
 		}
@@ -565,7 +601,7 @@ public class PersonPlanSueModel {
  		out.setMaaSSpecificFareLinkFlow(fareLinkFlow);
 		return out;
 	}
-	
+	//TODO: check this function
 	private void createIncidenceMaps(Population population) {
 		
 		for(Person p:this.compressedPersons.values()) {
@@ -636,6 +672,87 @@ public class PersonPlanSueModel {
 				}
 			}
 		}
+		this.ifNeedToCreateIncidenceMap = false;
+	}
+	
+private void fixIncidenceMaps(Population population) {
+
+		Map<String,List<Id<TransitLink>>> trlinkids = new HashMap<>();
+		for(String timeBeanId:this.timeBeans.keySet()) {
+			trlinkids.put(timeBeanId, new ArrayList<Id<TransitLink>>());
+			this.linkPlanIncidence.put(timeBeanId, new HashMap<>());
+			this.trLinkPlanIncidence.put(timeBeanId, new HashMap<>());
+			this.fareLinkPlanIncidence.put(timeBeanId, new HashMap<>());
+			}
+		this.plans.clear();
+		for(Person p:this.compressedPersons.values()) {
+			
+			if(this.feasibleplans == null) {
+				logger.debug("debug feasibleplan is null!!!");
+			}
+			if(!(PopulationUtils.getSubpopulation(p)).equals(MaaSUtil.MaaSOperatorAgentSubPopulationName)) {
+				int planNo = 0;
+				for(Plan plan:this.feasibleplans.get(p.getId())) {
+					
+					MaaSPackage maas = this.maasPakages.getMassPackages().get(plan.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName));
+					SimpleTranslatedPlan trPlan = (SimpleTranslatedPlan) plan.getAttributes().getAttribute(SimpleTranslatedPlan.SimplePlanAttributeName);
+					if(trPlan == null) {
+						trPlan = new SimpleTranslatedPlan(timeBeans, plan, scenario);
+						plan.getAttributes().putAttribute(SimpleTranslatedPlan.SimplePlanAttributeName, trPlan);
+					}
+					String planKey = new String(p.getId().toString()+"_^_"+planNo);
+					trPlan.setPlanKey(planKey);
+					this.plans.put(planKey, trPlan);
+					
+					planNo++;
+					if(maas!=null) {trPlan.setMaasPacakgeId(maas.getId());}
+					else {trPlan.setMaasPacakgeId(MaaSUtil.nullMaaSPacakgeKeyName);}
+					if(!this.maasPackagePlanIncidence.containsKey(trPlan.getMaasPacakgeId())) {
+						this.maasPackagePlanIncidence.put(trPlan.getMaasPacakgeId(), new ArrayList<>());	
+					}
+					this.maasPackagePlanIncidence.get(trPlan.getMaasPacakgeId()).add(planKey);
+					
+					for(Entry<String, List<Id<Link>>> s: trPlan.getCarUsage().entrySet()) {	
+						for(Id<Link> link:s.getValue()){
+							if(!this.linkPlanIncidence.get(s.getKey()).containsKey(link))this.linkPlanIncidence.get(s.getKey()).put(link, new HashMap<>());
+							Map<String, Double> incidenceMap = this.linkPlanIncidence.get(s.getKey()).get(link);
+							incidenceMap.compute(planKey, (k,v)->(v==null)?1:v+1);
+						};
+					}
+					
+					for(Entry<String, List<TransitLink>> s:trPlan.getTransitUsage().entrySet()) {
+						for(TransitLink trLink:s.getValue()){
+							if(!this.trLinkPlanIncidence.get(s.getKey()).containsKey(trLink.getTrLinkId())) {
+								this.trLinkPlanIncidence.get(s.getKey()).put(trLink.getTrLinkId(), new HashMap<>());
+							}
+							Map<String, Double> incidenceMap = this.trLinkPlanIncidence.get(s.getKey()).get(trLink.getTrLinkId());
+							incidenceMap.compute(planKey, (k,v)->(v==null)?1:v+1);
+							if(!this.transitLinks.get(s.getKey()).containsKey(trLink.getTrLinkId()))this.transitLinks.get(s.getKey()).put(trLink.getTrLinkId(), trLink);
+							trlinkids.get(s.getKey()).add(trLink.getTrLinkId());
+						}
+					}
+					
+					for(Entry<String, List<FareLink>> s: trPlan.getFareLinkUsage().entrySet()) {
+						if(trPlan.getMaasPacakgeId().equals(MaaSUtil.nullMaaSPacakgeKeyName))
+							logger.debug("NoMass");
+						if(!this.fareLinkPlanIncidence.get(s.getKey()).containsKey(trPlan.getMaasPacakgeId())) {
+							this.fareLinkPlanIncidence.get(s.getKey()).put(trPlan.getMaasPacakgeId(), new HashMap<>());
+						}
+						
+						for(FareLink fl:s.getValue()){
+							if(!this.fareLinkPlanIncidence.get(s.getKey()).get(trPlan.getMaasPacakgeId()).containsKey(fl.toString())) {
+								this.fareLinkPlanIncidence.get(s.getKey()).get(trPlan.getMaasPacakgeId()).put(fl.toString(), new HashMap<>());
+							}
+							Map<String, Double> incidenceMap = this.fareLinkPlanIncidence.get(s.getKey()).get(trPlan.getMaasPacakgeId()).get(fl.toString());
+							incidenceMap.compute(planKey, (k,v)->(v==null)?1:v+1);
+						}
+						
+					}
+				}
+			}
+		}
+		//this.plans.keySet().retainAll(planKeys);
+		for(String s:this.timeBeans.keySet())this.transitLinks.get(s).keySet().retainAll(trlinkids.get(s));
 	}
 	
 	//TODO: still do not take params in sub-population. We have to incorporate that 
@@ -810,9 +927,9 @@ public class PersonPlanSueModel {
 	private SUEModelOutput performAssignment(Population population, LinkedHashMap<String,Double> params, LinkedHashMap<String,Double> anaParams) {
 		SUEModelOutput flow = null;
 		for(int counter = 1; counter < this.maxIter; counter++) {
-			if(counter == 1 && this.createLinkIncidence == true) {
-				this.createIncidenceMaps(population);
-				}
+//			if(counter == 1 && this.createLinkIncidence == true) {
+//				this.createIncidenceMaps(population);
+//				}
 			long t1 = System.currentTimeMillis();
 			flow  = this.performNetworkLoading(population, params, anaParams,counter);//link incidences are ready after this step
 			logger.info("Finished network loading. Time required = "+(System.currentTimeMillis()-t1)+"ms.");
@@ -830,6 +947,37 @@ public class PersonPlanSueModel {
 		}
 		flow.setMaaSPackageUsage(this.calculateMaaSPackageUsage());
 		//this.calculateFareLinkFlowAndGradient(flow);
+		params.put(CNLSUEModel.CapacityMultiplierName, this.scenario.getConfig().qsim().getFlowCapFactor());
+		Map<String,Map<Id<Link>,Double>> linkTT = new HashMap<>();
+		for(Entry<String,AnalyticalModelNetwork> network:this.networks.entrySet()) {
+			linkTT.put(network.getKey(), new HashMap<>());
+			Map<Id<Link>,Double> linkMap = linkTT.get(network.getKey());
+			for(Entry<Id<Link>,? extends Link>link : network.getValue().getLinks().entrySet()) {
+				linkMap.put(link.getKey(),((CNLLink)link.getValue()).getLinkTravelTime(this.timeBeans.get(network.getKey()), params, anaParams));
+			}
+		}
+		flow.setLinkTravelTime(linkTT);
+		params.put(CNLSUEModel.CapacityMultiplierName, this.scenario.getConfig().qsim().getFlowCapFactor());
+		Map<String,Map<Id<TransitLink>,Double>> trDrlinkTT = new HashMap<>();
+		Map<String,Map<Id<TransitLink>,Double>> trTrlinkTT = new HashMap<>();
+		
+		for(Entry<String,Map<Id<TransitLink>,TransitLink>> timeLink:this.transitLinks.entrySet()) {
+			trDrlinkTT.put(timeLink.getKey(),  new HashMap<>());
+			Map<Id<TransitLink>,Double> drLink = trDrlinkTT.get(timeLink.getKey());
+			trTrlinkTT.put(timeLink.getKey(), new HashMap<>());
+			Map<Id<TransitLink>,Double> trLink = trTrlinkTT.get(timeLink.getKey());
+			for(Entry<Id<TransitLink>,TransitLink>link:timeLink.getValue().entrySet()) {
+				if(link.getValue() instanceof TransitDirectLink) {
+					drLink.put(link.getKey(), ((CNLTransitDirectLink)link.getValue()).getLinkTravelTime(networks.get(timeLink.getKey()), this.timeBeans.get(timeLink.getKey()), params, anaParams));
+				}else {
+					trLink.put(link.getKey(),((CNLTransitTransferLink)link.getValue()).getWaitingTime(anaParams, networks.get(timeLink.getKey())));
+				}
+			}
+		}
+		
+		flow.setTransitDirectLinkTT(trDrlinkTT);
+		flow.setTransitTransferLinkTT(trTrlinkTT);
+		params.remove(CNLSUEModel.CapacityMultiplierName);
 		this.alphaMSA = 1.5;
 		this.gammaMSA = 0.5;
 		return flow;
@@ -838,6 +986,7 @@ public class PersonPlanSueModel {
 	
 	private Measurements performAssignment(Population population, LinkedHashMap<String,Double> params, LinkedHashMap<String,Double> anaParams, Measurements originalMeasurements) {
 		Measurements measurementsToUpdate = null;
+		
 		SUEModelOutput flow = this.performAssignment(population, params, anaParams);
 		
 		if(originalMeasurements==null) {//for now we just add the fare link and link volume for a null measurements
@@ -955,9 +1104,14 @@ public class PersonPlanSueModel {
 	public void initializeGradients(LinkedHashMap<String,Double> Oparams) {
 		Map<String,Double> zeroGrad = new HashMap<>();
 		Oparams.keySet().forEach(k->{
-			if(k.contains(MaaSUtil.MaaSOperatorFareLinkDiscountVariableSubscript)||k.contains(MaaSUtil.MaaSOperatorPacakgePriceVariableSubscript)){
-				this.gradientKeys.add(k);
-				zeroGrad.put(k, 0.);
+			if(k.contains(MaaSUtil.MaaSOperatorFareLinkDiscountVariableSubscript)||k.contains(MaaSUtil.MaaSOperatorPacakgePriceVariableSubscript)||k.contains(MaaSUtil.MaaSOperatorFareLinkClusterDiscountVariableName)||k.contains(MaaSUtil.MaaSOperatorTransitLinesDiscountVariableName)){
+				String key = k;
+				if(MaaSUtil.retrieveName(k)!="") {
+					key = MaaSUtil.retrieveName(k);
+				}
+				this.simpleVarKeys.put(k, key);
+				this.gradientKeys.add(key);
+				zeroGrad.put(key, 0.);
 			}
 		});
 		
@@ -977,7 +1131,26 @@ public class PersonPlanSueModel {
 			this.planProbabilityGradient.put(planKey, new HashMap<>(zeroGrad));
 		}
 		this.initializeGradient = false;
+		this.fixGradient = false;
 		logger.info("Finished initializing gradients");
+	}
+	
+	public void fixOldGradients(LinkedHashMap<String,Double> Oparams) {
+		
+		for(String timeId:this.timeBeans.keySet()) {
+			this.linkGradient.get(timeId).keySet().retainAll(this.linkPlanIncidence.get(timeId).keySet());
+			this.linkTravelTimeGradient.get(timeId).keySet().retainAll(this.linkPlanIncidence.get(timeId).keySet());
+			this.trLinkGradient.get(timeId).keySet().retainAll(this.trLinkPlanIncidence.get(timeId).keySet());
+			this.trLinkTravelTimeGradient.get(timeId).keySet().retainAll(this.trLinkPlanIncidence.get(timeId).keySet());
+			this.fareLinkGradient.get(timeId).keySet().retainAll(this.maasPackagePlanIncidence.keySet());
+			for(String packageId:this.maasPackagePlanIncidence.keySet()) {
+				this.fareLinkGradient.get(timeId).get(packageId).keySet().retainAll(this.fareLinkPlanIncidence.get(timeId).get(packageId).keySet());
+			}
+			
+		}
+		this.planProbabilityGradient.keySet().retainAll(this.planProbability.keySet());
+		this.fixGradient = false;
+		logger.info("Finished fixing gradients");
 	}
 	
 	/**
@@ -993,6 +1166,7 @@ public class PersonPlanSueModel {
 		double counterPart=1/beta.get(counter-1);
 		if(this.initializeGradient==true) {
 			this.initializeGradients(Oparams);
+			if(fixGradient)this.fixOldGradients(Oparams);
 		}else {
 			//Calculate the travel time gradients
 			for(Entry<String, Map<Id<Link>, Map<String, Double>>> timeMap:this.linkTravelTimeGradient.entrySet()) {
@@ -1119,7 +1293,7 @@ public class PersonPlanSueModel {
 					String planKey = trPlan.getPlanKey();
 					double planGradient = 0;
 					
-					if(MaaSUtil.ifMaaSPackageCostVariableDetails(var) && trPlan.getMaasPacakgeId().equals(MaaSUtil.retrievePackageId(var))) {
+					if(MaaSUtil.ifMaaSPackageCostVariableDetails(this.simpleVarKeys.inverse().get(var)) && trPlan.getMaasPacakgeId().equals(MaaSUtil.retrievePackageId(this.simpleVarKeys.inverse().get(var)))) {
 						planGradient-=params.get(CNLSUEModel.MarginalUtilityofMoneyName);//This should be minus not plus?
 					}
 					
@@ -1143,10 +1317,33 @@ public class PersonPlanSueModel {
 							double routeGradient = 0;
 							double routeGradientDlink = 0;
 							double routeGradientTRLink = 0;
-							if(MaaSUtil.ifFareLinkVariableDetails(var)) {
-								String fl = MaaSUtil.retrieveFareLink(var);
-								if(trRoute.getFareLinks().contains(new FareLink(fl)))
-									routeGradient-=params.get(CNLSUEModel.MarginalUtilityofMoneyName);//Should It be minus
+							if(MaaSUtil.ifFareLinkVariableDetails(this.simpleVarKeys.inverse().get(var))) {
+								String fl = MaaSUtil.retrieveFareLink(this.simpleVarKeys.inverse().get(var));
+								if(trRoute.getFareLinks().contains(new FareLink(fl)) && trPlan.getMaasPacakgeId().equals(MaaSUtil.retrievePackageId(this.simpleVarKeys.inverse().get(var))))
+									routeGradient+=params.get(CNLSUEModel.MarginalUtilityofMoneyName);//Should It be minus? I think plus as the discount increases utility (Ashraf, 17Nov20)
+							}else if(MaaSUtil.ifMaaSTransitLinesDiscountVariableDetails(this.simpleVarKeys.inverse().get(var))||MaaSUtil.ifMaaSFareLinkClusterVariableDetails(this.simpleVarKeys.inverse().get(var))) {
+								Set<FareLink> fareLinkSet = this.transitLineFareLinkMap.get(var);
+								//Set<FareLink>fareLinkSet1 = new HashSet<>();
+								if(fareLinkSet==null) {
+									if(MaaSUtil.ifMaaSTransitLinesDiscountVariableDetails(this.simpleVarKeys.inverse().get(var))) {
+										Set<Id<TransitLine>> transitLine = MaaSUtil.retrieveTransitLineId(this.simpleVarKeys.inverse().get(var));
+										fareLinkSet = MaaSUtil.getTransitLinesToFareLinkIncidence(transitLine, ts, MaaSUtil.retrievePackageId(this.simpleVarKeys.inverse().get(var)), this.maasPakages);
+									}else if(MaaSUtil.ifMaaSFareLinkClusterVariableDetails(this.simpleVarKeys.inverse().get(var))) {
+										fareLinkSet = MaaSUtil.retrieveFareLinksIds(this.simpleVarKeys.inverse().get(var));
+									}
+									this.transitLineFareLinkMap.put(var, fareLinkSet);
+								}
+								
+								double flGrad = 0;
+								if(trPlan.getMaasPacakgeId().equals(MaaSUtil.retrievePackageId(this.simpleVarKeys.inverse().get(var)))) {
+									for(FareLink f:trRoute.getFareLinks()){
+										if(fareLinkSet.contains(f)){
+											double fare = this.farecalculators.get(f.getMode()).getFares(f.getTransitRoute(), f.getTransitLine(), f.getBoardingStopFacility(), f.getAlightingStopFacility()).get(0);
+											flGrad += fare*params.get(CNLSUEModel.MarginalUtilityofMoneyName)/params.get(var);
+										}
+									}
+								}
+								routeGradient += flGrad;
 							}
 							for(TransitDirectLink dlink:trRoute.getTransitDirectLinks()) {
 								routeGradientDlink += this.trLinkTravelTimeGradient.get(trRouteMap.getKey()).get(dlink.getTrLinkId()).get(var);
@@ -1393,7 +1590,33 @@ public class PersonPlanSueModel {
 	public Map<String, Map<String, Map<String, Map<String, Double>>>> getFareLinkGradient() {
 		return fareLinkGradient;
 	}
-	
+
+	public Map<String, Map<Id<TransitLink>, TransitLink>> getTransitLinks() {
+		return transitLinks;
+	}
+
+	public Map<String, AnalyticalModelNetwork> getNetworks() {
+		return networks;
+	}
+
+	public Map<String, Set<FareLink>> getTransitLineFareLinkMap() {
+		return transitLineFareLinkMap;
+	}
+//	public static void main(String[] args) {
+//		Map<Integer,String> numbers = new HashMap<>();
+//		Map<Integer,String> numbers1 = new HashMap<>();
+//		numbers.put(1, "One");
+//		numbers.put(2, "Two");
+//		numbers.put(3, "Three");
+//		
+//		numbers1.put(1, "One");
+//		numbers1.put(2, "Two");
+//		
+//		
+//		numbers.keySet().retainAll(numbers1.keySet());
+//		System.out.println(numbers);
+//		System.out.println(numbers1);
+//	}
 	
 }
 

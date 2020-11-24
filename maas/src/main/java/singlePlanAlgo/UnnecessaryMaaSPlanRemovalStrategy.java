@@ -10,7 +10,7 @@ import org.matsim.core.replanning.ReplanningContext;
 import org.matsim.core.replanning.selectors.BestPlanSelector;
 import com.google.inject.name.Named;
 
-import MaaSPackages.MaaSPackages;
+import maasPackagesV2.MaaSPackages;
 import optimizerAgent.MaaSUtil;
 
 public class UnnecessaryMaaSPlanRemovalStrategy implements PlanStrategy{

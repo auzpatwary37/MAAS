@@ -25,13 +25,13 @@ import org.matsim.lanes.Lane;
 import org.matsim.lanes.LanesToLinkAssignment;
 import org.xml.sax.SAXException;
 
-import MaaSPackages.MaaSPackages;
-import MaaSPackages.MaaSPackagesReader;
+import maasPackagesV2.MaaSPackages;
+import maasPackagesV2.MaaSPackagesReader;
 import dynamicTransitRouter.DynamicRoutingModule;
 import dynamicTransitRouter.fareCalculators.ZonalFareXMLParserV2;
 
 import singlePlanAlgo.MaaSConfigGroup;
-import singlePlanAlgo.MaaSDataLoader;
+import singlePlanAlgo.MaaSDataLoaderV2;
 import singlePlanAlgo.MaaSPlanStrategy;
 import singlePlanAlgo.RunUtils;
 
@@ -86,7 +86,7 @@ public class MaaSOperatorTest {
 		
 		MaaSPackages packages = new MaaSPackagesReader().readPackagesFile("test/packages.xml");
 		
-		MaaSUtil.createMaaSOperator(packages, scenario.getPopulation(), "test/agentPop.xml",new Tuple<>(.5,2.));
+		MaaSUtil.createMaaSOperator(packages, scenario.getPopulation(), "test/agentPop.xml",new Tuple<>(.5,2.),null,null);
 		
 		
 		for(LanesToLinkAssignment l2l:scenario.getLanes().getLanesToLinkAssignments().values()) {
@@ -105,7 +105,7 @@ public class MaaSOperatorTest {
 		
 		scenario.addScenarioElement(SignalsData.ELEMENT_NAME, new SignalsDataLoader(config).loadSignalsData());	
 		Controler controler = new Controler(scenario);
-		controler.addOverridingModule(new MaaSDataLoader(MaaSDataLoader.typeOperator));
+		controler.addOverridingModule(new MaaSDataLoaderV2(MaaSDataLoaderV2.typeOperator));
 		//controler.addOverridingModule(new MetamodelModule());
 		ZonalFareXMLParserV2 busFareGetter = new ZonalFareXMLParserV2(scenario.getTransitSchedule());
 		SAXParser saxParser;

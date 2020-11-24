@@ -53,8 +53,8 @@ import org.xml.sax.SAXException;
 
 import com.google.common.collect.Lists;
 
-import MaaSPackages.MaaSPackages;
-import MaaSPackages.MaaSPackagesReader;
+import maasPackagesV2.MaaSPackages;
+import maasPackagesV2.MaaSPackagesReader;
 import dynamicTransitRouter.costs.PTRecordHandler;
 import dynamicTransitRouter.fareCalculators.FareCalculator;
 import dynamicTransitRouter.fareCalculators.ODFareCalculator;
@@ -321,7 +321,7 @@ public class SmallExample {
 		MaaSPackages packages = new MaaSPackagesReader().readPackagesFile(inputPackage); //It has to be consistent with the config.
 
 		//Create activity for MaaS operator
-		Activity act = MaaSUtil.createMaaSOperator(packages, scenario.getPopulation(), "test/agentPop.xml",new Tuple<>(.5,2.5));
+		Activity act = MaaSUtil.createMaaSOperator(packages, scenario.getPopulation(), "test/agentPop.xml",new Tuple<>(.5,2.5),null,null);
 		ActivityParams param = new ActivityParams(act.getType());
 		param.setTypicalDuration(20*3600);
 		param.setMinimalDuration(8*3600);
@@ -354,7 +354,7 @@ public class SmallExample {
 		Scenario scenario = createSimpleScenario(19, 20);
 		additionalSettingsForMaaS(scenario, PlanCalcScoreConfigGroup.DEFAULT_SUBPOPULATION, "src/test/resources/packages/packages_simple19.0.xml");
 		final Controler controler = new Controler(scenario);
-		controler.addOverridingModule(new MaaSDataLoader(MaaSDataLoader.typeOperator));
+		controler.addOverridingModule(new MaaSDataLoaderV2(MaaSDataLoaderV2.typeOperator));
 		controler.addOverridingModule(new MaaSOperatorOptimizationModule());
 		controler.addOverridingModule(new DynamicRoutingModuleWithMaas(fareCalMap));
 		controler.run();
@@ -368,7 +368,7 @@ public class SmallExample {
 		Scenario scenario = createSimpleScenario(21, 20);
 		additionalSettingsForMaaS(scenario, PlanCalcScoreConfigGroup.DEFAULT_SUBPOPULATION, "src/test/resources/packages/packages_simple21.0.xml");
 		final Controler controler = new Controler(scenario);
-		controler.addOverridingModule(new MaaSDataLoader(MaaSDataLoader.typeOperator));
+		controler.addOverridingModule(new MaaSDataLoaderV2(MaaSDataLoaderV2.typeOperator));
 		controler.addOverridingModule(new MaaSOperatorOptimizationModule());
 		controler.addOverridingModule(new DynamicRoutingModuleWithMaas(fareCalMap));
 		controler.run();
@@ -385,7 +385,7 @@ public class SmallExample {
 				MaaSOperatorStrategy.class.getName(), 1, 200, MaaSUtil.MaaSOperatorAgentSubPopulationName));
 		scenario.getConfig().controler().setOutputDirectory("./output/smallTestOptimizePackage");
 		final Controler controler = new Controler(scenario);
-		controler.addOverridingModule(new MaaSDataLoader(MaaSDataLoader.typeOperator));
+		controler.addOverridingModule(new MaaSDataLoaderV2(MaaSDataLoaderV2.typeOperator));
 		controler.addOverridingModule(new MaaSOperatorOptimizationModule());
 		controler.addOverridingModule(new DynamicRoutingModuleWithMaas(fareCalMap));
 		controler.run();
@@ -406,7 +406,7 @@ public class SmallExample {
 		FareCalculator tramFareCal = createTramLine(scenario.getNetwork(), scenario.getTransitSchedule(), scenario.getTransitVehicles(), 15);
 		fareCalMap.put("tram", tramFareCal);
 		final Controler controler = new Controler(scenario);
-		controler.addOverridingModule(new MaaSDataLoader(MaaSDataLoader.typeOperator));
+		controler.addOverridingModule(new MaaSDataLoaderV2(MaaSDataLoaderV2.typeOperator));
 		controler.addOverridingModule(new MaaSOperatorOptimizationModule());
 		controler.addOverridingModule(new DynamicRoutingModuleWithMaas(fareCalMap));
 		controler.run();
@@ -442,7 +442,7 @@ public class SmallExample {
 				getAttributes().putAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName, "bus");
 		
 		final Controler controler = new Controler(scenario);
-		controler.addOverridingModule(new MaaSDataLoader(MaaSDataLoader.typeOperator));
+		controler.addOverridingModule(new MaaSDataLoaderV2(MaaSDataLoaderV2.typeOperator));
 		controler.addOverridingModule(new MaaSOperatorOptimizationModule());
 		controler.addOverridingModule(new DynamicRoutingModuleWithMaas(fareCalMap));
 		controler.run();

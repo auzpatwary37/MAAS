@@ -22,7 +22,7 @@ public class MaaSPackages{
 	
 	private Map<String,MaaSPackage> massPackages=new HashMap<>();
 	private Map<String,Set<MaaSPackage>> massPackagesPerOperator=new HashMap<>();
-	private Map<String, Set<FareLink>> fareLinksPerOperator = new HashMap<>();
+	private Map<String, Set<String>> fareLinksPerOperator = new HashMap<>();
 	public final String maasPriceVariableName = "MAAS_Price";
 	public final String maasTaxiTripVariableName = "MAAS_Taxi";
 
@@ -44,18 +44,18 @@ public class MaaSPackages{
 	public MaaSPackages(TransitSchedule ts,boolean freePerMode, double defaultCost, int freeTaxiTrip, Map<String,FareCalculator> fareCalculators,double defaultDiscount, boolean fullDiscounted) {
 		Map<String, MaaSPackage> packages = new HashMap<>();
 		int operatorId = 1;
-		packages.put("train", new MaaSPackage("train", Integer.toString(operatorId), defaultCost, freeTaxiTrip));
+		packages.put("train", new MaaSPackage("train", "MTR", defaultCost, freeTaxiTrip));
 		packages.get("train").addTransitMode(ts, "train", fareCalculators, defaultDiscount, fullDiscounted, "MTR");
 		for(Entry<Id<TransitLine>, TransitLine> d:ts.getTransitLines().entrySet()) {
 			String mode = d.getValue().getRoutes().get(new ArrayList<>(d.getValue().getRoutes().keySet()).get(0)).getTransportMode();
 			if(!mode.equals("train")) {
 			if(!packages.containsKey(mode)){
 				operatorId++;
-				packages.put(mode, new MaaSPackage(mode, Integer.toString(operatorId), defaultCost, freeTaxiTrip));
+				packages.put(mode, new MaaSPackage(mode, mode, defaultCost, freeTaxiTrip));
 				packages.get(mode).setPackageExpairyTime(24*3600.);
 				
 			}
-			packages.get(mode).addTransitLine(d.getValue(), fareCalculators, defaultDiscount, fullDiscounted, "KMB_FCB_GMB");
+			packages.get(mode).addTransitLine(d.getValue(), fareCalculators, defaultDiscount, fullDiscounted, mode);
 			}
 		}
 		//this.massPackages=packages;
@@ -83,7 +83,6 @@ public class MaaSPackages{
 			}else {
 				this.fareLinksPerOperator.put(e.getKey(), new HashSet<>(e.getValue()));
 			}
-			maas.setNeedToUpdateOperatorFareLinkMap(false);
 		});
 	}
 	
@@ -115,8 +114,8 @@ public class MaaSPackages{
 	
 	public String getOperatorId(FareLink fl) {
 		this.updateOperatorToFareLinkMap();
-		for(Entry<String,Set<FareLink>> e:this.fareLinksPerOperator.entrySet()){
-			if(e.getValue().contains(fl))return e.getKey();
+		for(Entry<String,Set<String>> e:this.fareLinksPerOperator.entrySet()){
+			if(e.getValue().contains(fl.toString()))return e.getKey();
 		}
 		return null;
 	}
@@ -139,5 +138,7 @@ public class MaaSPackages{
 		return operators;
 	}
 	
-	
+	public void setAllOPeratorReimbursementRatio(double ratio) {
+		this.getMassPackages().values().forEach(m->m.setAllOPeratorReimbursementRatio(ratio));
+	}
 }

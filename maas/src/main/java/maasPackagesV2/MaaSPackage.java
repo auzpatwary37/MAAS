@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import org.matsim.api.core.v01.Id;
 import org.matsim.pt.transitSchedule.api.TransitLine;
@@ -70,7 +71,7 @@ public class MaaSPackage {
 	 * This is to keep track of the multi operator maas package. 
 	 * This variable keeps the fare links that belong to the operator.
 	 */
-	private Map<String,Set<FareLink>> operatorSpecificFareLinks = new HashMap<>();
+	private Map<String,Set<String>> operatorSpecificFareLinks = new HashMap<>();
 	
 	private Map<String, Double> operatorReimburesementRatio = new HashMap<>();
 	
@@ -79,7 +80,7 @@ public class MaaSPackage {
 	
 	
 	//this will assume all fareLinks belongs to self
-	public MaaSPackage(String Id,String operatorId,Map<String,FareLink> fareLinks,  Map<String,Double> discountedFare, Map<String,Double> fullFare, int maxTaxiTrip, double packageCost, double packageExpTime) {
+	public MaaSPackage(String Id,String operatorId,Map<String,FareLink> fareLinks,  Map<String,Double> discountedFare, Map<String,Double> fullFare,Map<String,Set<String>>operatorSpecificFareLinks, int maxTaxiTrip, double packageCost, double packageExpTime) {
 		this.id=Id;
 		this.fareLinks = fareLinks;
 		this.discounts = discountedFare;
@@ -88,6 +89,8 @@ public class MaaSPackage {
 		this.packageCost=packageCost;
 		this.packageExpairyTime=packageExpTime;
 		this.operatorId=operatorId;
+		this.operatorSpecificFareLinks = operatorSpecificFareLinks;
+		this.operatorReimburesementRatio = operatorSpecificFareLinks.keySet().stream().collect(Collectors.toMap(k->k, k->1.0));
 	}
 	
 	public MaaSPackage(String Id,String operatorId, double packageCost,int maxTaxiTrip) {
@@ -112,6 +115,8 @@ public class MaaSPackage {
 			this.operatorSpecificFareLinks.put(operatorId, new HashSet<>());
 			this.operatorReimburesementRatio.put(operatorId, 1.0);
 		}
+		this.operatorSpecificFareLinks.get(operatorId).add(fareLink.toString());
+		
 		this.needToUpdateOperatorFareLinkMap = true;
 	}
 	
@@ -134,7 +139,7 @@ public class MaaSPackage {
 					if(stops.get(i).getId().equals(stops.get(j).getId())) continue;//Do not want to go through cyclic routes' same stop od pairs 
 					FareLink fl = new FareLink(FareLink.InVehicleFare,tl.getId(),tr.getId(),stops.get(i).getId(),stops.get(j).getId(),tr.getTransportMode());
 					double fullFare = fareCalculators.get(tr.getTransportMode()).getFares(tr.getId(), tl.getId(), fl.getBoardingStopFacility(), fl.getAlightingStopFacility()).get(0);
-					double discount = defaultDiscount;
+					double discount = defaultDiscount*fullFare;
 					if(fullDiscounted) discount = fullFare;
 					this.addFareLink(fl, discount, fullFare, operatorId);
 				}
@@ -152,7 +157,7 @@ public class MaaSPackage {
 	 * @param defaultDiscount
 	 * @param fullDiscounted
 	 */
-	public void addTransitMode(TransitSchedule ts, String mode, Map<String, FareCalculator> fareCalculators, double defaultDiscount, boolean fullDiscounted, String operatorId) {
+	public void addTransitMode(TransitSchedule ts, String mode, Map<String, FareCalculator> fareCalculators, double defaultDiscountRatio, boolean fullDiscounted, String operatorId) {
 		List<TransitStopFacility> stops = new ArrayList<>();
 		for(TransitLine tl:ts.getTransitLines().values()) {
 			for(TransitRoute tr:tl.getRoutes().values()) {
@@ -170,7 +175,7 @@ public class MaaSPackage {
 				if(i!=j) {
 					FareLink fl = new FareLink(FareLink.NetworkWideFare,null,null,stops.get(i).getId(),stops.get(j).getId(),mode);
 					double fullFare = fareCalculators.get(mode).getFares(null, null, fl.getBoardingStopFacility(), fl.getAlightingStopFacility()).get(0);
-					double discount = defaultDiscount;
+					double discount = defaultDiscountRatio*fullFare;
 					if(fullDiscounted) discount = fullFare;
 					this.addFareLink(fl, discount, fullFare, operatorId);
 				}
@@ -190,7 +195,7 @@ public class MaaSPackage {
 		 m.setFareLinks(new HashMap<>(this.fareLinks));
 		 m.setDiscounts(new HashMap<>(this.discounts));
 		 m.setFullFare(new HashMap<>(this.fullFare));
-		 m.setOperatorSpecificFareLinks(new HashMap<>(this.operatorSpecificFareLinks));
+		 m.setOperatorSpecificFareLinks(this.operatorSpecificFareLinks.keySet().stream().collect(Collectors.toMap(k->k, k->new HashSet<>(this.operatorSpecificFareLinks.get(k)))));
 		 m.setOperatorReimburesementRatio(new HashMap<>(this.operatorReimburesementRatio));
 		 return m;
 	}
@@ -216,11 +221,11 @@ public class MaaSPackage {
 
 	
 
-	public Map<String, Set<FareLink>> getOperatorSpecificFareLinks() {
+	public Map<String, Set<String>> getOperatorSpecificFareLinks() {
 		return operatorSpecificFareLinks;
 	}
 
-	public void setOperatorSpecificFareLinks(Map<String, Set<FareLink>> operatorSpecificFareLinks) {
+	public void setOperatorSpecificFareLinks(Map<String, Set<String>> operatorSpecificFareLinks) {
 		this.operatorSpecificFareLinks = operatorSpecificFareLinks;
 	}
 
@@ -305,8 +310,8 @@ public class MaaSPackage {
 	}
 	
 	public String getOperatorId(FareLink fl) {
-		for(Entry<String,Set<FareLink>> e:this.operatorSpecificFareLinks.entrySet()){
-			if(e.getValue().contains(fl))return e.getKey();
+		for(Entry<String,Set<String>> e:this.operatorSpecificFareLinks.entrySet()){
+			if(e.getValue().contains(fl.toString()))return e.getKey();
 		}
 		return null;
 	}
@@ -331,6 +336,10 @@ public class MaaSPackage {
 			outMap.put(k, v);
 		}
 		return outMap;
+	}
+	
+	public void setAllOPeratorReimbursementRatio(double ratio) {
+		this.operatorReimburesementRatio.keySet().forEach(k->this.operatorReimburesementRatio.compute(k, (kk,v)->ratio));
 	}
 	
 }

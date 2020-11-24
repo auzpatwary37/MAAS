@@ -7,7 +7,7 @@ import org.matsim.api.core.v01.population.Plan;
 import org.matsim.api.core.v01.replanning.PlanStrategyModule;
 import org.matsim.core.replanning.ReplanningContext;
 
-import MaaSPackages.MaaSPackages;
+import maasPackagesV2.MaaSPackages;
 import optimizerAgent.MaaSUtil;
 
 public class UnnecessaryMaaSPackRemovalStrategyModule implements PlanStrategyModule{

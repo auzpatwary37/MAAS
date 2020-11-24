@@ -11,8 +11,8 @@ import org.matsim.pt.transitSchedule.api.TransitRoute;
 
 import com.google.common.util.concurrent.AtomicDouble;
 
-import MaaSPackages.MaaSPackage;
-import MaaSPackages.MaaSPackages;
+import maasPackagesV2.MaaSPackage;
+import maasPackagesV2.MaaSPackages;
 import dynamicTransitRouter.FareDynamicTransitTimeAndDisutility;
 import dynamicTransitRouter.RouteHelper;
 import dynamicTransitRouter.TransitStop;

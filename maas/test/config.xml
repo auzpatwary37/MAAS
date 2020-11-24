@@ -12,7 +12,7 @@
 	</module>
 	<module name="MAAS" >
 		<!-- Use the xml file format reader and writer. -->
-		<param name="inputPacakgesFile" value="test/packages_July2020_20.xml" />
+		<param name="inputPacakgesFile" value="test/packages_Govt.xml" />
 	</module>
 	<module name="TimeAllocationMutator" >
 		<!-- Default:true; Defines whether time mutation changes an activity's duration. -->
@@ -48,7 +48,7 @@
 		Depending on the chosen mobsim, you'll have to add additional config modules to configure the corresponding mobsim.
 		For 'qsim', add a module 'qsim' to the config. -->
 		<param name="mobsim" value="qsim" />
-		<param name="outputDirectory" value="toyScenarioLarge/output_WithMaaSOptim" />
+		<param name="outputDirectory" value="toyScenarioLarge/output_optim_operatorPlatformGovt" />
 		<!-- Possible values: failIfDirectoryExists, overwriteExistingFiles, deleteDirectoryIfExists -->
 		<param name="overwriteFiles" value="overwriteExistingFiles" />
 		<!-- The type of routing (least cost path) algorithm used, may have the values: Dijkstra, FastDijkstra, AStarLandmarks or FastAStarLandmarks -->
@@ -60,7 +60,7 @@
 		<!-- iterationNumber % writeEventsInterval == 0 defines in which iterations events are written to a file. `0' disables events writing completely. -->
 		<param name="writeEventsInterval" value="20" />
 		<!-- iterationNumber % writePlansInterval == 0 defines (hopefully) in which iterations plans are written to a file. `0' disables plans writing completely.  Some plans in early iterations are always written -->
-		<param name="writePlansInterval" value="10" />
+		<param name="writePlansInterval" value="50" />
 		<!-- iterationNumber % writeSnapshotsInterval == 0 defines in which iterations snapshots are written to a file. `0' disables snapshots writing completely -->
 		<param name="writeSnapshotsInterval" value="1" />
 		<!-- iterationNumber % writeEventsInterval == 0 defines in which iterations trips CSV are written to a file. `0' disables trips writing completely. -->
@@ -104,7 +104,7 @@
 		<param name="defaultDelimiter" value=";" />
 		<param name="insistingOnDeprecatedConfigVersion" value="true" />
 		<!-- "global" number of threads.  This number is used, e.g., for replanning, but NOT in the mobsim.  This can typically be set to as many cores as you have available, or possibly even slightly more. -->
-		<param name="numberOfThreads" value="24" />
+		<param name="numberOfThreads" value="20" />
 		<param name="randomSeed" value="4711" />
 	</module>
 	<module name="households" >
@@ -5833,21 +5833,21 @@
 			<param name="executionPath" value="null" />
 			<param name="strategyName" value="ReRoute" />
 			<param name="subpopulation" value="person_TCSwithCar" />
-			<param name="weight" value="0.01" />
+			<param name="weight" value="0.015" />
 		</parameterset>
 		<parameterset type="strategysettings" >
 			<param name="disableAfterIteration" value="-1" />
 			<param name="executionPath" value="null" />
 			<param name="strategyName" value="ChangeTripMode" />
 			<param name="subpopulation" value="person_TCSwithCar" />
-			<param name="weight" value="0.005" />
+			<param name="weight" value="0.01" />
 		</parameterset>
 		<parameterset type="strategysettings" >
 			<param name="disableAfterIteration" value="-1" />
 			<param name="executionPath" value="null" />
 			<param name="strategyName" value="ChangeExpBeta" />
 			<param name="subpopulation" value="person_TCSwithCar" />
-			<param name="weight" value="0.97" />
+			<param name="weight" value="0.96" />
 		</parameterset>
 		<parameterset type="strategysettings" >
 			<param name="disableAfterIteration" value="-1" />
@@ -5861,21 +5861,21 @@
 			<param name="executionPath" value="null" />
 			<param name="strategyName" value="ReRoute" />
 			<param name="subpopulation" value="person_TCSwithoutCar" />
-			<param name="weight" value="0.01" />
+			<param name="weight" value="0.015" />
 		</parameterset>
 		<parameterset type="strategysettings" >
 			<param name="disableAfterIteration" value="-1" />
 			<param name="executionPath" value="null" />
 			<param name="strategyName" value="ChangeTripMode" />
 			<param name="subpopulation" value="person_TCSwithoutCar" />
-			<param name="weight" value="0.005" />
+			<param name="weight" value="0.01" />
 		</parameterset>
 		<parameterset type="strategysettings" >
 			<param name="disableAfterIteration" value="-1" />
 			<param name="executionPath" value="null" />
 			<param name="strategyName" value="ChangeExpBeta" />
 			<param name="subpopulation" value="person_TCSwithoutCar" />
-			<param name="weight" value="0.97" />
+			<param name="weight" value="0.96" />
 		</parameterset>
 		<parameterset type="strategysettings" >
 			<param name="disableAfterIteration" value="100" />
@@ -5983,53 +5983,53 @@
 			<param name="weight" value="0.975" />
 		</parameterset>
 		<parameterset type="strategysettings" >
-			<param name="disableAfterIteration" value="200" />
+			<param name="disableAfterIteration" value="225" />
 			<param name="executionPath" value="null" />
 			<param name="strategyName" value="singlePlanAlgo.MaaSPlanStrategy" />
 			<param name="subpopulation" value="person_TCSwithCar" />
 			<param name="weight" value="0.05" />
 		</parameterset>
 		<parameterset type="strategysettings" >
-			<param name="disableAfterIteration" value="200" />
+			<param name="disableAfterIteration" value="225" />
 			<param name="executionPath" value="null" />
 			<param name="strategyName" value="singlePlanAlgo.MaaSPlanStrategy" />
 			<param name="subpopulation" value="person_TCSwithoutCar" />
 			<param name="weight" value="0.05" />
 		</parameterset>
 		<parameterset type="strategysettings" >
-			<param name="disableAfterIteration" value="200" />
+			<param name="disableAfterIteration" value="225" />
 			<param name="executionPath" value="null" />
 			<param name="strategyName" value="singlePlanAlgo.MaaSPlanStrategy" />
 			<param name="subpopulation" value="trip_TCS" />
 			<param name="weight" value="0.05" />
 		</parameterset>
 		<parameterset type="strategysettings" >
-			<param name="disableAfterIteration" value="250" />
+			<param name="disableAfterIteration" value="200" />
 			<param name="executionPath" value="null" />
 			<param name="strategyName" value="optimizerAgent.MaaSOperatorStrategy" />
 			<param name="subpopulation" value="MaaSOperator" />
 			<param name="weight" value="1.0" />
 		</parameterset>
 		<parameterset type="strategysettings" >
-			<param name="disableAfterIteration" value="-1" />
+			<param name="disableAfterIteration" value="225" />
 			<param name="executionPath" value="null" />
-			<param name="strategyName" value="KeepLastSelected" />
-			<param name="subpopulation" value="MaaSOperator" />
-			<param name="weight" value="1.0" />
+			<param name="strategyName" value="singlePlanAlgo.UnnecessaryMaaSPlanRemovalStrategy" />
+			<param name="subpopulation" value="person_TCSwithCar" />
+			<param name="weight" value="0.05" />
 		</parameterset>
 		<parameterset type="strategysettings" >
-			<param name="disableAfterIteration" value="100" />
+			<param name="disableAfterIteration" value="225" />
 			<param name="executionPath" value="null" />
-			<param name="strategyName" value="KeepLastSelected" />
-			<param name="subpopulation" value="MaaSOperator" />
-			<param name="weight" value="20.0" />
+			<param name="strategyName" value="singlePlanAlgo.UnnecessaryMaaSPlanRemovalStrategy" />
+			<param name="subpopulation" value="person_TCSwithoutCar" />
+			<param name="weight" value="0.05" />
 		</parameterset>
 		<parameterset type="strategysettings" >
-			<param name="disableAfterIteration" value="150" />
+			<param name="disableAfterIteration" value="225" />
 			<param name="executionPath" value="null" />
-			<param name="strategyName" value="KeepLastSelected" />
-			<param name="subpopulation" value="MaaSOperator" />
-			<param name="weight" value="10.0" />
+			<param name="strategyName" value="singlePlanAlgo.UnnecessaryMaaSPlanRemovalStrategy" />
+			<param name="subpopulation" value="trip_TCS" />
+			<param name="weight" value="0.05" />
 		</parameterset>
 	</module>
 	<module name="subtourModeChoice" >

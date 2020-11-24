@@ -39,7 +39,7 @@ import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.core.utils.collections.Tuple;
 import org.matsim.lanes.Lane;
 import org.matsim.lanes.LanesToLinkAssignment;
-import org.matsim.pt.transitSchedule.api.TransitSchedule;
+import org.matsim.pt.transitSchedule.api.*;
 import org.matsim.utils.objectattributes.ObjectAttributes;
 import org.matsim.utils.objectattributes.ObjectAttributesXmlReader;
 import org.matsim.utils.objectattributes.attributable.Attributes;
@@ -51,11 +51,11 @@ import org.xml.sax.SAXException;
 
 import com.google.common.collect.Maps;
 
-import MaaSPackages.FareCalculatorCreator;
-import MaaSPackages.MaaSPackage;
-import MaaSPackages.MaaSPackages;
-import MaaSPackages.MaaSPackagesReader;
-import MaaSPackages.MaaSPackagesWriter;
+import MaaSPackagesV2.FareCalculatorCreator;
+import maasPackagesV2.MaaSPackage;
+import maasPackagesV2.MaaSPackages;
+import maasPackagesV2.MaaSPackagesReader;
+import maasPackagesV2.MaaSPackagesWriter;
 import dynamicTransitRouter.DynamicRoutingModule;
 import dynamicTransitRouter.fareCalculators.ZonalFareXMLParserV2;
 import matsimIntegrate.DynamicRoutingModuleWithMaas;
@@ -65,6 +65,7 @@ import optimizerAgent.MaaSOperatorStrategy;
 import optimizerAgent.MaaSUtil;
 import running.RunUtils;
 
+import clustering.RandomCluster;
 /**
  * This class will basically test the connection between different components for MaaS implementation in MATSim.
  * This however, will not test the optimization part of MaaS
@@ -94,14 +95,14 @@ class MaaSDiscountAndChargeHandlerTest {
 //				pac.getMassPackages().values().forEach(p->p.setReimbursementRatio(0.9));
 //				new MaaSPackagesWriter(pac).write("test/packages_all.xml");
 				MaaSPackages pac = new MaaSPackagesReader().readPackagesFile("test/packages_July2020_20.xml");
-				MaaSPackages pacAll = new MaaSPackagesReader().readPackagesFile("test/packages_all.xml");
-				pacAll.getMassPackages().get("platform").setSelfFareLinks(new HashSet<>());
+				MaaSPackages pacAll = MaaSUtil.createUnifiedMaaSPackages(pac, "Govt", "allPack");
+				//pacAll.getMassPackages().get("platform").setSelfFareLinks(new HashSet<>());
 //				Set<MaaSPackage> pacIds = pac.getMassPackagesPerOperator().get("train");
 				
 				//config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"test/packages_all.xml");
 				//config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"packages_July2020_400.xml");
 				
-				String operatorID = "1";
+				String operatorID = "Govt";
 				
 //				new HashMap<>(pac.getMassPackagesPerOperator()).entrySet().forEach(oPacs->{
 //					if(!oPacs.getKey().equals(operatorID)) {
@@ -115,18 +116,18 @@ class MaaSDiscountAndChargeHandlerTest {
 //					}
 //				});
 				
-				new HashMap<>(pac.getMassPackagesPerOperator()).entrySet().forEach(oPacs->{
-					if(oPacs.getKey().equals(operatorID)) {
-						oPacs.getValue().forEach(p->{
-							
-							pacAll.getMassPackages().get("platform").getSelfFareLinks().addAll(p.getFareLinks().keySet());
-							
-						});
-					}
-				});
-				pacAll.getMassPackages().get("platform").setReimbursementRatio(0.9);
-				new MaaSPackagesWriter(pacAll).write("test/packages_operator_platform"+operatorID+".xml");
-				config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"test/packages_operator_platform"+operatorID+".xml");
+//				new HashMap<>(pac.getMassPackagesPerOperator()).entrySet().forEach(oPacs->{
+//					if(oPacs.getKey().equals(operatorID)) {
+//						oPacs.getValue().forEach(p->{
+//							
+//							pacAll.getMassPackages().get("platform").getSelfFareLinks().addAll(p.getFareLinks().keySet());
+//							
+//						});
+//					}
+//				});
+				pacAll.setAllOPeratorReimbursementRatio(0.9);
+				new MaaSPackagesWriter(pacAll).write("test/packages_"+operatorID+".xml");
+				config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"test/packages_"+operatorID+".xml");
 				//new MaaSPackagesWriter(pac).write("test/packages_"+operatorID+".xml");
 				
 				//config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"test/packages_"+operatorID+".xml");
@@ -196,6 +197,7 @@ class MaaSDiscountAndChargeHandlerTest {
 				
 				Scenario scenario = ScenarioUtils.loadScenario(config);
 				
+				Set<Set<Id<TransitLine>>> tlSets = new RandomCluster<Id<TransitLine>>().createRandomSplit(scenario.getTransitSchedule().getTransitLines().keySet(), 5);
 				
 				ObjectAttributes obj = new ObjectAttributes();
 				new ObjectAttributesXmlReader(obj).readFile("new Data/core/personAttributesHKI.xml");
@@ -233,13 +235,31 @@ class MaaSDiscountAndChargeHandlerTest {
 				
 				MaaSPackages packages = new MaaSPackagesReader().readPackagesFile(scenario.getConfig().getModules().get(MaaSConfigGroup.GROUP_NAME).getParams().get(MaaSConfigGroup.INPUT_FILE)); //It has to be consistent with the config.
 				//RunUtils.scaleDownPopulation(scenario.getPopulation(), 0.1);
-				Activity act = MaaSUtil.createMaaSOperator(packages, scenario.getPopulation(), "test/agentPop.xml",new Tuple<>(.5,4.5));
+				Map<String,Map<String,Double>> variables  = new HashMap<>();
+				Map<String,Map<String,Tuple<Double,Double>>> variableLimits  = new HashMap<>();
+				variables.put("Govt", new HashMap<>());
+				variableLimits.put("Govt", new HashMap<>());
+				int i=0;
+				for(Set<Id<TransitLine>>sss:tlSets){
+					variables.get("Govt").put(MaaSUtil.generateMaaSTransitLinesDiscountKey("allPack", sss,"tl"+i),0.8);
+					variableLimits.get("Govt").put(MaaSUtil.generateMaaSTransitLinesDiscountKey("allPack", sss, "tl"+i),new Tuple<Double,Double>(0.,1.));
+					i++;
+				};
+				variables.get("Govt").keySet().forEach(v->{
+					for(Id<TransitLine>lineId:MaaSUtil.retrieveTransitLineId(v)) {
+						MaaSUtil.getTransitLineToFareLinkIncidence(lineId, scenario.getTransitSchedule(), MaaSUtil.retrievePackageId(v), packages);	
+					}
+				});
+				
+				Activity act = MaaSUtil.createMaaSOperator(packages, scenario.getPopulation(), "test/agentPop.xml",new Tuple<>(.5,4.5),variables,variableLimits);
 				
 				ActivityParams param = new ActivityParams(act.getType());
 				param.setTypicalDuration(20*3600);
 				param.setMinimalDuration(8*3600);
 				param.setScoringThisActivityAtAll(false);			
 				scenario.getConfig().planCalcScore().getScoringParameters(MaaSUtil.MaaSOperatorAgentSubPopulationName).addActivityParams(param);
+				
+				
 				
 //				for(LanesToLinkAssignment l2l:scenario.getLanes().getLanesToLinkAssignments().values()) {
 //					for(Lane l: l2l.getLanes().values()) {
@@ -264,7 +284,7 @@ class MaaSDiscountAndChargeHandlerTest {
 				
 				scenario.addScenarioElement(SignalsData.ELEMENT_NAME, new SignalsDataLoader(config).loadSignalsData());	
 				Controler controler = new Controler(scenario);
-				controler.addOverridingModule(new MaaSDataLoader(MaaSDataLoader.typeOperatorPlatform));
+				controler.addOverridingModule(new MaaSDataLoaderV2(MaaSDataLoaderV2.typeGovt));
 				//controler.addOverridingModule(new MaaSOperatorOptimizationModule("new Data/data/odNetwork.xml",5));
 				controler.addOverridingModule(new MaaSOperatorOptimizationModule());
 				ZonalFareXMLParserV2 busFareGetter = new ZonalFareXMLParserV2(scenario.getTransitSchedule());
@@ -304,4 +324,6 @@ class MaaSDiscountAndChargeHandlerTest {
 		stratSets.setSubpopulation(subPop);
 		return stratSets;
 	}
+	
+	
 }

@@ -26,7 +26,7 @@ import dynamicTransitRouter.DynamicRoutingModule;
 import dynamicTransitRouter.fareCalculators.ZonalFareXMLParserV2;
 
 import singlePlanAlgo.MaaSConfigGroup;
-import singlePlanAlgo.MaaSDataLoader;
+import singlePlanAlgo.MaaSDataLoaderV2;
 import singlePlanAlgo.MaaSPlanStrategy;
 import singlePlanAlgo.RunUtils;
 
@@ -66,7 +66,7 @@ public class PlanTranslatorTest {
 				
 				scenario.addScenarioElement(SignalsData.ELEMENT_NAME, new SignalsDataLoader(config).loadSignalsData());	
 				Controler controler = new Controler(scenario);
-				controler.addOverridingModule(new MaaSDataLoader(MaaSDataLoader.typeOperator));
+				controler.addOverridingModule(new MaaSDataLoaderV2(MaaSDataLoaderV2.typeOperator));
 				ZonalFareXMLParserV2 busFareGetter = new ZonalFareXMLParserV2(scenario.getTransitSchedule());
 				SAXParser saxParser;
 				

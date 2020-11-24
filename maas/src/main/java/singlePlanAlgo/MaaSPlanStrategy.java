@@ -24,7 +24,7 @@ import org.matsim.facilities.ActivityFacilities;
 
 import com.google.inject.name.Named;
 
-import MaaSPackages.MaaSPackages;
+import maasPackagesV2.MaaSPackages;
 import optimizerAgent.MaaSUtil;
 
 public class MaaSPlanStrategy implements PlanStrategy{

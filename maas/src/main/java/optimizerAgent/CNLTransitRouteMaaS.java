@@ -7,7 +7,7 @@ import java.util.Map;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.pt.transitSchedule.api.TransitSchedule;
 
-import MaaSPackages.MaaSPackage;
+import maasPackagesV2.MaaSPackage;
 import dynamicTransitRouter.fareCalculators.FareCalculator;
 import transitCalculatorsWithFare.FareLink;
 import ust.hk.praisehk.metamodelcalibration.analyticalModelImpl.CNLTransitDirectLink;

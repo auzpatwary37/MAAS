@@ -54,7 +54,7 @@ public class MaaSOperatorOptimizationModule extends AbstractModule{
 		
 		//Bind any other controller listener needed
 		
-		this.addControlerListenerBinding().to(PlanTranslationControlerListener.class).asEagerSingleton();
+		
 		bind(ExecutedPlansServiceImpl.class).asEagerSingleton();
 		bind(MobsimDataProvider.class).asEagerSingleton();
 		bind(PopulationCompressor.class).toProvider(Providers.of(this.populationCompressor));

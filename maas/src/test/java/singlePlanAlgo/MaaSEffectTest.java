@@ -42,8 +42,8 @@ import org.xml.sax.SAXException;
 
 import com.google.common.collect.Maps;
 
-import MaaSPackages.MaaSPackages;
-import MaaSPackages.MaaSPackagesReader;
+import maasPackagesV2.MaaSPackages;
+import maasPackagesV2.MaaSPackagesReader;
 import dynamicTransitRouter.TransitRouterFareDynamicImpl;
 import dynamicTransitRouter.fareCalculators.ZonalFareXMLParserV2;
 import matsimIntegrate.DynamicRoutingModuleWithMaas;
@@ -185,7 +185,7 @@ public class MaaSEffectTest {
 		
 		scenario.addScenarioElement(SignalsData.ELEMENT_NAME, new SignalsDataLoader(config).loadSignalsData());	
 		Controler controler = new Controler(scenario);
-		controler.addOverridingModule(new MaaSDataLoader(MaaSDataLoader.typeOperator));
+		controler.addOverridingModule(new MaaSDataLoaderV2(MaaSDataLoaderV2.typeOperator));
 		controler.addOverridingModule(new MaaSOperatorOptimizationModule());
 		ZonalFareXMLParserV2 busFareGetter = new ZonalFareXMLParserV2(scenario.getTransitSchedule());
 		SAXParser saxParser;

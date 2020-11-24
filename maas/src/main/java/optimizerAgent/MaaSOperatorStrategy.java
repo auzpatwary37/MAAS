@@ -22,7 +22,7 @@ import org.matsim.withinday.controller.ExecutedPlansServiceImpl;
 
 import com.google.inject.name.Named;
 
-import MaaSPackages.MaaSPackages;
+import maasPackagesV2.MaaSPackages;
 import dynamicTransitRouter.fareCalculators.FareCalculator;
 
 public class MaaSOperatorStrategy implements PlanStrategy{

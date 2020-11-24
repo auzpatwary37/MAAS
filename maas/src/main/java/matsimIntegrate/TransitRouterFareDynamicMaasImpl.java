@@ -28,7 +28,7 @@ import org.matsim.pt.transitSchedule.api.TransitRoute;
 import org.matsim.pt.transitSchedule.api.TransitRouteStop;
 import org.matsim.pt.transitSchedule.api.TransitStopFacility;
 
-import MaaSPackages.MaaSPackages;
+import maasPackagesV2.MaaSPackages;
 import dynamicTransitRouter.FareDynamicTransitTimeAndDisutility;
 import dynamicTransitRouter.TransitRouterFareDynamicImpl;
 import dynamicTransitRouter.TransitRouterNetworkHR;

@@ -35,8 +35,8 @@ import com.google.inject.Scopes;
 import com.google.inject.multibindings.MapBinder;
 import com.google.inject.name.Names;
 
-import MaaSPackages.FareCalculatorCreator;
-import MaaSPackages.MaaSPackages;
+import MaaSPackagesV2.FareCalculatorCreator;
+import maasPackagesV2.MaaSPackages;
 import dynamicTransitRouter.DynamicRoutingModule;
 import dynamicTransitRouter.fareCalculators.FareCalculator;
 import dynamicTransitRouter.fareCalculators.MTRFareCalculator;

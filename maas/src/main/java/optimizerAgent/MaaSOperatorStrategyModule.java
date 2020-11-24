@@ -26,7 +26,7 @@ import org.matsim.withinday.controller.ExecutedPlansServiceImpl;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-import MaaSPackages.MaaSPackages;
+import maasPackagesV2.MaaSPackages;
 import dynamicTransitRouter.fareCalculators.FareCalculator;
 import optimizer.Adam;
 import optimizer.GD;
@@ -53,7 +53,7 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 	
 	private static Logger logger = Logger.getLogger(MaaSOperatorStrategyModule.class);
 	private String type = null;
-	private IntelligentOperatorDecisionEngine decisionEngine;
+	private IntelligentOperatorDecisionEngineV2 decisionEngine;
 	private Map<String,VariableDetails> variables = new HashMap<>();
 	private Map<String,Optimizer> optimizers = new HashMap<>();
 	//private ExecutedPlansService executedPlans;
@@ -75,7 +75,7 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 	public void prepareReplanning(ReplanningContext replanningContext) {
 		this.currentMatsimIteration = replanningContext.getIteration();
 		logger.info("Entering into the replaning context in MaaSOperatorStrategyModule class.");
- 		this.decisionEngine = new IntelligentOperatorDecisionEngine(this.scenario,this.packages,this.timeBeans,this.fareCalculators,compressor, type);
+ 		this.decisionEngine = new IntelligentOperatorDecisionEngineV2(this.scenario,this.packages,this.timeBeans,this.fareCalculators,compressor, type);
  		this.variables.clear();
  		this.optimizers.clear();
 	}
@@ -118,14 +118,14 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 			if(grad==null)
 				logger.debug("Gradient is null. Debug!!!");
 			this.optimizers.entrySet().forEach(o->{
-				o.getValue().takeStep(grad.get(MaaSUtil.retrieveOperatorIdFromOperatorPersonId(Id.createPersonId(o.getKey()))));
+				o.getValue().takeStep(grad.get(o.getKey()));
 				//o.getValue().takeStep(null);
 			});
 			Map<String,Double> variableValues = new HashMap<>();
 			for(Entry<String, VariableDetails> vd:this.variables.entrySet()) {
 				variableValues.put(vd.getKey(), vd.getValue().getCurrentValue());
 			}
-			MaaSUtil.updateMaaSVariables(packages, variableValues);
+			MaaSUtil.updateMaaSVariables(packages, variableValues, scenario.getTransitSchedule(),this.decisionEngine.getSimpleVariableKey());
 			this.decisionEngine = null;
 		}
 	}
@@ -147,8 +147,8 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 			List<String> operators = new ArrayList<>();
 			this.optimizers.entrySet().forEach(o->{
 				try {
-					fw.append(","+MaaSUtil.retrieveOperatorIdFromOperatorPersonId(Id.createPersonId(o.getKey()))+"_Objective");
-					operators.add(MaaSUtil.retrieveOperatorIdFromOperatorPersonId(Id.createPersonId(o.getKey())));
+					fw.append(","+MaaSUtil.retrieveName(o.getKey())+"_Objective");
+					operators.add(o.getKey());
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -172,13 +172,13 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 					
 					
 					this.optimizers.entrySet().forEach(o->{
-						o.getValue().takeStep(grad.get(MaaSUtil.retrieveOperatorIdFromOperatorPersonId(Id.createPersonId(o.getKey()))));//This step 
+						o.getValue().takeStep(grad.get(o.getKey()));//This step 
 						//already decides the new variable values and replace the old one with the new values. As, the same variable details instances
 						//are used in decision engine and also here, the change should be broadcasted automatically. (Make a check if possible)Ashraf July 11, 2020
 						//o.getValue().takeStep(null);
 						for(String s:vName) {
 							try {
-								fw.append(","+grad.get(MaaSUtil.retrieveOperatorIdFromOperatorPersonId(Id.createPersonId(o.getKey()))).get(s));
+								fw.append(","+grad.get(o.getKey()).get(s));
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -189,7 +189,7 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 					for(Entry<String, VariableDetails> vd:this.variables.entrySet()) {
 						variableValues.put(vd.getKey(), vd.getValue().getCurrentValue());
 					}
-					MaaSUtil.updateMaaSVariables(packages, variableValues);
+					MaaSUtil.updateMaaSVariables(packages, variableValues, scenario.getTransitSchedule(),this.decisionEngine.getSimpleVariableKey());
 					for(String s:vName) {
 						fw.append(","+variableValues.get(s));
 					}

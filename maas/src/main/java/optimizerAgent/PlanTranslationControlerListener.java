@@ -28,7 +28,8 @@ import org.matsim.core.population.PopulationUtils;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-import MaaSPackages.MaaSPackages;
+import maasPackagesV2.MaaSPackages;
+import singlePlanAlgo.MaaSDiscountAndChargeHandlerV2;
 
 public class PlanTranslationControlerListener implements IterationStartsListener, StartupListener, BeforeMobsimListener, AfterMobsimListener{
 	
@@ -53,8 +54,13 @@ public class PlanTranslationControlerListener implements IterationStartsListener
 	public final int maxPlansPerAgent = 5;
 	
 	@Inject
+	private MaaSDiscountAndChargeHandlerV2 maasHandler;
+	
+	@Inject
+	private EventsManager events;
+	
+	@Inject
 	PlanTranslationControlerListener(){
-		
 	}
 	
 	@Override
@@ -63,7 +69,9 @@ public class PlanTranslationControlerListener implements IterationStartsListener
 			if(PopulationUtils.getSubpopulation(p).equals(MaaSUtil.MaaSOperatorAgentSubPopulationName)) {
 				this.operators.put(p.getId(),p);
 			}
+			
 		}
+		events.addHandler(maasHandler);
 	}
 	@Override
 	public void notifyIterationStarts(IterationStartsEvent event) {
@@ -119,8 +127,8 @@ public class PlanTranslationControlerListener implements IterationStartsListener
 				Double packageCost = 0.;
 				if(currentPac != null) packageCost = this.packages.getMassPackages().get(currentPac).getPackageCost();
 				if(fareSaved == null) fareSaved = 0.;
-				if((unique && fareSaved-packageCost>=0)||plans.isEmpty()) {
-					plans.add(p.getValue().getSelectedPlan());
+				if(unique) {
+				plans.add(p.getValue().getSelectedPlan());
 				}
 				if(plans.size()>this.maxPlansPerAgent) {
 					MaaSUtil.sortPlan(plans);
@@ -201,7 +209,7 @@ public class PlanTranslationControlerListener implements IterationStartsListener
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		this.maasHandler.writeStat(this.controlerIO.getIterationFilename(event.getIteration(), "maasAnalysis.csv"));
 	}
 
 

@@ -16,7 +16,7 @@ import org.matsim.core.api.experimental.events.EventsManager;
 import org.matsim.core.events.EventsUtils;
 import org.matsim.core.events.MatsimEventsReader;
 
-import MaaSPackages.MaaSPackages;
+import maasPackagesV2.MaaSPackages;
 import optimizerAgent.MaaSUtil;
 import transitCalculatorsWithFare.FareLink;
 
