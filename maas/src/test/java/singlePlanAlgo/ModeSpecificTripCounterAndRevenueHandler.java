@@ -15,6 +15,7 @@ import org.matsim.api.core.v01.events.handler.PersonMoneyEventHandler;
 import org.matsim.core.api.experimental.events.EventsManager;
 import org.matsim.core.events.EventsUtils;
 import org.matsim.core.events.MatsimEventsReader;
+import org.matsim.core.network.NetworkUtils;
 
 import MaaSPackages.MaaSPackages;
 import optimizerAgent.MaaSUtil;
@@ -32,7 +33,7 @@ public class ModeSpecificTripCounterAndRevenueHandler implements PersonMoneyEven
 		if(event.getPurpose().equals(FareLink.FareTransactionName)) {//farePayment event
 			FareLink fl = new FareLink(event.getTransactionPartner());
 			tripCount.compute(fl.getMode(),(k,v)->v==null?1:v+1);
-			revenueCount.compute(fl.getMode(), (k,v)->v==null?event.getAmount():v+event.getAmount());
+			revenueCount.compute(fl.getMode(), (k,v)->v==null?-1*event.getAmount():v-event.getAmount());
 		}else if(event.getPurpose().equals(MaaSUtil.MaaSDiscountReimbursementTransactionName)){
 			FareLink fl = new FareLink(event.getTransactionPartner());
 			revenueCount.compute(fl.getMode(), (k,v)->v==null?-1*event.getAmount():v-event.getAmount());
@@ -111,13 +112,17 @@ public class ModeSpecificTripCounterAndRevenueHandler implements PersonMoneyEven
 	}
 	
 	public static void main(String[] args) {
-		String eventFileLoc = "toyScenarioLarge/consolResult/output_events_oneStep_1.xml.gz";
-		String fileLoc = "toyScenarioLarge/consolResult/output_events_oneStep_1.csv";
+		String eventFileLoc = "toyScenarioLarge/consolResult/output_events_OperatorPlatform1.xml.gz";
+		String fileLoc = "toyScenarioLarge/consolResult/output_events_OperatorPlatform1.csv";
 		EventsManager events = EventsUtils.createEventsManager();
+		VehicleDistanceTravelledControlerListener vt = new VehicleDistanceTravelledControlerListener(NetworkUtils.readNetwork("toyScenarioLarge/output_optimall/output_network.xml.gz"),fileLoc);
+		vt.initialize();
+		vt.notifyIterationStarts(events);
 		ModeSpecificTripCounterAndRevenueHandler dataCollector = new ModeSpecificTripCounterAndRevenueHandler();
 		events.addHandler(dataCollector);
 		new MatsimEventsReader(events).readFile(eventFileLoc);
 		dataCollector.writeCsv(fileLoc);
+		vt.notifyIterationEnds();
 		
 	}
 

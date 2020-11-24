@@ -41,10 +41,11 @@ import transitCalculatorsWithFare.FareLink;
 public class MaaSDiscountAndChargeHandler implements PersonMoneyEventHandler, PersonDepartureEventHandler{
 
 	
-	private Scenario scenario;
+	protected Scenario scenario;
 	@Inject
-	private @Named(MaaSUtil.MaaSPackagesAttributeName) MaaSPackages packages;
-	private final EventsManager eventManager;
+	@Named(MaaSUtil.MaaSPackagesAttributeName)
+	protected MaaSPackages packages;
+	protected final EventsManager eventManager;
 	private final Map<Id<Person>,Person> operatorMap = new HashMap<>();
 	private final Set<Id<Person>> personIdWithPlan = new HashSet<>();
 	private Map<String,Double> govSubsidyRatio = null;
@@ -150,7 +151,7 @@ public class MaaSDiscountAndChargeHandler implements PersonMoneyEventHandler, Pe
 	}
 
 	
-	private synchronized void updateRevenue(double maasCost, Plan selectedOperatorPlan) {
+	protected synchronized void updateRevenue(double maasCost, Plan selectedOperatorPlan) {
 	
 		Double oldReveneue = (Double)selectedOperatorPlan.getAttributes().getAttribute(MaaSUtil.operatorRevenueName);
 		selectedOperatorPlan.getAttributes().putAttribute(MaaSUtil.operatorRevenueName, oldReveneue+maasCost);
@@ -166,11 +167,11 @@ public class MaaSDiscountAndChargeHandler implements PersonMoneyEventHandler, Pe
 		soldPackage++;
 		selectedOperatorPlan.getAttributes().putAttribute(MaaSUtil.PackageSoldKeyName,soldPackage);
 	}
-	private synchronized void updateOperatorTrip(Plan selectedOperatorPlan) {
+	protected synchronized void updateOperatorTrip(Plan selectedOperatorPlan) {
 		selectedOperatorPlan.getAttributes().putAttribute(MaaSUtil.operatorTripKeyName, (int)selectedOperatorPlan.getAttributes().getAttribute(MaaSUtil.operatorTripKeyName)+1);
 	}
 	
-	private synchronized void updatePackageTrip(Plan selectedOperatorPlan) {
+	protected synchronized void updatePackageTrip(Plan selectedOperatorPlan) {
 		selectedOperatorPlan.getAttributes().putAttribute(MaaSUtil.PackageTripKeyName, (int)selectedOperatorPlan.getAttributes().getAttribute(MaaSUtil.PackageTripKeyName)+1);
 	}
 }
