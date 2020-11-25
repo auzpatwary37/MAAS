@@ -71,6 +71,9 @@ public class Adam implements Optimizer{
 			Tuple<Double,Double> limit = this.variables.get(g.getKey()).getLimit();
 			if(var<limit.getFirst()) var = limit.getFirst();
 			else if (var>limit.getSecond()) var = limit.getSecond();
+			if(Double.isNaN(var)||!Double.isFinite(var)) {
+				logger.debug("debug here!!!");
+			}
 			this.variables.get(g.getKey()).setCurrentValue(var);
 		});
 		//}

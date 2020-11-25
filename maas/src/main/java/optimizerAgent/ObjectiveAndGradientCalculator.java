@@ -48,7 +48,9 @@ public class ObjectiveAndGradientCalculator {
 		for(String o: operator) {
 			//add the revenue from package price
 			for(MaaSPackage pac:packages.getMassPackagesPerOperator().get(o)) {
-				obj.compute(o,(k,v)->v+flow.getMaaSPackageUsage().get(pac.getId())*pac.getPackageCost());
+				if(flow.getMaaSPackageUsage().get(pac.getId())!=null) {
+					obj.compute(o,(k,v)->v+flow.getMaaSPackageUsage().get(pac.getId())*pac.getPackageCost());
+				}
 			}
 		}
 		for(Entry<String,Map<String,Map<String,Double>>> timeMap:flow.getMaaSSpecificFareLinkFlow().entrySet()) {

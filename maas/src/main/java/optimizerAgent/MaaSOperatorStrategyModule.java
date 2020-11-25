@@ -138,7 +138,7 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 			fw.append("optimIter");
 			List<String> vName = new ArrayList<>();
 			for(String s:this.variables.keySet()) {
-				fw.append(","+s+"_gradient");
+				fw.append(","+MaaSUtil.retrieveName(s)+"_gradient");
 				vName.add(s);
 			}
 			for(String s:vName) {

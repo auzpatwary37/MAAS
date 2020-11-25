@@ -276,14 +276,23 @@ public class PersonPlanSueModel{
 				if(PopulationUtils.getSubpopulation(p.getValue()).equals(MaaSUtil.MaaSOperatorAgentSubPopulationName))continue;
 				List<Plan> plans = (List<Plan>) p.getValue().getAttributes().getAttribute(MaaSUtil.uniqueMaaSIncludedPlanAttributeName);
 				List<Plan> feasiblePlans = new ArrayList<>();
+				Plan bestPlan = null;
 				for(Plan pl:plans) {
 					String maasId = (String)pl.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName);	
-					if(maasId!=null &&( 
-							(Double)pl.getAttributes().getAttribute("fareSaved")>this.maasPakages.getMassPackages().get(maasId).getPackageCost()||plans.size()==1)) {
-						feasiblePlans.add(pl);
+					if(maasId!=null ) {
+						if((Double)pl.getAttributes().getAttribute("fareSaved")>this.maasPakages.getMassPackages().get(maasId).getPackageCost()||plans.size()==1) {
+							feasiblePlans.add(pl);
+					}
+							
 					}else if(maasId==null) {
 						feasiblePlans.add(pl);
 					}
+					if(bestPlan == null)bestPlan = pl;
+					else if(pl.getScore()>bestPlan.getScore())bestPlan = pl;
+				}
+				if(feasiblePlans.isEmpty()) {
+					bestPlan.getAttributes().putAttribute(MaaSUtil.projectedNullMaaS, true);
+					feasiblePlans.add(bestPlan);
 				}
 				this.feasibleplans.put(p.getKey(), feasiblePlans);
 				this.personEquivalence.put(p.getKey(), 1.0);
@@ -474,6 +483,7 @@ public class PersonPlanSueModel{
 			double utility = 0;
 			//Add the MaaSPackage disutility
 			MaaSPackage maas = this.maasPakages.getMassPackages().get(plan.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName));
+			if((boolean)plan.getAttributes().getAttribute(MaaSUtil.projectedNullMaaS))maas = null;
 			
 			Map<String,Object> additionalInfo = new HashMap<>();
 			additionalInfo.put(MaaSUtil.CurrentSelectedMaaSPackageAttributeName, maas);
@@ -493,6 +503,7 @@ public class PersonPlanSueModel{
 			if(Double.isNaN(utility)||!Double.isFinite(utility))
 				logger.debug("utility is nan or infinite. Debug!!!");
 			
+			//System.out.println();
 			for(Entry<String, Map<Id<AnalyticalModelTransitRoute>, AnalyticalModelTransitRoute>> trRouteMap:trPlan.getTrroutes().entrySet()) {
 				for(AnalyticalModelTransitRoute trRoute : trRouteMap.getValue().values()) {
 					utility += trRoute.calcRouteUtility(params, anaParams, this.networks.get(trRouteMap.getKey()),this.transitLinks.get(trRouteMap.getKey()), this.farecalculators,additionalInfo, this.timeBeans.get(trRouteMap.getKey()));
@@ -534,7 +545,9 @@ public class PersonPlanSueModel{
 		
 		double p = 0.;
 		double vv = 0.;
-		
+		if(utilSum==0) {
+			logger.debug("util sum is zero!!!");
+		}
 		for(Entry<String, Double> d : utilities.entrySet()) {
 			p = planProb.get(d.getKey());
 			vv = p/utilSum;
@@ -627,7 +640,7 @@ public class PersonPlanSueModel{
 					trPlan.setPlanKey(planKey);
 					this.plans.put(planKey, trPlan);
 					planNo++;
-					if(maas!=null) {trPlan.setMaasPacakgeId(maas.getId());}
+					if(maas!=null && !(boolean)plan.getAttributes().getAttribute(MaaSUtil.projectedNullMaaS)) {trPlan.setMaasPacakgeId(maas.getId());}
 					else {trPlan.setMaasPacakgeId(MaaSUtil.nullMaaSPacakgeKeyName);}
 					if(!this.maasPackagePlanIncidence.containsKey(trPlan.getMaasPacakgeId())) {
 						this.maasPackagePlanIncidence.put(trPlan.getMaasPacakgeId(), new ArrayList<>());	
@@ -705,7 +718,7 @@ private void fixIncidenceMaps(Population population) {
 					this.plans.put(planKey, trPlan);
 					
 					planNo++;
-					if(maas!=null) {trPlan.setMaasPacakgeId(maas.getId());}
+					if(maas!=null && !(boolean)plan.getAttributes().getAttribute(MaaSUtil.projectedNullMaaS)) {trPlan.setMaasPacakgeId(maas.getId());}
 					else {trPlan.setMaasPacakgeId(MaaSUtil.nullMaaSPacakgeKeyName);}
 					if(!this.maasPackagePlanIncidence.containsKey(trPlan.getMaasPacakgeId())) {
 						this.maasPackagePlanIncidence.put(trPlan.getMaasPacakgeId(), new ArrayList<>());	

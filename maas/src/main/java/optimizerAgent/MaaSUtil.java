@@ -66,7 +66,7 @@ public final class MaaSUtil {
 	public static final String govSubsidyName = "Subsidy";
 	public static final String fareLinkOperatorReimbursementTransactionName = "fareLinkOperatorTransaction";
 	public static final String maasOperatorToFareLinkOperatorReimbursementTransactionName = "maasLooseFlgain";
-	
+	public static final String projectedNullMaaS = "projectedNullMaaS";
 	
 
 	public static Activity createMaaSOperator(MaaSPackages packages, Population population, String popOutLoc, 

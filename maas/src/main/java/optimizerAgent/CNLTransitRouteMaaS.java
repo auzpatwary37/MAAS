@@ -41,7 +41,12 @@ public class CNLTransitRouteMaaS extends CNLTransitRoute{
 				this.routeFare+=farecalc.get(s.getMode()).getFares(s.getTransitRoute(), s.getTransitLine(), s.getBoardingStopFacility(), s.getAlightingStopFacility()).get(0);
 			}
 			MaaSPackage maas = (MaaSPackage)additionalDataContainer.get(MaaSUtil.CurrentSelectedMaaSPackageAttributeName);
+			double discount = maas.getDiscounts().get(s.toString());
 			if(maas!=null && maas.getDiscounts().get(s.toString())!=null)this.routeFare-=maas.getDiscounts().get(s.toString());
+		}
+		//System.out.println();
+		if(Double.isNaN(routeFare)) {
+			System.out.println("Debug");
 		}
 		return this.routeFare;
 		
