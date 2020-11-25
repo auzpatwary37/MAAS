@@ -641,7 +641,7 @@ public class PersonPlanSueModel{
 					trPlan.setPlanKey(planKey);
 					this.plans.put(planKey, trPlan);
 					planNo++;
-					if(maas!=null && !(boolean)plan.getAttributes().getAttribute(MaaSUtil.projectedNullMaaS)) {trPlan.setMaasPacakgeId(maas.getId());}
+					if(maas!=null && plan.getAttributes().getAttribute(MaaSUtil.projectedNullMaaS)==null) {trPlan.setMaasPacakgeId(maas.getId());}
 					else {trPlan.setMaasPacakgeId(MaaSUtil.nullMaaSPacakgeKeyName);}
 					if(!this.maasPackagePlanIncidence.containsKey(trPlan.getMaasPacakgeId())) {
 						this.maasPackagePlanIncidence.put(trPlan.getMaasPacakgeId(), new ArrayList<>());	
@@ -719,7 +719,7 @@ private void fixIncidenceMaps(Population population) {
 					this.plans.put(planKey, trPlan);
 					
 					planNo++;
-					if(maas!=null && !(boolean)plan.getAttributes().getAttribute(MaaSUtil.projectedNullMaaS)) {trPlan.setMaasPacakgeId(maas.getId());}
+					if(maas!=null && plan.getAttributes().getAttribute(MaaSUtil.projectedNullMaaS)==null) {trPlan.setMaasPacakgeId(maas.getId());}
 					else {trPlan.setMaasPacakgeId(MaaSUtil.nullMaaSPacakgeKeyName);}
 					if(!this.maasPackagePlanIncidence.containsKey(trPlan.getMaasPacakgeId())) {
 						this.maasPackagePlanIncidence.put(trPlan.getMaasPacakgeId(), new ArrayList<>());	
