@@ -278,6 +278,7 @@ public class PersonPlanSueModel{
 				List<Plan> feasiblePlans = new ArrayList<>();
 				Plan bestPlan = null;
 				for(Plan pl:plans) {
+					pl.getAttributes().removeAttribute(MaaSUtil.projectedNullMaaS);
 					String maasId = (String)pl.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName);	
 					if(maasId!=null ) {
 						if((Double)pl.getAttributes().getAttribute("fareSaved")>this.maasPakages.getMassPackages().get(maasId).getPackageCost()||plans.size()==1) {
@@ -483,7 +484,7 @@ public class PersonPlanSueModel{
 			double utility = 0;
 			//Add the MaaSPackage disutility
 			MaaSPackage maas = this.maasPakages.getMassPackages().get(plan.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName));
-			if((boolean)plan.getAttributes().getAttribute(MaaSUtil.projectedNullMaaS))maas = null;
+			if(plan.getAttributes().getAttribute(MaaSUtil.projectedNullMaaS)!=null)maas = null;
 			
 			Map<String,Object> additionalInfo = new HashMap<>();
 			additionalInfo.put(MaaSUtil.CurrentSelectedMaaSPackageAttributeName, maas);
