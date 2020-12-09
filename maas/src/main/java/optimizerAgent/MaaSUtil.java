@@ -153,7 +153,7 @@ public final class MaaSUtil {
 	}
 	
 	public static String retrieveName(String variableDetailsKey) {
-		if(variableDetailsKey.split("\\^").length<3)return "";
+		if(variableDetailsKey.split("\\^").length<3)return variableDetailsKey;
 		return variableDetailsKey.split("\\^")[2].split("_")[0];
 	}
 	

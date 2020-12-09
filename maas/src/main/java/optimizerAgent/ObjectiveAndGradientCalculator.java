@@ -145,7 +145,8 @@ public class ObjectiveAndGradientCalculator {
 	 */
 	public static Map<String,Map<String,Double>> calcRevenueObjectiveGradient(PersonPlanSueModel sue, SUEModelOutput flow, Map<String,Double> variables, Map<String,Map<String,VariableDetails>> operators, MaaSPackages packages, Map<String,FareCalculator> fareCalculators) {
 		Map<String,Map<String,Double>>operatorGradient = new HashMap<>();
-		operators.keySet().forEach(o->operatorGradient.put(o, new HashMap<>()));
+		operators.keySet().forEach(o->operatorGradient.put(o, variables.keySet().stream().collect(Collectors.toMap(k->k, k->0.))));
+		
                                            
 		//As the fare link operator never have the right to choose the discount rate and the volume comes directly from the decision variable, the volume can never belong to a farelink operator.
 		variables.entrySet().parallelStream().forEach(v->{
@@ -184,7 +185,7 @@ public class ObjectiveAndGradientCalculator {
 				}
 			}
 			double vol = volume;
-			if(operatorGradient.containsKey(operatorId))operatorGradient.get(operatorId).compute(skey, (k,vv)->(vv==null)?vol:vv+vol);
+			if(operatorGradient.containsKey(operatorId))operatorGradient.get(operatorId).compute(skey, (k,vv)->vv+vol);
 			//However, the first case is not true for the rest of the gradient element. As the farelink volume or maas package user volume gradient will always be dependent on the network and can be non zero.
 			// the rest of the gradient component should be similar to the volume calculation. 
 			final String kkk = key;
@@ -192,10 +193,9 @@ public class ObjectiveAndGradientCalculator {
 			sue.getPacakgeUserGradient().entrySet().forEach(pu->{
 				if(!pu.getKey().equals(MaaSUtil.nullMaaSPacakgeKeyName)) {
 					String o = packages.getMassPackages().get(pu.getKey()).getOperatorId();
-					
+					double cost = packages.getMassPackages().get(pu.getKey()).getPackageCost();
 					if(operatorGradient.containsKey(o)) {
-						
-						operatorGradient.get(o).compute(skey,(k,vv)->(vv==null)?pu.getValue().get(kkk):vv+pu.getValue().get(kkk));
+						operatorGradient.get(o).compute(skey,(k,vv)->vv+pu.getValue().get(kkk)*cost);
 					}
 				}
 			});
@@ -218,7 +218,7 @@ public class ObjectiveAndGradientCalculator {
 							//for maaspackage operator
 							//each element should be -1*reimbursementRatio*discount*gradient
 							if(discount>0 && operators.containsKey(maasOperatorId)) {
-								double grad = fareGrad.getValue().get(key)*-1*rr;
+								double grad = fareGrad.getValue().get(key)*-1*rr*discount;
 								operatorGradient.get(maasOperatorId).compute(skey, (k,vv)->(v==null)?grad:vv+grad);
 							}
 						}
@@ -227,7 +227,7 @@ public class ObjectiveAndGradientCalculator {
 						if(fareLinkOpId!=null && operators.containsKey(fareLinkOpId)) {
 							double grad = 0;
 							if(discount>0) {
-								grad = fareGrad.getValue().get(key)*(fullFare-(1-rr));
+								grad = fareGrad.getValue().get(key)*(fullFare-discount*(1-rr));
 							}else {
 								grad = fareGrad.getValue().get(key)*fullFare;
 							}

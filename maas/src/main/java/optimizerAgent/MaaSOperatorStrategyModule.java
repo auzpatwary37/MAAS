@@ -142,12 +142,12 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 				vName.add(s);
 			}
 			for(String s:vName) {
-				fw.append(","+s);
+				fw.append(","+MaaSUtil.retrieveName(s));
 			}
 			List<String> operators = new ArrayList<>();
 			this.optimizers.entrySet().forEach(o->{
 				try {
-					fw.append(","+MaaSUtil.retrieveName(o.getKey())+"_Objective");
+					fw.append(","+o.getKey()+"_Objective");
 					operators.add(o.getKey());
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -159,13 +159,15 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 				for(int counter = 0;counter<=maxCounter;counter++) {
 					fw.append(counter+"");
 					Map<String,Map<String,Double>>grad =  this.decisionEngine.calcApproximateObjectiveGradient();
-					if(counter == 1) {
-						Map<String,Map<String,Double>>fdgrad =  this.decisionEngine.calcFDGradient();//This line is for testing only. 
-						
-						logger.info("grad = "+ grad);
-						logger.info("FD Grad = "+ fdgrad);
-					}
+//					if(counter == 1) {
+//						Map<String,Map<String,Double>>fdgrad =  this.decisionEngine.calcFDGradient();//This line is for testing only. 
+//						
+//						logger.info("grad = "+ grad);
+//						logger.info("FD Grad = "+ fdgrad);
+//					}
 					Map<String,Double> obj = this.decisionEngine.calcApproximateObjective();
+					//double ttObj = this.decisionEngine.calcApproximateGovtTTObjective(this.decisionEngine.getVariables)
+					
 					if(grad==null)
 						logger.debug("Gradient is null. Debug!!!");
 					

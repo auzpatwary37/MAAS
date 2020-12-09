@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.log4j.Logger;
 import org.jfree.util.Log;
 import org.matsim.api.core.v01.Id;
@@ -68,6 +69,8 @@ import ust.hk.praisehk.metamodelcalibration.measurements.Measurement;
 import ust.hk.praisehk.metamodelcalibration.measurements.MeasurementType;
 import ust.hk.praisehk.metamodelcalibration.measurements.Measurements;
 
+import optimizer.MapToArray;
+import org.apache.commons.math3.linear.*;
 /**
  * 
  * @author Ashraf
@@ -207,45 +210,47 @@ public class PersonPlanSueModel{
 	//2. MaaS Package to plan incidence {packageId->Plan}
 	//3. Transfer Link to transferLinks and directLinks
 	
-	Map<String,Map<Id<Link>,Map<String,Double>>> linkPlanIncidence = new ConcurrentHashMap<>();//done
-	Map<String,Map<Id<TransitLink>,Map<String,Double>>> trLinkPlanIncidence = new ConcurrentHashMap<>();//done
+	private Map<String,Map<Id<Link>,Map<String,Double>>> linkPlanIncidence = new ConcurrentHashMap<>();//done
+	private Map<String,Map<Id<TransitLink>,Map<String,Double>>> trLinkPlanIncidence = new ConcurrentHashMap<>();//done
 	//timeId-maasPacakge-fareLinkid-planid-numofUsage
-	Map<String,Map<String,Map<String,Map<String,Double>>>> fareLinkPlanIncidence = new ConcurrentHashMap<>();//done
+	private Map<String,Map<String,Map<String,Map<String,Double>>>> fareLinkPlanIncidence = new ConcurrentHashMap<>();//done
 	
 	//should be packageId-list<planid>
-	Map<String,List<String>> maasPackagePlanIncidence = new ConcurrentHashMap<>();//done
+	private Map<String,List<String>> maasPackagePlanIncidence = new ConcurrentHashMap<>();//done
 	
 	//Save plan probability
 	
-	Map<String,Double> planProbability = new ConcurrentHashMap<>();//done
+	private Map<String,Double> planProbability = new ConcurrentHashMap<>();//done
 	
 	//Gradient Keys
-	Set<String> gradientKeys = new HashSet<>();
+	private Set<String> gradientKeys = new HashSet<>();
 	
 	//Gradient Variable
-	Map<String,Map<Id<Link>,Map<String,Double>>> linkGradient = new ConcurrentHashMap<>();
-	Map<String,Map<Id<TransitLink>,Map<String,Double>>> trLinkGradient = new ConcurrentHashMap<>();
+	private Map<String,Map<Id<Link>,Map<String,Double>>> linkGradient = new ConcurrentHashMap<>();
+	private Map<String,Map<Id<TransitLink>,Map<String,Double>>> trLinkGradient = new ConcurrentHashMap<>();
 	//timeId-maasPacakge-fareLinkid-varkey-gradient
-	Map<String,Map<String,Map<String,Map<String,Double>>>> fareLinkGradient = new ConcurrentHashMap<>();
+	private Map<String,Map<String,Map<String,Map<String,Double>>>> fareLinkGradient = new ConcurrentHashMap<>();
 	
-	Map<String,Map<Id<Link>,Map<String,Double>>> linkTravelTimeGradient = new ConcurrentHashMap<>();
-	Map<String,Map<Id<TransitLink>,Map<String,Double>>> trLinkTravelTimeGradient = new ConcurrentHashMap<>();
+	private Map<String,Map<Id<Link>,Map<String,Double>>> linkTravelTimeGradient = new ConcurrentHashMap<>();
+	private Map<String,Map<Id<TransitLink>,Map<String,Double>>> trLinkTravelTimeGradient = new ConcurrentHashMap<>();
 	
-	Map<String,Map<String,Double>> planProbabilityGradient = new ConcurrentHashMap<>();
-	Map<String,Map<String,Double>> pacakgeUserGradient = new ConcurrentHashMap<>();
+	private Map<String,Map<String,Double>> planProbabilityGradient = new ConcurrentHashMap<>();
+	private Map<String,Map<String,Double>> pacakgeUserGradient = new ConcurrentHashMap<>();
 	
-	Map<String,SimpleTranslatedPlan> plans = new HashMap<>();
+	private MapToArray<String> gradArray;
+	
+	private Map<String,SimpleTranslatedPlan> plans = new HashMap<>();
 	//___________________________FrontEndFunctionality____________________________________
 	
 
 	public Measurements performAssignment(Population population, LinkedHashMap<String,Double> params, Measurements originalMeasurements) {
 		MaaSUtil.updateMaaSVariables(this.maasPakages, params,ts,this.simpleVarKeys);
-		this.extractFeasiblePlans(population);
-		if(this.ifNeedToCreateIncidenceMap) {
-			this.createIncidenceMaps(population);
-		}else if(this.ifNeedToFixIncidenceMap) {
-			this.fixIncidenceMaps(population);
-		}
+//		this.extractFeasiblePlans(population);
+//		if(this.ifNeedToCreateIncidenceMap) {
+//			this.createIncidenceMaps(population);
+//		}else if(this.ifNeedToFixIncidenceMap) {
+//			this.fixIncidenceMaps(population);
+//		}
 		Measurements m = this.performAssignment(population, params,this.AnalyticalModelInternalParams, originalMeasurements);
 		return m;
 	}
@@ -260,7 +265,7 @@ public class PersonPlanSueModel{
 
 	public SUEModelOutput performAssignment(Population population, LinkedHashMap<String,Double> params) {
 		MaaSUtil.updateMaaSVariables(this.maasPakages, params,ts, this.simpleVarKeys);
-		this.extractFeasiblePlans(population);
+		//this.extractFeasiblePlans(population);
 		if(this.ifNeedToCreateIncidenceMap) {
 			this.createIncidenceMaps(population);
 		}else if(this.ifNeedToFixIncidenceMap) {
@@ -270,7 +275,7 @@ public class PersonPlanSueModel{
 		return flow;
 	} 
 	
-	private Map<Id<Person>, List<Plan>> extractFeasiblePlans(Population population) {
+	private Map<Id<Person>, List<Plan>> extractFeasiblePlanstest(Population population) {
 		if(this.populationCompressor == null) {
 			for(Entry<Id<Person>, ? extends Person> p:population.getPersons().entrySet()) {
 				if(PopulationUtils.getSubpopulation(p.getValue()).equals(MaaSUtil.MaaSOperatorAgentSubPopulationName))continue;
@@ -306,6 +311,46 @@ public class PersonPlanSueModel{
 		}
 		this.ifNeedToFixIncidenceMap = true;
 		this.fixGradient = true;
+		
+  		return feasibleplans;
+	}
+	
+	private Map<Id<Person>, List<Plan>> extractFeasiblePlans(Population population) {
+		if(this.populationCompressor == null) {
+			for(Entry<Id<Person>, ? extends Person> p:population.getPersons().entrySet()) {
+				if(PopulationUtils.getSubpopulation(p.getValue()).equals(MaaSUtil.MaaSOperatorAgentSubPopulationName))continue;
+				List<Plan> plans = (List<Plan>) p.getValue().getAttributes().getAttribute(MaaSUtil.uniqueMaaSIncludedPlanAttributeName);
+				List<Plan> feasiblePlans = new ArrayList<>();
+				Plan bestPlan = null;
+				for(Plan pl:plans) {
+					//pl.getAttributes().removeAttribute(MaaSUtil.projectedNullMaaS);
+//					String maasId = (String)pl.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName);	
+//					if(maasId!=null ) {
+//						if((Double)pl.getAttributes().getAttribute("fareSaved")>this.maasPakages.getMassPackages().get(maasId).getPackageCost()||plans.size()==1) {
+//							feasiblePlans.add(pl);
+//					}
+//							
+//					}else if(maasId==null) {
+						feasiblePlans.add(pl);
+//					}
+//					if(bestPlan == null)bestPlan = pl;
+//					else if(pl.getScore()>bestPlan.getScore())bestPlan = pl;
+//				}
+//				if(feasiblePlans.isEmpty()) {
+//					bestPlan.getAttributes().putAttribute(MaaSUtil.projectedNullMaaS, true);
+//					feasiblePlans.add(bestPlan);
+			}
+				this.feasibleplans.put(p.getKey(), feasiblePlans);
+				this.personEquivalence.put(p.getKey(), 1.0);
+			}
+			this.compressedPersons = population.getPersons();
+		}else {
+			this.compressedPersons = this.populationCompressor.compressPopulation(population);
+			this.feasibleplans = this.populationCompressor.getFeasiblePlans();
+			this.personEquivalence = this.populationCompressor.getEquivalentPerson();
+		}
+		this.ifNeedToFixIncidenceMap = true;
+		
 		
   		return feasibleplans;
 	}
@@ -395,7 +440,7 @@ public class PersonPlanSueModel{
 	
 	
 	protected void loadAnalyticalModelInternalPamamsLimit() {
-		this.AnalyticalModelParamsLimit.put(CNLSUEModel.LinkMiuName, new Tuple<Double,Double>(0.0075,0.25));
+		this.AnalyticalModelParamsLimit.put(CNLSUEModel.LinkMiuName, new Tuple<Double,Double>(0.0075,25.));
 		this.AnalyticalModelParamsLimit.put(CNLSUEModel.ModeMiuName, new Tuple<Double,Double>(0.01,0.5));
 		this.AnalyticalModelParamsLimit.put(CNLSUEModel.BPRalphaName, new Tuple<Double,Double>(0.10,4.));
 		this.AnalyticalModelParamsLimit.put(CNLSUEModel.BPRbetaName, new Tuple<Double,Double>(1.,15.));
@@ -454,7 +499,7 @@ public class PersonPlanSueModel{
 		this.farecalculators = fareCalculator;
 		this.maasPakages = packages;
 		this.ts = scenario.getTransitSchedule();
-		//this.extractFeasiblePlans(population);
+		this.extractFeasiblePlans(population);
 	}
 	
 
@@ -483,8 +528,8 @@ public class PersonPlanSueModel{
 			String planKey = trPlan.getPlanKey();
 			double utility = 0;
 			//Add the MaaSPackage disutility
-			MaaSPackage maas = this.maasPakages.getMassPackages().get(plan.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName));
-			if(plan.getAttributes().getAttribute(MaaSUtil.projectedNullMaaS)!=null)maas = null;
+			MaaSPackage maas = this.maasPakages.getMassPackages().get(trPlan.getMaasPacakgeId());
+			
 			
 			Map<String,Object> additionalInfo = new HashMap<>();
 			additionalInfo.put(MaaSUtil.CurrentSelectedMaaSPackageAttributeName, maas);
@@ -539,7 +584,7 @@ public class PersonPlanSueModel{
 		
 	
 		for(Entry<String, Double> d: utilities.entrySet()) {
-			double v = Math.exp(d.getValue()-maxUtil);
+			double v = Math.exp(anaParams.get(CNLSUEModel.LinkMiuName)*(d.getValue()-maxUtil));
 			planProb.put(d.getKey(), v);
 			utilSum += v;
 		}
@@ -687,6 +732,7 @@ public class PersonPlanSueModel{
 			}
 		}
 		this.ifNeedToCreateIncidenceMap = false;
+		this.ifNeedToFixIncidenceMap = false;
 	}
 	
 private void fixIncidenceMaps(Population population) {
@@ -767,6 +813,8 @@ private void fixIncidenceMaps(Population population) {
 		}
 		//this.plans.keySet().retainAll(planKeys);
 		for(String s:this.timeBeans.keySet())this.transitLinks.get(s).keySet().retainAll(trlinkids.get(s));
+		this.ifNeedToFixIncidenceMap = false;
+		this.fixGradient = true;
 	}
 	
 	//TODO: still do not take params in sub-population. We have to incorporate that 
@@ -958,6 +1006,7 @@ private void fixIncidenceMaps(Population population) {
 			if(shouldStop) {
 				break;
 			}
+			//anaParams.put(CNLSUEModel.LinkMiuName, 1.);
 		}
 		flow.setMaaSPackageUsage(this.calculateMaaSPackageUsage());
 		//this.calculateFareLinkFlowAndGradient(flow);
@@ -1145,7 +1194,7 @@ private void fixIncidenceMaps(Population population) {
 			this.planProbabilityGradient.put(planKey, new HashMap<>(zeroGrad));
 		}
 		this.initializeGradient = false;
-		this.fixGradient = false;
+		// this.fixGradient = false;
 		logger.info("Finished initializing gradients");
 	}
 	
@@ -1178,27 +1227,33 @@ private void fixIncidenceMaps(Population population) {
 	public void caclulateGradient(Population population, int counter, LinkedHashMap<String,Double> Oparams, LinkedHashMap<String,Double>anaParam) {
 		this.nonZeroPlanGrad=0;
 		double counterPart=1/beta.get(counter-1);
+		
 		if(this.initializeGradient==true) {
 			this.initializeGradients(Oparams);
 			if(fixGradient)this.fixOldGradients(Oparams);
+			this.gradArray = new MapToArray<String>("gradient",this.gradientKeys);
 		}else {
+			//gradArray = new MapToArray<String>("gradient",this.gradientKeys);
 			//Calculate the travel time gradients
 			for(Entry<String, Map<Id<Link>, Map<String, Double>>> timeMap:this.linkTravelTimeGradient.entrySet()) {
 				//for(Entry<Id<Link>,Map<String,Double>> linkGradientMap:timeMap.getValue().entrySet()) {
 				timeMap.getValue().entrySet().parallelStream().forEach(linkGradientMap->{		
 					CNLLink link = (CNLLink) this.networks.get(timeMap.getKey()).getLinks().get(linkGradientMap.getKey());
 					if(link.getAllowedModes().contains("train"))return;
-					for(Entry<String, Double> var:linkGradientMap.getValue().entrySet()) {
+					//for(Entry<String, Double> var:linkGradientMap.getValue().entrySet()) {
 						double flow = link.getLinkCarVolume()+link.getLinkTransitVolume();
 						double t_0 = link.getLength()/link.getFreespeed();//should be in sec
 						double cap = link.getCapacity()*(this.timeBeans.get(timeMap.getKey()).getSecond()-this.timeBeans.get(timeMap.getKey()).getFirst())/3600;
 						double beta = anaParam.get(PersonPlanSueModel.BPRbetaName);
-						double grad = anaParam.get(PersonPlanSueModel.BPRalphaName)*beta*t_0/Math.pow(cap, beta)*Math.pow(flow,beta-1)*this.linkGradient.get(timeMap.getKey()).get(link.getId()).get(var.getKey());
-						if(grad>1000) {
-							logger.debug("High Gradient");
-						}
-						this.linkTravelTimeGradient.get(timeMap.getKey()).get(link.getId()).put(var.getKey(),grad);
-					}
+						//double grad = anaParam.get(PersonPlanSueModel.BPRalphaName)*beta*t_0/Math.pow(cap, beta)*Math.pow(flow,beta-1)*this.linkGradient.get(timeMap.getKey()).get(link.getId()).get(var.getKey());
+						
+						RealVector g = MatrixUtils.createRealVector(gradArray.getMatrix(this.linkGradient.get(timeMap.getKey()).get(link.getId())));
+						this.linkGradient.get(timeMap.getKey()).put(link.getId(), gradArray.getMap(g.mapMultiply(anaParam.get(PersonPlanSueModel.BPRalphaName)*beta*t_0/Math.pow(cap, beta)*Math.pow(flow,beta-1)).toArray()));
+//						if(grad>1000) {
+//							logger.debug("High Gradient");
+//						}
+//						this.linkTravelTimeGradient.get(timeMap.getKey()).get(link.getId()).put(var.getKey(),grad);
+//					}
 				});
 			}
 			
@@ -1207,11 +1262,12 @@ private void fixIncidenceMaps(Population population) {
 				//for(Entry<Id<TransitLink>,Map<String,Double>> linkGradientMap:timeMap.getValue().entrySet()) {
 				timeMap.getValue().entrySet().stream().forEach(linkGradientMap->{	
 					TransitLink link = this.transitLinks.get(timeMap.getKey()).get(linkGradientMap.getKey());
-					for(Entry<String, Double> var:linkGradientMap.getValue().entrySet()) {
+//					for(Entry<String, Double> var:linkGradientMap.getValue().entrySet()) {
 						
 						if(link instanceof TransitDirectLink) {
 							CNLTransitDirectLink dlink = (CNLTransitDirectLink)link;
 							double grad = 0;
+							RealVector g = MatrixUtils.createRealVector(new double[this.gradientKeys.size()]);
 							for(Id<Link> linkId:dlink.getLinkList()) {
 								String timeId = timeMap.getKey();
 								if(this.linkTravelTimeGradient.get(timeMap.getKey()).get(linkId)==null) {//As we have used the link plan incidence to loop, there might be some link not used by any plan.
@@ -1220,17 +1276,20 @@ private void fixIncidenceMaps(Population population) {
 									logger.debug("Dead link here. Putting gradient = 0.");
 									
 								}else {
-									grad+=this.linkTravelTimeGradient.get(timeMap.getKey()).get(linkId).get(var.getKey());
+									//grad+=this.linkTravelTimeGradient.get(timeMap.getKey()).get(linkId).get(var.getKey());
+									g.add(gradArray.getRealVector(this.linkTravelTimeGradient.get(timeMap.getKey()).get(linkId)));
 								}
 								
 							}
-							if(Double.isNaN(grad))
-								logger.debug("Debug point. Gradient is NAN");
-							this.trLinkTravelTimeGradient.get(timeMap.getKey()).get(dlink.getTrLinkId()).put(var.getKey(), grad);
+//							if(Double.isNaN(grad))
+//								logger.debug("Debug point. Gradient is NAN");
+							//this.trLinkTravelTimeGradient.get(timeMap.getKey()).get(dlink.getTrLinkId()).put(var.getKey(), grad);
+							this.trLinkTravelTimeGradient.get(timeMap.getKey()).put(dlink.getTrLinkId(), gradArray.getMap(g.toArray()));
 						}else if(link instanceof TransitTransferLink){
 							CNLTransitTransferLink transferLink = (CNLTransitTransferLink)link;
 							CNLTransitDirectLink dlink = transferLink.getNextdLink();
-							double grad = 0;
+							//double grad = 0;
+							RealVector g = MatrixUtils.createRealVector(new double[this.gradientKeys.size()]);
 							if(dlink != null) {//For an alighting link only (the last transfer leg) the next dlink is null. 
 								//The gradient for this link's travel time is zero as the waiting time for a alighting only link is always zero.
 								CNLLink plink = (CNLLink) this.networks.get(timeMap.getKey()).getLinks().get(transferLink.getStartingLinkId());
@@ -1244,26 +1303,31 @@ private void fixIncidenceMaps(Population population) {
 								double volume = passengerOnBord;
 								double grad1 = beta*headway/Math.pow(cap*freq, beta)*Math.pow(volume, beta-1);//if both the second and first term is 
 								if(Double.isInfinite(grad1)||Double.isNaN(grad1))grad1 = 0;
-								double grad2 = this.trLinkGradient.get(timeMap.getKey()).get(transferLink.getTrLinkId()).get(var.getKey());
+								//double grad2 = this.trLinkGradient.get(timeMap.getKey()).get(transferLink.getTrLinkId()).get(var.getKey());
+								//g.add(gradArray.getRealVector(this.trLinkGradient.get(timeMap.getKey()).get(transferLink.getTrLinkId())));
 								
 								for(Id<TransitLink> l:transferLink.getIncidentLinkIds()){
-									grad2+=this.trLinkGradient.get(timeMap.getKey()).get(l).get(var.getKey());
+									//grad2+=this.trLinkGradient.get(timeMap.getKey()).get(l).get(var.getKey());
+									g.add(gradArray.getRealVector(this.trLinkGradient.get(timeMap.getKey()).get(l)));
 								}
-								if(grad2!=0) {
-									logger.debug("Debug here");
-								}
-								grad = grad1*grad2;
-								if(grad>1000) {
-									logger.debug("High Gradient");
-								}
-							}else {
-								grad = 0;
+//								if(grad2!=0) {
+//									logger.debug("Debug here");
+//								}
+//								grad = grad1*grad2;
+								g.mapMultiplyToSelf(grad1);
+//								if(grad>1000) {
+//									logger.debug("High Gradient");
+//								}
 							}
-							if(Double.isNaN(grad))
-								logger.debug("Debug point. Gradient is NAN");
-							this.trLinkTravelTimeGradient.get(timeMap.getKey()).get(transferLink.getTrLinkId()).put(var.getKey(),grad);
+//							else {
+//								grad = 0;
+//							}
+//							if(Double.isNaN(grad))
+//								logger.debug("Debug point. Gradient is NAN");
+							//this.trLinkTravelTimeGradient.get(timeMap.getKey()).get(transferLink.getTrLinkId()).put(var.getKey(),grad);
+							this.trLinkTravelTimeGradient.get(timeMap.getKey()).put(transferLink.getTrLinkId(), gradArray.getMap(g.toArray()));
 						}
-					}
+					//}
 				});
 			});
 			
@@ -1297,103 +1361,146 @@ private void fixIncidenceMaps(Population population) {
 			if(subpopulation.equals(MaaSUtil.MaaSOperatorAgentSubPopulationName))return;
 			LinkedHashMap<String,Double> params = this.handleBasicParams(Oparams, subpopulation, this.scenario.getConfig());
 			Map<String,Map<String,Double>> utilityGradient = new HashMap<>();
-			Map<String,Double> sumTerm = this.gradientKeys.stream().collect(Collectors.toMap(k->k, k->0.));
-			Map<String,Double> planProbSum = this.gradientKeys.stream().collect(Collectors.toMap(k->k, k->0.));
+			//Map<String,Double> sumTerm = this.gradientKeys.stream().collect(Collectors.toMap(k->k, k->0.));
+			RealVector summationTerm = MatrixUtils.createRealVector(new double[this.gradientKeys.size()]);
+//			Map<String,Double> planProbSum = this.gradientKeys.stream().collect(Collectors.toMap(k->k, k->0.));
+			double planProbSum = 0;
 			for(Plan plan:this.feasibleplans.get(p.getValue().getId())) {
-				for(String var:this.gradientKeys) {
+//				for(String var:this.gradientKeys) {
 					SimpleTranslatedPlan trPlan = (SimpleTranslatedPlan) plan.getAttributes().getAttribute(SimpleTranslatedPlan.SimplePlanAttributeName);
 					//extract the translated plan first
 					
 					String planKey = trPlan.getPlanKey();
-					double planGradient = 0;
-					
-					if(MaaSUtil.ifMaaSPackageCostVariableDetails(this.simpleVarKeys.inverse().get(var)) && trPlan.getMaasPacakgeId().equals(MaaSUtil.retrievePackageId(this.simpleVarKeys.inverse().get(var)))) {
-						planGradient-=params.get(CNLSUEModel.MarginalUtilityofMoneyName);//This should be minus not plus?
+					//double planGradient = 0;
+					RealVector planGrad = MatrixUtils.createRealVector(new double[this.gradientKeys.size()]);
+//					if(MaaSUtil.ifMaaSPackageCostVariableDetails(this.simpleVarKeys.inverse().get(var)) && trPlan.getMaasPacakgeId().equals(MaaSUtil.retrievePackageId(this.simpleVarKeys.inverse().get(var)))) {
+//						planGradient-=params.get(CNLSUEModel.MarginalUtilityofMoneyName);//This should be minus not plus?
+//					}
+					if(trPlan.getMaasPacakgeId()!=null) {
+						Map<String,Double> gradToAdd = new HashMap<>();
+						for(String s:this.gradientKeys) {
+							if(trPlan.getMaasPacakgeId().equals(MaaSUtil.retrievePackageId(this.simpleVarKeys.inverse().get(s)))) {
+								gradToAdd.put(s, -1*params.get(CNLSUEModel.MarginalUtilityofMoneyName));
+							}
+						}
+						planGrad = planGrad.add(gradArray.getRealVector(gradToAdd));
+						
 					}
 					
 					for(Entry<String, Map<Id<AnalyticalModelTransitRoute>, AnalyticalModelTransitRoute>> trRouteMap:trPlan.getTrroutes().entrySet()) {
 						
 						//calculate the auto route utility gradient first
 						for(AnalyticalModelRoute route: trPlan.getRoutes().get(trRouteMap.getKey()).values()) {
-							double routeGradient = 0;
+//							double routeGradient = 0;
+							RealVector routeGrad = MatrixUtils.createRealVector(new double[this.gradientKeys.size()]);
 							for(Id<Link>linkId: route.getLinkIds()) {
-								routeGradient+=this.linkTravelTimeGradient.get(trRouteMap.getKey()).get(linkId).get(var);
+//								routeGradient+=this.linkTravelTimeGradient.get(trRouteMap.getKey()).get(linkId).get(var);
+								routeGrad = routeGrad.add(gradArray.getRealVector(this.linkTravelTimeGradient.get(trRouteMap.getKey()).get(linkId)));
 							}
-							routeGradient*=(params.get(CNLSUEModel.MarginalUtilityofTravelCarName)/3600.-params.get(CNLSUEModel.MarginalUtilityofPerformName)/3600.);
-							if(Double.isNaN(routeGradient))
-								logger.debug("Debug point. Gradient is NAN");
-							planGradient+=routeGradient;
+//							routeGradient*=(params.get(CNLSUEModel.MarginalUtilityofTravelCarName)/3600.-params.get(CNLSUEModel.MarginalUtilityofPerformName)/3600.);
+							routeGrad.mapMultiplyToSelf((params.get(CNLSUEModel.MarginalUtilityofTravelCarName)/3600.-params.get(CNLSUEModel.MarginalUtilityofPerformName)/3600.));
+//							if(Double.isNaN(routeGradient))
+//								logger.debug("Debug point. Gradient is NAN");
+//							planGradient+=routeGradient;
+							planGrad = planGrad.add(routeGrad);
 						}
-						if(Double.isNaN(planGradient))
-							logger.debug("Debug point. Gradient is NAN..");
+//						if(Double.isNaN(planGradient))
+//							logger.debug("Debug point. Gradient is NAN..");
 						
 						for(AnalyticalModelTransitRoute trRoute : trRouteMap.getValue().values()) {
-							double routeGradient = 0;
-							double routeGradientDlink = 0;
-							double routeGradientTRLink = 0;
-							if(MaaSUtil.ifFareLinkVariableDetails(this.simpleVarKeys.inverse().get(var))) {
-								String fl = MaaSUtil.retrieveFareLink(this.simpleVarKeys.inverse().get(var));
-								if(trRoute.getFareLinks().contains(new FareLink(fl)) && trPlan.getMaasPacakgeId().equals(MaaSUtil.retrievePackageId(this.simpleVarKeys.inverse().get(var))))
-									routeGradient+=params.get(CNLSUEModel.MarginalUtilityofMoneyName);//Should It be minus? I think plus as the discount increases utility (Ashraf, 17Nov20)
-							}else if(MaaSUtil.ifMaaSTransitLinesDiscountVariableDetails(this.simpleVarKeys.inverse().get(var))||MaaSUtil.ifMaaSFareLinkClusterVariableDetails(this.simpleVarKeys.inverse().get(var))) {
-								Set<FareLink> fareLinkSet = this.transitLineFareLinkMap.get(var);
-								//Set<FareLink>fareLinkSet1 = new HashSet<>();
-								if(fareLinkSet==null) {
-									if(MaaSUtil.ifMaaSTransitLinesDiscountVariableDetails(this.simpleVarKeys.inverse().get(var))) {
-										Set<Id<TransitLine>> transitLine = MaaSUtil.retrieveTransitLineId(this.simpleVarKeys.inverse().get(var));
-										fareLinkSet = MaaSUtil.getTransitLinesToFareLinkIncidence(transitLine, ts, MaaSUtil.retrievePackageId(this.simpleVarKeys.inverse().get(var)), this.maasPakages);
-									}else if(MaaSUtil.ifMaaSFareLinkClusterVariableDetails(this.simpleVarKeys.inverse().get(var))) {
-										fareLinkSet = MaaSUtil.retrieveFareLinksIds(this.simpleVarKeys.inverse().get(var));
-									}
-									this.transitLineFareLinkMap.put(var, fareLinkSet);
-								}
-								
-								double flGrad = 0;
-								if(trPlan.getMaasPacakgeId().equals(MaaSUtil.retrievePackageId(this.simpleVarKeys.inverse().get(var)))) {
-									for(FareLink f:trRoute.getFareLinks()){
-										if(fareLinkSet.contains(f)){
-											double fare = this.farecalculators.get(f.getMode()).getFares(f.getTransitRoute(), f.getTransitLine(), f.getBoardingStopFacility(), f.getAlightingStopFacility()).get(0);
-											flGrad += fare*params.get(CNLSUEModel.MarginalUtilityofMoneyName)/params.get(var);
+//							double routeGradient = 0;
+							RealVector routeGrad = MatrixUtils.createRealVector(new double[this.gradientKeys.size()]);
+							Map<String,Double> selfRouteGrad = new HashMap<>();
+//							double routeGradientDlink = 0;
+							RealVector routeGradDlink = MatrixUtils.createRealVector(new double[this.gradientKeys.size()]);
+//							double routeGradientTRLink = 0;
+							RealVector routeGradTRlink = MatrixUtils.createRealVector(new double[this.gradientKeys.size()]);
+							if(trPlan.getMaasPacakgeId()!=null) {
+								for(String var:this.gradientKeys) {
+									if(MaaSUtil.ifFareLinkVariableDetails(this.simpleVarKeys.inverse().get(var))) {
+										String fl = MaaSUtil.retrieveFareLink(this.simpleVarKeys.inverse().get(var));
+										if(trRoute.getFareLinks().contains(new FareLink(fl)) && trPlan.getMaasPacakgeId().equals(MaaSUtil.retrievePackageId(this.simpleVarKeys.inverse().get(var))))
+//											routeGradient+=params.get(CNLSUEModel.MarginalUtilityofMoneyName);//Should It be minus? I think plus as the discount increases utility (Ashraf, 17Nov20)
+											selfRouteGrad.compute(var, (k,v)->(v==null)?params.get(CNLSUEModel.MarginalUtilityofMoneyName):v+params.get(CNLSUEModel.MarginalUtilityofMoneyName));
+									}else if(MaaSUtil.ifMaaSTransitLinesDiscountVariableDetails(this.simpleVarKeys.inverse().get(var))||MaaSUtil.ifMaaSFareLinkClusterVariableDetails(this.simpleVarKeys.inverse().get(var))) {
+										Set<FareLink> fareLinkSet = this.transitLineFareLinkMap.get(var);
+										//Set<FareLink>fareLinkSet1 = new HashSet<>();
+										if(fareLinkSet==null) {
+											if(MaaSUtil.ifMaaSTransitLinesDiscountVariableDetails(this.simpleVarKeys.inverse().get(var))) {
+												Set<Id<TransitLine>> transitLine = MaaSUtil.retrieveTransitLineId(this.simpleVarKeys.inverse().get(var));
+												fareLinkSet = MaaSUtil.getTransitLinesToFareLinkIncidence(transitLine, ts, MaaSUtil.retrievePackageId(this.simpleVarKeys.inverse().get(var)), this.maasPakages);
+											}else if(MaaSUtil.ifMaaSFareLinkClusterVariableDetails(this.simpleVarKeys.inverse().get(var))) {
+												fareLinkSet = MaaSUtil.retrieveFareLinksIds(this.simpleVarKeys.inverse().get(var));
+											}
+											this.transitLineFareLinkMap.put(var, fareLinkSet);
 										}
+										
+										double flGrad = 0;
+										if(trPlan.getMaasPacakgeId().equals(MaaSUtil.retrievePackageId(this.simpleVarKeys.inverse().get(var)))) {
+											for(FareLink f:trRoute.getFareLinks()){
+												if(fareLinkSet.contains(f)){
+													//double fare = this.farecalculators.get(f.getMode()).getFares(f.getTransitRoute(), f.getTransitLine(), f.getBoardingStopFacility(), f.getAlightingStopFacility()).get(0);
+													double discount = this.maasPakages.getMassPackages().get(trPlan.getMaasPacakgeId()).getDiscountForFareLink(f);
+													flGrad += discount*params.get(CNLSUEModel.MarginalUtilityofMoneyName)/params.get(var);//error here
+												}
+											}
+										}
+//										routeGradient += flGrad;
+										final double flg = flGrad;
+										selfRouteGrad.compute(var,(k,v)->(v==null)?flg:v+flg);
 									}
 								}
-								routeGradient += flGrad;
 							}
+							routeGrad = routeGrad.add(gradArray.getRealVector(selfRouteGrad));
 							for(TransitDirectLink dlink:trRoute.getTransitDirectLinks()) {
-								routeGradientDlink += this.trLinkTravelTimeGradient.get(trRouteMap.getKey()).get(dlink.getTrLinkId()).get(var);
+//								routeGradientDlink += this.trLinkTravelTimeGradient.get(trRouteMap.getKey()).get(dlink.getTrLinkId()).get(var);
+								routeGradDlink = routeGradDlink.add(gradArray.getRealVector(this.trLinkTravelTimeGradient.get(trRouteMap.getKey()).get(dlink.getTrLinkId())));
 							}
-							routeGradientDlink*=params.get(CNLSUEModel.MarginalUtilityofTravelptName)/3600.-params.get(CNLSUEModel.MarginalUtilityofPerformName)/3600.;
+//							routeGradientDlink*=params.get(CNLSUEModel.MarginalUtilityofTravelptName)/3600.-params.get(CNLSUEModel.MarginalUtilityofPerformName)/3600.;
+							routeGradDlink.mapMultiplyToSelf(params.get(CNLSUEModel.MarginalUtilityofTravelptName)/3600.-params.get(CNLSUEModel.MarginalUtilityofPerformName)/3600.);
+							routeGrad = routeGrad.add(routeGradDlink);
 							for(TransitTransferLink trlink:trRoute.getTransitTransferLinks()) {
-								routeGradientTRLink += this.trLinkTravelTimeGradient.get(trRouteMap.getKey()).get(trlink.getTrLinkId()).get(var);
+//								routeGradientTRLink += this.trLinkTravelTimeGradient.get(trRouteMap.getKey()).get(trlink.getTrLinkId()).get(var);
+								routeGradTRlink = routeGradTRlink.add(gradArray.getRealVector(this.trLinkTravelTimeGradient.get(trRouteMap.getKey()).get(trlink.getTrLinkId())));
 							}
-							routeGradientTRLink*=params.get(CNLSUEModel.MarginalUtilityofWaitingName)/3600.-params.get(CNLSUEModel.MarginalUtilityofPerformName)/3600.;
-							double grad = routeGradient+routeGradientDlink+routeGradientTRLink;
-							if(counter==1 && grad!=0) {
-								logger.debug("Bug Here");
-							}
-							if(Double.isNaN(grad))
-								logger.debug("Debug point. Gradient is NAN");
+//							routeGradientTRLink*=params.get(CNLSUEModel.MarginalUtilityofWaitingName)/3600.-params.get(CNLSUEModel.MarginalUtilityofPerformName)/3600.;
+							routeGradTRlink.mapMultiplyToSelf(params.get(CNLSUEModel.MarginalUtilityofWaitingName)/3600.-params.get(CNLSUEModel.MarginalUtilityofPerformName)/3600.);
+//							double grad = routeGradient+routeGradientDlink+routeGradientTRLink;
+							routeGrad = routeGrad.add(routeGradTRlink);
+//							if(counter==1 && grad!=0) {
+//								logger.debug("Bug Here");
+//							}
+//							if(Double.isNaN(grad))
+//								logger.debug("Debug point. Gradient is NAN");
 							
-							planGradient+=grad;
-							if(Double.isNaN(planGradient))
-								logger.debug("Debug point. Gradient is NAN..");
+//							planGradient+=grad;
+							planGrad = planGrad.add(routeGrad);
+//							if(Double.isNaN(planGradient))
+//								logger.debug("Debug point. Gradient is NAN..");
 						}
 					}
 					
-					if(!utilityGradient.containsKey(planKey))utilityGradient.put(planKey, new HashMap<>());
-					utilityGradient.get(planKey).put(var, planGradient);
-					if(planGradient>1000) {
-						logger.debug("High Gradient");
-					}
+//					if(!utilityGradient.containsKey(planKey))utilityGradient.put(planKey, new HashMap<>());
+					if(!utilityGradient.containsKey(planKey))utilityGradient.put(planKey, gradArray.getMap(planGrad.toArray()));
+//					utilityGradient.get(planKey).put(var, planGradient);
+//					if(planGradient>1000) {
+//						logger.debug("High Gradient");
+//					}
 					double planProb = this.planProbability.get(planKey);
-					sumTerm.compute(var, (k,v)->v=v+planProb*utilityGradient.get(planKey).get(var));
-					planProbSum.compute(var, (k,v)->v=v+planProb);
-				}
+					
+//					sumTerm.compute(var, (k,v)->v=v+planProb*utilityGradient.get(planKey).get(var));
+					summationTerm = summationTerm.add(planGrad.mapMultiply(planProb));
+//					planProbSum.compute(var, (k,v)->v=v+planProb);
+					planProbSum+=planProb;
+//				}
 				
 			}
 			for(Plan plan:this.feasibleplans.get(p.getValue().getId())) {
-				for(String var:this.gradientKeys) {
-					if(Math.abs(planProbSum.get(var)-1.)>.00001) {
+//				for(String var:this.gradientKeys) {
+//					if(Math.abs(planProbSum.get(var)-1.)>.00001) {
+//						logger.debug("planProb sum is not 1!!! debug!!!");
+//					}
+					if(Math.abs(planProbSum-1.)>.00001) {
 						logger.debug("planProb sum is not 1!!! debug!!!");
 					}
 					SimpleTranslatedPlan trPlan = (SimpleTranslatedPlan) plan.getAttributes().getAttribute(SimpleTranslatedPlan.SimplePlanAttributeName);
@@ -1401,19 +1508,22 @@ private void fixIncidenceMaps(Population population) {
 					
 					String planKey = trPlan.getPlanKey();
 					double planProb = this.planProbability.get(planKey);
-					double planGradient = planProb*(utilityGradient.get(planKey).get(var)-sumTerm.get(var));
-					if(planGradient>1) {
-						logger.debug("plan probability gradient cannot be larger than 1!!! debug!!!");
-					}
-					if(planGradient!=0)
+//					double planGradient = anaParam.get(CNLSUEModel.LinkMiuName)*planProb*(utilityGradient.get(planKey).get(var)-sumTerm.get(var));
+					RealVector planGrad = gradArray.getRealVector(utilityGradient.get(planKey)).subtract(summationTerm).mapMultiply(anaParam.get(CNLSUEModel.LinkMiuName)*planProb);
+//					if(planGradient>1) {
+//						logger.debug("plan probability gradient cannot be larger than 1!!! debug!!!");
+//					}
+//					if(planGradient!=0)
+					if(planGrad.getL1Norm()!=0)
 						{
 						this.nonZeroPlanGrad++;
 						}
-					if(Double.isNaN(planGradient))
-						logger.debug("Debug point. Gradient is NAN");
+//					if(Double.isNaN(planGradient))
+//						logger.debug("Debug point. Gradient is NAN");
 					
-					this.planProbabilityGradient.get(planKey).put(var, planGradient);
-					}
+//					this.planProbabilityGradient.get(planKey).put(var, planGradient);
+					this.planProbabilityGradient.put(planKey, gradArray.getMap(planGrad.toArray()));
+//					}
 				}
 		});
 		
@@ -1424,9 +1534,11 @@ private void fixIncidenceMaps(Population population) {
 		
 		for(Entry<String, Map<Id<Link>, Map<String, Double>>> timeMap:this.linkPlanIncidence.entrySet()) {
 			timeMap.getValue().entrySet().parallelStream().forEach(linkId->{
-				for(String var:this.gradientKeys) {
-					double oldGrad = this.linkGradient.get(timeMap.getKey()).get(linkId.getKey()).get(var);
-					double grad = 0;
+//				for(String var:this.gradientKeys) {
+//					double oldGrad = this.linkGradient.get(timeMap.getKey()).get(linkId.getKey()).get(var);
+					RealVector old = gradArray.getRealVector(this.linkGradient.get(timeMap.getKey()).get(linkId.getKey()));
+//					double grad = 0;
+					RealVector g = MatrixUtils.createRealVector(new double[this.gradientKeys.size()]);
 					for(Entry<String, Double> planInc:linkId.getValue().entrySet()) {
 						if(this.planProbabilityGradient.get(planInc.getKey())==null) {
 							logger.debug("Debug Here");
@@ -1438,59 +1550,73 @@ private void fixIncidenceMaps(Population population) {
 						}
 						String[] part = planInc.getKey().split("_\\^_");
 						Id<Person> personId = Id.createPersonId(part[0]);
-						grad+=this.planProbabilityGradient.get(planInc.getKey()).get(var)*planInc.getValue()*this.personEquivalence.get(personId);
+//						grad+=this.planProbabilityGradient.get(planInc.getKey()).get(var)*planInc.getValue()*this.personEquivalence.get(personId);
+						g = g.add(gradArray.getRealVector(this.planProbabilityGradient.get(planInc.getKey())).mapMultiplyToSelf(planInc.getValue()*this.personEquivalence.get(personId)));
 					}
-					double newGrad = oldGrad + counterPart*(grad-oldGrad);
-					this.linkGradient.get(timeMap.getKey()).get(linkId.getKey()).put(var, newGrad);
-				}
+//					double newGrad = oldGrad + counterPart*(grad-oldGrad);
+					RealVector newG = old.add(g.subtract(old).mapMultiply(counterPart));
+//					this.linkGradient.get(timeMap.getKey()).get(linkId.getKey()).put(var, newGrad);
+					this.linkGradient.get(timeMap.getKey()).put(linkId.getKey(), gradArray.getMap(newG.toArray()));
+//				}
 			});
 		}
 		
 		for(Entry<String, Map<Id<TransitLink>, Map<String, Double>>> timeMap:this.trLinkPlanIncidence.entrySet()) {
 			timeMap.getValue().entrySet().parallelStream().forEach(linkId->{
-				for(String var:this.gradientKeys) {
-					double oldGrad = this.trLinkGradient.get(timeMap.getKey()).get(linkId.getKey()).get(var);
-					double grad = 0;
+				//for(String var:this.gradientKeys) {
+//					double oldGrad = this.trLinkGradient.get(timeMap.getKey()).get(linkId.getKey()).get(var);
+					RealVector old = gradArray.getRealVector(this.trLinkGradient.get(timeMap.getKey()).get(linkId.getKey()));
+//					double grad = 0;
+					RealVector g = MatrixUtils.createRealVector(new double[this.gradientKeys.size()]);
 					for(Entry<String, Double> planInc:linkId.getValue().entrySet()) {
 						Id<Person> personId = Id.createPersonId(planInc.getKey().split("_\\^_")[0]);
-						grad+=this.planProbabilityGradient.get(planInc.getKey()).get(var)*planInc.getValue()*this.personEquivalence.get(personId);
+//						grad+=this.planProbabilityGradient.get(planInc.getKey()).get(var)*planInc.getValue()*this.personEquivalence.get(personId);
+						g = g.add(gradArray.getRealVector(this.planProbabilityGradient.get(planInc.getKey())).mapMultiplyToSelf(planInc.getValue()*this.personEquivalence.get(personId)));
 					}
-					double newGrad = oldGrad + counterPart*(grad-oldGrad);
-					this.trLinkGradient.get(timeMap.getKey()).get(linkId.getKey()).put(var, newGrad);
-				}
+//					double newGrad = oldGrad + counterPart*(grad-oldGrad);
+					RealVector newG = old.add(g.subtract(old).mapMultiplyToSelf(counterPart));
+//					this.trLinkGradient.get(timeMap.getKey()).get(linkId.getKey()).put(var, newGrad);
+					this.trLinkGradient.get(timeMap.getKey()).put(linkId.getKey(), gradArray.getMap(newG.toArray()));
+				//}
 			});
 		}
 		
 		for(Entry<String, Map<String, Map<String, Map<String, Double>>>> timeMap:this.fareLinkPlanIncidence.entrySet()) {
 			for(Entry<String, Map<String, Map<String, Double>>> maasMap:timeMap.getValue().entrySet()) {
 				maasMap.getValue().entrySet().parallelStream().forEach(linkId->{
-					for(String var:this.gradientKeys) {
-						double grad = 0;
+//					for(String var:this.gradientKeys) {
+//						double grad = 0;
+						RealVector g = MatrixUtils.createRealVector(new double[this.gradientKeys.size()]);
 						for(Entry<String, Double> planInc:linkId.getValue().entrySet()) {
 							Id<Person> personId = Id.createPersonId(planInc.getKey().split("_\\^_")[0]);
-							grad+=this.planProbabilityGradient.get(planInc.getKey()).get(var)*planInc.getValue()*this.personEquivalence.get(personId);
+//							grad+=this.planProbabilityGradient.get(planInc.getKey()).get(var)*planInc.getValue()*this.personEquivalence.get(personId);
+							g = g.add(gradArray.getRealVector(this.planProbabilityGradient.get(planInc.getKey())).mapMultiplyToSelf(planInc.getValue()*this.personEquivalence.get(personId)));
 						}
 						if(this.fareLinkGradient.get(timeMap.getKey()).get(maasMap.getKey())==null) {
 							String timeId = timeMap.getKey();
 							String maasKey = maasMap.getKey();
 							logger.debug(timeId+" and "+maasKey+" is not present in fareLinkGradient.");
 						}
-						this.fareLinkGradient.get(timeMap.getKey()).get(maasMap.getKey()).get(linkId.getKey()).put(var, grad);
-					}
+//						this.fareLinkGradient.get(timeMap.getKey()).get(maasMap.getKey()).get(linkId.getKey()).put(var, grad);
+						this.fareLinkGradient.get(timeMap.getKey()).get(maasMap.getKey()).put(linkId.getKey(),gradArray.getMap(g.toArray()));
+//					}
 				});
 			}
 		}
 		
 		for(Entry<String, List<String>> packageIncidence:this.maasPackagePlanIncidence.entrySet()) {
-			for(String var:this.gradientKeys) {
-				double grad = 0;
+			//for(String var:this.gradientKeys) {
+				//double grad = 0;
+				RealVector g = MatrixUtils.createRealVector(new double[this.gradientKeys.size()]);
 				for(String planId:packageIncidence.getValue()) {
 					Id<Person> personId = Id.createPersonId(planId.split("_\\^_")[0]);
-					grad+=this.planProbabilityGradient.get(planId).get(var)*this.personEquivalence.get(personId);
+//					grad+=this.planProbabilityGradient.get(planId).get(var)*this.personEquivalence.get(personId);
+					g = g.add(gradArray.getRealVector(this.planProbabilityGradient.get(planId)).mapMultiplyToSelf(this.personEquivalence.get(personId)));
 				}
 				if(!this.pacakgeUserGradient.containsKey(packageIncidence.getKey()))this.pacakgeUserGradient.put(packageIncidence.getKey(), new ConcurrentHashMap<>());
-				this.pacakgeUserGradient.get(packageIncidence.getKey()).put(var, grad);
-			}
+				//this.pacakgeUserGradient.get(packageIncidence.getKey()).put(var, grad);
+				this.pacakgeUserGradient.put(packageIncidence.getKey(), gradArray.getMap(g.toArray()));
+			//}
 		}
 		logger.info("Finished Gradient Calculation.");
 	}

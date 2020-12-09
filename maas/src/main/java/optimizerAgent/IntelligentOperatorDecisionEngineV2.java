@@ -167,7 +167,7 @@ public class IntelligentOperatorDecisionEngineV2 {
 		
 		for(Entry<String,Map<String,Double>> operator:ttGrad.entrySet()) {
 			for(Entry<String,Double> grad:operator.getValue().entrySet()) {
-				totalGrad.get(operator.getKey()).compute(grad.getKey(), (k,v)->v=v-grad.getValue());
+				totalGrad.get(operator.getKey()).compute(grad.getKey(), (k,v)->v=v+grad.getValue());
 			}
 		}
 		return totalGrad;
@@ -251,9 +251,33 @@ public class IntelligentOperatorDecisionEngineV2 {
 		double vom = scenario.getConfig().planCalcScore().getOrCreateScoringParameters(PersonChangeWithoutCar_NAME).getMarginalUtilityOfMoney();
 		Map<String,Double> revObj = ObjectiveAndGradientCalculator.calcRevenueObjective(flow, operator.keySet(), packages, fareCalculators);
 		double ttObj = ObjectiveAndGradientCalculator.calcTotalSystemTravelTime(model, flow, vot_car, vot_transit, vot_wait, vom);
-		revObj.keySet().forEach(l->revObj.compute(l, (k,v)->v=v-ttObj));
-		
+		revObj.keySet().forEach(l->revObj.compute(l, (k,v)->v=v+ttObj));
+		logger.info("Travel time Objective = "+ttObj);
+		logger.info("RevenueObjective = "+revObj.toString());
 		return revObj;
+	}
+	
+	public double calcApproximateGovtTTObjective(LinkedHashMap<String,Double>variables){
+		//this.setupAndRunMetaModel(variables);
+		if(model==null) {
+			this.setupAndRunMetaModel(variables);
+		}
+		String PersonChangeWithCar_NAME = "person_TCSwithCar";
+		String PersonChangeWithoutCar_NAME = "person_TCSwithoutCar";
+		
+		String PersonFixed_NAME = "trip_TCS";
+		String GVChange_NAME = "person_GV";
+		String GVFixed_NAME = "trip_GV";
+		double vot_car = scenario.getConfig().planCalcScore().getOrCreateScoringParameters(PersonChangeWithCar_NAME).getOrCreateModeParams("car").getMarginalUtilityOfTraveling()/3600;
+		double vot_transit = scenario.getConfig().planCalcScore().getOrCreateScoringParameters(PersonChangeWithoutCar_NAME).getOrCreateModeParams("pt").getMarginalUtilityOfTraveling()/3600;
+		double vot_wait = scenario.getConfig().planCalcScore().getOrCreateScoringParameters(PersonChangeWithoutCar_NAME).getMarginalUtlOfWaitingPt_utils_hr()/3600;
+		double vom = scenario.getConfig().planCalcScore().getOrCreateScoringParameters(PersonChangeWithoutCar_NAME).getMarginalUtilityOfMoney();
+		//Map<String,Double> revObj = ObjectiveAndGradientCalculator.calcRevenueObjective(flow, operator.keySet(), packages, fareCalculators);
+		double ttObj = ObjectiveAndGradientCalculator.calcTotalSystemTravelTime(model, flow, vot_car, vot_transit, vot_wait, vom);
+	//	revObj.keySet().forEach(l->revObj.compute(l, (k,v)->v=v+ttObj));
+		logger.info("Travel time Objective = "+ttObj);
+	//	logger.info("RevenueObjective = "+revObj.toString());
+		return ttObj;
 	}
 	
 	public BiMap<String,String> getSimpleVariableKey(){

@@ -63,9 +63,11 @@ import optimizerAgent.MaaSOperator;
 import optimizerAgent.MaaSOperatorOptimizationModule;
 import optimizerAgent.MaaSOperatorStrategy;
 import optimizerAgent.MaaSUtil;
+import optimizerAgent.ObjectiveAndGradientCalculator;
 import running.RunUtils;
 
 import clustering.RandomCluster;
+import clustering.UsageBasedCluster;
 /**
  * This class will basically test the connection between different components for MaaS implementation in MATSim.
  * This however, will not test the optimization part of MaaS
@@ -197,7 +199,9 @@ class MaaSDiscountAndChargeHandlerTest {
 				
 				Scenario scenario = ScenarioUtils.loadScenario(config);
 				
-				Set<Set<Id<TransitLine>>> tlSets = new RandomCluster<Id<TransitLine>>().createRandomSplit(scenario.getTransitSchedule().getTransitLines().keySet(), 5);
+				//Set<Set<Id<TransitLine>>> tlSets = new RandomCluster<Id<TransitLine>>().createRandomSplit(scenario.getTransitSchedule().getTransitLines().keySet(), 5);
+				Set<Set<Id<TransitLine>>> tlSets = new UsageBasedCluster<TransitLine>().createUsageBasedSplit(scenario.getTransitSchedule().getTransitLines(), 
+						ObjectiveAndGradientCalculator.readSimpleMap("test/ averageWaitTime.csv"), 5);
 				
 				ObjectAttributes obj = new ObjectAttributes();
 				new ObjectAttributesXmlReader(obj).readFile("new Data/core/personAttributesHKI.xml");
@@ -242,7 +246,7 @@ class MaaSDiscountAndChargeHandlerTest {
 				int i=0;
 				for(Set<Id<TransitLine>>sss:tlSets){
 					variables.get("Govt").put(MaaSUtil.generateMaaSTransitLinesDiscountKey("allPack", sss,"tl"+i),0.8);
-					variableLimits.get("Govt").put(MaaSUtil.generateMaaSTransitLinesDiscountKey("allPack", sss, "tl"+i),new Tuple<Double,Double>(0.,1.));
+					variableLimits.get("Govt").put(MaaSUtil.generateMaaSTransitLinesDiscountKey("allPack", sss, "tl"+i),new Tuple<Double,Double>(0.01,1.));
 					i++;
 				};
 				variables.get("Govt").keySet().forEach(v->{
