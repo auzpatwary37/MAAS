@@ -1,0 +1,15 @@
+SubPopulation,Parameter Name,id,Lower Limit,UpperLimit,CurretValue,Code,IncludeIninitialParam
+,MarginalUtilityofTravelCar,person_TCSwithCar MarginalUtilityofTravelCar,-240,-160,-200,1,TRUE
+,MarginalUtilityofDistanceCar,person_TCSwithCar MarginalUtilityofDistanceCar,-0.009,-0.006,-0.0075,2,FALSE
+,MarginalUtilityofMoney,person_TCSwithCar MarginalUtilityofMoney,0.8,1.2,1,3,FALSE
+,DistanceBasedMoneyCostCar,person_TCSwithCar DistanceBasedMoneyCostCar,0,0,0,4,FALSE
+,MarginalUtilityofTravelpt,person_TCSwithCar MarginalUtilityofTravelpt,-240,-160,-200,5,TRUE
+,MarginalUtilityOfDistancePt,person_TCSwithCar MarginalUtilityOfDistancePt,-0.00012,-0.00008,-0.0001,6,FALSE
+,MarginalUtilityofWaiting,person_TCSwithCar MarginalUtilityofWaiting,-7.2,-4.8,-6,7,FALSE
+,UtilityOfLineSwitch,person_TCSwithCar UtilityOfLineSwitch,-6,-4,-5,8,FALSE
+,MarginalUtilityOfWalking,person_TCSwithCar MarginalUtilityOfWalking,-240,-160,-200,9,FALSE
+,DistanceBasedMoneyCostWalk,person_TCSwithCar DistanceBasedMoneyCostWalk,-0.006,-0.004,-0.005,10,FALSE
+,ModeConstantPt,person_TCSwithCar ModeConstantPt,0,0,0,11,FALSE
+,ModeConstantCar,person_TCSwithCar ModeConstantCar,0,0,0,12,FALSE
+,MarginalUtilityofPerform,person_TCSwithCar MarginalUtilityofPerform,80,120,100,13,FALSE
+,CapacityMultiplier,,0.5,1.25,1,14,FALSE

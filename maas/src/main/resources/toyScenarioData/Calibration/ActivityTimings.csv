@@ -1,0 +1,188 @@
+ActivityType,opening Time,Latest start time,Closing time,earliest Closing time,duration
+Airport passenger terminal,na,na,na,na,7102
+Airport passenger terminal_StartOrEnd,na,na,na,na,43200
+Ambulance depot,na,na,na,na,4500
+Ambulance depot_StartOrEnd,na,na,na,na,43200
+Another home / second home (occassional)_StartOrEnd,na,na,na,na,43200
+Anywhere in the Mainland_StartOrEnd,na,na,na,na,43200
+Anywhere in the overseas_StartOrEnd,na,na,na,na,43200
+Bank,36000,na,64800,na,6773
+Bank_StartOrEnd,na,na,na,na,43200
+Barbecue sites,36000,na,64800,na,14400
+Barbecue sites_StartOrEnd,na,na,na,na,43200
+Beauty salon/Barber shop,25200,na,57600,na,3276
+Beauty salon/Barber shop_StartOrEnd,na,na,na,na,43200
+Boundary Control Point,21600,na,82800,na,37052
+Boundary Control Point_StartOrEnd,na,na,na,na,43200
+Bus / public light bus terminal / stop / MTR / LRT station / pier (non-transport purpose e.g. settle/get things),na,na,na,na,7500
+Bus / public light bus terminal / stop / MTR / LRT station / pier (non-transport purpose e.g. settle/get things)_StartOrEnd,na,na,na,na,43200
+Carrying/meeting family,25200,na,68400,na,530
+Carrying/meeting family_StartOrEnd,na,na,na,na,43200
+Cemeteries / crematoria,28800,na,68400,na,16375
+Cemeteries / crematoria_StartOrEnd,na,na,na,na,43200
+Chek Lap Kok Airport (non-departure or arrival),na,na,64800,na,8400
+Chek Lap Kok Airport (non-departure or arrival)_StartOrEnd,na,na,na,na,43200
+Church / temple,32400,na,79200,na,12568
+Church / temple_StartOrEnd,na,na,na,na,43200
+Churches,28800,na,39600,na,633
+Churches_StartOrEnd,na,na,na,na,43200
+Cinema/concert karaoke and other entertainment facilities (includindg nightclubs / bathhouses / massage establishments,39600,na,86400,na,13522
+Cinema/concert karaoke and other entertainment facilities (includindg nightclubs / bathhouses / massage establishments_StartOrEnd,na,na,na,na,43200
+Clinic and Hospital,32400,na,61200,na,11400
+Clinic and Hospital_StartOrEnd,na,na,na,na,43200
+Clubhouses / Yacht clubs / Golf clubs,36000,na,57600,na,1923
+Clubhouses / Yacht clubs / Golf clubs_StartOrEnd,na,na,na,na,43200
+Construction site,28800,na,64800,na,9822
+Construction site_StartOrEnd,na,na,na,na,43200
+Convention centers / Showrooms,39600,na,72000,na,10959
+Convention centers / Showrooms_StartOrEnd,na,na,na,na,43200
+Country park / countryside area,36000,na,64800,na,10800
+Country park / countryside area_StartOrEnd,na,na,na,na,43200
+Cultural / community center library and arts / museum,32400,na,75600,na,11224
+Cultural / community center library and arts / museum_StartOrEnd,na,na,na,na,43200
+Depot / Ship repair yards,32400,na,68400,na,4909
+Depot / Ship repair yards_StartOrEnd,na,na,na,na,43200
+Dormitory,25200,na,39600,na,900
+Dormitory_StartOrEnd,na,na,na,na,43200
+Driving / taking a ride,28800,na,79200,na,4350
+Driving / taking a ride_StartOrEnd,na,na,na,na,43200
+Elderly homes,32400,na,64800,na,13610
+Elderly homes_StartOrEnd,na,na,na,na,43200
+Examination venue,64800,na,75600,na,8700
+Examination venue_StartOrEnd,na,na,na,na,43200
+Factory,32400,na,64800,na,4457
+Factory_StartOrEnd,na,na,na,na,43200
+Farms / Fishing grounds / Horticultural sites,14400,na,64800,na,17869
+Farms / Fishing grounds / Horticultural sites_StartOrEnd,na,na,na,na,43200
+Food premise: restaurant caf pub etc.,36000,na,79200,na,10356
+Food premise: restaurant caf pub etc._StartOrEnd,na,na,na,na,43200
+Funeral home / cemetery / crematorium / bone ash space,39600,na,54000,na,1451
+Funeral home / cemetery / crematorium / bone ash space_StartOrEnd,na,na,na,na,43200
+Funeral parlors,36000,na,54000,na,1453
+Funeral parlors_StartOrEnd,na,na,na,na,43200
+Garage / car repair center,32400,na,61200,na,8237
+Garage / car repair center_StartOrEnd,na,na,na,na,43200
+Government and Community organization,28800,na,61200,na,4884
+Government and Community organization_StartOrEnd,na,na,na,na,43200
+Holiday camp,36000,na,64800,na,10800
+Holiday camp_StartOrEnd,na,na,na,na,43200
+Holiday villages / Holiday camp,36000,na,64800,na,16509
+Holiday villages / Holiday camp_StartOrEnd,na,na,na,na,43200
+Home,28800,na,72000,na,14968
+Home of family member/relative/friend,36000,na,79200,na,15736
+Home of family member/relative/friend_StartOrEnd,na,na,na,na,43200
+Home_StartOrEnd,na,na,na,na,43200
+Homes for the aged / Nursing homes,32400,na,54000,na,726
+Homes for the aged / Nursing homes_StartOrEnd,na,na,na,na,43200
+Hospital / medical center / clinic,32400,na,68400,na,10941
+Hospital / medical center / clinic_StartOrEnd,na,na,na,na,43200
+Hotel,36000,na,64800,na,2754
+Hotel_StartOrEnd,na,na,na,na,43200
+Industrial and commercial buildings (non-work purpose),32400,na,64800,na,12600
+Industrial and commercial buildings (non-work purpose)_StartOrEnd,na,na,na,na,43200
+Kwai Tsing container terminals,32400,na,68400,na,5307
+Kwai Tsing container terminals_StartOrEnd,na,na,na,na,43200
+Labor organization/association,36000,na,64800,na,2700
+Labor organization/association_StartOrEnd,na,na,na,na,43200
+Law firm,46800,na,57600,na,7200
+Law firm_StartOrEnd,na,na,na,na,43200
+Learning center / learning center,43200,na,72000,na,11700
+Learning center / learning center_StartOrEnd,na,na,na,na,43200
+Logistics centers,32400,na,64800,na,4887
+Logistics centers_StartOrEnd,na,na,na,na,43200
+Market / Wholesale market_StartOrEnd,na,na,na,na,43200
+Market/shopping arcade/shops/ supermarket (excluding restaurant cinema karaoke),36000,na,72000,na,10341
+Market/shopping arcade/shops/ supermarket (excluding restaurant cinema karaoke)_StartOrEnd,na,na,na,na,43200
+Newspaper stands,18000,na,25200,na,300
+Newspaper stands_StartOrEnd,na,na,na,na,43200
+Office,32400,na,64800,na,5024
+Office_StartOrEnd,na,na,na,na,43200
+On street / roaming the street / no particular destination,na,na,na,na,9602
+On street / roaming the street / no particular destination_StartOrEnd,na,na,na,na,43200
+Open storage and Port back-up facilities,32400,na,57600,na,3270
+Open storage and Port back-up facilities_StartOrEnd,na,na,na,na,43200
+other,36000,na,79200,na,16672
+Other container terminals (i.e. River trade terminal / Mid-stream site / Private wharf),36000,na,64800,na,1994
+Other container terminals (i.e. River trade terminal / Mid-stream site / Private wharf)_StartOrEnd,na,na,na,na,43200
+Other places of work,28800,na,79200,na,16509
+Other places of work_StartOrEnd,na,na,na,na,43200
+other_StartOrEnd,na,na,na,na,43200
+Others,54000,na,93600,na,18300
+Others_StartOrEnd,na,na,na,na,43200
+Park / Theme park,28800,na,61200,na,5742
+Park / Theme park_StartOrEnd,na,na,na,na,43200
+Park/playground/sports ground/court/gym centre/swimming pool/beach,28800,na,75600,na,12631
+Park/playground/sports ground/court/gym centre/swimming pool/beach_StartOrEnd,na,na,na,na,43200
+Petrol station (please specify purpose),28800,na,82800,na,300
+Petrol station (please specify purpose)_StartOrEnd,na,na,na,na,43200
+Petrol station / Oil depots / LPG filling station,32400,na,72000,na,6614
+Petrol station / Oil depots / LPG filling station_StartOrEnd,na,na,na,na,43200
+Place nearby to home / downstairs (please specify purpose),na,na,na,na,0
+Place nearby to home / downstairs (please specify purpose)_StartOrEnd,na,na,na,na,43200
+Places of work of other people (non-work purpose),36000,na,68400,na,6683
+Places of work of other people (non-work purpose)_StartOrEnd,na,na,na,na,43200
+Police station / immigration department / other government offices,32400,na,57600,na,4102
+Police station / immigration department / other government offices_StartOrEnd,na,na,na,na,43200
+Post office,36000,na,57600,na,1500
+Post office_StartOrEnd,na,na,na,na,43200
+Power plants / Electric substations / Bulk infeed substations,28800,na,68400,na,7421
+Power plants / Electric substations / Bulk infeed substations_StartOrEnd,na,na,na,na,43200
+Public parking area,28800,na,64800,na,5412
+Public parking area_StartOrEnd,na,na,na,na,43200
+Public refuse collection Points / Refuse transfer stations / Refuse collection stations,32400,na,75600,na,2503
+Public refuse collection Points / Refuse transfer stations / Refuse collection stations_StartOrEnd,na,na,na,na,43200
+Public transport stations / stops / piers,25200,na,86400,na,4012
+Public transport stations / stops / piers_StartOrEnd,na,na,na,na,43200
+Pumping station_StartOrEnd,na,na,na,na,43200
+Racecourse,39600,na,68400,na,8055
+Racecourse_StartOrEnd,na,na,na,na,43200
+Recorder house,36000,na,61200,na,5550
+Recorder house_StartOrEnd,na,na,na,na,43200
+Refuse sorting facilities,39600,na,57600,na,1200
+Refuse sorting facilities_StartOrEnd,na,na,na,na,43200
+Residential,32400,na,64800,na,5397
+Residential_StartOrEnd,na,na,na,na,43200
+School,32400,na,61200,na,3954
+School/educational institution that oneself studied,21600,32400,68400,57600,26062
+School/educational institution that oneself studied_StartOrEnd,na,na,na,na,43200
+School/educational institution that other people studied,28800,na,61200,na,5676
+School/educational institution that other people studied_StartOrEnd,na,na,na,na,43200
+School_StartOrEnd,na,na,na,na,43200
+Securities company / investment center,32400,na,61200,na,2400
+Securities company / investment center_StartOrEnd,na,na,na,na,43200
+Sewage treatment plants,32400,na,68400,na,11576
+Sewage treatment plants_StartOrEnd,na,na,na,na,43200
+Shop / Restaurant,32400,na,72000,na,3531
+Shop / Restaurant_StartOrEnd,na,na,na,na,43200
+Slaughterhouses,36000,na,68400,na,11250
+Slaughterhouses_StartOrEnd,na,na,na,na,43200
+Sports centers / Sports grounds / Pitches / Courts,32400,na,68400,na,8320
+Sports centers / Sports grounds / Pitches / Courts_StartOrEnd,na,na,na,na,43200
+Swimming pools,28800,na,79200,na,900
+Swimming pools_StartOrEnd,na,na,na,na,43200
+Telephone exchange buildings,32400,na,64800,na,7525
+Telephone exchange buildings_StartOrEnd,na,na,na,na,43200
+Television stations,28800,na,64800,na,1900
+Television stations_StartOrEnd,na,na,na,na,43200
+Temple_StartOrEnd,na,na,na,na,43200
+Test centers,68400,71400,75600,na,3300
+Test centers_StartOrEnd,na,na,na,na,43200
+Tourist attractions_StartOrEnd,na,na,na,na,43200
+Travel agent,36000,na,57600,na,6300
+Travel agent_StartOrEnd,na,na,na,na,43200
+Tunnels / Bridges / Tolls / Roads / Roadside,32400,na,64800,na,3405
+Tunnels / Bridges / Tolls / Roads / Roadside_StartOrEnd,na,na,na,na,43200
+Tutorial center,50400,58980.6175,75600,na,6319
+Tutorial center_StartOrEnd,na,na,na,na,43200
+Usual place of work,25200,32400,75600,68400,33612
+Usual place of work_StartOrEnd,na,na,na,na,43200
+Vehicle repair centers / Vehicle examination centers / Garage / Vehicle cleansing services sites,32400,na,61200,na,4520
+Vehicle repair centers / Vehicle examination centers / Garage / Vehicle cleansing services sites_StartOrEnd,na,na,na,na,43200
+Vehicle scrap yard,32400,na,61200,na,24000
+Vehicle scrap yard_StartOrEnd,na,na,na,na,43200
+Viewing property,39600,na,79200,na,10224
+Viewing property_StartOrEnd,na,na,na,na,43200
+Warehouse,36000,na,64800,na,6446
+Warehouse_StartOrEnd,na,na,na,na,43200
+Water treatment works,32400,na,64800,na,13846
+Water treatment works_StartOrEnd,na,na,na,na,43200

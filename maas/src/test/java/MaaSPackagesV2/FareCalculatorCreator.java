@@ -65,19 +65,19 @@ public class FareCalculatorCreator {
 	public static Map<String,FareCalculator> getToyScenarioFareCalculators(){
 		Map<String,FareCalculator> fareCalculators = new HashMap<>();
 		Config config = ConfigUtils.createConfig();
-		ConfigUtils.loadConfig(config, "toyScenario/toyScenarioData/config.xml");
-		config.network().setInputFile("toyScenario/toyScenarioData/network.xml");
-		config.vehicles().setVehiclesFile("toyScenario/toyScenarioData/vehicles.xml");
-		config.transit().setTransitScheduleFile("toyScenario/toyScenarioData/transitSchedule.xml");
-		config.transit().setVehiclesFile("toyScenario/toyScenarioData/transitVehicles.xml");
-		config.plans().setInputFile("toyScenario/output_plans.xml.gz");
+		ConfigUtils.loadConfig(config, "src/main/resources/toyScenarioData/config.xml");
+		config.network().setInputFile("src/main/resources/toyScenarioData/network.xml");
+		config.vehicles().setVehiclesFile("src/main/resources/toyScenarioData/vehicles.xml");
+		config.transit().setTransitScheduleFile("src/main/resources/toyScenarioData/transitSchedule.xml");
+		config.transit().setVehiclesFile("src/main/resources/toyScenarioData/transitVehicles.xml");
+		//config.plans().setInputFile("src/main/resources/output_plans.xml.gz");
 		
 		config.scenario().setSimulationPeriodInDays(1.0);
 		Scenario scenario;
 		scenario = ScenarioUtils.loadScenario(config);
 		try {
-			fareCalculators.put("bus",transitGenerator.createBusFareCalculator(scenario.getTransitSchedule(), Arrays.asList("toyScenario/toyScenarioData/Bus_1_fare_Test.csv","toyScenario/toyScenarioData/Bus_2_fare_Test.csv")));
-			fareCalculators.put("train",new MTRFareCalculator("toyScenario/toyScenarioData/Mtr_fare.csv", scenario.getTransitSchedule()));
+			fareCalculators.put("bus",transitGenerator.createBusFareCalculator(scenario.getTransitSchedule(), Arrays.asList("src/main/resources/toyScenarioData/Bus_1_fare_Test.csv","src/main/resources/toyScenarioData/Bus_2_fare_Test.csv")));
+			fareCalculators.put("train",new MTRFareCalculator("src/main/resources/toyScenarioData/Mtr_fare.csv", scenario.getTransitSchedule()));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

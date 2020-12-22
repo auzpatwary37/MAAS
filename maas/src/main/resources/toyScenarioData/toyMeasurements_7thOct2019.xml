@@ -1,0 +1,831 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Measurements>
+    <timeBeans>
+        <timeBean EndingTime="36000.0" StartingTime="25200.0" timeBeanId="MorningPeak"/>
+        <timeBean EndingTime="57600.0" StartingTime="36000.0" timeBeanId="AfterMorningPeak"/>
+        <timeBean EndingTime="86400.0" StartingTime="72000.0" timeBeanId="AfterAfternoonPeak"/>
+        <timeBean EndingTime="72000.0" StartingTime="57600.0" timeBeanId="AfternoonPeak"/>
+        <timeBean EndingTime="25200.0" StartingTime="0.0" timeBeanId="BeforeMorningPeak"/>
+    </timeBeans>
+    <Measurement LINK_LIST="[]" MeasurementId="7_7rGGG_stop___6_6rFFF_stop___bus___bus2___From_2_to_3_bus2" MeasurementType="smartCardEntryAndExit" transitMode="bus" transit_alighting_stop="6_6rFFF_stop" transit_boarding_stop="7_7rGGG_stop">
+        <Volumes>
+            <Volume PCUVolume="217.72452722451612" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="928.126523525244" TimeBeanId="AfternoonPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="bus2___From_2_to_3_bus2___7_7rGGG_stop" MeasurementType="smartCardEntry" TRANSIT_LINE="bus2" Transit_Route="From_2_to_3_bus2" transitMode="bus" transit_boarding_stop="7_7rGGG_stop">
+        <Volumes>
+            <Volume PCUVolume="0.0" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="218.07880769578134" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="928.142286118788" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="4r_4DDD_stop___2r_2BBB_stop___bus1___From_4_to_1_bus1" MeasurementType="smartCardEntryAndExit" TRANSIT_LINE="bus1" Transit_Route="From_4_to_1_bus1" transitMode="bus" transit_alighting_stop="2r_2BBB_stop" transit_boarding_stop="4r_4DDD_stop">
+        <Volumes>
+            <Volume PCUVolume="0.0" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="53.65235344288564" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="262.50190980720737" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="5r_5EEE_stop___2r_2BBB_stop___bus___bus2___From_3_to_2_bus2" MeasurementType="smartCardEntryAndExit" transitMode="bus" transit_alighting_stop="2r_2BBB_stop" transit_boarding_stop="5r_5EEE_stop">
+        <Volumes>
+            <Volume PCUVolume="41.86367354194887" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="194.93526395216034" TimeBeanId="AfternoonPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="6r_6FFF_stop___5r_5EEE_stop___bus___bus1___From_4_to_1_bus1" MeasurementType="smartCardEntryAndExit" transitMode="bus" transit_alighting_stop="5r_5EEE_stop" transit_boarding_stop="6r_6FFF_stop">
+        <Volumes>
+            <Volume PCUVolume="29.217821395421833" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="155.81788568288826" TimeBeanId="AfternoonPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="1_1rAAA_stop___2_2rBBB_stop___bus1___From_1_to_4_bus1" MeasurementType="smartCardEntryAndExit" TRANSIT_LINE="bus1" Transit_Route="From_1_to_4_bus1" transitMode="bus" transit_alighting_stop="2_2rBBB_stop" transit_boarding_stop="1_1rAAA_stop">
+        <Volumes>
+            <Volume PCUVolume="350.7778834310294" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="34.692109796392295" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="0.10640634146188525" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[7r_6]" MeasurementId="7r_6" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="36.0" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="679.6585958936071" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="45.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="3954.69669737033" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="84.0" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="7r_6"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="1_1rAAA_stop___6_6rFFF_stop___bus1___From_1_to_4_bus1" MeasurementType="smartCardEntryAndExit" TRANSIT_LINE="bus1" Transit_Route="From_1_to_4_bus1" transitMode="bus" transit_alighting_stop="6_6rFFF_stop" transit_boarding_stop="1_1rAAA_stop">
+        <Volumes>
+            <Volume PCUVolume="382.2426319150857" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="48.5792910940235" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="0.14812044869919339" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="6r_6FFF_stop___1r_1AAA_stop___bus___bus1___From_4_to_1_bus1" MeasurementType="smartCardEntryAndExit" transitMode="bus" transit_alighting_stop="1r_1AAA_stop" transit_boarding_stop="6r_6FFF_stop">
+        <Volumes>
+            <Volume PCUVolume="81.97261727854931" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="425.62953177856605" TimeBeanId="AfternoonPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="bus2___From_2_to_3_bus2___5_5rEEE_stop" MeasurementType="smartCardEntry" TRANSIT_LINE="bus2" Transit_Route="From_2_to_3_bus2" transitMode="bus" transit_boarding_stop="5_5rEEE_stop">
+        <Volumes>
+            <Volume PCUVolume="315.29556275734933" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="40.47203921683062" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="0.12488219515714899" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="6r_6FFF_stop___7r_7GGG_stop___bus___bus2___From_3_to_2_bus2" MeasurementType="smartCardEntryAndExit" transitMode="bus" transit_alighting_stop="7r_7GGG_stop" transit_boarding_stop="6r_6FFF_stop">
+        <Volumes>
+            <Volume PCUVolume="905.4452868142694" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="111.23405448215416" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.7429194953591394" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[3r_4]" MeasurementId="3r_4" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="2091.683006106843" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="94.71374397400542" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="3r_4"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[3_6r]" MeasurementId="3_6r" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="2208.385601960455" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="270.67039253485984" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="74.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="78.0" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="136.82523271029987" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="3_6r"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="MTR2___From_3_to_2_MTR2___5r_5EEE_stop_train" MeasurementType="smartCardEntry" TRANSIT_LINE="MTR2" Transit_Route="From_3_to_2_MTR2" transitMode="train" transit_boarding_stop="5r_5EEE_stop_train">
+        <Volumes>
+            <Volume PCUVolume="0.0" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="44.3026214978929" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="240.29403100741982" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="2_2rBBB_stop___7_7rGGG_stop___bus___bus2___From_2_to_3_bus2" MeasurementType="smartCardEntryAndExit" transitMode="bus" transit_alighting_stop="7_7rGGG_stop" transit_boarding_stop="2_2rBBB_stop">
+        <Volumes>
+            <Volume PCUVolume="981.3026181225587" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="108.33863083849042" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="1.234464583752675" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="7r_7GGG_stop_train___2r_2BBB_stop_train___train" MeasurementType="smartCardEntryAndExit" transitMode="train" transit_alighting_stop="2r_2BBB_stop_train" transit_boarding_stop="7r_7GGG_stop_train">
+        <Volumes>
+            <Volume PCUVolume="62.21335796170558" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="362.4267730463831" TimeBeanId="AfternoonPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[4_3r]" MeasurementId="4_3r" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="0.0" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="59.9583398235653" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="1526.6208660939137" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="4_3r"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="MTR2___From_2_to_3_MTR2___2_2rBBB_stop_train" MeasurementType="smartCardEntry" TRANSIT_LINE="MTR2" Transit_Route="From_2_to_3_MTR2" transitMode="train" transit_boarding_stop="2_2rBBB_stop_train">
+        <Volumes>
+            <Volume PCUVolume="1605.113007189408" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="132.95089832684985" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="1.1565360336129822" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[3_2r]" MeasurementId="3_2r" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="0.0" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="328.0421760416747" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="3214.5165825903937" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="3_2r"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="bus1___From_4_to_1_bus1___2r_2BBB_stop" MeasurementType="smartCardEntry" TRANSIT_LINE="bus1" Transit_Route="From_4_to_1_bus1" transitMode="bus" transit_boarding_stop="2r_2BBB_stop">
+        <Volumes>
+            <Volume PCUVolume="495.3639244043083" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="106.91208243366488" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="362.74096387201286" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="0.5156270486882312" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="MTR1___From_1_to_4_MTR1___1_1rAAA_stop_train" MeasurementType="smartCardEntry" TRANSIT_LINE="MTR1" Transit_Route="From_1_to_4_MTR1" transitMode="train" transit_boarding_stop="1_1rAAA_stop_train">
+        <Volumes>
+            <Volume PCUVolume="1816.2472578741902" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="159.6707601187702" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="0.8126731267943487" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[2_1r]" MeasurementId="2_1r" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="54.0" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="167.9583398235653" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="69.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="1598.6208660939137" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="126.0" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="2_1r"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="2_2rBBB_stop___6_6rFFF_stop___bus___bus1___From_1_to_4_bus1" MeasurementType="smartCardEntryAndExit" transitMode="bus" transit_alighting_stop="6_6rFFF_stop" transit_boarding_stop="2_2rBBB_stop">
+        <Volumes>
+            <Volume PCUVolume="899.6690524446713" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="95.76412616046056" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="1.0897322927669202" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="7_7rGGG_stop_train___5r_5EEE_stop_train___train" MeasurementType="smartCardEntryAndExit" transitMode="train" transit_alighting_stop="5r_5EEE_stop_train" transit_boarding_stop="7_7rGGG_stop_train">
+        <Volumes>
+            <Volume PCUVolume="41.86367354194887" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="194.93526395216034" TimeBeanId="AfternoonPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[6_5r]" MeasurementId="6_5r" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="84.0" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="557.0492696131142" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="108.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="3587.9460167821185" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="196.0" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="6_5r"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="6r_6FFF_stop___1r_1AAA_stop___bus1___From_4_to_1_bus1" MeasurementType="smartCardEntryAndExit" TRANSIT_LINE="bus1" Transit_Route="From_4_to_1_bus1" transitMode="bus" transit_alighting_stop="1r_1AAA_stop" transit_boarding_stop="6r_6FFF_stop">
+        <Volumes>
+            <Volume PCUVolume="0.0" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="82.08156369777463" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="425.71055105681825" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="6r_6FFF_stop___7r_7GGG_stop___bus2___From_3_to_2_bus2" MeasurementType="smartCardEntryAndExit" TRANSIT_LINE="bus2" Transit_Route="From_3_to_2_bus2" transitMode="bus" transit_alighting_stop="7r_7GGG_stop" transit_boarding_stop="6r_6FFF_stop">
+        <Volumes>
+            <Volume PCUVolume="905.407130166803" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="111.31909870249744" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="0.7450783291143691" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="bus1___From_4_to_1_bus1___6r_6FFF_stop" MeasurementType="smartCardEntry" TRANSIT_LINE="bus1" Transit_Route="From_4_to_1_bus1" transitMode="bus" transit_boarding_stop="6r_6FFF_stop">
+        <Volumes>
+            <Volume PCUVolume="0.0" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="283.153265364162" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="1244.1231037841135" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="5_5rEEE_stop___7_7rGGG_stop___bus___bus2___From_2_to_3_bus2" MeasurementType="smartCardEntryAndExit" transitMode="bus" transit_alighting_stop="7_7rGGG_stop" transit_boarding_stop="5_5rEEE_stop">
+        <Volumes>
+            <Volume PCUVolume="315.36068112717277" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="40.445955558053065" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.12903708133953057" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="5r_5EEE_stop___2r_2BBB_stop___bus2___From_3_to_2_bus2" MeasurementType="smartCardEntryAndExit" TRANSIT_LINE="bus2" Transit_Route="From_3_to_2_bus2" transitMode="bus" transit_alighting_stop="2r_2BBB_stop" transit_boarding_stop="5r_5EEE_stop">
+        <Volumes>
+            <Volume PCUVolume="0.0" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="41.97543703025887" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="194.91646012087375" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[6r_3]" MeasurementId="6r_3" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="36.0" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="340.08383621810935" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="45.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="1735.8957164964797" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="84.0" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="6r_3"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[6r_4]" MeasurementId="6r_4" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="1790.1177177871123" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="186.1460221599222" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="69.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="72.0" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="126.0" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="6r_4"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="7r_7GGG_stop___5r_5EEE_stop___bus2___From_3_to_2_bus2" MeasurementType="smartCardEntryAndExit" TRANSIT_LINE="bus2" Transit_Route="From_3_to_2_bus2" transitMode="bus" transit_alighting_stop="5r_5EEE_stop" transit_boarding_stop="7r_7GGG_stop">
+        <Volumes>
+            <Volume PCUVolume="0.0" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="49.0118241940468" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="281.57536896503586" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[2r_3]" MeasurementId="2r_3" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="4241.068608067299" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="248.38413650886525" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="0.8252327102998831" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="2r_3"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="1_1rAAA_stop_train___5_5rEEE_stop_train___train" MeasurementType="smartCardEntryAndExit" transitMode="train" transit_alighting_stop="5_5rEEE_stop_train" transit_boarding_stop="1_1rAAA_stop_train">
+        <Volumes>
+            <Volume PCUVolume="315.36068112717277" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="40.445955558053065" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.12903708133953057" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="bus1___From_1_to_4_bus1___2_2rBBB_stop" MeasurementType="smartCardEntry" TRANSIT_LINE="bus1" Transit_Route="From_1_to_4_bus1" transitMode="bus" transit_boarding_stop="2_2rBBB_stop">
+        <Volumes>
+            <Volume PCUVolume="899.7472793939929" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="95.84909272069976" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="1.0997566297881092" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="6r_6FFF_stop___2r_2BBB_stop___bus___bus1___From_4_to_1_bus1" MeasurementType="smartCardEntryAndExit" transitMode="bus" transit_alighting_stop="2r_2BBB_stop" transit_boarding_stop="6r_6FFF_stop">
+        <Volumes>
+            <Volume PCUVolume="171.44365575074332" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="662.5958081508625" TimeBeanId="AfternoonPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[2r_5]" MeasurementId="2r_5" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="4078.5715186285274" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="460.29421283283705" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="114.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="120.0" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="211.5893024857221" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="2r_5"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="7_7rGGG_stop_train___4_4rDDD_stop_train___train" MeasurementType="smartCardEntryAndExit" transitMode="train" transit_alighting_stop="4_4rDDD_stop_train" transit_boarding_stop="7_7rGGG_stop_train">
+        <Volumes>
+            <Volume PCUVolume="53.49854760492945" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="262.2582972045798" TimeBeanId="AfternoonPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[5_1r]" MeasurementId="5_1r" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="30.0" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="374.13137648732305" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="39.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="3146.5131297887524" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="70.0" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="5_1r"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="MTR1___From_4_to_1_MTR1___6r_6FFF_stop_train" MeasurementType="smartCardEntry" TRANSIT_LINE="MTR1" Transit_Route="From_4_to_1_MTR1" transitMode="train" transit_boarding_stop="6r_6FFF_stop_train">
+        <Volumes>
+            <Volume PCUVolume="0.0" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="163.69981784512075" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="896.8696689304313" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="7r_7GGG_stop___2r_2BBB_stop___bus2___From_3_to_2_bus2" MeasurementType="smartCardEntryAndExit" TRANSIT_LINE="bus2" Transit_Route="From_3_to_2_bus2" transitMode="bus" transit_alighting_stop="2r_2BBB_stop" transit_boarding_stop="7r_7GGG_stop">
+        <Volumes>
+            <Volume PCUVolume="0.0" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="120.29612645689924" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="550.2951977779143" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[1r_5]" MeasurementId="1r_5" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="2835.6764509032228" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="168.85814197190143" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="0.1915925798536919" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="1r_5"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[1r_2]" MeasurementId="1r_2" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="3581.4197002807805" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="322.80357726837855" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="69.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="72.0" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="126.25683455187911" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="1r_2"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="bus1___From_4_to_1_bus1___4r_4DDD_stop" MeasurementType="smartCardEntry" TRANSIT_LINE="bus1" Transit_Route="From_4_to_1_bus1" transitMode="bus" transit_boarding_stop="4r_4DDD_stop">
+        <Volumes>
+            <Volume PCUVolume="0.0" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="85.16382186926634" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="994.1430893462518" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="6r_6FFF_stop___5r_5EEE_stop___bus1___From_4_to_1_bus1" MeasurementType="smartCardEntryAndExit" TRANSIT_LINE="bus1" Transit_Route="From_4_to_1_bus1" transitMode="bus" transit_alighting_stop="5r_5EEE_stop" transit_boarding_stop="6r_6FFF_stop">
+        <Volumes>
+            <Volume PCUVolume="0.0" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="29.26256993563993" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="155.8380086656371" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="MTR2___From_2_to_3_MTR2___5_5rEEE_stop_train" MeasurementType="smartCardEntry" TRANSIT_LINE="MTR2" Transit_Route="From_2_to_3_MTR2" transitMode="train" transit_boarding_stop="5_5rEEE_stop_train">
+        <Volumes>
+            <Volume PCUVolume="210.46607448393894" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="20.139132720153036" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="0.06479812802186544" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="bus2___From_3_to_2_bus2___5r_5EEE_stop" MeasurementType="smartCardEntry" TRANSIT_LINE="bus2" Transit_Route="From_3_to_2_bus2" transitMode="bus" transit_boarding_stop="5r_5EEE_stop">
+        <Volumes>
+            <Volume PCUVolume="0.0" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="41.97543703025887" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="194.91646012087375" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="1_1rAAA_stop_train___7r_7GGG_stop_train___train" MeasurementType="smartCardEntryAndExit" transitMode="train" transit_alighting_stop="7r_7GGG_stop_train" transit_boarding_stop="1_1rAAA_stop_train">
+        <Volumes>
+            <Volume PCUVolume="669.9352198992724" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="60.998041909323724" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.5585446392129202" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[5r_7]" MeasurementId="5r_7" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="3051.600242135629" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="290.1243461140821" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="45.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="48.0" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="85.03246392432483" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="5r_7"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="7r_7GGG_stop___5r_5EEE_stop___bus___bus2___From_3_to_2_bus2" MeasurementType="smartCardEntryAndExit" transitMode="bus" transit_alighting_stop="5r_5EEE_stop" transit_boarding_stop="7r_7GGG_stop">
+        <Volumes>
+            <Volume PCUVolume="48.94012620773327" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="281.41853940972976" TimeBeanId="AfternoonPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="7_7rGGG_stop_train___1r_1AAA_stop_train___train" MeasurementType="smartCardEntryAndExit" transitMode="train" transit_alighting_stop="1r_1AAA_stop_train" transit_boarding_stop="7_7rGGG_stop_train">
+        <Volumes>
+            <Volume PCUVolume="31.725686811011336" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="201.83193951623895" TimeBeanId="AfternoonPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[5r_6]" MeasurementId="5r_6" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="3862.6477273961214" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="339.0280086906564" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="69.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="72.0" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="126.74843114125095" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="5r_6"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="2_2rBBB_stop___7_7rGGG_stop___bus2___From_2_to_3_bus2" MeasurementType="smartCardEntryAndExit" TRANSIT_LINE="bus2" Transit_Route="From_2_to_3_bus2" transitMode="bus" transit_alighting_stop="7_7rGGG_stop" transit_boarding_stop="2_2rBBB_stop">
+        <Volumes>
+            <Volume PCUVolume="981.3332460282749" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="108.41346642605296" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="1.1767859852297047" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="2r_2BBB_stop___1r_1AAA_stop___bus___bus1___From_4_to_1_bus1" MeasurementType="smartCardEntryAndExit" transitMode="bus" transit_alighting_stop="1r_1AAA_stop" transit_boarding_stop="2r_2BBB_stop">
+        <Volumes>
+            <Volume PCUVolume="495.4656897982209" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="106.77890104324544" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="362.4267730463831" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="0.5071897535570543" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="MTR2___From_3_to_2_MTR2___7r_7GGG_stop_train" MeasurementType="smartCardEntry" TRANSIT_LINE="MTR2" Transit_Route="From_3_to_2_MTR2" transitMode="train" transit_boarding_stop="7r_7GGG_stop_train">
+        <Volumes>
+            <Volume PCUVolume="0.0" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="243.29059118551865" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="1413.2480223392295" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="7r_7GGG_stop___2r_2BBB_stop___bus___bus2___From_3_to_2_bus2" MeasurementType="smartCardEntryAndExit" transitMode="bus" transit_alighting_stop="2r_2BBB_stop" transit_boarding_stop="7r_7GGG_stop">
+        <Volumes>
+            <Volume PCUVolume="120.01458438765877" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="550.0738963917456" TimeBeanId="AfternoonPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="1_1rAAA_stop_train___6_6rFFF_stop_train___train" MeasurementType="smartCardEntryAndExit" transitMode="train" transit_alighting_stop="6_6rFFF_stop_train" transit_boarding_stop="1_1rAAA_stop_train">
+        <Volumes>
+            <Volume PCUVolume="143.34992707104195" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="15.848002373590214" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.050080778097280856" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[5_2r]" MeasurementId="5_2r" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="113.0" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="755.1553187435509" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="143.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="3488.122918019104" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="262.0" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="5_2r"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="MTR1___From_1_to_4_MTR1___6_6rFFF_stop_train" MeasurementType="smartCardEntry" TRANSIT_LINE="MTR1" Transit_Route="From_1_to_4_MTR1" transitMode="train" transit_boarding_stop="6_6rFFF_stop_train">
+        <Volumes>
+            <Volume PCUVolume="0.0" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="53.65235344288564" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="262.50190980720737" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="MTR1___From_4_to_1_MTR1___5r_5EEE_stop_train" MeasurementType="smartCardEntry" TRANSIT_LINE="MTR1" Transit_Route="From_4_to_1_MTR1" transitMode="train" transit_boarding_stop="5r_5EEE_stop_train">
+        <Volumes>
+            <Volume PCUVolume="0.0" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="132.53160825135095" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="781.5212133885468" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="5_5rEEE_stop___7_7rGGG_stop___bus2___From_2_to_3_bus2" MeasurementType="smartCardEntryAndExit" TRANSIT_LINE="bus2" Transit_Route="From_2_to_3_bus2" transitMode="bus" transit_alighting_stop="7_7rGGG_stop" transit_boarding_stop="5_5rEEE_stop">
+        <Volumes>
+            <Volume PCUVolume="315.29556275734933" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="40.47203921683062" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="0.12488219515714899" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="2_2rBBB_stop___6_6rFFF_stop___bus1___From_1_to_4_bus1" MeasurementType="smartCardEntryAndExit" TRANSIT_LINE="bus1" Transit_Route="From_1_to_4_bus1" transitMode="bus" transit_alighting_stop="6_6rFFF_stop" transit_boarding_stop="2_2rBBB_stop">
+        <Volumes>
+            <Volume PCUVolume="899.7472793939929" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="95.84909272069976" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="1.0997566297881092" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="4r_4DDD_stop___2r_2BBB_stop___bus___bus1___From_4_to_1_bus1" MeasurementType="smartCardEntryAndExit" transitMode="bus" transit_alighting_stop="2r_2BBB_stop" transit_boarding_stop="4r_4DDD_stop">
+        <Volumes>
+            <Volume PCUVolume="53.49854760492945" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="262.2582972045798" TimeBeanId="AfternoonPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="MTR2___From_2_to_3_MTR2___7_7rGGG_stop_train" MeasurementType="smartCardEntry" TRANSIT_LINE="MTR2" Transit_Route="From_2_to_3_MTR2" transitMode="train" transit_boarding_stop="7_7rGGG_stop_train">
+        <Volumes>
+            <Volume PCUVolume="0.0" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="282.4266289563871" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="1475.3523964029641" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[6_7r]" MeasurementId="6_7r" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="4280.915611569464" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="423.552379065594" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="74.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="78.0" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="137.57366385155083" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="6_7r"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="7_7rGGG_stop_train___2r_2BBB_stop_train___train" MeasurementType="smartCardEntryAndExit" transitMode="train" transit_alighting_stop="2r_2BBB_stop_train" transit_boarding_stop="7_7rGGG_stop_train">
+        <Volumes>
+            <Volume PCUVolume="44.165740087188254" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="239.8890000425889" TimeBeanId="AfternoonPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="4r_4DDD_stop___1r_1AAA_stop___bus___bus1___From_4_to_1_bus1" MeasurementType="smartCardEntryAndExit" transitMode="bus" transit_alighting_stop="1r_1AAA_stop" transit_boarding_stop="4r_4DDD_stop">
+        <Volumes>
+            <Volume PCUVolume="31.470725929512902" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="731.3020820869837" TimeBeanId="AfternoonPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="bus2___From_2_to_3_bus2___2_2rBBB_stop" MeasurementType="smartCardEntry" TRANSIT_LINE="bus2" Transit_Route="From_2_to_3_bus2" transitMode="bus" transit_boarding_stop="2_2rBBB_stop">
+        <Volumes>
+            <Volume PCUVolume="981.3332460282749" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="108.41346642605296" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="1.1767859852297047" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="bus2___From_3_to_2_bus2___7r_7GGG_stop" MeasurementType="smartCardEntry" TRANSIT_LINE="bus2" Transit_Route="From_3_to_2_bus2" transitMode="bus" transit_boarding_stop="7r_7GGG_stop">
+        <Volumes>
+            <Volume PCUVolume="0.0" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="169.30795065094605" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="831.8705667429501" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="6r_6FFF_stop___2r_2BBB_stop___bus1___From_4_to_1_bus1" MeasurementType="smartCardEntryAndExit" TRANSIT_LINE="bus1" Transit_Route="From_4_to_1_bus1" transitMode="bus" transit_alighting_stop="2r_2BBB_stop" transit_boarding_stop="6r_6FFF_stop">
+        <Volumes>
+            <Volume PCUVolume="0.0" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="171.80913173074742" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="662.5745440616581" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="2r_2BBB_stop___1r_1AAA_stop___bus1___From_4_to_1_bus1" MeasurementType="smartCardEntryAndExit" TRANSIT_LINE="bus1" Transit_Route="From_4_to_1_bus1" transitMode="bus" transit_alighting_stop="1r_1AAA_stop" transit_boarding_stop="2r_2BBB_stop">
+        <Volumes>
+            <Volume PCUVolume="495.3639244043083" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="106.91208243366488" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="362.74096387201286" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="0.5156270486882312" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="7_7rGGG_stop___6_6rFFF_stop___bus2___From_2_to_3_bus2" MeasurementType="smartCardEntryAndExit" TRANSIT_LINE="bus2" Transit_Route="From_2_to_3_bus2" transitMode="bus" transit_alighting_stop="6_6rFFF_stop" transit_boarding_stop="7_7rGGG_stop">
+        <Volumes>
+            <Volume PCUVolume="0.0" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="218.07880769578134" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="928.142286118788" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="MTR2___From_3_to_2_MTR2___6r_6FFF_stop_train" MeasurementType="smartCardEntry" TRANSIT_LINE="MTR2" Transit_Route="From_3_to_2_MTR2" transitMode="train" transit_boarding_stop="6r_6FFF_stop_train">
+        <Volumes>
+            <Volume PCUVolume="1189.8691256691327" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="110.02863942794" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="1.1257915529882678" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="4r_4DDD_stop___1r_1AAA_stop___bus1___From_4_to_1_bus1" MeasurementType="smartCardEntryAndExit" TRANSIT_LINE="bus1" Transit_Route="From_4_to_1_bus1" transitMode="bus" transit_alighting_stop="1r_1AAA_stop" transit_boarding_stop="4r_4DDD_stop">
+        <Volumes>
+            <Volume PCUVolume="0.0" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="31.51146842638071" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="731.6411795390444" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="1_1rAAA_stop___2_2rBBB_stop___bus___bus1___From_1_to_4_bus1" MeasurementType="smartCardEntryAndExit" transitMode="bus" transit_alighting_stop="2_2rBBB_stop" transit_boarding_stop="1_1rAAA_stop">
+        <Volumes>
+            <Volume PCUVolume="350.643622792658" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="34.66613247891946" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.10871364227474045" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="1_1rAAA_stop_train___7_7rGGG_stop_train___train" MeasurementType="smartCardEntryAndExit" transitMode="train" transit_alighting_stop="7_7rGGG_stop_train" transit_boarding_stop="1_1rAAA_stop_train">
+        <Volumes>
+            <Volume PCUVolume="210.42106689866267" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="20.11954712665987" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.06294460749071865" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="bus1___From_1_to_4_bus1___1_1rAAA_stop" MeasurementType="smartCardEntry" TRANSIT_LINE="bus1" Transit_Route="From_1_to_4_bus1" transitMode="bus" transit_boarding_stop="1_1rAAA_stop">
+        <Volumes>
+            <Volume PCUVolume="733.0205153461152" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="83.2714008904158" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="0.25452679016107865" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="bus2___From_3_to_2_bus2___6r_6FFF_stop" MeasurementType="smartCardEntry" TRANSIT_LINE="bus2" Transit_Route="From_3_to_2_bus2" transitMode="bus" transit_boarding_stop="6r_6FFF_stop">
+        <Volumes>
+            <Volume PCUVolume="905.407130166803" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="111.31909870249744" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="0.7450783291143691" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="MTR1___From_4_to_1_MTR1___4r_4DDD_stop_train" MeasurementType="smartCardEntry" TRANSIT_LINE="MTR1" Transit_Route="From_4_to_1_MTR1" transitMode="train" transit_boarding_stop="4r_4DDD_stop_train">
+        <Volumes>
+            <Volume PCUVolume="0.0" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="33.055681812437435" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="810.592918458774" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="0.0" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="1_1rAAA_stop___6_6rFFF_stop___bus___bus1___From_1_to_4_bus1" MeasurementType="smartCardEntryAndExit" transitMode="bus" transit_alighting_stop="6_6rFFF_stop" transit_boarding_stop="1_1rAAA_stop">
+        <Volumes>
+            <Volume PCUVolume="382.23883031704025" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="48.5510765981141" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="0.1545991602357794" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="7r_7GGG_stop_train___1r_1AAA_stop_train___train" MeasurementType="smartCardEntryAndExit" transitMode="train" transit_alighting_stop="1r_1AAA_stop_train" transit_boarding_stop="7r_7GGG_stop_train">
+        <Volumes>
+            <Volume PCUVolume="54.16902194651598" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="343.64619110398615" TimeBeanId="AfternoonPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[4_6r]" MeasurementId="4_6r" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="84.0" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="217.47450993761657" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="108.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="1369.145035908268" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="196.0" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="4_6r"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[]" MeasurementId="7_7rGGG_stop_train___6_6rFFF_stop_train___train" MeasurementType="smartCardEntryAndExit" transitMode="train" transit_alighting_stop="6_6rFFF_stop_train" transit_boarding_stop="7_7rGGG_stop_train">
+        <Volumes>
+            <Volume PCUVolume="110.48366682299894" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="575.193864800914" TimeBeanId="AfternoonPeak"/>
+        </Volumes>
+        <LinkIds/>
+    </Measurement>
+    <Measurement LINK_LIST="[7_5r]" MeasurementId="7_5r" MeasurementType="linkVolume">
+        <Volumes>
+            <Volume PCUVolume="59.0" TimeBeanId="MorningPeak"/>
+            <Volume PCUVolume="572.2374256177598" TimeBeanId="AfterMorningPeak"/>
+            <Volume PCUVolume="74.0" TimeBeanId="AfterAfternoonPeak"/>
+            <Volume PCUVolume="3046.6900310257374" TimeBeanId="AfternoonPeak"/>
+            <Volume PCUVolume="136.0" TimeBeanId="BeforeMorningPeak"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="7_5r"/>
+        </LinkIds>
+    </Measurement>
+</Measurements>

@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE network SYSTEM "http://www.matsim.org/files/dtd/network_v2.dtd">
+<network>
+
+<!-- ====================================================================== -->
+
+	<nodes>
+		<node id="1" x="0.0" y="20000.0" >
+		</node>
+		<node id="1r" x="10.0" y="20000.0" >
+		</node>
+		<node id="2" x="10000.0" y="20000.0" >
+		</node>
+		<node id="2r" x="10010.0" y="20000.0" >
+		</node>
+		<node id="3" x="20000.0" y="20000.0" >
+		</node>
+		<node id="3r" x="20010.0" y="20000.0" >
+		</node>
+		<node id="4" x="30000.0" y="20000.0" >
+		</node>
+		<node id="4r" x="30010.0" y="20000.0" >
+		</node>
+		<node id="5" x="10000.0" y="10000.0" >
+		</node>
+		<node id="5r" x="10010.0" y="10000.0" >
+		</node>
+		<node id="6" x="20000.0" y="10000.0" >
+		</node>
+		<node id="6r" x="20010.0" y="10000.0" >
+		</node>
+		<node id="7" x="15000.0" y="0.0" >
+		</node>
+		<node id="7r" x="15010.0" y="0.0" >
+		</node>
+	</nodes>
+
+<!-- ====================================================================== -->
+
+	<links capperiod="01:00:00" effectivecellsize="7.5" effectivelanewidth="3.75">
+		<link id="1_1r_stop" from="1" to="1r" length="10.0" freespeed="16.67" capacity="400000.0" permlanes="2.0" oneway="1" modes="bus,car" >
+		</link>
+		<link id="1_1r_stop_train" from="1" to="1r" length="10.0" freespeed="16.67" capacity="400000.0" permlanes="2.0" oneway="1" modes="train" >
+		</link>
+		<link id="1r_1_stop" from="1r" to="1" length="10.0" freespeed="16.67" capacity="400000.0" permlanes="2.0" oneway="1" modes="bus,car" >
+		</link>
+		<link id="1r_1_stop_train" from="1r" to="1" length="10.0" freespeed="16.67" capacity="400000.0" permlanes="2.0" oneway="1" modes="train" >
+		</link>
+		<link id="1r_2" from="1r" to="2" length="9990.0" freespeed="13.89" capacity="1800.0" permlanes="1.0" oneway="1" modes="bus,car" >
+		</link>
+		<link id="1r_5" from="1r" to="5" length="14135.066324570253" freespeed="13.89" capacity="1800.0" permlanes="1.0" oneway="1" modes="bus,car" >
+		</link>
+		<link id="1r_5_MTR" from="1r" to="5" length="14135.066324570253" freespeed="22.22" capacity="3600.0" permlanes="2.0" oneway="1" modes="train" >
+		</link>
+		<link id="2_1r" from="2" to="1r" length="9990.0" freespeed="13.89" capacity="1800.0" permlanes="1.0" oneway="1" modes="bus,car" >
+		</link>
+		<link id="2_2r_stop" from="2" to="2r" length="10.0" freespeed="16.67" capacity="400000.0" permlanes="2.0" oneway="1" modes="bus,car" >
+		</link>
+		<link id="2_2r_stop_train" from="2" to="2r" length="10.0" freespeed="16.67" capacity="400000.0" permlanes="2.0" oneway="1" modes="train" >
+		</link>
+		<link id="2r_2_stop" from="2r" to="2" length="10.0" freespeed="16.67" capacity="400000.0" permlanes="2.0" oneway="1" modes="bus,car" >
+		</link>
+		<link id="2r_2_stop_train" from="2r" to="2" length="10.0" freespeed="16.67" capacity="400000.0" permlanes="2.0" oneway="1" modes="train" >
+		</link>
+		<link id="2r_3" from="2r" to="3" length="9990.0" freespeed="13.89" capacity="1800.0" permlanes="1.0" oneway="1" modes="bus,car" >
+		</link>
+		<link id="2r_5" from="2r" to="5" length="10000.00499999875" freespeed="13.89" capacity="1800.0" permlanes="1.0" oneway="1" modes="bus,car" >
+		</link>
+		<link id="2r_5_MTR" from="2r" to="5" length="10000.00499999875" freespeed="22.22" capacity="3600.0" permlanes="2.0" oneway="1" modes="train" >
+		</link>
+		<link id="3_2r" from="3" to="2r" length="9990.0" freespeed="13.89" capacity="1800.0" permlanes="1.0" oneway="1" modes="bus,car" >
+		</link>
+		<link id="3_3r_stop" from="3" to="3r" length="10.0" freespeed="16.67" capacity="400000.0" permlanes="2.0" oneway="1" modes="bus,car" >
+		</link>
+		<link id="3_3r_stop_train" from="3" to="3r" length="10.0" freespeed="16.67" capacity="400000.0" permlanes="2.0" oneway="1" modes="train" >
+		</link>
+		<link id="3_6r" from="3" to="6r" length="10000.00499999875" freespeed="13.89" capacity="1800.0" permlanes="1.0" oneway="1" modes="bus,car" >
+		</link>
+		<link id="3_6r_MTR" from="3" to="6r" length="10000.00499999875" freespeed="22.22" capacity="3600.0" permlanes="2.0" oneway="1" modes="train" >
+		</link>
+		<link id="3r_3_stop" from="3r" to="3" length="10.0" freespeed="16.67" capacity="400000.0" permlanes="2.0" oneway="1" modes="bus,car" >
+		</link>
+		<link id="3r_3_stop_train" from="3r" to="3" length="10.0" freespeed="16.67" capacity="400000.0" permlanes="2.0" oneway="1" modes="train" >
+		</link>
+		<link id="3r_4" from="3r" to="4" length="9990.0" freespeed="13.89" capacity="1800.0" permlanes="1.0" oneway="1" modes="bus,car" >
+		</link>
+		<link id="4_3r" from="4" to="3r" length="9990.0" freespeed="13.89" capacity="1800.0" permlanes="1.0" oneway="1" modes="bus,car" >
+		</link>
+		<link id="4_4r_stop" from="4" to="4r" length="10.0" freespeed="16.67" capacity="400000.0" permlanes="2.0" oneway="1" modes="bus,car" >
+		</link>
+		<link id="4_4r_stop_train" from="4" to="4r" length="10.0" freespeed="16.67" capacity="400000.0" permlanes="2.0" oneway="1" modes="train" >
+		</link>
+		<link id="4_6r" from="4" to="6r" length="14135.066324570253" freespeed="13.89" capacity="1800.0" permlanes="1.0" oneway="1" modes="bus,car" >
+		</link>
+		<link id="4_6r_MTR" from="4" to="6r" length="14135.066324570253" freespeed="22.22" capacity="3600.0" permlanes="2.0" oneway="1" modes="train" >
+		</link>
+		<link id="4r_4_stop" from="4r" to="4" length="10.0" freespeed="16.67" capacity="400000.0" permlanes="2.0" oneway="1" modes="bus,car" >
+		</link>
+		<link id="4r_4_stop_train" from="4r" to="4" length="10.0" freespeed="16.67" capacity="400000.0" permlanes="2.0" oneway="1" modes="train" >
+		</link>
+		<link id="5_1r" from="5" to="1r" length="14135.066324570253" freespeed="13.89" capacity="1800.0" permlanes="1.0" oneway="1" modes="bus,car" >
+		</link>
+		<link id="5_1r_MTR" from="5" to="1r" length="14135.066324570253" freespeed="22.22" capacity="3600.0" permlanes="2.0" oneway="1" modes="train" >
+		</link>
+		<link id="5_2r" from="5" to="2r" length="10000.00499999875" freespeed="13.89" capacity="1800.0" permlanes="1.0" oneway="1" modes="bus,car" >
+		</link>
+		<link id="5_2r_MTR" from="5" to="2r" length="10000.00499999875" freespeed="22.22" capacity="3600.0" permlanes="2.0" oneway="1" modes="train" >
+		</link>
+		<link id="5_5r_stop" from="5" to="5r" length="10.0" freespeed="16.67" capacity="400000.0" permlanes="2.0" oneway="1" modes="bus,car" >
+		</link>
+		<link id="5_5r_stop_train" from="5" to="5r" length="10.0" freespeed="16.67" capacity="400000.0" permlanes="2.0" oneway="1" modes="train" >
+		</link>
+		<link id="5r_5_stop" from="5r" to="5" length="10.0" freespeed="16.67" capacity="400000.0" permlanes="2.0" oneway="1" modes="bus,car" >
+		</link>
+		<link id="5r_5_stop_train" from="5r" to="5" length="10.0" freespeed="16.67" capacity="400000.0" permlanes="2.0" oneway="1" modes="train" >
+		</link>
+		<link id="5r_6" from="5r" to="6" length="9990.0" freespeed="13.89" capacity="1800.0" permlanes="1.0" oneway="1" modes="bus,car" >
+		</link>
+		<link id="5r_6_MTR" from="5r" to="6" length="9990.0" freespeed="22.22" capacity="3600.0" permlanes="2.0" oneway="1" modes="train" >
+		</link>
+		<link id="5r_7" from="5r" to="7" length="11175.871330683796" freespeed="13.89" capacity="1800.0" permlanes="1.0" oneway="1" modes="bus,car" >
+		</link>
+		<link id="5r_7_MTR" from="5r" to="7" length="11175.871330683796" freespeed="22.22" capacity="3600.0" permlanes="2.0" oneway="1" modes="train" >
+		</link>
+		<link id="6_5r" from="6" to="5r" length="9990.0" freespeed="13.89" capacity="1800.0" permlanes="1.0" oneway="1" modes="bus,car" >
+		</link>
+		<link id="6_5r_MTR" from="6" to="5r" length="9990.0" freespeed="22.22" capacity="3600.0" permlanes="2.0" oneway="1" modes="train" >
+		</link>
+		<link id="6_6r_stop" from="6" to="6r" length="10.0" freespeed="16.67" capacity="400000.0" permlanes="2.0" oneway="1" modes="bus,car" >
+		</link>
+		<link id="6_6r_stop_train" from="6" to="6r" length="10.0" freespeed="16.67" capacity="400000.0" permlanes="2.0" oneway="1" modes="train" >
+		</link>
+		<link id="6_7r" from="6" to="7r" length="11175.871330683796" freespeed="13.89" capacity="1800.0" permlanes="1.0" oneway="1" modes="bus,car" >
+		</link>
+		<link id="6_7r_MTR" from="6" to="7r" length="11175.871330683796" freespeed="22.22" capacity="3600.0" permlanes="2.0" oneway="1" modes="train" >
+		</link>
+		<link id="6r_3" from="6r" to="3" length="10000.00499999875" freespeed="13.89" capacity="1800.0" permlanes="1.0" oneway="1" modes="bus,car" >
+		</link>
+		<link id="6r_3_MTR" from="6r" to="3" length="10000.00499999875" freespeed="22.22" capacity="3600.0" permlanes="2.0" oneway="1" modes="train" >
+		</link>
+		<link id="6r_4" from="6r" to="4" length="14135.066324570253" freespeed="13.89" capacity="1800.0" permlanes="1.0" oneway="1" modes="bus,car" >
+		</link>
+		<link id="6r_4_MTR" from="6r" to="4" length="14135.066324570253" freespeed="22.22" capacity="3600.0" permlanes="2.0" oneway="1" modes="train" >
+		</link>
+		<link id="6r_6_stop" from="6r" to="6" length="10.0" freespeed="16.67" capacity="400000.0" permlanes="2.0" oneway="1" modes="bus,car" >
+		</link>
+		<link id="6r_6_stop_train" from="6r" to="6" length="10.0" freespeed="16.67" capacity="400000.0" permlanes="2.0" oneway="1" modes="train" >
+		</link>
+		<link id="7_5r" from="7" to="5r" length="11175.871330683796" freespeed="13.89" capacity="1800.0" permlanes="1.0" oneway="1" modes="bus,car" >
+		</link>
+		<link id="7_5r_MTR" from="7" to="5r" length="11175.871330683796" freespeed="22.22" capacity="3600.0" permlanes="2.0" oneway="1" modes="train" >
+		</link>
+		<link id="7_7r_stop" from="7" to="7r" length="10.0" freespeed="16.67" capacity="400000.0" permlanes="2.0" oneway="1" modes="bus,car" >
+		</link>
+		<link id="7_7r_stop_train" from="7" to="7r" length="10.0" freespeed="16.67" capacity="400000.0" permlanes="2.0" oneway="1" modes="train" >
+		</link>
+		<link id="7r_6" from="7r" to="6" length="11175.871330683796" freespeed="13.89" capacity="1800.0" permlanes="1.0" oneway="1" modes="bus,car" >
+		</link>
+		<link id="7r_6_MTR" from="7r" to="6" length="11175.871330683796" freespeed="22.22" capacity="3600.0" permlanes="2.0" oneway="1" modes="train" >
+		</link>
+		<link id="7r_7_stop" from="7r" to="7" length="10.0" freespeed="16.67" capacity="400000.0" permlanes="2.0" oneway="1" modes="bus,car" >
+		</link>
+		<link id="7r_7_stop_train" from="7r" to="7" length="10.0" freespeed="16.67" capacity="400000.0" permlanes="2.0" oneway="1" modes="train" >
+		</link>
+	</links>
+
+<!-- ====================================================================== -->
+
+</network>

@@ -1,0 +1,1542 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE transitSchedule SYSTEM "http://www.matsim.org/files/dtd/transitSchedule_v2.dtd">
+
+<transitSchedule>
+
+	<transitStops>
+		<stopFacility id="1_1rAAA_stop" x="10.0" y="20000.0" linkRefId="1_1r_stop" name="Station1" isBlocking="false"/>
+		<stopFacility id="1_1rAAA_stop_train" x="10.0" y="20000.0" linkRefId="1_1r_stop_train" name="Station1_train" isBlocking="false"/>
+		<stopFacility id="1r_1AAA_stop" x="10.0" y="20000.0" linkRefId="1r_1_stop" name="Station1" isBlocking="false"/>
+		<stopFacility id="1r_1AAA_stop_train" x="10.0" y="20000.0" linkRefId="1r_1_stop_train" name="Station1_train" isBlocking="false"/>
+		<stopFacility id="2_2rBBB_stop" x="10010.0" y="20000.0" linkRefId="2_2r_stop" name="Station2" isBlocking="false"/>
+		<stopFacility id="2_2rBBB_stop_train" x="10010.0" y="20000.0" linkRefId="2_2r_stop_train" name="Station2_train" isBlocking="false"/>
+		<stopFacility id="2r_2BBB_stop" x="10010.0" y="20000.0" linkRefId="2r_2_stop" name="Station2" isBlocking="false"/>
+		<stopFacility id="2r_2BBB_stop_train" x="10010.0" y="20000.0" linkRefId="2r_2_stop_train" name="Station2_train" isBlocking="false"/>
+		<stopFacility id="3_3rCCC_stop" x="20010.0" y="20000.0" linkRefId="3_3r_stop" name="Station3" isBlocking="false"/>
+		<stopFacility id="3_3rCCC_stop_train" x="20010.0" y="20000.0" linkRefId="3_3r_stop_train" name="Station3_train" isBlocking="false"/>
+		<stopFacility id="3r_3CCC_stop" x="20010.0" y="20000.0" linkRefId="3r_3_stop" name="Station3" isBlocking="false"/>
+		<stopFacility id="3r_3CCC_stop_train" x="20010.0" y="20000.0" linkRefId="3r_3_stop_train" name="Station3_train" isBlocking="false"/>
+		<stopFacility id="4_4rDDD_stop" x="30010.0" y="20000.0" linkRefId="4_4r_stop" name="Station4" isBlocking="false"/>
+		<stopFacility id="4_4rDDD_stop_train" x="30010.0" y="20000.0" linkRefId="4_4r_stop_train" name="Station4_train" isBlocking="false"/>
+		<stopFacility id="4r_4DDD_stop" x="30010.0" y="20000.0" linkRefId="4r_4_stop" name="Station4" isBlocking="false"/>
+		<stopFacility id="4r_4DDD_stop_train" x="30010.0" y="20000.0" linkRefId="4r_4_stop_train" name="Station4_train" isBlocking="false"/>
+		<stopFacility id="5_5rEEE_stop" x="10010.0" y="10000.0" linkRefId="5_5r_stop" name="Station5" isBlocking="false"/>
+		<stopFacility id="5_5rEEE_stop_train" x="10010.0" y="10000.0" linkRefId="5_5r_stop_train" name="Station5_train" isBlocking="false"/>
+		<stopFacility id="5r_5EEE_stop" x="10010.0" y="10000.0" linkRefId="5r_5_stop" name="Station5" isBlocking="false"/>
+		<stopFacility id="5r_5EEE_stop_train" x="10010.0" y="10000.0" linkRefId="5r_5_stop_train" name="Station5_train" isBlocking="false"/>
+		<stopFacility id="6_6rFFF_stop" x="20010.0" y="10000.0" linkRefId="6_6r_stop" name="Station6" isBlocking="false"/>
+		<stopFacility id="6_6rFFF_stop_train" x="20010.0" y="10000.0" linkRefId="6_6r_stop_train" name="Station6_train" isBlocking="false"/>
+		<stopFacility id="6r_6FFF_stop" x="20010.0" y="10000.0" linkRefId="6r_6_stop" name="Station6" isBlocking="false"/>
+		<stopFacility id="6r_6FFF_stop_train" x="20010.0" y="10000.0" linkRefId="6r_6_stop_train" name="Station6_train" isBlocking="false"/>
+		<stopFacility id="7_7rGGG_stop" x="15010.0" y="0.0" linkRefId="7_7r_stop" name="Station7" isBlocking="false"/>
+		<stopFacility id="7_7rGGG_stop_train" x="15010.0" y="0.0" linkRefId="7_7r_stop_train" name="Station7_train" isBlocking="false"/>
+		<stopFacility id="7r_7GGG_stop" x="15010.0" y="0.0" linkRefId="7r_7_stop" name="Station7" isBlocking="false"/>
+		<stopFacility id="7r_7GGG_stop_train" x="15010.0" y="0.0" linkRefId="7r_7_stop_train" name="Station7_train" isBlocking="false"/>
+	</transitStops>
+	<transitLine id="MTR1">
+		<transitRoute id="From_1_to_4_MTR1">
+			<transportMode>train</transportMode>
+			<routeProfile>
+				<stop refId="1_1rAAA_stop_train" arrivalOffset="00:00:00" departureOffset="00:00:30" awaitDeparture="false"/>
+				<stop refId="5_5rEEE_stop_train" arrivalOffset="00:10:30" departureOffset="00:11:00" awaitDeparture="false"/>
+				<stop refId="6_6rFFF_stop_train" arrivalOffset="00:21:00" departureOffset="00:21:30" awaitDeparture="false"/>
+				<stop refId="4_4rDDD_stop_train" arrivalOffset="00:31:30" departureOffset="00:32:00" awaitDeparture="false"/>
+			</routeProfile>
+			<route>
+				<link refId="1_1r_stop_train"/>
+				<link refId="1r_5_MTR"/>
+				<link refId="5_5r_stop_train"/>
+				<link refId="5r_6_MTR"/>
+				<link refId="6_6r_stop_train"/>
+				<link refId="6r_4_MTR"/>
+				<link refId="4_4r_stop_train"/>
+			</route>
+			<departures>
+				<departure id="From_1_to_4_MTR1_0" departureTime="00:00:00" vehicleRefId="From_1_to_4_MTR1_0"/>
+				<departure id="From_1_to_4_MTR1_10080" departureTime="02:48:00" vehicleRefId="From_1_to_4_MTR1_10080"/>
+				<departure id="From_1_to_4_MTR1_10440" departureTime="02:54:00" vehicleRefId="From_1_to_4_MTR1_10440"/>
+				<departure id="From_1_to_4_MTR1_1080" departureTime="00:18:00" vehicleRefId="From_1_to_4_MTR1_1080"/>
+				<departure id="From_1_to_4_MTR1_10800" departureTime="03:00:00" vehicleRefId="From_1_to_4_MTR1_10800"/>
+				<departure id="From_1_to_4_MTR1_11160" departureTime="03:06:00" vehicleRefId="From_1_to_4_MTR1_11160"/>
+				<departure id="From_1_to_4_MTR1_11520" departureTime="03:12:00" vehicleRefId="From_1_to_4_MTR1_11520"/>
+				<departure id="From_1_to_4_MTR1_11880" departureTime="03:18:00" vehicleRefId="From_1_to_4_MTR1_11880"/>
+				<departure id="From_1_to_4_MTR1_12240" departureTime="03:24:00" vehicleRefId="From_1_to_4_MTR1_12240"/>
+				<departure id="From_1_to_4_MTR1_12600" departureTime="03:30:00" vehicleRefId="From_1_to_4_MTR1_12600"/>
+				<departure id="From_1_to_4_MTR1_12960" departureTime="03:36:00" vehicleRefId="From_1_to_4_MTR1_12960"/>
+				<departure id="From_1_to_4_MTR1_13320" departureTime="03:42:00" vehicleRefId="From_1_to_4_MTR1_13320"/>
+				<departure id="From_1_to_4_MTR1_13680" departureTime="03:48:00" vehicleRefId="From_1_to_4_MTR1_13680"/>
+				<departure id="From_1_to_4_MTR1_14040" departureTime="03:54:00" vehicleRefId="From_1_to_4_MTR1_14040"/>
+				<departure id="From_1_to_4_MTR1_1440" departureTime="00:24:00" vehicleRefId="From_1_to_4_MTR1_1440"/>
+				<departure id="From_1_to_4_MTR1_14400" departureTime="04:00:00" vehicleRefId="From_1_to_4_MTR1_14400"/>
+				<departure id="From_1_to_4_MTR1_14760" departureTime="04:06:00" vehicleRefId="From_1_to_4_MTR1_14760"/>
+				<departure id="From_1_to_4_MTR1_15120" departureTime="04:12:00" vehicleRefId="From_1_to_4_MTR1_15120"/>
+				<departure id="From_1_to_4_MTR1_15480" departureTime="04:18:00" vehicleRefId="From_1_to_4_MTR1_15480"/>
+				<departure id="From_1_to_4_MTR1_15840" departureTime="04:24:00" vehicleRefId="From_1_to_4_MTR1_15840"/>
+				<departure id="From_1_to_4_MTR1_16200" departureTime="04:30:00" vehicleRefId="From_1_to_4_MTR1_16200"/>
+				<departure id="From_1_to_4_MTR1_16560" departureTime="04:36:00" vehicleRefId="From_1_to_4_MTR1_16560"/>
+				<departure id="From_1_to_4_MTR1_16920" departureTime="04:42:00" vehicleRefId="From_1_to_4_MTR1_16920"/>
+				<departure id="From_1_to_4_MTR1_17280" departureTime="04:48:00" vehicleRefId="From_1_to_4_MTR1_17280"/>
+				<departure id="From_1_to_4_MTR1_17640" departureTime="04:54:00" vehicleRefId="From_1_to_4_MTR1_17640"/>
+				<departure id="From_1_to_4_MTR1_1800" departureTime="00:30:00" vehicleRefId="From_1_to_4_MTR1_1800"/>
+				<departure id="From_1_to_4_MTR1_18000" departureTime="05:00:00" vehicleRefId="From_1_to_4_MTR1_18000"/>
+				<departure id="From_1_to_4_MTR1_18360" departureTime="05:06:00" vehicleRefId="From_1_to_4_MTR1_18360"/>
+				<departure id="From_1_to_4_MTR1_18720" departureTime="05:12:00" vehicleRefId="From_1_to_4_MTR1_18720"/>
+				<departure id="From_1_to_4_MTR1_19080" departureTime="05:18:00" vehicleRefId="From_1_to_4_MTR1_19080"/>
+				<departure id="From_1_to_4_MTR1_19440" departureTime="05:24:00" vehicleRefId="From_1_to_4_MTR1_19440"/>
+				<departure id="From_1_to_4_MTR1_19800" departureTime="05:30:00" vehicleRefId="From_1_to_4_MTR1_19800"/>
+				<departure id="From_1_to_4_MTR1_20160" departureTime="05:36:00" vehicleRefId="From_1_to_4_MTR1_20160"/>
+				<departure id="From_1_to_4_MTR1_20520" departureTime="05:42:00" vehicleRefId="From_1_to_4_MTR1_20520"/>
+				<departure id="From_1_to_4_MTR1_20880" departureTime="05:48:00" vehicleRefId="From_1_to_4_MTR1_20880"/>
+				<departure id="From_1_to_4_MTR1_21240" departureTime="05:54:00" vehicleRefId="From_1_to_4_MTR1_21240"/>
+				<departure id="From_1_to_4_MTR1_2160" departureTime="00:36:00" vehicleRefId="From_1_to_4_MTR1_2160"/>
+				<departure id="From_1_to_4_MTR1_21600" departureTime="06:00:00" vehicleRefId="From_1_to_4_MTR1_21600"/>
+				<departure id="From_1_to_4_MTR1_21960" departureTime="06:06:00" vehicleRefId="From_1_to_4_MTR1_21960"/>
+				<departure id="From_1_to_4_MTR1_22320" departureTime="06:12:00" vehicleRefId="From_1_to_4_MTR1_22320"/>
+				<departure id="From_1_to_4_MTR1_22680" departureTime="06:18:00" vehicleRefId="From_1_to_4_MTR1_22680"/>
+				<departure id="From_1_to_4_MTR1_23040" departureTime="06:24:00" vehicleRefId="From_1_to_4_MTR1_23040"/>
+				<departure id="From_1_to_4_MTR1_23400" departureTime="06:30:00" vehicleRefId="From_1_to_4_MTR1_23400"/>
+				<departure id="From_1_to_4_MTR1_23760" departureTime="06:36:00" vehicleRefId="From_1_to_4_MTR1_23760"/>
+				<departure id="From_1_to_4_MTR1_24120" departureTime="06:42:00" vehicleRefId="From_1_to_4_MTR1_24120"/>
+				<departure id="From_1_to_4_MTR1_24480" departureTime="06:48:00" vehicleRefId="From_1_to_4_MTR1_24480"/>
+				<departure id="From_1_to_4_MTR1_24840" departureTime="06:54:00" vehicleRefId="From_1_to_4_MTR1_24840"/>
+				<departure id="From_1_to_4_MTR1_2520" departureTime="00:42:00" vehicleRefId="From_1_to_4_MTR1_2520"/>
+				<departure id="From_1_to_4_MTR1_25200" departureTime="07:00:00" vehicleRefId="From_1_to_4_MTR1_25200"/>
+				<departure id="From_1_to_4_MTR1_25560" departureTime="07:06:00" vehicleRefId="From_1_to_4_MTR1_25560"/>
+				<departure id="From_1_to_4_MTR1_25920" departureTime="07:12:00" vehicleRefId="From_1_to_4_MTR1_25920"/>
+				<departure id="From_1_to_4_MTR1_26280" departureTime="07:18:00" vehicleRefId="From_1_to_4_MTR1_26280"/>
+				<departure id="From_1_to_4_MTR1_26640" departureTime="07:24:00" vehicleRefId="From_1_to_4_MTR1_26640"/>
+				<departure id="From_1_to_4_MTR1_27000" departureTime="07:30:00" vehicleRefId="From_1_to_4_MTR1_27000"/>
+				<departure id="From_1_to_4_MTR1_27360" departureTime="07:36:00" vehicleRefId="From_1_to_4_MTR1_27360"/>
+				<departure id="From_1_to_4_MTR1_27720" departureTime="07:42:00" vehicleRefId="From_1_to_4_MTR1_27720"/>
+				<departure id="From_1_to_4_MTR1_28080" departureTime="07:48:00" vehicleRefId="From_1_to_4_MTR1_28080"/>
+				<departure id="From_1_to_4_MTR1_28440" departureTime="07:54:00" vehicleRefId="From_1_to_4_MTR1_28440"/>
+				<departure id="From_1_to_4_MTR1_2880" departureTime="00:48:00" vehicleRefId="From_1_to_4_MTR1_2880"/>
+				<departure id="From_1_to_4_MTR1_28800" departureTime="08:00:00" vehicleRefId="From_1_to_4_MTR1_28800"/>
+				<departure id="From_1_to_4_MTR1_29160" departureTime="08:06:00" vehicleRefId="From_1_to_4_MTR1_29160"/>
+				<departure id="From_1_to_4_MTR1_29520" departureTime="08:12:00" vehicleRefId="From_1_to_4_MTR1_29520"/>
+				<departure id="From_1_to_4_MTR1_29880" departureTime="08:18:00" vehicleRefId="From_1_to_4_MTR1_29880"/>
+				<departure id="From_1_to_4_MTR1_30240" departureTime="08:24:00" vehicleRefId="From_1_to_4_MTR1_30240"/>
+				<departure id="From_1_to_4_MTR1_30600" departureTime="08:30:00" vehicleRefId="From_1_to_4_MTR1_30600"/>
+				<departure id="From_1_to_4_MTR1_30960" departureTime="08:36:00" vehicleRefId="From_1_to_4_MTR1_30960"/>
+				<departure id="From_1_to_4_MTR1_31320" departureTime="08:42:00" vehicleRefId="From_1_to_4_MTR1_31320"/>
+				<departure id="From_1_to_4_MTR1_31680" departureTime="08:48:00" vehicleRefId="From_1_to_4_MTR1_31680"/>
+				<departure id="From_1_to_4_MTR1_32040" departureTime="08:54:00" vehicleRefId="From_1_to_4_MTR1_32040"/>
+				<departure id="From_1_to_4_MTR1_3240" departureTime="00:54:00" vehicleRefId="From_1_to_4_MTR1_3240"/>
+				<departure id="From_1_to_4_MTR1_32400" departureTime="09:00:00" vehicleRefId="From_1_to_4_MTR1_32400"/>
+				<departure id="From_1_to_4_MTR1_32760" departureTime="09:06:00" vehicleRefId="From_1_to_4_MTR1_32760"/>
+				<departure id="From_1_to_4_MTR1_33120" departureTime="09:12:00" vehicleRefId="From_1_to_4_MTR1_33120"/>
+				<departure id="From_1_to_4_MTR1_33480" departureTime="09:18:00" vehicleRefId="From_1_to_4_MTR1_33480"/>
+				<departure id="From_1_to_4_MTR1_33840" departureTime="09:24:00" vehicleRefId="From_1_to_4_MTR1_33840"/>
+				<departure id="From_1_to_4_MTR1_34200" departureTime="09:30:00" vehicleRefId="From_1_to_4_MTR1_34200"/>
+				<departure id="From_1_to_4_MTR1_34560" departureTime="09:36:00" vehicleRefId="From_1_to_4_MTR1_34560"/>
+				<departure id="From_1_to_4_MTR1_34920" departureTime="09:42:00" vehicleRefId="From_1_to_4_MTR1_34920"/>
+				<departure id="From_1_to_4_MTR1_35280" departureTime="09:48:00" vehicleRefId="From_1_to_4_MTR1_35280"/>
+				<departure id="From_1_to_4_MTR1_35640" departureTime="09:54:00" vehicleRefId="From_1_to_4_MTR1_35640"/>
+				<departure id="From_1_to_4_MTR1_360" departureTime="00:06:00" vehicleRefId="From_1_to_4_MTR1_360"/>
+				<departure id="From_1_to_4_MTR1_3600" departureTime="01:00:00" vehicleRefId="From_1_to_4_MTR1_3600"/>
+				<departure id="From_1_to_4_MTR1_36000" departureTime="10:00:00" vehicleRefId="From_1_to_4_MTR1_36000"/>
+				<departure id="From_1_to_4_MTR1_36360" departureTime="10:06:00" vehicleRefId="From_1_to_4_MTR1_36360"/>
+				<departure id="From_1_to_4_MTR1_36720" departureTime="10:12:00" vehicleRefId="From_1_to_4_MTR1_36720"/>
+				<departure id="From_1_to_4_MTR1_37080" departureTime="10:18:00" vehicleRefId="From_1_to_4_MTR1_37080"/>
+				<departure id="From_1_to_4_MTR1_37440" departureTime="10:24:00" vehicleRefId="From_1_to_4_MTR1_37440"/>
+				<departure id="From_1_to_4_MTR1_37800" departureTime="10:30:00" vehicleRefId="From_1_to_4_MTR1_37800"/>
+				<departure id="From_1_to_4_MTR1_38160" departureTime="10:36:00" vehicleRefId="From_1_to_4_MTR1_38160"/>
+				<departure id="From_1_to_4_MTR1_38520" departureTime="10:42:00" vehicleRefId="From_1_to_4_MTR1_38520"/>
+				<departure id="From_1_to_4_MTR1_38880" departureTime="10:48:00" vehicleRefId="From_1_to_4_MTR1_38880"/>
+				<departure id="From_1_to_4_MTR1_39240" departureTime="10:54:00" vehicleRefId="From_1_to_4_MTR1_39240"/>
+				<departure id="From_1_to_4_MTR1_3960" departureTime="01:06:00" vehicleRefId="From_1_to_4_MTR1_3960"/>
+				<departure id="From_1_to_4_MTR1_39600" departureTime="11:00:00" vehicleRefId="From_1_to_4_MTR1_39600"/>
+				<departure id="From_1_to_4_MTR1_39960" departureTime="11:06:00" vehicleRefId="From_1_to_4_MTR1_39960"/>
+				<departure id="From_1_to_4_MTR1_40320" departureTime="11:12:00" vehicleRefId="From_1_to_4_MTR1_40320"/>
+				<departure id="From_1_to_4_MTR1_40680" departureTime="11:18:00" vehicleRefId="From_1_to_4_MTR1_40680"/>
+				<departure id="From_1_to_4_MTR1_41040" departureTime="11:24:00" vehicleRefId="From_1_to_4_MTR1_41040"/>
+				<departure id="From_1_to_4_MTR1_41400" departureTime="11:30:00" vehicleRefId="From_1_to_4_MTR1_41400"/>
+				<departure id="From_1_to_4_MTR1_41760" departureTime="11:36:00" vehicleRefId="From_1_to_4_MTR1_41760"/>
+				<departure id="From_1_to_4_MTR1_42120" departureTime="11:42:00" vehicleRefId="From_1_to_4_MTR1_42120"/>
+				<departure id="From_1_to_4_MTR1_42480" departureTime="11:48:00" vehicleRefId="From_1_to_4_MTR1_42480"/>
+				<departure id="From_1_to_4_MTR1_42840" departureTime="11:54:00" vehicleRefId="From_1_to_4_MTR1_42840"/>
+				<departure id="From_1_to_4_MTR1_4320" departureTime="01:12:00" vehicleRefId="From_1_to_4_MTR1_4320"/>
+				<departure id="From_1_to_4_MTR1_43200" departureTime="12:00:00" vehicleRefId="From_1_to_4_MTR1_43200"/>
+				<departure id="From_1_to_4_MTR1_43560" departureTime="12:06:00" vehicleRefId="From_1_to_4_MTR1_43560"/>
+				<departure id="From_1_to_4_MTR1_43920" departureTime="12:12:00" vehicleRefId="From_1_to_4_MTR1_43920"/>
+				<departure id="From_1_to_4_MTR1_44280" departureTime="12:18:00" vehicleRefId="From_1_to_4_MTR1_44280"/>
+				<departure id="From_1_to_4_MTR1_44640" departureTime="12:24:00" vehicleRefId="From_1_to_4_MTR1_44640"/>
+				<departure id="From_1_to_4_MTR1_45000" departureTime="12:30:00" vehicleRefId="From_1_to_4_MTR1_45000"/>
+				<departure id="From_1_to_4_MTR1_45360" departureTime="12:36:00" vehicleRefId="From_1_to_4_MTR1_45360"/>
+				<departure id="From_1_to_4_MTR1_45720" departureTime="12:42:00" vehicleRefId="From_1_to_4_MTR1_45720"/>
+				<departure id="From_1_to_4_MTR1_46080" departureTime="12:48:00" vehicleRefId="From_1_to_4_MTR1_46080"/>
+				<departure id="From_1_to_4_MTR1_46440" departureTime="12:54:00" vehicleRefId="From_1_to_4_MTR1_46440"/>
+				<departure id="From_1_to_4_MTR1_4680" departureTime="01:18:00" vehicleRefId="From_1_to_4_MTR1_4680"/>
+				<departure id="From_1_to_4_MTR1_46800" departureTime="13:00:00" vehicleRefId="From_1_to_4_MTR1_46800"/>
+				<departure id="From_1_to_4_MTR1_47160" departureTime="13:06:00" vehicleRefId="From_1_to_4_MTR1_47160"/>
+				<departure id="From_1_to_4_MTR1_47520" departureTime="13:12:00" vehicleRefId="From_1_to_4_MTR1_47520"/>
+				<departure id="From_1_to_4_MTR1_47880" departureTime="13:18:00" vehicleRefId="From_1_to_4_MTR1_47880"/>
+				<departure id="From_1_to_4_MTR1_48240" departureTime="13:24:00" vehicleRefId="From_1_to_4_MTR1_48240"/>
+				<departure id="From_1_to_4_MTR1_48600" departureTime="13:30:00" vehicleRefId="From_1_to_4_MTR1_48600"/>
+				<departure id="From_1_to_4_MTR1_48960" departureTime="13:36:00" vehicleRefId="From_1_to_4_MTR1_48960"/>
+				<departure id="From_1_to_4_MTR1_49320" departureTime="13:42:00" vehicleRefId="From_1_to_4_MTR1_49320"/>
+				<departure id="From_1_to_4_MTR1_49680" departureTime="13:48:00" vehicleRefId="From_1_to_4_MTR1_49680"/>
+				<departure id="From_1_to_4_MTR1_50040" departureTime="13:54:00" vehicleRefId="From_1_to_4_MTR1_50040"/>
+				<departure id="From_1_to_4_MTR1_5040" departureTime="01:24:00" vehicleRefId="From_1_to_4_MTR1_5040"/>
+				<departure id="From_1_to_4_MTR1_50400" departureTime="14:00:00" vehicleRefId="From_1_to_4_MTR1_50400"/>
+				<departure id="From_1_to_4_MTR1_50760" departureTime="14:06:00" vehicleRefId="From_1_to_4_MTR1_50760"/>
+				<departure id="From_1_to_4_MTR1_51120" departureTime="14:12:00" vehicleRefId="From_1_to_4_MTR1_51120"/>
+				<departure id="From_1_to_4_MTR1_51480" departureTime="14:18:00" vehicleRefId="From_1_to_4_MTR1_51480"/>
+				<departure id="From_1_to_4_MTR1_51840" departureTime="14:24:00" vehicleRefId="From_1_to_4_MTR1_51840"/>
+				<departure id="From_1_to_4_MTR1_52200" departureTime="14:30:00" vehicleRefId="From_1_to_4_MTR1_52200"/>
+				<departure id="From_1_to_4_MTR1_52560" departureTime="14:36:00" vehicleRefId="From_1_to_4_MTR1_52560"/>
+				<departure id="From_1_to_4_MTR1_52920" departureTime="14:42:00" vehicleRefId="From_1_to_4_MTR1_52920"/>
+				<departure id="From_1_to_4_MTR1_53280" departureTime="14:48:00" vehicleRefId="From_1_to_4_MTR1_53280"/>
+				<departure id="From_1_to_4_MTR1_53640" departureTime="14:54:00" vehicleRefId="From_1_to_4_MTR1_53640"/>
+				<departure id="From_1_to_4_MTR1_5400" departureTime="01:30:00" vehicleRefId="From_1_to_4_MTR1_5400"/>
+				<departure id="From_1_to_4_MTR1_54000" departureTime="15:00:00" vehicleRefId="From_1_to_4_MTR1_54000"/>
+				<departure id="From_1_to_4_MTR1_54360" departureTime="15:06:00" vehicleRefId="From_1_to_4_MTR1_54360"/>
+				<departure id="From_1_to_4_MTR1_54720" departureTime="15:12:00" vehicleRefId="From_1_to_4_MTR1_54720"/>
+				<departure id="From_1_to_4_MTR1_55080" departureTime="15:18:00" vehicleRefId="From_1_to_4_MTR1_55080"/>
+				<departure id="From_1_to_4_MTR1_55440" departureTime="15:24:00" vehicleRefId="From_1_to_4_MTR1_55440"/>
+				<departure id="From_1_to_4_MTR1_55800" departureTime="15:30:00" vehicleRefId="From_1_to_4_MTR1_55800"/>
+				<departure id="From_1_to_4_MTR1_56160" departureTime="15:36:00" vehicleRefId="From_1_to_4_MTR1_56160"/>
+				<departure id="From_1_to_4_MTR1_56520" departureTime="15:42:00" vehicleRefId="From_1_to_4_MTR1_56520"/>
+				<departure id="From_1_to_4_MTR1_56880" departureTime="15:48:00" vehicleRefId="From_1_to_4_MTR1_56880"/>
+				<departure id="From_1_to_4_MTR1_57240" departureTime="15:54:00" vehicleRefId="From_1_to_4_MTR1_57240"/>
+				<departure id="From_1_to_4_MTR1_5760" departureTime="01:36:00" vehicleRefId="From_1_to_4_MTR1_5760"/>
+				<departure id="From_1_to_4_MTR1_57600" departureTime="16:00:00" vehicleRefId="From_1_to_4_MTR1_57600"/>
+				<departure id="From_1_to_4_MTR1_57960" departureTime="16:06:00" vehicleRefId="From_1_to_4_MTR1_57960"/>
+				<departure id="From_1_to_4_MTR1_58320" departureTime="16:12:00" vehicleRefId="From_1_to_4_MTR1_58320"/>
+				<departure id="From_1_to_4_MTR1_58680" departureTime="16:18:00" vehicleRefId="From_1_to_4_MTR1_58680"/>
+				<departure id="From_1_to_4_MTR1_59040" departureTime="16:24:00" vehicleRefId="From_1_to_4_MTR1_59040"/>
+				<departure id="From_1_to_4_MTR1_59400" departureTime="16:30:00" vehicleRefId="From_1_to_4_MTR1_59400"/>
+				<departure id="From_1_to_4_MTR1_59760" departureTime="16:36:00" vehicleRefId="From_1_to_4_MTR1_59760"/>
+				<departure id="From_1_to_4_MTR1_60120" departureTime="16:42:00" vehicleRefId="From_1_to_4_MTR1_60120"/>
+				<departure id="From_1_to_4_MTR1_60480" departureTime="16:48:00" vehicleRefId="From_1_to_4_MTR1_60480"/>
+				<departure id="From_1_to_4_MTR1_60840" departureTime="16:54:00" vehicleRefId="From_1_to_4_MTR1_60840"/>
+				<departure id="From_1_to_4_MTR1_6120" departureTime="01:42:00" vehicleRefId="From_1_to_4_MTR1_6120"/>
+				<departure id="From_1_to_4_MTR1_61200" departureTime="17:00:00" vehicleRefId="From_1_to_4_MTR1_61200"/>
+				<departure id="From_1_to_4_MTR1_61560" departureTime="17:06:00" vehicleRefId="From_1_to_4_MTR1_61560"/>
+				<departure id="From_1_to_4_MTR1_61920" departureTime="17:12:00" vehicleRefId="From_1_to_4_MTR1_61920"/>
+				<departure id="From_1_to_4_MTR1_62280" departureTime="17:18:00" vehicleRefId="From_1_to_4_MTR1_62280"/>
+				<departure id="From_1_to_4_MTR1_62640" departureTime="17:24:00" vehicleRefId="From_1_to_4_MTR1_62640"/>
+				<departure id="From_1_to_4_MTR1_63000" departureTime="17:30:00" vehicleRefId="From_1_to_4_MTR1_63000"/>
+				<departure id="From_1_to_4_MTR1_63360" departureTime="17:36:00" vehicleRefId="From_1_to_4_MTR1_63360"/>
+				<departure id="From_1_to_4_MTR1_63720" departureTime="17:42:00" vehicleRefId="From_1_to_4_MTR1_63720"/>
+				<departure id="From_1_to_4_MTR1_64080" departureTime="17:48:00" vehicleRefId="From_1_to_4_MTR1_64080"/>
+				<departure id="From_1_to_4_MTR1_64440" departureTime="17:54:00" vehicleRefId="From_1_to_4_MTR1_64440"/>
+				<departure id="From_1_to_4_MTR1_6480" departureTime="01:48:00" vehicleRefId="From_1_to_4_MTR1_6480"/>
+				<departure id="From_1_to_4_MTR1_64800" departureTime="18:00:00" vehicleRefId="From_1_to_4_MTR1_64800"/>
+				<departure id="From_1_to_4_MTR1_65160" departureTime="18:06:00" vehicleRefId="From_1_to_4_MTR1_65160"/>
+				<departure id="From_1_to_4_MTR1_65520" departureTime="18:12:00" vehicleRefId="From_1_to_4_MTR1_65520"/>
+				<departure id="From_1_to_4_MTR1_65880" departureTime="18:18:00" vehicleRefId="From_1_to_4_MTR1_65880"/>
+				<departure id="From_1_to_4_MTR1_66240" departureTime="18:24:00" vehicleRefId="From_1_to_4_MTR1_66240"/>
+				<departure id="From_1_to_4_MTR1_66600" departureTime="18:30:00" vehicleRefId="From_1_to_4_MTR1_66600"/>
+				<departure id="From_1_to_4_MTR1_66960" departureTime="18:36:00" vehicleRefId="From_1_to_4_MTR1_66960"/>
+				<departure id="From_1_to_4_MTR1_67320" departureTime="18:42:00" vehicleRefId="From_1_to_4_MTR1_67320"/>
+				<departure id="From_1_to_4_MTR1_67680" departureTime="18:48:00" vehicleRefId="From_1_to_4_MTR1_67680"/>
+				<departure id="From_1_to_4_MTR1_68040" departureTime="18:54:00" vehicleRefId="From_1_to_4_MTR1_68040"/>
+				<departure id="From_1_to_4_MTR1_6840" departureTime="01:54:00" vehicleRefId="From_1_to_4_MTR1_6840"/>
+				<departure id="From_1_to_4_MTR1_68400" departureTime="19:00:00" vehicleRefId="From_1_to_4_MTR1_68400"/>
+				<departure id="From_1_to_4_MTR1_68760" departureTime="19:06:00" vehicleRefId="From_1_to_4_MTR1_68760"/>
+				<departure id="From_1_to_4_MTR1_69120" departureTime="19:12:00" vehicleRefId="From_1_to_4_MTR1_69120"/>
+				<departure id="From_1_to_4_MTR1_69480" departureTime="19:18:00" vehicleRefId="From_1_to_4_MTR1_69480"/>
+				<departure id="From_1_to_4_MTR1_69840" departureTime="19:24:00" vehicleRefId="From_1_to_4_MTR1_69840"/>
+				<departure id="From_1_to_4_MTR1_70200" departureTime="19:30:00" vehicleRefId="From_1_to_4_MTR1_70200"/>
+				<departure id="From_1_to_4_MTR1_70560" departureTime="19:36:00" vehicleRefId="From_1_to_4_MTR1_70560"/>
+				<departure id="From_1_to_4_MTR1_70920" departureTime="19:42:00" vehicleRefId="From_1_to_4_MTR1_70920"/>
+				<departure id="From_1_to_4_MTR1_71280" departureTime="19:48:00" vehicleRefId="From_1_to_4_MTR1_71280"/>
+				<departure id="From_1_to_4_MTR1_71640" departureTime="19:54:00" vehicleRefId="From_1_to_4_MTR1_71640"/>
+				<departure id="From_1_to_4_MTR1_720" departureTime="00:12:00" vehicleRefId="From_1_to_4_MTR1_720"/>
+				<departure id="From_1_to_4_MTR1_7200" departureTime="02:00:00" vehicleRefId="From_1_to_4_MTR1_7200"/>
+				<departure id="From_1_to_4_MTR1_72000" departureTime="20:00:00" vehicleRefId="From_1_to_4_MTR1_72000"/>
+				<departure id="From_1_to_4_MTR1_72360" departureTime="20:06:00" vehicleRefId="From_1_to_4_MTR1_72360"/>
+				<departure id="From_1_to_4_MTR1_72720" departureTime="20:12:00" vehicleRefId="From_1_to_4_MTR1_72720"/>
+				<departure id="From_1_to_4_MTR1_73080" departureTime="20:18:00" vehicleRefId="From_1_to_4_MTR1_73080"/>
+				<departure id="From_1_to_4_MTR1_73440" departureTime="20:24:00" vehicleRefId="From_1_to_4_MTR1_73440"/>
+				<departure id="From_1_to_4_MTR1_73800" departureTime="20:30:00" vehicleRefId="From_1_to_4_MTR1_73800"/>
+				<departure id="From_1_to_4_MTR1_74160" departureTime="20:36:00" vehicleRefId="From_1_to_4_MTR1_74160"/>
+				<departure id="From_1_to_4_MTR1_74520" departureTime="20:42:00" vehicleRefId="From_1_to_4_MTR1_74520"/>
+				<departure id="From_1_to_4_MTR1_74880" departureTime="20:48:00" vehicleRefId="From_1_to_4_MTR1_74880"/>
+				<departure id="From_1_to_4_MTR1_75240" departureTime="20:54:00" vehicleRefId="From_1_to_4_MTR1_75240"/>
+				<departure id="From_1_to_4_MTR1_7560" departureTime="02:06:00" vehicleRefId="From_1_to_4_MTR1_7560"/>
+				<departure id="From_1_to_4_MTR1_75600" departureTime="21:00:00" vehicleRefId="From_1_to_4_MTR1_75600"/>
+				<departure id="From_1_to_4_MTR1_75960" departureTime="21:06:00" vehicleRefId="From_1_to_4_MTR1_75960"/>
+				<departure id="From_1_to_4_MTR1_76320" departureTime="21:12:00" vehicleRefId="From_1_to_4_MTR1_76320"/>
+				<departure id="From_1_to_4_MTR1_76680" departureTime="21:18:00" vehicleRefId="From_1_to_4_MTR1_76680"/>
+				<departure id="From_1_to_4_MTR1_77040" departureTime="21:24:00" vehicleRefId="From_1_to_4_MTR1_77040"/>
+				<departure id="From_1_to_4_MTR1_77400" departureTime="21:30:00" vehicleRefId="From_1_to_4_MTR1_77400"/>
+				<departure id="From_1_to_4_MTR1_77760" departureTime="21:36:00" vehicleRefId="From_1_to_4_MTR1_77760"/>
+				<departure id="From_1_to_4_MTR1_78120" departureTime="21:42:00" vehicleRefId="From_1_to_4_MTR1_78120"/>
+				<departure id="From_1_to_4_MTR1_78480" departureTime="21:48:00" vehicleRefId="From_1_to_4_MTR1_78480"/>
+				<departure id="From_1_to_4_MTR1_78840" departureTime="21:54:00" vehicleRefId="From_1_to_4_MTR1_78840"/>
+				<departure id="From_1_to_4_MTR1_7920" departureTime="02:12:00" vehicleRefId="From_1_to_4_MTR1_7920"/>
+				<departure id="From_1_to_4_MTR1_79200" departureTime="22:00:00" vehicleRefId="From_1_to_4_MTR1_79200"/>
+				<departure id="From_1_to_4_MTR1_79560" departureTime="22:06:00" vehicleRefId="From_1_to_4_MTR1_79560"/>
+				<departure id="From_1_to_4_MTR1_79920" departureTime="22:12:00" vehicleRefId="From_1_to_4_MTR1_79920"/>
+				<departure id="From_1_to_4_MTR1_80280" departureTime="22:18:00" vehicleRefId="From_1_to_4_MTR1_80280"/>
+				<departure id="From_1_to_4_MTR1_80640" departureTime="22:24:00" vehicleRefId="From_1_to_4_MTR1_80640"/>
+				<departure id="From_1_to_4_MTR1_81000" departureTime="22:30:00" vehicleRefId="From_1_to_4_MTR1_81000"/>
+				<departure id="From_1_to_4_MTR1_81360" departureTime="22:36:00" vehicleRefId="From_1_to_4_MTR1_81360"/>
+				<departure id="From_1_to_4_MTR1_81720" departureTime="22:42:00" vehicleRefId="From_1_to_4_MTR1_81720"/>
+				<departure id="From_1_to_4_MTR1_82080" departureTime="22:48:00" vehicleRefId="From_1_to_4_MTR1_82080"/>
+				<departure id="From_1_to_4_MTR1_82440" departureTime="22:54:00" vehicleRefId="From_1_to_4_MTR1_82440"/>
+				<departure id="From_1_to_4_MTR1_8280" departureTime="02:18:00" vehicleRefId="From_1_to_4_MTR1_8280"/>
+				<departure id="From_1_to_4_MTR1_82800" departureTime="23:00:00" vehicleRefId="From_1_to_4_MTR1_82800"/>
+				<departure id="From_1_to_4_MTR1_83160" departureTime="23:06:00" vehicleRefId="From_1_to_4_MTR1_83160"/>
+				<departure id="From_1_to_4_MTR1_83520" departureTime="23:12:00" vehicleRefId="From_1_to_4_MTR1_83520"/>
+				<departure id="From_1_to_4_MTR1_83880" departureTime="23:18:00" vehicleRefId="From_1_to_4_MTR1_83880"/>
+				<departure id="From_1_to_4_MTR1_84240" departureTime="23:24:00" vehicleRefId="From_1_to_4_MTR1_84240"/>
+				<departure id="From_1_to_4_MTR1_84600" departureTime="23:30:00" vehicleRefId="From_1_to_4_MTR1_84600"/>
+				<departure id="From_1_to_4_MTR1_84960" departureTime="23:36:00" vehicleRefId="From_1_to_4_MTR1_84960"/>
+				<departure id="From_1_to_4_MTR1_85320" departureTime="23:42:00" vehicleRefId="From_1_to_4_MTR1_85320"/>
+				<departure id="From_1_to_4_MTR1_85680" departureTime="23:48:00" vehicleRefId="From_1_to_4_MTR1_85680"/>
+				<departure id="From_1_to_4_MTR1_86040" departureTime="23:54:00" vehicleRefId="From_1_to_4_MTR1_86040"/>
+				<departure id="From_1_to_4_MTR1_8640" departureTime="02:24:00" vehicleRefId="From_1_to_4_MTR1_8640"/>
+				<departure id="From_1_to_4_MTR1_9000" departureTime="02:30:00" vehicleRefId="From_1_to_4_MTR1_9000"/>
+				<departure id="From_1_to_4_MTR1_9360" departureTime="02:36:00" vehicleRefId="From_1_to_4_MTR1_9360"/>
+				<departure id="From_1_to_4_MTR1_9720" departureTime="02:42:00" vehicleRefId="From_1_to_4_MTR1_9720"/>
+			</departures>
+		</transitRoute>
+		<transitRoute id="From_4_to_1_MTR1">
+			<transportMode>train</transportMode>
+			<routeProfile>
+				<stop refId="4r_4DDD_stop_train" arrivalOffset="00:00:00" departureOffset="00:00:30" awaitDeparture="false"/>
+				<stop refId="6r_6FFF_stop_train" arrivalOffset="00:10:30" departureOffset="00:11:00" awaitDeparture="false"/>
+				<stop refId="5r_5EEE_stop_train" arrivalOffset="00:21:00" departureOffset="00:21:30" awaitDeparture="false"/>
+				<stop refId="1r_1AAA_stop_train" arrivalOffset="00:31:30" departureOffset="00:32:00" awaitDeparture="false"/>
+			</routeProfile>
+			<route>
+				<link refId="4r_4_stop_train"/>
+				<link refId="4_6r"/>
+				<link refId="6r_6_stop_train"/>
+				<link refId="6_5r"/>
+				<link refId="5r_5_stop_train"/>
+				<link refId="5_1r"/>
+				<link refId="1r_1_stop_train"/>
+			</route>
+			<departures>
+				<departure id="From_4_to_1_MTR1_0" departureTime="00:00:00" vehicleRefId="From_4_to_1_MTR1_0"/>
+				<departure id="From_4_to_1_MTR1_10080" departureTime="02:48:00" vehicleRefId="From_4_to_1_MTR1_10080"/>
+				<departure id="From_4_to_1_MTR1_10440" departureTime="02:54:00" vehicleRefId="From_4_to_1_MTR1_10440"/>
+				<departure id="From_4_to_1_MTR1_1080" departureTime="00:18:00" vehicleRefId="From_4_to_1_MTR1_1080"/>
+				<departure id="From_4_to_1_MTR1_10800" departureTime="03:00:00" vehicleRefId="From_4_to_1_MTR1_10800"/>
+				<departure id="From_4_to_1_MTR1_11160" departureTime="03:06:00" vehicleRefId="From_4_to_1_MTR1_11160"/>
+				<departure id="From_4_to_1_MTR1_11520" departureTime="03:12:00" vehicleRefId="From_4_to_1_MTR1_11520"/>
+				<departure id="From_4_to_1_MTR1_11880" departureTime="03:18:00" vehicleRefId="From_4_to_1_MTR1_11880"/>
+				<departure id="From_4_to_1_MTR1_12240" departureTime="03:24:00" vehicleRefId="From_4_to_1_MTR1_12240"/>
+				<departure id="From_4_to_1_MTR1_12600" departureTime="03:30:00" vehicleRefId="From_4_to_1_MTR1_12600"/>
+				<departure id="From_4_to_1_MTR1_12960" departureTime="03:36:00" vehicleRefId="From_4_to_1_MTR1_12960"/>
+				<departure id="From_4_to_1_MTR1_13320" departureTime="03:42:00" vehicleRefId="From_4_to_1_MTR1_13320"/>
+				<departure id="From_4_to_1_MTR1_13680" departureTime="03:48:00" vehicleRefId="From_4_to_1_MTR1_13680"/>
+				<departure id="From_4_to_1_MTR1_14040" departureTime="03:54:00" vehicleRefId="From_4_to_1_MTR1_14040"/>
+				<departure id="From_4_to_1_MTR1_1440" departureTime="00:24:00" vehicleRefId="From_4_to_1_MTR1_1440"/>
+				<departure id="From_4_to_1_MTR1_14400" departureTime="04:00:00" vehicleRefId="From_4_to_1_MTR1_14400"/>
+				<departure id="From_4_to_1_MTR1_14760" departureTime="04:06:00" vehicleRefId="From_4_to_1_MTR1_14760"/>
+				<departure id="From_4_to_1_MTR1_15120" departureTime="04:12:00" vehicleRefId="From_4_to_1_MTR1_15120"/>
+				<departure id="From_4_to_1_MTR1_15480" departureTime="04:18:00" vehicleRefId="From_4_to_1_MTR1_15480"/>
+				<departure id="From_4_to_1_MTR1_15840" departureTime="04:24:00" vehicleRefId="From_4_to_1_MTR1_15840"/>
+				<departure id="From_4_to_1_MTR1_16200" departureTime="04:30:00" vehicleRefId="From_4_to_1_MTR1_16200"/>
+				<departure id="From_4_to_1_MTR1_16560" departureTime="04:36:00" vehicleRefId="From_4_to_1_MTR1_16560"/>
+				<departure id="From_4_to_1_MTR1_16920" departureTime="04:42:00" vehicleRefId="From_4_to_1_MTR1_16920"/>
+				<departure id="From_4_to_1_MTR1_17280" departureTime="04:48:00" vehicleRefId="From_4_to_1_MTR1_17280"/>
+				<departure id="From_4_to_1_MTR1_17640" departureTime="04:54:00" vehicleRefId="From_4_to_1_MTR1_17640"/>
+				<departure id="From_4_to_1_MTR1_1800" departureTime="00:30:00" vehicleRefId="From_4_to_1_MTR1_1800"/>
+				<departure id="From_4_to_1_MTR1_18000" departureTime="05:00:00" vehicleRefId="From_4_to_1_MTR1_18000"/>
+				<departure id="From_4_to_1_MTR1_18360" departureTime="05:06:00" vehicleRefId="From_4_to_1_MTR1_18360"/>
+				<departure id="From_4_to_1_MTR1_18720" departureTime="05:12:00" vehicleRefId="From_4_to_1_MTR1_18720"/>
+				<departure id="From_4_to_1_MTR1_19080" departureTime="05:18:00" vehicleRefId="From_4_to_1_MTR1_19080"/>
+				<departure id="From_4_to_1_MTR1_19440" departureTime="05:24:00" vehicleRefId="From_4_to_1_MTR1_19440"/>
+				<departure id="From_4_to_1_MTR1_19800" departureTime="05:30:00" vehicleRefId="From_4_to_1_MTR1_19800"/>
+				<departure id="From_4_to_1_MTR1_20160" departureTime="05:36:00" vehicleRefId="From_4_to_1_MTR1_20160"/>
+				<departure id="From_4_to_1_MTR1_20520" departureTime="05:42:00" vehicleRefId="From_4_to_1_MTR1_20520"/>
+				<departure id="From_4_to_1_MTR1_20880" departureTime="05:48:00" vehicleRefId="From_4_to_1_MTR1_20880"/>
+				<departure id="From_4_to_1_MTR1_21240" departureTime="05:54:00" vehicleRefId="From_4_to_1_MTR1_21240"/>
+				<departure id="From_4_to_1_MTR1_2160" departureTime="00:36:00" vehicleRefId="From_4_to_1_MTR1_2160"/>
+				<departure id="From_4_to_1_MTR1_21600" departureTime="06:00:00" vehicleRefId="From_4_to_1_MTR1_21600"/>
+				<departure id="From_4_to_1_MTR1_21960" departureTime="06:06:00" vehicleRefId="From_4_to_1_MTR1_21960"/>
+				<departure id="From_4_to_1_MTR1_22320" departureTime="06:12:00" vehicleRefId="From_4_to_1_MTR1_22320"/>
+				<departure id="From_4_to_1_MTR1_22680" departureTime="06:18:00" vehicleRefId="From_4_to_1_MTR1_22680"/>
+				<departure id="From_4_to_1_MTR1_23040" departureTime="06:24:00" vehicleRefId="From_4_to_1_MTR1_23040"/>
+				<departure id="From_4_to_1_MTR1_23400" departureTime="06:30:00" vehicleRefId="From_4_to_1_MTR1_23400"/>
+				<departure id="From_4_to_1_MTR1_23760" departureTime="06:36:00" vehicleRefId="From_4_to_1_MTR1_23760"/>
+				<departure id="From_4_to_1_MTR1_24120" departureTime="06:42:00" vehicleRefId="From_4_to_1_MTR1_24120"/>
+				<departure id="From_4_to_1_MTR1_24480" departureTime="06:48:00" vehicleRefId="From_4_to_1_MTR1_24480"/>
+				<departure id="From_4_to_1_MTR1_24840" departureTime="06:54:00" vehicleRefId="From_4_to_1_MTR1_24840"/>
+				<departure id="From_4_to_1_MTR1_2520" departureTime="00:42:00" vehicleRefId="From_4_to_1_MTR1_2520"/>
+				<departure id="From_4_to_1_MTR1_25200" departureTime="07:00:00" vehicleRefId="From_4_to_1_MTR1_25200"/>
+				<departure id="From_4_to_1_MTR1_25560" departureTime="07:06:00" vehicleRefId="From_4_to_1_MTR1_25560"/>
+				<departure id="From_4_to_1_MTR1_25920" departureTime="07:12:00" vehicleRefId="From_4_to_1_MTR1_25920"/>
+				<departure id="From_4_to_1_MTR1_26280" departureTime="07:18:00" vehicleRefId="From_4_to_1_MTR1_26280"/>
+				<departure id="From_4_to_1_MTR1_26640" departureTime="07:24:00" vehicleRefId="From_4_to_1_MTR1_26640"/>
+				<departure id="From_4_to_1_MTR1_27000" departureTime="07:30:00" vehicleRefId="From_4_to_1_MTR1_27000"/>
+				<departure id="From_4_to_1_MTR1_27360" departureTime="07:36:00" vehicleRefId="From_4_to_1_MTR1_27360"/>
+				<departure id="From_4_to_1_MTR1_27720" departureTime="07:42:00" vehicleRefId="From_4_to_1_MTR1_27720"/>
+				<departure id="From_4_to_1_MTR1_28080" departureTime="07:48:00" vehicleRefId="From_4_to_1_MTR1_28080"/>
+				<departure id="From_4_to_1_MTR1_28440" departureTime="07:54:00" vehicleRefId="From_4_to_1_MTR1_28440"/>
+				<departure id="From_4_to_1_MTR1_2880" departureTime="00:48:00" vehicleRefId="From_4_to_1_MTR1_2880"/>
+				<departure id="From_4_to_1_MTR1_28800" departureTime="08:00:00" vehicleRefId="From_4_to_1_MTR1_28800"/>
+				<departure id="From_4_to_1_MTR1_29160" departureTime="08:06:00" vehicleRefId="From_4_to_1_MTR1_29160"/>
+				<departure id="From_4_to_1_MTR1_29520" departureTime="08:12:00" vehicleRefId="From_4_to_1_MTR1_29520"/>
+				<departure id="From_4_to_1_MTR1_29880" departureTime="08:18:00" vehicleRefId="From_4_to_1_MTR1_29880"/>
+				<departure id="From_4_to_1_MTR1_30240" departureTime="08:24:00" vehicleRefId="From_4_to_1_MTR1_30240"/>
+				<departure id="From_4_to_1_MTR1_30600" departureTime="08:30:00" vehicleRefId="From_4_to_1_MTR1_30600"/>
+				<departure id="From_4_to_1_MTR1_30960" departureTime="08:36:00" vehicleRefId="From_4_to_1_MTR1_30960"/>
+				<departure id="From_4_to_1_MTR1_31320" departureTime="08:42:00" vehicleRefId="From_4_to_1_MTR1_31320"/>
+				<departure id="From_4_to_1_MTR1_31680" departureTime="08:48:00" vehicleRefId="From_4_to_1_MTR1_31680"/>
+				<departure id="From_4_to_1_MTR1_32040" departureTime="08:54:00" vehicleRefId="From_4_to_1_MTR1_32040"/>
+				<departure id="From_4_to_1_MTR1_3240" departureTime="00:54:00" vehicleRefId="From_4_to_1_MTR1_3240"/>
+				<departure id="From_4_to_1_MTR1_32400" departureTime="09:00:00" vehicleRefId="From_4_to_1_MTR1_32400"/>
+				<departure id="From_4_to_1_MTR1_32760" departureTime="09:06:00" vehicleRefId="From_4_to_1_MTR1_32760"/>
+				<departure id="From_4_to_1_MTR1_33120" departureTime="09:12:00" vehicleRefId="From_4_to_1_MTR1_33120"/>
+				<departure id="From_4_to_1_MTR1_33480" departureTime="09:18:00" vehicleRefId="From_4_to_1_MTR1_33480"/>
+				<departure id="From_4_to_1_MTR1_33840" departureTime="09:24:00" vehicleRefId="From_4_to_1_MTR1_33840"/>
+				<departure id="From_4_to_1_MTR1_34200" departureTime="09:30:00" vehicleRefId="From_4_to_1_MTR1_34200"/>
+				<departure id="From_4_to_1_MTR1_34560" departureTime="09:36:00" vehicleRefId="From_4_to_1_MTR1_34560"/>
+				<departure id="From_4_to_1_MTR1_34920" departureTime="09:42:00" vehicleRefId="From_4_to_1_MTR1_34920"/>
+				<departure id="From_4_to_1_MTR1_35280" departureTime="09:48:00" vehicleRefId="From_4_to_1_MTR1_35280"/>
+				<departure id="From_4_to_1_MTR1_35640" departureTime="09:54:00" vehicleRefId="From_4_to_1_MTR1_35640"/>
+				<departure id="From_4_to_1_MTR1_360" departureTime="00:06:00" vehicleRefId="From_4_to_1_MTR1_360"/>
+				<departure id="From_4_to_1_MTR1_3600" departureTime="01:00:00" vehicleRefId="From_4_to_1_MTR1_3600"/>
+				<departure id="From_4_to_1_MTR1_36000" departureTime="10:00:00" vehicleRefId="From_4_to_1_MTR1_36000"/>
+				<departure id="From_4_to_1_MTR1_36360" departureTime="10:06:00" vehicleRefId="From_4_to_1_MTR1_36360"/>
+				<departure id="From_4_to_1_MTR1_36720" departureTime="10:12:00" vehicleRefId="From_4_to_1_MTR1_36720"/>
+				<departure id="From_4_to_1_MTR1_37080" departureTime="10:18:00" vehicleRefId="From_4_to_1_MTR1_37080"/>
+				<departure id="From_4_to_1_MTR1_37440" departureTime="10:24:00" vehicleRefId="From_4_to_1_MTR1_37440"/>
+				<departure id="From_4_to_1_MTR1_37800" departureTime="10:30:00" vehicleRefId="From_4_to_1_MTR1_37800"/>
+				<departure id="From_4_to_1_MTR1_38160" departureTime="10:36:00" vehicleRefId="From_4_to_1_MTR1_38160"/>
+				<departure id="From_4_to_1_MTR1_38520" departureTime="10:42:00" vehicleRefId="From_4_to_1_MTR1_38520"/>
+				<departure id="From_4_to_1_MTR1_38880" departureTime="10:48:00" vehicleRefId="From_4_to_1_MTR1_38880"/>
+				<departure id="From_4_to_1_MTR1_39240" departureTime="10:54:00" vehicleRefId="From_4_to_1_MTR1_39240"/>
+				<departure id="From_4_to_1_MTR1_3960" departureTime="01:06:00" vehicleRefId="From_4_to_1_MTR1_3960"/>
+				<departure id="From_4_to_1_MTR1_39600" departureTime="11:00:00" vehicleRefId="From_4_to_1_MTR1_39600"/>
+				<departure id="From_4_to_1_MTR1_39960" departureTime="11:06:00" vehicleRefId="From_4_to_1_MTR1_39960"/>
+				<departure id="From_4_to_1_MTR1_40320" departureTime="11:12:00" vehicleRefId="From_4_to_1_MTR1_40320"/>
+				<departure id="From_4_to_1_MTR1_40680" departureTime="11:18:00" vehicleRefId="From_4_to_1_MTR1_40680"/>
+				<departure id="From_4_to_1_MTR1_41040" departureTime="11:24:00" vehicleRefId="From_4_to_1_MTR1_41040"/>
+				<departure id="From_4_to_1_MTR1_41400" departureTime="11:30:00" vehicleRefId="From_4_to_1_MTR1_41400"/>
+				<departure id="From_4_to_1_MTR1_41760" departureTime="11:36:00" vehicleRefId="From_4_to_1_MTR1_41760"/>
+				<departure id="From_4_to_1_MTR1_42120" departureTime="11:42:00" vehicleRefId="From_4_to_1_MTR1_42120"/>
+				<departure id="From_4_to_1_MTR1_42480" departureTime="11:48:00" vehicleRefId="From_4_to_1_MTR1_42480"/>
+				<departure id="From_4_to_1_MTR1_42840" departureTime="11:54:00" vehicleRefId="From_4_to_1_MTR1_42840"/>
+				<departure id="From_4_to_1_MTR1_4320" departureTime="01:12:00" vehicleRefId="From_4_to_1_MTR1_4320"/>
+				<departure id="From_4_to_1_MTR1_43200" departureTime="12:00:00" vehicleRefId="From_4_to_1_MTR1_43200"/>
+				<departure id="From_4_to_1_MTR1_43560" departureTime="12:06:00" vehicleRefId="From_4_to_1_MTR1_43560"/>
+				<departure id="From_4_to_1_MTR1_43920" departureTime="12:12:00" vehicleRefId="From_4_to_1_MTR1_43920"/>
+				<departure id="From_4_to_1_MTR1_44280" departureTime="12:18:00" vehicleRefId="From_4_to_1_MTR1_44280"/>
+				<departure id="From_4_to_1_MTR1_44640" departureTime="12:24:00" vehicleRefId="From_4_to_1_MTR1_44640"/>
+				<departure id="From_4_to_1_MTR1_45000" departureTime="12:30:00" vehicleRefId="From_4_to_1_MTR1_45000"/>
+				<departure id="From_4_to_1_MTR1_45360" departureTime="12:36:00" vehicleRefId="From_4_to_1_MTR1_45360"/>
+				<departure id="From_4_to_1_MTR1_45720" departureTime="12:42:00" vehicleRefId="From_4_to_1_MTR1_45720"/>
+				<departure id="From_4_to_1_MTR1_46080" departureTime="12:48:00" vehicleRefId="From_4_to_1_MTR1_46080"/>
+				<departure id="From_4_to_1_MTR1_46440" departureTime="12:54:00" vehicleRefId="From_4_to_1_MTR1_46440"/>
+				<departure id="From_4_to_1_MTR1_4680" departureTime="01:18:00" vehicleRefId="From_4_to_1_MTR1_4680"/>
+				<departure id="From_4_to_1_MTR1_46800" departureTime="13:00:00" vehicleRefId="From_4_to_1_MTR1_46800"/>
+				<departure id="From_4_to_1_MTR1_47160" departureTime="13:06:00" vehicleRefId="From_4_to_1_MTR1_47160"/>
+				<departure id="From_4_to_1_MTR1_47520" departureTime="13:12:00" vehicleRefId="From_4_to_1_MTR1_47520"/>
+				<departure id="From_4_to_1_MTR1_47880" departureTime="13:18:00" vehicleRefId="From_4_to_1_MTR1_47880"/>
+				<departure id="From_4_to_1_MTR1_48240" departureTime="13:24:00" vehicleRefId="From_4_to_1_MTR1_48240"/>
+				<departure id="From_4_to_1_MTR1_48600" departureTime="13:30:00" vehicleRefId="From_4_to_1_MTR1_48600"/>
+				<departure id="From_4_to_1_MTR1_48960" departureTime="13:36:00" vehicleRefId="From_4_to_1_MTR1_48960"/>
+				<departure id="From_4_to_1_MTR1_49320" departureTime="13:42:00" vehicleRefId="From_4_to_1_MTR1_49320"/>
+				<departure id="From_4_to_1_MTR1_49680" departureTime="13:48:00" vehicleRefId="From_4_to_1_MTR1_49680"/>
+				<departure id="From_4_to_1_MTR1_50040" departureTime="13:54:00" vehicleRefId="From_4_to_1_MTR1_50040"/>
+				<departure id="From_4_to_1_MTR1_5040" departureTime="01:24:00" vehicleRefId="From_4_to_1_MTR1_5040"/>
+				<departure id="From_4_to_1_MTR1_50400" departureTime="14:00:00" vehicleRefId="From_4_to_1_MTR1_50400"/>
+				<departure id="From_4_to_1_MTR1_50760" departureTime="14:06:00" vehicleRefId="From_4_to_1_MTR1_50760"/>
+				<departure id="From_4_to_1_MTR1_51120" departureTime="14:12:00" vehicleRefId="From_4_to_1_MTR1_51120"/>
+				<departure id="From_4_to_1_MTR1_51480" departureTime="14:18:00" vehicleRefId="From_4_to_1_MTR1_51480"/>
+				<departure id="From_4_to_1_MTR1_51840" departureTime="14:24:00" vehicleRefId="From_4_to_1_MTR1_51840"/>
+				<departure id="From_4_to_1_MTR1_52200" departureTime="14:30:00" vehicleRefId="From_4_to_1_MTR1_52200"/>
+				<departure id="From_4_to_1_MTR1_52560" departureTime="14:36:00" vehicleRefId="From_4_to_1_MTR1_52560"/>
+				<departure id="From_4_to_1_MTR1_52920" departureTime="14:42:00" vehicleRefId="From_4_to_1_MTR1_52920"/>
+				<departure id="From_4_to_1_MTR1_53280" departureTime="14:48:00" vehicleRefId="From_4_to_1_MTR1_53280"/>
+				<departure id="From_4_to_1_MTR1_53640" departureTime="14:54:00" vehicleRefId="From_4_to_1_MTR1_53640"/>
+				<departure id="From_4_to_1_MTR1_5400" departureTime="01:30:00" vehicleRefId="From_4_to_1_MTR1_5400"/>
+				<departure id="From_4_to_1_MTR1_54000" departureTime="15:00:00" vehicleRefId="From_4_to_1_MTR1_54000"/>
+				<departure id="From_4_to_1_MTR1_54360" departureTime="15:06:00" vehicleRefId="From_4_to_1_MTR1_54360"/>
+				<departure id="From_4_to_1_MTR1_54720" departureTime="15:12:00" vehicleRefId="From_4_to_1_MTR1_54720"/>
+				<departure id="From_4_to_1_MTR1_55080" departureTime="15:18:00" vehicleRefId="From_4_to_1_MTR1_55080"/>
+				<departure id="From_4_to_1_MTR1_55440" departureTime="15:24:00" vehicleRefId="From_4_to_1_MTR1_55440"/>
+				<departure id="From_4_to_1_MTR1_55800" departureTime="15:30:00" vehicleRefId="From_4_to_1_MTR1_55800"/>
+				<departure id="From_4_to_1_MTR1_56160" departureTime="15:36:00" vehicleRefId="From_4_to_1_MTR1_56160"/>
+				<departure id="From_4_to_1_MTR1_56520" departureTime="15:42:00" vehicleRefId="From_4_to_1_MTR1_56520"/>
+				<departure id="From_4_to_1_MTR1_56880" departureTime="15:48:00" vehicleRefId="From_4_to_1_MTR1_56880"/>
+				<departure id="From_4_to_1_MTR1_57240" departureTime="15:54:00" vehicleRefId="From_4_to_1_MTR1_57240"/>
+				<departure id="From_4_to_1_MTR1_5760" departureTime="01:36:00" vehicleRefId="From_4_to_1_MTR1_5760"/>
+				<departure id="From_4_to_1_MTR1_57600" departureTime="16:00:00" vehicleRefId="From_4_to_1_MTR1_57600"/>
+				<departure id="From_4_to_1_MTR1_57960" departureTime="16:06:00" vehicleRefId="From_4_to_1_MTR1_57960"/>
+				<departure id="From_4_to_1_MTR1_58320" departureTime="16:12:00" vehicleRefId="From_4_to_1_MTR1_58320"/>
+				<departure id="From_4_to_1_MTR1_58680" departureTime="16:18:00" vehicleRefId="From_4_to_1_MTR1_58680"/>
+				<departure id="From_4_to_1_MTR1_59040" departureTime="16:24:00" vehicleRefId="From_4_to_1_MTR1_59040"/>
+				<departure id="From_4_to_1_MTR1_59400" departureTime="16:30:00" vehicleRefId="From_4_to_1_MTR1_59400"/>
+				<departure id="From_4_to_1_MTR1_59760" departureTime="16:36:00" vehicleRefId="From_4_to_1_MTR1_59760"/>
+				<departure id="From_4_to_1_MTR1_60120" departureTime="16:42:00" vehicleRefId="From_4_to_1_MTR1_60120"/>
+				<departure id="From_4_to_1_MTR1_60480" departureTime="16:48:00" vehicleRefId="From_4_to_1_MTR1_60480"/>
+				<departure id="From_4_to_1_MTR1_60840" departureTime="16:54:00" vehicleRefId="From_4_to_1_MTR1_60840"/>
+				<departure id="From_4_to_1_MTR1_6120" departureTime="01:42:00" vehicleRefId="From_4_to_1_MTR1_6120"/>
+				<departure id="From_4_to_1_MTR1_61200" departureTime="17:00:00" vehicleRefId="From_4_to_1_MTR1_61200"/>
+				<departure id="From_4_to_1_MTR1_61560" departureTime="17:06:00" vehicleRefId="From_4_to_1_MTR1_61560"/>
+				<departure id="From_4_to_1_MTR1_61920" departureTime="17:12:00" vehicleRefId="From_4_to_1_MTR1_61920"/>
+				<departure id="From_4_to_1_MTR1_62280" departureTime="17:18:00" vehicleRefId="From_4_to_1_MTR1_62280"/>
+				<departure id="From_4_to_1_MTR1_62640" departureTime="17:24:00" vehicleRefId="From_4_to_1_MTR1_62640"/>
+				<departure id="From_4_to_1_MTR1_63000" departureTime="17:30:00" vehicleRefId="From_4_to_1_MTR1_63000"/>
+				<departure id="From_4_to_1_MTR1_63360" departureTime="17:36:00" vehicleRefId="From_4_to_1_MTR1_63360"/>
+				<departure id="From_4_to_1_MTR1_63720" departureTime="17:42:00" vehicleRefId="From_4_to_1_MTR1_63720"/>
+				<departure id="From_4_to_1_MTR1_64080" departureTime="17:48:00" vehicleRefId="From_4_to_1_MTR1_64080"/>
+				<departure id="From_4_to_1_MTR1_64440" departureTime="17:54:00" vehicleRefId="From_4_to_1_MTR1_64440"/>
+				<departure id="From_4_to_1_MTR1_6480" departureTime="01:48:00" vehicleRefId="From_4_to_1_MTR1_6480"/>
+				<departure id="From_4_to_1_MTR1_64800" departureTime="18:00:00" vehicleRefId="From_4_to_1_MTR1_64800"/>
+				<departure id="From_4_to_1_MTR1_65160" departureTime="18:06:00" vehicleRefId="From_4_to_1_MTR1_65160"/>
+				<departure id="From_4_to_1_MTR1_65520" departureTime="18:12:00" vehicleRefId="From_4_to_1_MTR1_65520"/>
+				<departure id="From_4_to_1_MTR1_65880" departureTime="18:18:00" vehicleRefId="From_4_to_1_MTR1_65880"/>
+				<departure id="From_4_to_1_MTR1_66240" departureTime="18:24:00" vehicleRefId="From_4_to_1_MTR1_66240"/>
+				<departure id="From_4_to_1_MTR1_66600" departureTime="18:30:00" vehicleRefId="From_4_to_1_MTR1_66600"/>
+				<departure id="From_4_to_1_MTR1_66960" departureTime="18:36:00" vehicleRefId="From_4_to_1_MTR1_66960"/>
+				<departure id="From_4_to_1_MTR1_67320" departureTime="18:42:00" vehicleRefId="From_4_to_1_MTR1_67320"/>
+				<departure id="From_4_to_1_MTR1_67680" departureTime="18:48:00" vehicleRefId="From_4_to_1_MTR1_67680"/>
+				<departure id="From_4_to_1_MTR1_68040" departureTime="18:54:00" vehicleRefId="From_4_to_1_MTR1_68040"/>
+				<departure id="From_4_to_1_MTR1_6840" departureTime="01:54:00" vehicleRefId="From_4_to_1_MTR1_6840"/>
+				<departure id="From_4_to_1_MTR1_68400" departureTime="19:00:00" vehicleRefId="From_4_to_1_MTR1_68400"/>
+				<departure id="From_4_to_1_MTR1_68760" departureTime="19:06:00" vehicleRefId="From_4_to_1_MTR1_68760"/>
+				<departure id="From_4_to_1_MTR1_69120" departureTime="19:12:00" vehicleRefId="From_4_to_1_MTR1_69120"/>
+				<departure id="From_4_to_1_MTR1_69480" departureTime="19:18:00" vehicleRefId="From_4_to_1_MTR1_69480"/>
+				<departure id="From_4_to_1_MTR1_69840" departureTime="19:24:00" vehicleRefId="From_4_to_1_MTR1_69840"/>
+				<departure id="From_4_to_1_MTR1_70200" departureTime="19:30:00" vehicleRefId="From_4_to_1_MTR1_70200"/>
+				<departure id="From_4_to_1_MTR1_70560" departureTime="19:36:00" vehicleRefId="From_4_to_1_MTR1_70560"/>
+				<departure id="From_4_to_1_MTR1_70920" departureTime="19:42:00" vehicleRefId="From_4_to_1_MTR1_70920"/>
+				<departure id="From_4_to_1_MTR1_71280" departureTime="19:48:00" vehicleRefId="From_4_to_1_MTR1_71280"/>
+				<departure id="From_4_to_1_MTR1_71640" departureTime="19:54:00" vehicleRefId="From_4_to_1_MTR1_71640"/>
+				<departure id="From_4_to_1_MTR1_720" departureTime="00:12:00" vehicleRefId="From_4_to_1_MTR1_720"/>
+				<departure id="From_4_to_1_MTR1_7200" departureTime="02:00:00" vehicleRefId="From_4_to_1_MTR1_7200"/>
+				<departure id="From_4_to_1_MTR1_72000" departureTime="20:00:00" vehicleRefId="From_4_to_1_MTR1_72000"/>
+				<departure id="From_4_to_1_MTR1_72360" departureTime="20:06:00" vehicleRefId="From_4_to_1_MTR1_72360"/>
+				<departure id="From_4_to_1_MTR1_72720" departureTime="20:12:00" vehicleRefId="From_4_to_1_MTR1_72720"/>
+				<departure id="From_4_to_1_MTR1_73080" departureTime="20:18:00" vehicleRefId="From_4_to_1_MTR1_73080"/>
+				<departure id="From_4_to_1_MTR1_73440" departureTime="20:24:00" vehicleRefId="From_4_to_1_MTR1_73440"/>
+				<departure id="From_4_to_1_MTR1_73800" departureTime="20:30:00" vehicleRefId="From_4_to_1_MTR1_73800"/>
+				<departure id="From_4_to_1_MTR1_74160" departureTime="20:36:00" vehicleRefId="From_4_to_1_MTR1_74160"/>
+				<departure id="From_4_to_1_MTR1_74520" departureTime="20:42:00" vehicleRefId="From_4_to_1_MTR1_74520"/>
+				<departure id="From_4_to_1_MTR1_74880" departureTime="20:48:00" vehicleRefId="From_4_to_1_MTR1_74880"/>
+				<departure id="From_4_to_1_MTR1_75240" departureTime="20:54:00" vehicleRefId="From_4_to_1_MTR1_75240"/>
+				<departure id="From_4_to_1_MTR1_7560" departureTime="02:06:00" vehicleRefId="From_4_to_1_MTR1_7560"/>
+				<departure id="From_4_to_1_MTR1_75600" departureTime="21:00:00" vehicleRefId="From_4_to_1_MTR1_75600"/>
+				<departure id="From_4_to_1_MTR1_75960" departureTime="21:06:00" vehicleRefId="From_4_to_1_MTR1_75960"/>
+				<departure id="From_4_to_1_MTR1_76320" departureTime="21:12:00" vehicleRefId="From_4_to_1_MTR1_76320"/>
+				<departure id="From_4_to_1_MTR1_76680" departureTime="21:18:00" vehicleRefId="From_4_to_1_MTR1_76680"/>
+				<departure id="From_4_to_1_MTR1_77040" departureTime="21:24:00" vehicleRefId="From_4_to_1_MTR1_77040"/>
+				<departure id="From_4_to_1_MTR1_77400" departureTime="21:30:00" vehicleRefId="From_4_to_1_MTR1_77400"/>
+				<departure id="From_4_to_1_MTR1_77760" departureTime="21:36:00" vehicleRefId="From_4_to_1_MTR1_77760"/>
+				<departure id="From_4_to_1_MTR1_78120" departureTime="21:42:00" vehicleRefId="From_4_to_1_MTR1_78120"/>
+				<departure id="From_4_to_1_MTR1_78480" departureTime="21:48:00" vehicleRefId="From_4_to_1_MTR1_78480"/>
+				<departure id="From_4_to_1_MTR1_78840" departureTime="21:54:00" vehicleRefId="From_4_to_1_MTR1_78840"/>
+				<departure id="From_4_to_1_MTR1_7920" departureTime="02:12:00" vehicleRefId="From_4_to_1_MTR1_7920"/>
+				<departure id="From_4_to_1_MTR1_79200" departureTime="22:00:00" vehicleRefId="From_4_to_1_MTR1_79200"/>
+				<departure id="From_4_to_1_MTR1_79560" departureTime="22:06:00" vehicleRefId="From_4_to_1_MTR1_79560"/>
+				<departure id="From_4_to_1_MTR1_79920" departureTime="22:12:00" vehicleRefId="From_4_to_1_MTR1_79920"/>
+				<departure id="From_4_to_1_MTR1_80280" departureTime="22:18:00" vehicleRefId="From_4_to_1_MTR1_80280"/>
+				<departure id="From_4_to_1_MTR1_80640" departureTime="22:24:00" vehicleRefId="From_4_to_1_MTR1_80640"/>
+				<departure id="From_4_to_1_MTR1_81000" departureTime="22:30:00" vehicleRefId="From_4_to_1_MTR1_81000"/>
+				<departure id="From_4_to_1_MTR1_81360" departureTime="22:36:00" vehicleRefId="From_4_to_1_MTR1_81360"/>
+				<departure id="From_4_to_1_MTR1_81720" departureTime="22:42:00" vehicleRefId="From_4_to_1_MTR1_81720"/>
+				<departure id="From_4_to_1_MTR1_82080" departureTime="22:48:00" vehicleRefId="From_4_to_1_MTR1_82080"/>
+				<departure id="From_4_to_1_MTR1_82440" departureTime="22:54:00" vehicleRefId="From_4_to_1_MTR1_82440"/>
+				<departure id="From_4_to_1_MTR1_8280" departureTime="02:18:00" vehicleRefId="From_4_to_1_MTR1_8280"/>
+				<departure id="From_4_to_1_MTR1_82800" departureTime="23:00:00" vehicleRefId="From_4_to_1_MTR1_82800"/>
+				<departure id="From_4_to_1_MTR1_83160" departureTime="23:06:00" vehicleRefId="From_4_to_1_MTR1_83160"/>
+				<departure id="From_4_to_1_MTR1_83520" departureTime="23:12:00" vehicleRefId="From_4_to_1_MTR1_83520"/>
+				<departure id="From_4_to_1_MTR1_83880" departureTime="23:18:00" vehicleRefId="From_4_to_1_MTR1_83880"/>
+				<departure id="From_4_to_1_MTR1_84240" departureTime="23:24:00" vehicleRefId="From_4_to_1_MTR1_84240"/>
+				<departure id="From_4_to_1_MTR1_84600" departureTime="23:30:00" vehicleRefId="From_4_to_1_MTR1_84600"/>
+				<departure id="From_4_to_1_MTR1_84960" departureTime="23:36:00" vehicleRefId="From_4_to_1_MTR1_84960"/>
+				<departure id="From_4_to_1_MTR1_85320" departureTime="23:42:00" vehicleRefId="From_4_to_1_MTR1_85320"/>
+				<departure id="From_4_to_1_MTR1_85680" departureTime="23:48:00" vehicleRefId="From_4_to_1_MTR1_85680"/>
+				<departure id="From_4_to_1_MTR1_86040" departureTime="23:54:00" vehicleRefId="From_4_to_1_MTR1_86040"/>
+				<departure id="From_4_to_1_MTR1_8640" departureTime="02:24:00" vehicleRefId="From_4_to_1_MTR1_8640"/>
+				<departure id="From_4_to_1_MTR1_9000" departureTime="02:30:00" vehicleRefId="From_4_to_1_MTR1_9000"/>
+				<departure id="From_4_to_1_MTR1_9360" departureTime="02:36:00" vehicleRefId="From_4_to_1_MTR1_9360"/>
+				<departure id="From_4_to_1_MTR1_9720" departureTime="02:42:00" vehicleRefId="From_4_to_1_MTR1_9720"/>
+			</departures>
+		</transitRoute>
+	</transitLine>
+	<transitLine id="MTR2">
+		<transitRoute id="From_2_to_3_MTR2">
+			<transportMode>train</transportMode>
+			<routeProfile>
+				<stop refId="2_2rBBB_stop_train" arrivalOffset="00:00:00" departureOffset="00:00:30" awaitDeparture="false"/>
+				<stop refId="5_5rEEE_stop_train" arrivalOffset="00:10:30" departureOffset="00:11:00" awaitDeparture="false"/>
+				<stop refId="7_7rGGG_stop_train" arrivalOffset="00:21:00" departureOffset="00:21:30" awaitDeparture="false"/>
+				<stop refId="6_6rFFF_stop_train" arrivalOffset="00:31:30" departureOffset="00:32:00" awaitDeparture="false"/>
+				<stop refId="3_3rCCC_stop_train" arrivalOffset="00:42:00" departureOffset="00:42:30" awaitDeparture="false"/>
+			</routeProfile>
+			<route>
+				<link refId="2_2r_stop_train"/>
+				<link refId="2r_5_MTR"/>
+				<link refId="5_5r_stop_train"/>
+				<link refId="5r_7_MTR"/>
+				<link refId="7_7r_stop_train"/>
+				<link refId="7r_6_MTR"/>
+				<link refId="6_6r_stop_train"/>
+				<link refId="6r_3_MTR"/>
+				<link refId="3_3r_stop_train"/>
+			</route>
+			<departures>
+				<departure id="From_2_to_3_MTR2_0" departureTime="00:00:00" vehicleRefId="From_2_to_3_MTR2_0"/>
+				<departure id="From_2_to_3_MTR2_10080" departureTime="02:48:00" vehicleRefId="From_2_to_3_MTR2_10080"/>
+				<departure id="From_2_to_3_MTR2_10560" departureTime="02:56:00" vehicleRefId="From_2_to_3_MTR2_10560"/>
+				<departure id="From_2_to_3_MTR2_11040" departureTime="03:04:00" vehicleRefId="From_2_to_3_MTR2_11040"/>
+				<departure id="From_2_to_3_MTR2_11520" departureTime="03:12:00" vehicleRefId="From_2_to_3_MTR2_11520"/>
+				<departure id="From_2_to_3_MTR2_12000" departureTime="03:20:00" vehicleRefId="From_2_to_3_MTR2_12000"/>
+				<departure id="From_2_to_3_MTR2_12480" departureTime="03:28:00" vehicleRefId="From_2_to_3_MTR2_12480"/>
+				<departure id="From_2_to_3_MTR2_12960" departureTime="03:36:00" vehicleRefId="From_2_to_3_MTR2_12960"/>
+				<departure id="From_2_to_3_MTR2_13440" departureTime="03:44:00" vehicleRefId="From_2_to_3_MTR2_13440"/>
+				<departure id="From_2_to_3_MTR2_13920" departureTime="03:52:00" vehicleRefId="From_2_to_3_MTR2_13920"/>
+				<departure id="From_2_to_3_MTR2_1440" departureTime="00:24:00" vehicleRefId="From_2_to_3_MTR2_1440"/>
+				<departure id="From_2_to_3_MTR2_14400" departureTime="04:00:00" vehicleRefId="From_2_to_3_MTR2_14400"/>
+				<departure id="From_2_to_3_MTR2_14880" departureTime="04:08:00" vehicleRefId="From_2_to_3_MTR2_14880"/>
+				<departure id="From_2_to_3_MTR2_15360" departureTime="04:16:00" vehicleRefId="From_2_to_3_MTR2_15360"/>
+				<departure id="From_2_to_3_MTR2_15840" departureTime="04:24:00" vehicleRefId="From_2_to_3_MTR2_15840"/>
+				<departure id="From_2_to_3_MTR2_16320" departureTime="04:32:00" vehicleRefId="From_2_to_3_MTR2_16320"/>
+				<departure id="From_2_to_3_MTR2_16800" departureTime="04:40:00" vehicleRefId="From_2_to_3_MTR2_16800"/>
+				<departure id="From_2_to_3_MTR2_17280" departureTime="04:48:00" vehicleRefId="From_2_to_3_MTR2_17280"/>
+				<departure id="From_2_to_3_MTR2_17760" departureTime="04:56:00" vehicleRefId="From_2_to_3_MTR2_17760"/>
+				<departure id="From_2_to_3_MTR2_18240" departureTime="05:04:00" vehicleRefId="From_2_to_3_MTR2_18240"/>
+				<departure id="From_2_to_3_MTR2_18720" departureTime="05:12:00" vehicleRefId="From_2_to_3_MTR2_18720"/>
+				<departure id="From_2_to_3_MTR2_1920" departureTime="00:32:00" vehicleRefId="From_2_to_3_MTR2_1920"/>
+				<departure id="From_2_to_3_MTR2_19200" departureTime="05:20:00" vehicleRefId="From_2_to_3_MTR2_19200"/>
+				<departure id="From_2_to_3_MTR2_19680" departureTime="05:28:00" vehicleRefId="From_2_to_3_MTR2_19680"/>
+				<departure id="From_2_to_3_MTR2_20160" departureTime="05:36:00" vehicleRefId="From_2_to_3_MTR2_20160"/>
+				<departure id="From_2_to_3_MTR2_20640" departureTime="05:44:00" vehicleRefId="From_2_to_3_MTR2_20640"/>
+				<departure id="From_2_to_3_MTR2_21120" departureTime="05:52:00" vehicleRefId="From_2_to_3_MTR2_21120"/>
+				<departure id="From_2_to_3_MTR2_21600" departureTime="06:00:00" vehicleRefId="From_2_to_3_MTR2_21600"/>
+				<departure id="From_2_to_3_MTR2_22080" departureTime="06:08:00" vehicleRefId="From_2_to_3_MTR2_22080"/>
+				<departure id="From_2_to_3_MTR2_22560" departureTime="06:16:00" vehicleRefId="From_2_to_3_MTR2_22560"/>
+				<departure id="From_2_to_3_MTR2_23040" departureTime="06:24:00" vehicleRefId="From_2_to_3_MTR2_23040"/>
+				<departure id="From_2_to_3_MTR2_23520" departureTime="06:32:00" vehicleRefId="From_2_to_3_MTR2_23520"/>
+				<departure id="From_2_to_3_MTR2_2400" departureTime="00:40:00" vehicleRefId="From_2_to_3_MTR2_2400"/>
+				<departure id="From_2_to_3_MTR2_24000" departureTime="06:40:00" vehicleRefId="From_2_to_3_MTR2_24000"/>
+				<departure id="From_2_to_3_MTR2_24480" departureTime="06:48:00" vehicleRefId="From_2_to_3_MTR2_24480"/>
+				<departure id="From_2_to_3_MTR2_24960" departureTime="06:56:00" vehicleRefId="From_2_to_3_MTR2_24960"/>
+				<departure id="From_2_to_3_MTR2_25440" departureTime="07:04:00" vehicleRefId="From_2_to_3_MTR2_25440"/>
+				<departure id="From_2_to_3_MTR2_25920" departureTime="07:12:00" vehicleRefId="From_2_to_3_MTR2_25920"/>
+				<departure id="From_2_to_3_MTR2_26400" departureTime="07:20:00" vehicleRefId="From_2_to_3_MTR2_26400"/>
+				<departure id="From_2_to_3_MTR2_26880" departureTime="07:28:00" vehicleRefId="From_2_to_3_MTR2_26880"/>
+				<departure id="From_2_to_3_MTR2_27360" departureTime="07:36:00" vehicleRefId="From_2_to_3_MTR2_27360"/>
+				<departure id="From_2_to_3_MTR2_27840" departureTime="07:44:00" vehicleRefId="From_2_to_3_MTR2_27840"/>
+				<departure id="From_2_to_3_MTR2_28320" departureTime="07:52:00" vehicleRefId="From_2_to_3_MTR2_28320"/>
+				<departure id="From_2_to_3_MTR2_2880" departureTime="00:48:00" vehicleRefId="From_2_to_3_MTR2_2880"/>
+				<departure id="From_2_to_3_MTR2_28800" departureTime="08:00:00" vehicleRefId="From_2_to_3_MTR2_28800"/>
+				<departure id="From_2_to_3_MTR2_29280" departureTime="08:08:00" vehicleRefId="From_2_to_3_MTR2_29280"/>
+				<departure id="From_2_to_3_MTR2_29760" departureTime="08:16:00" vehicleRefId="From_2_to_3_MTR2_29760"/>
+				<departure id="From_2_to_3_MTR2_30240" departureTime="08:24:00" vehicleRefId="From_2_to_3_MTR2_30240"/>
+				<departure id="From_2_to_3_MTR2_30720" departureTime="08:32:00" vehicleRefId="From_2_to_3_MTR2_30720"/>
+				<departure id="From_2_to_3_MTR2_31200" departureTime="08:40:00" vehicleRefId="From_2_to_3_MTR2_31200"/>
+				<departure id="From_2_to_3_MTR2_31680" departureTime="08:48:00" vehicleRefId="From_2_to_3_MTR2_31680"/>
+				<departure id="From_2_to_3_MTR2_32160" departureTime="08:56:00" vehicleRefId="From_2_to_3_MTR2_32160"/>
+				<departure id="From_2_to_3_MTR2_32640" departureTime="09:04:00" vehicleRefId="From_2_to_3_MTR2_32640"/>
+				<departure id="From_2_to_3_MTR2_33120" departureTime="09:12:00" vehicleRefId="From_2_to_3_MTR2_33120"/>
+				<departure id="From_2_to_3_MTR2_3360" departureTime="00:56:00" vehicleRefId="From_2_to_3_MTR2_3360"/>
+				<departure id="From_2_to_3_MTR2_33600" departureTime="09:20:00" vehicleRefId="From_2_to_3_MTR2_33600"/>
+				<departure id="From_2_to_3_MTR2_34080" departureTime="09:28:00" vehicleRefId="From_2_to_3_MTR2_34080"/>
+				<departure id="From_2_to_3_MTR2_34560" departureTime="09:36:00" vehicleRefId="From_2_to_3_MTR2_34560"/>
+				<departure id="From_2_to_3_MTR2_35040" departureTime="09:44:00" vehicleRefId="From_2_to_3_MTR2_35040"/>
+				<departure id="From_2_to_3_MTR2_35520" departureTime="09:52:00" vehicleRefId="From_2_to_3_MTR2_35520"/>
+				<departure id="From_2_to_3_MTR2_36000" departureTime="10:00:00" vehicleRefId="From_2_to_3_MTR2_36000"/>
+				<departure id="From_2_to_3_MTR2_36480" departureTime="10:08:00" vehicleRefId="From_2_to_3_MTR2_36480"/>
+				<departure id="From_2_to_3_MTR2_36960" departureTime="10:16:00" vehicleRefId="From_2_to_3_MTR2_36960"/>
+				<departure id="From_2_to_3_MTR2_37440" departureTime="10:24:00" vehicleRefId="From_2_to_3_MTR2_37440"/>
+				<departure id="From_2_to_3_MTR2_37920" departureTime="10:32:00" vehicleRefId="From_2_to_3_MTR2_37920"/>
+				<departure id="From_2_to_3_MTR2_3840" departureTime="01:04:00" vehicleRefId="From_2_to_3_MTR2_3840"/>
+				<departure id="From_2_to_3_MTR2_38400" departureTime="10:40:00" vehicleRefId="From_2_to_3_MTR2_38400"/>
+				<departure id="From_2_to_3_MTR2_38880" departureTime="10:48:00" vehicleRefId="From_2_to_3_MTR2_38880"/>
+				<departure id="From_2_to_3_MTR2_39360" departureTime="10:56:00" vehicleRefId="From_2_to_3_MTR2_39360"/>
+				<departure id="From_2_to_3_MTR2_39840" departureTime="11:04:00" vehicleRefId="From_2_to_3_MTR2_39840"/>
+				<departure id="From_2_to_3_MTR2_40320" departureTime="11:12:00" vehicleRefId="From_2_to_3_MTR2_40320"/>
+				<departure id="From_2_to_3_MTR2_40800" departureTime="11:20:00" vehicleRefId="From_2_to_3_MTR2_40800"/>
+				<departure id="From_2_to_3_MTR2_41280" departureTime="11:28:00" vehicleRefId="From_2_to_3_MTR2_41280"/>
+				<departure id="From_2_to_3_MTR2_41760" departureTime="11:36:00" vehicleRefId="From_2_to_3_MTR2_41760"/>
+				<departure id="From_2_to_3_MTR2_42240" departureTime="11:44:00" vehicleRefId="From_2_to_3_MTR2_42240"/>
+				<departure id="From_2_to_3_MTR2_42720" departureTime="11:52:00" vehicleRefId="From_2_to_3_MTR2_42720"/>
+				<departure id="From_2_to_3_MTR2_4320" departureTime="01:12:00" vehicleRefId="From_2_to_3_MTR2_4320"/>
+				<departure id="From_2_to_3_MTR2_43200" departureTime="12:00:00" vehicleRefId="From_2_to_3_MTR2_43200"/>
+				<departure id="From_2_to_3_MTR2_43680" departureTime="12:08:00" vehicleRefId="From_2_to_3_MTR2_43680"/>
+				<departure id="From_2_to_3_MTR2_44160" departureTime="12:16:00" vehicleRefId="From_2_to_3_MTR2_44160"/>
+				<departure id="From_2_to_3_MTR2_44640" departureTime="12:24:00" vehicleRefId="From_2_to_3_MTR2_44640"/>
+				<departure id="From_2_to_3_MTR2_45120" departureTime="12:32:00" vehicleRefId="From_2_to_3_MTR2_45120"/>
+				<departure id="From_2_to_3_MTR2_45600" departureTime="12:40:00" vehicleRefId="From_2_to_3_MTR2_45600"/>
+				<departure id="From_2_to_3_MTR2_46080" departureTime="12:48:00" vehicleRefId="From_2_to_3_MTR2_46080"/>
+				<departure id="From_2_to_3_MTR2_46560" departureTime="12:56:00" vehicleRefId="From_2_to_3_MTR2_46560"/>
+				<departure id="From_2_to_3_MTR2_47040" departureTime="13:04:00" vehicleRefId="From_2_to_3_MTR2_47040"/>
+				<departure id="From_2_to_3_MTR2_47520" departureTime="13:12:00" vehicleRefId="From_2_to_3_MTR2_47520"/>
+				<departure id="From_2_to_3_MTR2_480" departureTime="00:08:00" vehicleRefId="From_2_to_3_MTR2_480"/>
+				<departure id="From_2_to_3_MTR2_4800" departureTime="01:20:00" vehicleRefId="From_2_to_3_MTR2_4800"/>
+				<departure id="From_2_to_3_MTR2_48000" departureTime="13:20:00" vehicleRefId="From_2_to_3_MTR2_48000"/>
+				<departure id="From_2_to_3_MTR2_48480" departureTime="13:28:00" vehicleRefId="From_2_to_3_MTR2_48480"/>
+				<departure id="From_2_to_3_MTR2_48960" departureTime="13:36:00" vehicleRefId="From_2_to_3_MTR2_48960"/>
+				<departure id="From_2_to_3_MTR2_49440" departureTime="13:44:00" vehicleRefId="From_2_to_3_MTR2_49440"/>
+				<departure id="From_2_to_3_MTR2_49920" departureTime="13:52:00" vehicleRefId="From_2_to_3_MTR2_49920"/>
+				<departure id="From_2_to_3_MTR2_50400" departureTime="14:00:00" vehicleRefId="From_2_to_3_MTR2_50400"/>
+				<departure id="From_2_to_3_MTR2_50880" departureTime="14:08:00" vehicleRefId="From_2_to_3_MTR2_50880"/>
+				<departure id="From_2_to_3_MTR2_51360" departureTime="14:16:00" vehicleRefId="From_2_to_3_MTR2_51360"/>
+				<departure id="From_2_to_3_MTR2_51840" departureTime="14:24:00" vehicleRefId="From_2_to_3_MTR2_51840"/>
+				<departure id="From_2_to_3_MTR2_52320" departureTime="14:32:00" vehicleRefId="From_2_to_3_MTR2_52320"/>
+				<departure id="From_2_to_3_MTR2_5280" departureTime="01:28:00" vehicleRefId="From_2_to_3_MTR2_5280"/>
+				<departure id="From_2_to_3_MTR2_52800" departureTime="14:40:00" vehicleRefId="From_2_to_3_MTR2_52800"/>
+				<departure id="From_2_to_3_MTR2_53280" departureTime="14:48:00" vehicleRefId="From_2_to_3_MTR2_53280"/>
+				<departure id="From_2_to_3_MTR2_53760" departureTime="14:56:00" vehicleRefId="From_2_to_3_MTR2_53760"/>
+				<departure id="From_2_to_3_MTR2_54240" departureTime="15:04:00" vehicleRefId="From_2_to_3_MTR2_54240"/>
+				<departure id="From_2_to_3_MTR2_54720" departureTime="15:12:00" vehicleRefId="From_2_to_3_MTR2_54720"/>
+				<departure id="From_2_to_3_MTR2_55200" departureTime="15:20:00" vehicleRefId="From_2_to_3_MTR2_55200"/>
+				<departure id="From_2_to_3_MTR2_55680" departureTime="15:28:00" vehicleRefId="From_2_to_3_MTR2_55680"/>
+				<departure id="From_2_to_3_MTR2_56160" departureTime="15:36:00" vehicleRefId="From_2_to_3_MTR2_56160"/>
+				<departure id="From_2_to_3_MTR2_56640" departureTime="15:44:00" vehicleRefId="From_2_to_3_MTR2_56640"/>
+				<departure id="From_2_to_3_MTR2_57120" departureTime="15:52:00" vehicleRefId="From_2_to_3_MTR2_57120"/>
+				<departure id="From_2_to_3_MTR2_5760" departureTime="01:36:00" vehicleRefId="From_2_to_3_MTR2_5760"/>
+				<departure id="From_2_to_3_MTR2_57600" departureTime="16:00:00" vehicleRefId="From_2_to_3_MTR2_57600"/>
+				<departure id="From_2_to_3_MTR2_58080" departureTime="16:08:00" vehicleRefId="From_2_to_3_MTR2_58080"/>
+				<departure id="From_2_to_3_MTR2_58560" departureTime="16:16:00" vehicleRefId="From_2_to_3_MTR2_58560"/>
+				<departure id="From_2_to_3_MTR2_59040" departureTime="16:24:00" vehicleRefId="From_2_to_3_MTR2_59040"/>
+				<departure id="From_2_to_3_MTR2_59520" departureTime="16:32:00" vehicleRefId="From_2_to_3_MTR2_59520"/>
+				<departure id="From_2_to_3_MTR2_60000" departureTime="16:40:00" vehicleRefId="From_2_to_3_MTR2_60000"/>
+				<departure id="From_2_to_3_MTR2_60480" departureTime="16:48:00" vehicleRefId="From_2_to_3_MTR2_60480"/>
+				<departure id="From_2_to_3_MTR2_60960" departureTime="16:56:00" vehicleRefId="From_2_to_3_MTR2_60960"/>
+				<departure id="From_2_to_3_MTR2_61440" departureTime="17:04:00" vehicleRefId="From_2_to_3_MTR2_61440"/>
+				<departure id="From_2_to_3_MTR2_61920" departureTime="17:12:00" vehicleRefId="From_2_to_3_MTR2_61920"/>
+				<departure id="From_2_to_3_MTR2_6240" departureTime="01:44:00" vehicleRefId="From_2_to_3_MTR2_6240"/>
+				<departure id="From_2_to_3_MTR2_62400" departureTime="17:20:00" vehicleRefId="From_2_to_3_MTR2_62400"/>
+				<departure id="From_2_to_3_MTR2_62880" departureTime="17:28:00" vehicleRefId="From_2_to_3_MTR2_62880"/>
+				<departure id="From_2_to_3_MTR2_63360" departureTime="17:36:00" vehicleRefId="From_2_to_3_MTR2_63360"/>
+				<departure id="From_2_to_3_MTR2_63840" departureTime="17:44:00" vehicleRefId="From_2_to_3_MTR2_63840"/>
+				<departure id="From_2_to_3_MTR2_64320" departureTime="17:52:00" vehicleRefId="From_2_to_3_MTR2_64320"/>
+				<departure id="From_2_to_3_MTR2_64800" departureTime="18:00:00" vehicleRefId="From_2_to_3_MTR2_64800"/>
+				<departure id="From_2_to_3_MTR2_65280" departureTime="18:08:00" vehicleRefId="From_2_to_3_MTR2_65280"/>
+				<departure id="From_2_to_3_MTR2_65760" departureTime="18:16:00" vehicleRefId="From_2_to_3_MTR2_65760"/>
+				<departure id="From_2_to_3_MTR2_66240" departureTime="18:24:00" vehicleRefId="From_2_to_3_MTR2_66240"/>
+				<departure id="From_2_to_3_MTR2_66720" departureTime="18:32:00" vehicleRefId="From_2_to_3_MTR2_66720"/>
+				<departure id="From_2_to_3_MTR2_6720" departureTime="01:52:00" vehicleRefId="From_2_to_3_MTR2_6720"/>
+				<departure id="From_2_to_3_MTR2_67200" departureTime="18:40:00" vehicleRefId="From_2_to_3_MTR2_67200"/>
+				<departure id="From_2_to_3_MTR2_67680" departureTime="18:48:00" vehicleRefId="From_2_to_3_MTR2_67680"/>
+				<departure id="From_2_to_3_MTR2_68160" departureTime="18:56:00" vehicleRefId="From_2_to_3_MTR2_68160"/>
+				<departure id="From_2_to_3_MTR2_68640" departureTime="19:04:00" vehicleRefId="From_2_to_3_MTR2_68640"/>
+				<departure id="From_2_to_3_MTR2_69120" departureTime="19:12:00" vehicleRefId="From_2_to_3_MTR2_69120"/>
+				<departure id="From_2_to_3_MTR2_69600" departureTime="19:20:00" vehicleRefId="From_2_to_3_MTR2_69600"/>
+				<departure id="From_2_to_3_MTR2_70080" departureTime="19:28:00" vehicleRefId="From_2_to_3_MTR2_70080"/>
+				<departure id="From_2_to_3_MTR2_70560" departureTime="19:36:00" vehicleRefId="From_2_to_3_MTR2_70560"/>
+				<departure id="From_2_to_3_MTR2_71040" departureTime="19:44:00" vehicleRefId="From_2_to_3_MTR2_71040"/>
+				<departure id="From_2_to_3_MTR2_71520" departureTime="19:52:00" vehicleRefId="From_2_to_3_MTR2_71520"/>
+				<departure id="From_2_to_3_MTR2_7200" departureTime="02:00:00" vehicleRefId="From_2_to_3_MTR2_7200"/>
+				<departure id="From_2_to_3_MTR2_72000" departureTime="20:00:00" vehicleRefId="From_2_to_3_MTR2_72000"/>
+				<departure id="From_2_to_3_MTR2_72480" departureTime="20:08:00" vehicleRefId="From_2_to_3_MTR2_72480"/>
+				<departure id="From_2_to_3_MTR2_72960" departureTime="20:16:00" vehicleRefId="From_2_to_3_MTR2_72960"/>
+				<departure id="From_2_to_3_MTR2_73440" departureTime="20:24:00" vehicleRefId="From_2_to_3_MTR2_73440"/>
+				<departure id="From_2_to_3_MTR2_73920" departureTime="20:32:00" vehicleRefId="From_2_to_3_MTR2_73920"/>
+				<departure id="From_2_to_3_MTR2_74400" departureTime="20:40:00" vehicleRefId="From_2_to_3_MTR2_74400"/>
+				<departure id="From_2_to_3_MTR2_74880" departureTime="20:48:00" vehicleRefId="From_2_to_3_MTR2_74880"/>
+				<departure id="From_2_to_3_MTR2_75360" departureTime="20:56:00" vehicleRefId="From_2_to_3_MTR2_75360"/>
+				<departure id="From_2_to_3_MTR2_75840" departureTime="21:04:00" vehicleRefId="From_2_to_3_MTR2_75840"/>
+				<departure id="From_2_to_3_MTR2_76320" departureTime="21:12:00" vehicleRefId="From_2_to_3_MTR2_76320"/>
+				<departure id="From_2_to_3_MTR2_7680" departureTime="02:08:00" vehicleRefId="From_2_to_3_MTR2_7680"/>
+				<departure id="From_2_to_3_MTR2_76800" departureTime="21:20:00" vehicleRefId="From_2_to_3_MTR2_76800"/>
+				<departure id="From_2_to_3_MTR2_77280" departureTime="21:28:00" vehicleRefId="From_2_to_3_MTR2_77280"/>
+				<departure id="From_2_to_3_MTR2_77760" departureTime="21:36:00" vehicleRefId="From_2_to_3_MTR2_77760"/>
+				<departure id="From_2_to_3_MTR2_78240" departureTime="21:44:00" vehicleRefId="From_2_to_3_MTR2_78240"/>
+				<departure id="From_2_to_3_MTR2_78720" departureTime="21:52:00" vehicleRefId="From_2_to_3_MTR2_78720"/>
+				<departure id="From_2_to_3_MTR2_79200" departureTime="22:00:00" vehicleRefId="From_2_to_3_MTR2_79200"/>
+				<departure id="From_2_to_3_MTR2_79680" departureTime="22:08:00" vehicleRefId="From_2_to_3_MTR2_79680"/>
+				<departure id="From_2_to_3_MTR2_80160" departureTime="22:16:00" vehicleRefId="From_2_to_3_MTR2_80160"/>
+				<departure id="From_2_to_3_MTR2_80640" departureTime="22:24:00" vehicleRefId="From_2_to_3_MTR2_80640"/>
+				<departure id="From_2_to_3_MTR2_81120" departureTime="22:32:00" vehicleRefId="From_2_to_3_MTR2_81120"/>
+				<departure id="From_2_to_3_MTR2_8160" departureTime="02:16:00" vehicleRefId="From_2_to_3_MTR2_8160"/>
+				<departure id="From_2_to_3_MTR2_81600" departureTime="22:40:00" vehicleRefId="From_2_to_3_MTR2_81600"/>
+				<departure id="From_2_to_3_MTR2_82080" departureTime="22:48:00" vehicleRefId="From_2_to_3_MTR2_82080"/>
+				<departure id="From_2_to_3_MTR2_82560" departureTime="22:56:00" vehicleRefId="From_2_to_3_MTR2_82560"/>
+				<departure id="From_2_to_3_MTR2_83040" departureTime="23:04:00" vehicleRefId="From_2_to_3_MTR2_83040"/>
+				<departure id="From_2_to_3_MTR2_83520" departureTime="23:12:00" vehicleRefId="From_2_to_3_MTR2_83520"/>
+				<departure id="From_2_to_3_MTR2_84000" departureTime="23:20:00" vehicleRefId="From_2_to_3_MTR2_84000"/>
+				<departure id="From_2_to_3_MTR2_84480" departureTime="23:28:00" vehicleRefId="From_2_to_3_MTR2_84480"/>
+				<departure id="From_2_to_3_MTR2_84960" departureTime="23:36:00" vehicleRefId="From_2_to_3_MTR2_84960"/>
+				<departure id="From_2_to_3_MTR2_85440" departureTime="23:44:00" vehicleRefId="From_2_to_3_MTR2_85440"/>
+				<departure id="From_2_to_3_MTR2_85920" departureTime="23:52:00" vehicleRefId="From_2_to_3_MTR2_85920"/>
+				<departure id="From_2_to_3_MTR2_8640" departureTime="02:24:00" vehicleRefId="From_2_to_3_MTR2_8640"/>
+				<departure id="From_2_to_3_MTR2_9120" departureTime="02:32:00" vehicleRefId="From_2_to_3_MTR2_9120"/>
+				<departure id="From_2_to_3_MTR2_960" departureTime="00:16:00" vehicleRefId="From_2_to_3_MTR2_960"/>
+				<departure id="From_2_to_3_MTR2_9600" departureTime="02:40:00" vehicleRefId="From_2_to_3_MTR2_9600"/>
+			</departures>
+		</transitRoute>
+		<transitRoute id="From_3_to_2_MTR2">
+			<transportMode>train</transportMode>
+			<routeProfile>
+				<stop refId="3r_3CCC_stop_train" arrivalOffset="00:00:00" departureOffset="00:00:30" awaitDeparture="false"/>
+				<stop refId="6r_6FFF_stop_train" arrivalOffset="00:10:30" departureOffset="00:11:00" awaitDeparture="false"/>
+				<stop refId="7r_7GGG_stop_train" arrivalOffset="00:21:00" departureOffset="00:21:30" awaitDeparture="false"/>
+				<stop refId="5r_5EEE_stop_train" arrivalOffset="00:31:30" departureOffset="00:32:00" awaitDeparture="false"/>
+				<stop refId="2r_2BBB_stop_train" arrivalOffset="00:42:00" departureOffset="00:42:30" awaitDeparture="false"/>
+			</routeProfile>
+			<route>
+				<link refId="3r_3_stop_train"/>
+				<link refId="3_6r"/>
+				<link refId="6r_6_stop_train"/>
+				<link refId="6_7r"/>
+				<link refId="7r_7_stop_train"/>
+				<link refId="7_5r"/>
+				<link refId="5r_5_stop_train"/>
+				<link refId="5_2r"/>
+				<link refId="2r_2_stop_train"/>
+			</route>
+			<departures>
+				<departure id="From_3_to_2_MTR2_0" departureTime="00:00:00" vehicleRefId="From_3_to_2_MTR2_0"/>
+				<departure id="From_3_to_2_MTR2_10080" departureTime="02:48:00" vehicleRefId="From_3_to_2_MTR2_10080"/>
+				<departure id="From_3_to_2_MTR2_10560" departureTime="02:56:00" vehicleRefId="From_3_to_2_MTR2_10560"/>
+				<departure id="From_3_to_2_MTR2_11040" departureTime="03:04:00" vehicleRefId="From_3_to_2_MTR2_11040"/>
+				<departure id="From_3_to_2_MTR2_11520" departureTime="03:12:00" vehicleRefId="From_3_to_2_MTR2_11520"/>
+				<departure id="From_3_to_2_MTR2_12000" departureTime="03:20:00" vehicleRefId="From_3_to_2_MTR2_12000"/>
+				<departure id="From_3_to_2_MTR2_12480" departureTime="03:28:00" vehicleRefId="From_3_to_2_MTR2_12480"/>
+				<departure id="From_3_to_2_MTR2_12960" departureTime="03:36:00" vehicleRefId="From_3_to_2_MTR2_12960"/>
+				<departure id="From_3_to_2_MTR2_13440" departureTime="03:44:00" vehicleRefId="From_3_to_2_MTR2_13440"/>
+				<departure id="From_3_to_2_MTR2_13920" departureTime="03:52:00" vehicleRefId="From_3_to_2_MTR2_13920"/>
+				<departure id="From_3_to_2_MTR2_1440" departureTime="00:24:00" vehicleRefId="From_3_to_2_MTR2_1440"/>
+				<departure id="From_3_to_2_MTR2_14400" departureTime="04:00:00" vehicleRefId="From_3_to_2_MTR2_14400"/>
+				<departure id="From_3_to_2_MTR2_14880" departureTime="04:08:00" vehicleRefId="From_3_to_2_MTR2_14880"/>
+				<departure id="From_3_to_2_MTR2_15360" departureTime="04:16:00" vehicleRefId="From_3_to_2_MTR2_15360"/>
+				<departure id="From_3_to_2_MTR2_15840" departureTime="04:24:00" vehicleRefId="From_3_to_2_MTR2_15840"/>
+				<departure id="From_3_to_2_MTR2_16320" departureTime="04:32:00" vehicleRefId="From_3_to_2_MTR2_16320"/>
+				<departure id="From_3_to_2_MTR2_16800" departureTime="04:40:00" vehicleRefId="From_3_to_2_MTR2_16800"/>
+				<departure id="From_3_to_2_MTR2_17280" departureTime="04:48:00" vehicleRefId="From_3_to_2_MTR2_17280"/>
+				<departure id="From_3_to_2_MTR2_17760" departureTime="04:56:00" vehicleRefId="From_3_to_2_MTR2_17760"/>
+				<departure id="From_3_to_2_MTR2_18240" departureTime="05:04:00" vehicleRefId="From_3_to_2_MTR2_18240"/>
+				<departure id="From_3_to_2_MTR2_18720" departureTime="05:12:00" vehicleRefId="From_3_to_2_MTR2_18720"/>
+				<departure id="From_3_to_2_MTR2_1920" departureTime="00:32:00" vehicleRefId="From_3_to_2_MTR2_1920"/>
+				<departure id="From_3_to_2_MTR2_19200" departureTime="05:20:00" vehicleRefId="From_3_to_2_MTR2_19200"/>
+				<departure id="From_3_to_2_MTR2_19680" departureTime="05:28:00" vehicleRefId="From_3_to_2_MTR2_19680"/>
+				<departure id="From_3_to_2_MTR2_20160" departureTime="05:36:00" vehicleRefId="From_3_to_2_MTR2_20160"/>
+				<departure id="From_3_to_2_MTR2_20640" departureTime="05:44:00" vehicleRefId="From_3_to_2_MTR2_20640"/>
+				<departure id="From_3_to_2_MTR2_21120" departureTime="05:52:00" vehicleRefId="From_3_to_2_MTR2_21120"/>
+				<departure id="From_3_to_2_MTR2_21600" departureTime="06:00:00" vehicleRefId="From_3_to_2_MTR2_21600"/>
+				<departure id="From_3_to_2_MTR2_22080" departureTime="06:08:00" vehicleRefId="From_3_to_2_MTR2_22080"/>
+				<departure id="From_3_to_2_MTR2_22560" departureTime="06:16:00" vehicleRefId="From_3_to_2_MTR2_22560"/>
+				<departure id="From_3_to_2_MTR2_23040" departureTime="06:24:00" vehicleRefId="From_3_to_2_MTR2_23040"/>
+				<departure id="From_3_to_2_MTR2_23520" departureTime="06:32:00" vehicleRefId="From_3_to_2_MTR2_23520"/>
+				<departure id="From_3_to_2_MTR2_2400" departureTime="00:40:00" vehicleRefId="From_3_to_2_MTR2_2400"/>
+				<departure id="From_3_to_2_MTR2_24000" departureTime="06:40:00" vehicleRefId="From_3_to_2_MTR2_24000"/>
+				<departure id="From_3_to_2_MTR2_24480" departureTime="06:48:00" vehicleRefId="From_3_to_2_MTR2_24480"/>
+				<departure id="From_3_to_2_MTR2_24960" departureTime="06:56:00" vehicleRefId="From_3_to_2_MTR2_24960"/>
+				<departure id="From_3_to_2_MTR2_25440" departureTime="07:04:00" vehicleRefId="From_3_to_2_MTR2_25440"/>
+				<departure id="From_3_to_2_MTR2_25920" departureTime="07:12:00" vehicleRefId="From_3_to_2_MTR2_25920"/>
+				<departure id="From_3_to_2_MTR2_26400" departureTime="07:20:00" vehicleRefId="From_3_to_2_MTR2_26400"/>
+				<departure id="From_3_to_2_MTR2_26880" departureTime="07:28:00" vehicleRefId="From_3_to_2_MTR2_26880"/>
+				<departure id="From_3_to_2_MTR2_27360" departureTime="07:36:00" vehicleRefId="From_3_to_2_MTR2_27360"/>
+				<departure id="From_3_to_2_MTR2_27840" departureTime="07:44:00" vehicleRefId="From_3_to_2_MTR2_27840"/>
+				<departure id="From_3_to_2_MTR2_28320" departureTime="07:52:00" vehicleRefId="From_3_to_2_MTR2_28320"/>
+				<departure id="From_3_to_2_MTR2_2880" departureTime="00:48:00" vehicleRefId="From_3_to_2_MTR2_2880"/>
+				<departure id="From_3_to_2_MTR2_28800" departureTime="08:00:00" vehicleRefId="From_3_to_2_MTR2_28800"/>
+				<departure id="From_3_to_2_MTR2_29280" departureTime="08:08:00" vehicleRefId="From_3_to_2_MTR2_29280"/>
+				<departure id="From_3_to_2_MTR2_29760" departureTime="08:16:00" vehicleRefId="From_3_to_2_MTR2_29760"/>
+				<departure id="From_3_to_2_MTR2_30240" departureTime="08:24:00" vehicleRefId="From_3_to_2_MTR2_30240"/>
+				<departure id="From_3_to_2_MTR2_30720" departureTime="08:32:00" vehicleRefId="From_3_to_2_MTR2_30720"/>
+				<departure id="From_3_to_2_MTR2_31200" departureTime="08:40:00" vehicleRefId="From_3_to_2_MTR2_31200"/>
+				<departure id="From_3_to_2_MTR2_31680" departureTime="08:48:00" vehicleRefId="From_3_to_2_MTR2_31680"/>
+				<departure id="From_3_to_2_MTR2_32160" departureTime="08:56:00" vehicleRefId="From_3_to_2_MTR2_32160"/>
+				<departure id="From_3_to_2_MTR2_32640" departureTime="09:04:00" vehicleRefId="From_3_to_2_MTR2_32640"/>
+				<departure id="From_3_to_2_MTR2_33120" departureTime="09:12:00" vehicleRefId="From_3_to_2_MTR2_33120"/>
+				<departure id="From_3_to_2_MTR2_3360" departureTime="00:56:00" vehicleRefId="From_3_to_2_MTR2_3360"/>
+				<departure id="From_3_to_2_MTR2_33600" departureTime="09:20:00" vehicleRefId="From_3_to_2_MTR2_33600"/>
+				<departure id="From_3_to_2_MTR2_34080" departureTime="09:28:00" vehicleRefId="From_3_to_2_MTR2_34080"/>
+				<departure id="From_3_to_2_MTR2_34560" departureTime="09:36:00" vehicleRefId="From_3_to_2_MTR2_34560"/>
+				<departure id="From_3_to_2_MTR2_35040" departureTime="09:44:00" vehicleRefId="From_3_to_2_MTR2_35040"/>
+				<departure id="From_3_to_2_MTR2_35520" departureTime="09:52:00" vehicleRefId="From_3_to_2_MTR2_35520"/>
+				<departure id="From_3_to_2_MTR2_36000" departureTime="10:00:00" vehicleRefId="From_3_to_2_MTR2_36000"/>
+				<departure id="From_3_to_2_MTR2_36480" departureTime="10:08:00" vehicleRefId="From_3_to_2_MTR2_36480"/>
+				<departure id="From_3_to_2_MTR2_36960" departureTime="10:16:00" vehicleRefId="From_3_to_2_MTR2_36960"/>
+				<departure id="From_3_to_2_MTR2_37440" departureTime="10:24:00" vehicleRefId="From_3_to_2_MTR2_37440"/>
+				<departure id="From_3_to_2_MTR2_37920" departureTime="10:32:00" vehicleRefId="From_3_to_2_MTR2_37920"/>
+				<departure id="From_3_to_2_MTR2_3840" departureTime="01:04:00" vehicleRefId="From_3_to_2_MTR2_3840"/>
+				<departure id="From_3_to_2_MTR2_38400" departureTime="10:40:00" vehicleRefId="From_3_to_2_MTR2_38400"/>
+				<departure id="From_3_to_2_MTR2_38880" departureTime="10:48:00" vehicleRefId="From_3_to_2_MTR2_38880"/>
+				<departure id="From_3_to_2_MTR2_39360" departureTime="10:56:00" vehicleRefId="From_3_to_2_MTR2_39360"/>
+				<departure id="From_3_to_2_MTR2_39840" departureTime="11:04:00" vehicleRefId="From_3_to_2_MTR2_39840"/>
+				<departure id="From_3_to_2_MTR2_40320" departureTime="11:12:00" vehicleRefId="From_3_to_2_MTR2_40320"/>
+				<departure id="From_3_to_2_MTR2_40800" departureTime="11:20:00" vehicleRefId="From_3_to_2_MTR2_40800"/>
+				<departure id="From_3_to_2_MTR2_41280" departureTime="11:28:00" vehicleRefId="From_3_to_2_MTR2_41280"/>
+				<departure id="From_3_to_2_MTR2_41760" departureTime="11:36:00" vehicleRefId="From_3_to_2_MTR2_41760"/>
+				<departure id="From_3_to_2_MTR2_42240" departureTime="11:44:00" vehicleRefId="From_3_to_2_MTR2_42240"/>
+				<departure id="From_3_to_2_MTR2_42720" departureTime="11:52:00" vehicleRefId="From_3_to_2_MTR2_42720"/>
+				<departure id="From_3_to_2_MTR2_4320" departureTime="01:12:00" vehicleRefId="From_3_to_2_MTR2_4320"/>
+				<departure id="From_3_to_2_MTR2_43200" departureTime="12:00:00" vehicleRefId="From_3_to_2_MTR2_43200"/>
+				<departure id="From_3_to_2_MTR2_43680" departureTime="12:08:00" vehicleRefId="From_3_to_2_MTR2_43680"/>
+				<departure id="From_3_to_2_MTR2_44160" departureTime="12:16:00" vehicleRefId="From_3_to_2_MTR2_44160"/>
+				<departure id="From_3_to_2_MTR2_44640" departureTime="12:24:00" vehicleRefId="From_3_to_2_MTR2_44640"/>
+				<departure id="From_3_to_2_MTR2_45120" departureTime="12:32:00" vehicleRefId="From_3_to_2_MTR2_45120"/>
+				<departure id="From_3_to_2_MTR2_45600" departureTime="12:40:00" vehicleRefId="From_3_to_2_MTR2_45600"/>
+				<departure id="From_3_to_2_MTR2_46080" departureTime="12:48:00" vehicleRefId="From_3_to_2_MTR2_46080"/>
+				<departure id="From_3_to_2_MTR2_46560" departureTime="12:56:00" vehicleRefId="From_3_to_2_MTR2_46560"/>
+				<departure id="From_3_to_2_MTR2_47040" departureTime="13:04:00" vehicleRefId="From_3_to_2_MTR2_47040"/>
+				<departure id="From_3_to_2_MTR2_47520" departureTime="13:12:00" vehicleRefId="From_3_to_2_MTR2_47520"/>
+				<departure id="From_3_to_2_MTR2_480" departureTime="00:08:00" vehicleRefId="From_3_to_2_MTR2_480"/>
+				<departure id="From_3_to_2_MTR2_4800" departureTime="01:20:00" vehicleRefId="From_3_to_2_MTR2_4800"/>
+				<departure id="From_3_to_2_MTR2_48000" departureTime="13:20:00" vehicleRefId="From_3_to_2_MTR2_48000"/>
+				<departure id="From_3_to_2_MTR2_48480" departureTime="13:28:00" vehicleRefId="From_3_to_2_MTR2_48480"/>
+				<departure id="From_3_to_2_MTR2_48960" departureTime="13:36:00" vehicleRefId="From_3_to_2_MTR2_48960"/>
+				<departure id="From_3_to_2_MTR2_49440" departureTime="13:44:00" vehicleRefId="From_3_to_2_MTR2_49440"/>
+				<departure id="From_3_to_2_MTR2_49920" departureTime="13:52:00" vehicleRefId="From_3_to_2_MTR2_49920"/>
+				<departure id="From_3_to_2_MTR2_50400" departureTime="14:00:00" vehicleRefId="From_3_to_2_MTR2_50400"/>
+				<departure id="From_3_to_2_MTR2_50880" departureTime="14:08:00" vehicleRefId="From_3_to_2_MTR2_50880"/>
+				<departure id="From_3_to_2_MTR2_51360" departureTime="14:16:00" vehicleRefId="From_3_to_2_MTR2_51360"/>
+				<departure id="From_3_to_2_MTR2_51840" departureTime="14:24:00" vehicleRefId="From_3_to_2_MTR2_51840"/>
+				<departure id="From_3_to_2_MTR2_52320" departureTime="14:32:00" vehicleRefId="From_3_to_2_MTR2_52320"/>
+				<departure id="From_3_to_2_MTR2_5280" departureTime="01:28:00" vehicleRefId="From_3_to_2_MTR2_5280"/>
+				<departure id="From_3_to_2_MTR2_52800" departureTime="14:40:00" vehicleRefId="From_3_to_2_MTR2_52800"/>
+				<departure id="From_3_to_2_MTR2_53280" departureTime="14:48:00" vehicleRefId="From_3_to_2_MTR2_53280"/>
+				<departure id="From_3_to_2_MTR2_53760" departureTime="14:56:00" vehicleRefId="From_3_to_2_MTR2_53760"/>
+				<departure id="From_3_to_2_MTR2_54240" departureTime="15:04:00" vehicleRefId="From_3_to_2_MTR2_54240"/>
+				<departure id="From_3_to_2_MTR2_54720" departureTime="15:12:00" vehicleRefId="From_3_to_2_MTR2_54720"/>
+				<departure id="From_3_to_2_MTR2_55200" departureTime="15:20:00" vehicleRefId="From_3_to_2_MTR2_55200"/>
+				<departure id="From_3_to_2_MTR2_55680" departureTime="15:28:00" vehicleRefId="From_3_to_2_MTR2_55680"/>
+				<departure id="From_3_to_2_MTR2_56160" departureTime="15:36:00" vehicleRefId="From_3_to_2_MTR2_56160"/>
+				<departure id="From_3_to_2_MTR2_56640" departureTime="15:44:00" vehicleRefId="From_3_to_2_MTR2_56640"/>
+				<departure id="From_3_to_2_MTR2_57120" departureTime="15:52:00" vehicleRefId="From_3_to_2_MTR2_57120"/>
+				<departure id="From_3_to_2_MTR2_5760" departureTime="01:36:00" vehicleRefId="From_3_to_2_MTR2_5760"/>
+				<departure id="From_3_to_2_MTR2_57600" departureTime="16:00:00" vehicleRefId="From_3_to_2_MTR2_57600"/>
+				<departure id="From_3_to_2_MTR2_58080" departureTime="16:08:00" vehicleRefId="From_3_to_2_MTR2_58080"/>
+				<departure id="From_3_to_2_MTR2_58560" departureTime="16:16:00" vehicleRefId="From_3_to_2_MTR2_58560"/>
+				<departure id="From_3_to_2_MTR2_59040" departureTime="16:24:00" vehicleRefId="From_3_to_2_MTR2_59040"/>
+				<departure id="From_3_to_2_MTR2_59520" departureTime="16:32:00" vehicleRefId="From_3_to_2_MTR2_59520"/>
+				<departure id="From_3_to_2_MTR2_60000" departureTime="16:40:00" vehicleRefId="From_3_to_2_MTR2_60000"/>
+				<departure id="From_3_to_2_MTR2_60480" departureTime="16:48:00" vehicleRefId="From_3_to_2_MTR2_60480"/>
+				<departure id="From_3_to_2_MTR2_60960" departureTime="16:56:00" vehicleRefId="From_3_to_2_MTR2_60960"/>
+				<departure id="From_3_to_2_MTR2_61440" departureTime="17:04:00" vehicleRefId="From_3_to_2_MTR2_61440"/>
+				<departure id="From_3_to_2_MTR2_61920" departureTime="17:12:00" vehicleRefId="From_3_to_2_MTR2_61920"/>
+				<departure id="From_3_to_2_MTR2_6240" departureTime="01:44:00" vehicleRefId="From_3_to_2_MTR2_6240"/>
+				<departure id="From_3_to_2_MTR2_62400" departureTime="17:20:00" vehicleRefId="From_3_to_2_MTR2_62400"/>
+				<departure id="From_3_to_2_MTR2_62880" departureTime="17:28:00" vehicleRefId="From_3_to_2_MTR2_62880"/>
+				<departure id="From_3_to_2_MTR2_63360" departureTime="17:36:00" vehicleRefId="From_3_to_2_MTR2_63360"/>
+				<departure id="From_3_to_2_MTR2_63840" departureTime="17:44:00" vehicleRefId="From_3_to_2_MTR2_63840"/>
+				<departure id="From_3_to_2_MTR2_64320" departureTime="17:52:00" vehicleRefId="From_3_to_2_MTR2_64320"/>
+				<departure id="From_3_to_2_MTR2_64800" departureTime="18:00:00" vehicleRefId="From_3_to_2_MTR2_64800"/>
+				<departure id="From_3_to_2_MTR2_65280" departureTime="18:08:00" vehicleRefId="From_3_to_2_MTR2_65280"/>
+				<departure id="From_3_to_2_MTR2_65760" departureTime="18:16:00" vehicleRefId="From_3_to_2_MTR2_65760"/>
+				<departure id="From_3_to_2_MTR2_66240" departureTime="18:24:00" vehicleRefId="From_3_to_2_MTR2_66240"/>
+				<departure id="From_3_to_2_MTR2_66720" departureTime="18:32:00" vehicleRefId="From_3_to_2_MTR2_66720"/>
+				<departure id="From_3_to_2_MTR2_6720" departureTime="01:52:00" vehicleRefId="From_3_to_2_MTR2_6720"/>
+				<departure id="From_3_to_2_MTR2_67200" departureTime="18:40:00" vehicleRefId="From_3_to_2_MTR2_67200"/>
+				<departure id="From_3_to_2_MTR2_67680" departureTime="18:48:00" vehicleRefId="From_3_to_2_MTR2_67680"/>
+				<departure id="From_3_to_2_MTR2_68160" departureTime="18:56:00" vehicleRefId="From_3_to_2_MTR2_68160"/>
+				<departure id="From_3_to_2_MTR2_68640" departureTime="19:04:00" vehicleRefId="From_3_to_2_MTR2_68640"/>
+				<departure id="From_3_to_2_MTR2_69120" departureTime="19:12:00" vehicleRefId="From_3_to_2_MTR2_69120"/>
+				<departure id="From_3_to_2_MTR2_69600" departureTime="19:20:00" vehicleRefId="From_3_to_2_MTR2_69600"/>
+				<departure id="From_3_to_2_MTR2_70080" departureTime="19:28:00" vehicleRefId="From_3_to_2_MTR2_70080"/>
+				<departure id="From_3_to_2_MTR2_70560" departureTime="19:36:00" vehicleRefId="From_3_to_2_MTR2_70560"/>
+				<departure id="From_3_to_2_MTR2_71040" departureTime="19:44:00" vehicleRefId="From_3_to_2_MTR2_71040"/>
+				<departure id="From_3_to_2_MTR2_71520" departureTime="19:52:00" vehicleRefId="From_3_to_2_MTR2_71520"/>
+				<departure id="From_3_to_2_MTR2_7200" departureTime="02:00:00" vehicleRefId="From_3_to_2_MTR2_7200"/>
+				<departure id="From_3_to_2_MTR2_72000" departureTime="20:00:00" vehicleRefId="From_3_to_2_MTR2_72000"/>
+				<departure id="From_3_to_2_MTR2_72480" departureTime="20:08:00" vehicleRefId="From_3_to_2_MTR2_72480"/>
+				<departure id="From_3_to_2_MTR2_72960" departureTime="20:16:00" vehicleRefId="From_3_to_2_MTR2_72960"/>
+				<departure id="From_3_to_2_MTR2_73440" departureTime="20:24:00" vehicleRefId="From_3_to_2_MTR2_73440"/>
+				<departure id="From_3_to_2_MTR2_73920" departureTime="20:32:00" vehicleRefId="From_3_to_2_MTR2_73920"/>
+				<departure id="From_3_to_2_MTR2_74400" departureTime="20:40:00" vehicleRefId="From_3_to_2_MTR2_74400"/>
+				<departure id="From_3_to_2_MTR2_74880" departureTime="20:48:00" vehicleRefId="From_3_to_2_MTR2_74880"/>
+				<departure id="From_3_to_2_MTR2_75360" departureTime="20:56:00" vehicleRefId="From_3_to_2_MTR2_75360"/>
+				<departure id="From_3_to_2_MTR2_75840" departureTime="21:04:00" vehicleRefId="From_3_to_2_MTR2_75840"/>
+				<departure id="From_3_to_2_MTR2_76320" departureTime="21:12:00" vehicleRefId="From_3_to_2_MTR2_76320"/>
+				<departure id="From_3_to_2_MTR2_7680" departureTime="02:08:00" vehicleRefId="From_3_to_2_MTR2_7680"/>
+				<departure id="From_3_to_2_MTR2_76800" departureTime="21:20:00" vehicleRefId="From_3_to_2_MTR2_76800"/>
+				<departure id="From_3_to_2_MTR2_77280" departureTime="21:28:00" vehicleRefId="From_3_to_2_MTR2_77280"/>
+				<departure id="From_3_to_2_MTR2_77760" departureTime="21:36:00" vehicleRefId="From_3_to_2_MTR2_77760"/>
+				<departure id="From_3_to_2_MTR2_78240" departureTime="21:44:00" vehicleRefId="From_3_to_2_MTR2_78240"/>
+				<departure id="From_3_to_2_MTR2_78720" departureTime="21:52:00" vehicleRefId="From_3_to_2_MTR2_78720"/>
+				<departure id="From_3_to_2_MTR2_79200" departureTime="22:00:00" vehicleRefId="From_3_to_2_MTR2_79200"/>
+				<departure id="From_3_to_2_MTR2_79680" departureTime="22:08:00" vehicleRefId="From_3_to_2_MTR2_79680"/>
+				<departure id="From_3_to_2_MTR2_80160" departureTime="22:16:00" vehicleRefId="From_3_to_2_MTR2_80160"/>
+				<departure id="From_3_to_2_MTR2_80640" departureTime="22:24:00" vehicleRefId="From_3_to_2_MTR2_80640"/>
+				<departure id="From_3_to_2_MTR2_81120" departureTime="22:32:00" vehicleRefId="From_3_to_2_MTR2_81120"/>
+				<departure id="From_3_to_2_MTR2_8160" departureTime="02:16:00" vehicleRefId="From_3_to_2_MTR2_8160"/>
+				<departure id="From_3_to_2_MTR2_81600" departureTime="22:40:00" vehicleRefId="From_3_to_2_MTR2_81600"/>
+				<departure id="From_3_to_2_MTR2_82080" departureTime="22:48:00" vehicleRefId="From_3_to_2_MTR2_82080"/>
+				<departure id="From_3_to_2_MTR2_82560" departureTime="22:56:00" vehicleRefId="From_3_to_2_MTR2_82560"/>
+				<departure id="From_3_to_2_MTR2_83040" departureTime="23:04:00" vehicleRefId="From_3_to_2_MTR2_83040"/>
+				<departure id="From_3_to_2_MTR2_83520" departureTime="23:12:00" vehicleRefId="From_3_to_2_MTR2_83520"/>
+				<departure id="From_3_to_2_MTR2_84000" departureTime="23:20:00" vehicleRefId="From_3_to_2_MTR2_84000"/>
+				<departure id="From_3_to_2_MTR2_84480" departureTime="23:28:00" vehicleRefId="From_3_to_2_MTR2_84480"/>
+				<departure id="From_3_to_2_MTR2_84960" departureTime="23:36:00" vehicleRefId="From_3_to_2_MTR2_84960"/>
+				<departure id="From_3_to_2_MTR2_85440" departureTime="23:44:00" vehicleRefId="From_3_to_2_MTR2_85440"/>
+				<departure id="From_3_to_2_MTR2_85920" departureTime="23:52:00" vehicleRefId="From_3_to_2_MTR2_85920"/>
+				<departure id="From_3_to_2_MTR2_8640" departureTime="02:24:00" vehicleRefId="From_3_to_2_MTR2_8640"/>
+				<departure id="From_3_to_2_MTR2_9120" departureTime="02:32:00" vehicleRefId="From_3_to_2_MTR2_9120"/>
+				<departure id="From_3_to_2_MTR2_960" departureTime="00:16:00" vehicleRefId="From_3_to_2_MTR2_960"/>
+				<departure id="From_3_to_2_MTR2_9600" departureTime="02:40:00" vehicleRefId="From_3_to_2_MTR2_9600"/>
+			</departures>
+		</transitRoute>
+	</transitLine>
+	<transitLine id="bus1">
+		<transitRoute id="From_1_to_4_bus1">
+			<transportMode>bus</transportMode>
+			<routeProfile>
+				<stop refId="1_1rAAA_stop" arrivalOffset="00:00:00" departureOffset="00:00:30" awaitDeparture="false"/>
+				<stop refId="2_2rBBB_stop" arrivalOffset="00:15:30" departureOffset="00:16:00" awaitDeparture="false"/>
+				<stop refId="5_5rEEE_stop" arrivalOffset="00:31:00" departureOffset="00:31:30" awaitDeparture="false"/>
+				<stop refId="6_6rFFF_stop" arrivalOffset="00:46:30" departureOffset="00:47:00" awaitDeparture="false"/>
+				<stop refId="4_4rDDD_stop" arrivalOffset="01:02:00" departureOffset="01:02:30" awaitDeparture="false"/>
+			</routeProfile>
+			<route>
+				<link refId="1_1r_stop"/>
+				<link refId="1r_2"/>
+				<link refId="2_2r_stop"/>
+				<link refId="2r_5"/>
+				<link refId="5_5r_stop"/>
+				<link refId="5r_6"/>
+				<link refId="6_6r_stop"/>
+				<link refId="6r_4"/>
+				<link refId="4_4r_stop"/>
+			</route>
+			<departures>
+				<departure id="From_1_to_4_bus1_0" departureTime="00:00:00" vehicleRefId="From_1_to_4_bus1_0"/>
+				<departure id="From_1_to_4_bus1_10200" departureTime="02:50:00" vehicleRefId="From_1_to_4_bus1_10200"/>
+				<departure id="From_1_to_4_bus1_10800" departureTime="03:00:00" vehicleRefId="From_1_to_4_bus1_10800"/>
+				<departure id="From_1_to_4_bus1_11400" departureTime="03:10:00" vehicleRefId="From_1_to_4_bus1_11400"/>
+				<departure id="From_1_to_4_bus1_1200" departureTime="00:20:00" vehicleRefId="From_1_to_4_bus1_1200"/>
+				<departure id="From_1_to_4_bus1_12000" departureTime="03:20:00" vehicleRefId="From_1_to_4_bus1_12000"/>
+				<departure id="From_1_to_4_bus1_12600" departureTime="03:30:00" vehicleRefId="From_1_to_4_bus1_12600"/>
+				<departure id="From_1_to_4_bus1_13200" departureTime="03:40:00" vehicleRefId="From_1_to_4_bus1_13200"/>
+				<departure id="From_1_to_4_bus1_13800" departureTime="03:50:00" vehicleRefId="From_1_to_4_bus1_13800"/>
+				<departure id="From_1_to_4_bus1_14400" departureTime="04:00:00" vehicleRefId="From_1_to_4_bus1_14400"/>
+				<departure id="From_1_to_4_bus1_15000" departureTime="04:10:00" vehicleRefId="From_1_to_4_bus1_15000"/>
+				<departure id="From_1_to_4_bus1_15600" departureTime="04:20:00" vehicleRefId="From_1_to_4_bus1_15600"/>
+				<departure id="From_1_to_4_bus1_16200" departureTime="04:30:00" vehicleRefId="From_1_to_4_bus1_16200"/>
+				<departure id="From_1_to_4_bus1_16800" departureTime="04:40:00" vehicleRefId="From_1_to_4_bus1_16800"/>
+				<departure id="From_1_to_4_bus1_17400" departureTime="04:50:00" vehicleRefId="From_1_to_4_bus1_17400"/>
+				<departure id="From_1_to_4_bus1_1800" departureTime="00:30:00" vehicleRefId="From_1_to_4_bus1_1800"/>
+				<departure id="From_1_to_4_bus1_18000" departureTime="05:00:00" vehicleRefId="From_1_to_4_bus1_18000"/>
+				<departure id="From_1_to_4_bus1_18600" departureTime="05:10:00" vehicleRefId="From_1_to_4_bus1_18600"/>
+				<departure id="From_1_to_4_bus1_19200" departureTime="05:20:00" vehicleRefId="From_1_to_4_bus1_19200"/>
+				<departure id="From_1_to_4_bus1_19800" departureTime="05:30:00" vehicleRefId="From_1_to_4_bus1_19800"/>
+				<departure id="From_1_to_4_bus1_20400" departureTime="05:40:00" vehicleRefId="From_1_to_4_bus1_20400"/>
+				<departure id="From_1_to_4_bus1_21000" departureTime="05:50:00" vehicleRefId="From_1_to_4_bus1_21000"/>
+				<departure id="From_1_to_4_bus1_21600" departureTime="06:00:00" vehicleRefId="From_1_to_4_bus1_21600"/>
+				<departure id="From_1_to_4_bus1_22200" departureTime="06:10:00" vehicleRefId="From_1_to_4_bus1_22200"/>
+				<departure id="From_1_to_4_bus1_22800" departureTime="06:20:00" vehicleRefId="From_1_to_4_bus1_22800"/>
+				<departure id="From_1_to_4_bus1_23400" departureTime="06:30:00" vehicleRefId="From_1_to_4_bus1_23400"/>
+				<departure id="From_1_to_4_bus1_2400" departureTime="00:40:00" vehicleRefId="From_1_to_4_bus1_2400"/>
+				<departure id="From_1_to_4_bus1_24000" departureTime="06:40:00" vehicleRefId="From_1_to_4_bus1_24000"/>
+				<departure id="From_1_to_4_bus1_24600" departureTime="06:50:00" vehicleRefId="From_1_to_4_bus1_24600"/>
+				<departure id="From_1_to_4_bus1_25200" departureTime="07:00:00" vehicleRefId="From_1_to_4_bus1_25200"/>
+				<departure id="From_1_to_4_bus1_25800" departureTime="07:10:00" vehicleRefId="From_1_to_4_bus1_25800"/>
+				<departure id="From_1_to_4_bus1_26400" departureTime="07:20:00" vehicleRefId="From_1_to_4_bus1_26400"/>
+				<departure id="From_1_to_4_bus1_27000" departureTime="07:30:00" vehicleRefId="From_1_to_4_bus1_27000"/>
+				<departure id="From_1_to_4_bus1_27600" departureTime="07:40:00" vehicleRefId="From_1_to_4_bus1_27600"/>
+				<departure id="From_1_to_4_bus1_28200" departureTime="07:50:00" vehicleRefId="From_1_to_4_bus1_28200"/>
+				<departure id="From_1_to_4_bus1_28800" departureTime="08:00:00" vehicleRefId="From_1_to_4_bus1_28800"/>
+				<departure id="From_1_to_4_bus1_29400" departureTime="08:10:00" vehicleRefId="From_1_to_4_bus1_29400"/>
+				<departure id="From_1_to_4_bus1_3000" departureTime="00:50:00" vehicleRefId="From_1_to_4_bus1_3000"/>
+				<departure id="From_1_to_4_bus1_30000" departureTime="08:20:00" vehicleRefId="From_1_to_4_bus1_30000"/>
+				<departure id="From_1_to_4_bus1_30600" departureTime="08:30:00" vehicleRefId="From_1_to_4_bus1_30600"/>
+				<departure id="From_1_to_4_bus1_31200" departureTime="08:40:00" vehicleRefId="From_1_to_4_bus1_31200"/>
+				<departure id="From_1_to_4_bus1_31800" departureTime="08:50:00" vehicleRefId="From_1_to_4_bus1_31800"/>
+				<departure id="From_1_to_4_bus1_32400" departureTime="09:00:00" vehicleRefId="From_1_to_4_bus1_32400"/>
+				<departure id="From_1_to_4_bus1_33000" departureTime="09:10:00" vehicleRefId="From_1_to_4_bus1_33000"/>
+				<departure id="From_1_to_4_bus1_33600" departureTime="09:20:00" vehicleRefId="From_1_to_4_bus1_33600"/>
+				<departure id="From_1_to_4_bus1_34200" departureTime="09:30:00" vehicleRefId="From_1_to_4_bus1_34200"/>
+				<departure id="From_1_to_4_bus1_34800" departureTime="09:40:00" vehicleRefId="From_1_to_4_bus1_34800"/>
+				<departure id="From_1_to_4_bus1_35400" departureTime="09:50:00" vehicleRefId="From_1_to_4_bus1_35400"/>
+				<departure id="From_1_to_4_bus1_3600" departureTime="01:00:00" vehicleRefId="From_1_to_4_bus1_3600"/>
+				<departure id="From_1_to_4_bus1_36000" departureTime="10:00:00" vehicleRefId="From_1_to_4_bus1_36000"/>
+				<departure id="From_1_to_4_bus1_36600" departureTime="10:10:00" vehicleRefId="From_1_to_4_bus1_36600"/>
+				<departure id="From_1_to_4_bus1_37200" departureTime="10:20:00" vehicleRefId="From_1_to_4_bus1_37200"/>
+				<departure id="From_1_to_4_bus1_37800" departureTime="10:30:00" vehicleRefId="From_1_to_4_bus1_37800"/>
+				<departure id="From_1_to_4_bus1_38400" departureTime="10:40:00" vehicleRefId="From_1_to_4_bus1_38400"/>
+				<departure id="From_1_to_4_bus1_39000" departureTime="10:50:00" vehicleRefId="From_1_to_4_bus1_39000"/>
+				<departure id="From_1_to_4_bus1_39600" departureTime="11:00:00" vehicleRefId="From_1_to_4_bus1_39600"/>
+				<departure id="From_1_to_4_bus1_40200" departureTime="11:10:00" vehicleRefId="From_1_to_4_bus1_40200"/>
+				<departure id="From_1_to_4_bus1_40800" departureTime="11:20:00" vehicleRefId="From_1_to_4_bus1_40800"/>
+				<departure id="From_1_to_4_bus1_41400" departureTime="11:30:00" vehicleRefId="From_1_to_4_bus1_41400"/>
+				<departure id="From_1_to_4_bus1_4200" departureTime="01:10:00" vehicleRefId="From_1_to_4_bus1_4200"/>
+				<departure id="From_1_to_4_bus1_42000" departureTime="11:40:00" vehicleRefId="From_1_to_4_bus1_42000"/>
+				<departure id="From_1_to_4_bus1_42600" departureTime="11:50:00" vehicleRefId="From_1_to_4_bus1_42600"/>
+				<departure id="From_1_to_4_bus1_43200" departureTime="12:00:00" vehicleRefId="From_1_to_4_bus1_43200"/>
+				<departure id="From_1_to_4_bus1_43800" departureTime="12:10:00" vehicleRefId="From_1_to_4_bus1_43800"/>
+				<departure id="From_1_to_4_bus1_44400" departureTime="12:20:00" vehicleRefId="From_1_to_4_bus1_44400"/>
+				<departure id="From_1_to_4_bus1_45000" departureTime="12:30:00" vehicleRefId="From_1_to_4_bus1_45000"/>
+				<departure id="From_1_to_4_bus1_45600" departureTime="12:40:00" vehicleRefId="From_1_to_4_bus1_45600"/>
+				<departure id="From_1_to_4_bus1_46200" departureTime="12:50:00" vehicleRefId="From_1_to_4_bus1_46200"/>
+				<departure id="From_1_to_4_bus1_46800" departureTime="13:00:00" vehicleRefId="From_1_to_4_bus1_46800"/>
+				<departure id="From_1_to_4_bus1_47400" departureTime="13:10:00" vehicleRefId="From_1_to_4_bus1_47400"/>
+				<departure id="From_1_to_4_bus1_4800" departureTime="01:20:00" vehicleRefId="From_1_to_4_bus1_4800"/>
+				<departure id="From_1_to_4_bus1_48000" departureTime="13:20:00" vehicleRefId="From_1_to_4_bus1_48000"/>
+				<departure id="From_1_to_4_bus1_48600" departureTime="13:30:00" vehicleRefId="From_1_to_4_bus1_48600"/>
+				<departure id="From_1_to_4_bus1_49200" departureTime="13:40:00" vehicleRefId="From_1_to_4_bus1_49200"/>
+				<departure id="From_1_to_4_bus1_49800" departureTime="13:50:00" vehicleRefId="From_1_to_4_bus1_49800"/>
+				<departure id="From_1_to_4_bus1_50400" departureTime="14:00:00" vehicleRefId="From_1_to_4_bus1_50400"/>
+				<departure id="From_1_to_4_bus1_51000" departureTime="14:10:00" vehicleRefId="From_1_to_4_bus1_51000"/>
+				<departure id="From_1_to_4_bus1_51600" departureTime="14:20:00" vehicleRefId="From_1_to_4_bus1_51600"/>
+				<departure id="From_1_to_4_bus1_52200" departureTime="14:30:00" vehicleRefId="From_1_to_4_bus1_52200"/>
+				<departure id="From_1_to_4_bus1_52800" departureTime="14:40:00" vehicleRefId="From_1_to_4_bus1_52800"/>
+				<departure id="From_1_to_4_bus1_53400" departureTime="14:50:00" vehicleRefId="From_1_to_4_bus1_53400"/>
+				<departure id="From_1_to_4_bus1_5400" departureTime="01:30:00" vehicleRefId="From_1_to_4_bus1_5400"/>
+				<departure id="From_1_to_4_bus1_54000" departureTime="15:00:00" vehicleRefId="From_1_to_4_bus1_54000"/>
+				<departure id="From_1_to_4_bus1_54600" departureTime="15:10:00" vehicleRefId="From_1_to_4_bus1_54600"/>
+				<departure id="From_1_to_4_bus1_55200" departureTime="15:20:00" vehicleRefId="From_1_to_4_bus1_55200"/>
+				<departure id="From_1_to_4_bus1_55800" departureTime="15:30:00" vehicleRefId="From_1_to_4_bus1_55800"/>
+				<departure id="From_1_to_4_bus1_56400" departureTime="15:40:00" vehicleRefId="From_1_to_4_bus1_56400"/>
+				<departure id="From_1_to_4_bus1_57000" departureTime="15:50:00" vehicleRefId="From_1_to_4_bus1_57000"/>
+				<departure id="From_1_to_4_bus1_57600" departureTime="16:00:00" vehicleRefId="From_1_to_4_bus1_57600"/>
+				<departure id="From_1_to_4_bus1_58200" departureTime="16:10:00" vehicleRefId="From_1_to_4_bus1_58200"/>
+				<departure id="From_1_to_4_bus1_58800" departureTime="16:20:00" vehicleRefId="From_1_to_4_bus1_58800"/>
+				<departure id="From_1_to_4_bus1_59400" departureTime="16:30:00" vehicleRefId="From_1_to_4_bus1_59400"/>
+				<departure id="From_1_to_4_bus1_600" departureTime="00:10:00" vehicleRefId="From_1_to_4_bus1_600"/>
+				<departure id="From_1_to_4_bus1_6000" departureTime="01:40:00" vehicleRefId="From_1_to_4_bus1_6000"/>
+				<departure id="From_1_to_4_bus1_60000" departureTime="16:40:00" vehicleRefId="From_1_to_4_bus1_60000"/>
+				<departure id="From_1_to_4_bus1_60600" departureTime="16:50:00" vehicleRefId="From_1_to_4_bus1_60600"/>
+				<departure id="From_1_to_4_bus1_61200" departureTime="17:00:00" vehicleRefId="From_1_to_4_bus1_61200"/>
+				<departure id="From_1_to_4_bus1_61800" departureTime="17:10:00" vehicleRefId="From_1_to_4_bus1_61800"/>
+				<departure id="From_1_to_4_bus1_62400" departureTime="17:20:00" vehicleRefId="From_1_to_4_bus1_62400"/>
+				<departure id="From_1_to_4_bus1_63000" departureTime="17:30:00" vehicleRefId="From_1_to_4_bus1_63000"/>
+				<departure id="From_1_to_4_bus1_63600" departureTime="17:40:00" vehicleRefId="From_1_to_4_bus1_63600"/>
+				<departure id="From_1_to_4_bus1_64200" departureTime="17:50:00" vehicleRefId="From_1_to_4_bus1_64200"/>
+				<departure id="From_1_to_4_bus1_64800" departureTime="18:00:00" vehicleRefId="From_1_to_4_bus1_64800"/>
+				<departure id="From_1_to_4_bus1_65400" departureTime="18:10:00" vehicleRefId="From_1_to_4_bus1_65400"/>
+				<departure id="From_1_to_4_bus1_6600" departureTime="01:50:00" vehicleRefId="From_1_to_4_bus1_6600"/>
+				<departure id="From_1_to_4_bus1_66000" departureTime="18:20:00" vehicleRefId="From_1_to_4_bus1_66000"/>
+				<departure id="From_1_to_4_bus1_66600" departureTime="18:30:00" vehicleRefId="From_1_to_4_bus1_66600"/>
+				<departure id="From_1_to_4_bus1_67200" departureTime="18:40:00" vehicleRefId="From_1_to_4_bus1_67200"/>
+				<departure id="From_1_to_4_bus1_67800" departureTime="18:50:00" vehicleRefId="From_1_to_4_bus1_67800"/>
+				<departure id="From_1_to_4_bus1_68400" departureTime="19:00:00" vehicleRefId="From_1_to_4_bus1_68400"/>
+				<departure id="From_1_to_4_bus1_69000" departureTime="19:10:00" vehicleRefId="From_1_to_4_bus1_69000"/>
+				<departure id="From_1_to_4_bus1_69600" departureTime="19:20:00" vehicleRefId="From_1_to_4_bus1_69600"/>
+				<departure id="From_1_to_4_bus1_70200" departureTime="19:30:00" vehicleRefId="From_1_to_4_bus1_70200"/>
+				<departure id="From_1_to_4_bus1_70800" departureTime="19:40:00" vehicleRefId="From_1_to_4_bus1_70800"/>
+				<departure id="From_1_to_4_bus1_71400" departureTime="19:50:00" vehicleRefId="From_1_to_4_bus1_71400"/>
+				<departure id="From_1_to_4_bus1_7200" departureTime="02:00:00" vehicleRefId="From_1_to_4_bus1_7200"/>
+				<departure id="From_1_to_4_bus1_72000" departureTime="20:00:00" vehicleRefId="From_1_to_4_bus1_72000"/>
+				<departure id="From_1_to_4_bus1_72600" departureTime="20:10:00" vehicleRefId="From_1_to_4_bus1_72600"/>
+				<departure id="From_1_to_4_bus1_73200" departureTime="20:20:00" vehicleRefId="From_1_to_4_bus1_73200"/>
+				<departure id="From_1_to_4_bus1_73800" departureTime="20:30:00" vehicleRefId="From_1_to_4_bus1_73800"/>
+				<departure id="From_1_to_4_bus1_74400" departureTime="20:40:00" vehicleRefId="From_1_to_4_bus1_74400"/>
+				<departure id="From_1_to_4_bus1_75000" departureTime="20:50:00" vehicleRefId="From_1_to_4_bus1_75000"/>
+				<departure id="From_1_to_4_bus1_75600" departureTime="21:00:00" vehicleRefId="From_1_to_4_bus1_75600"/>
+				<departure id="From_1_to_4_bus1_76200" departureTime="21:10:00" vehicleRefId="From_1_to_4_bus1_76200"/>
+				<departure id="From_1_to_4_bus1_76800" departureTime="21:20:00" vehicleRefId="From_1_to_4_bus1_76800"/>
+				<departure id="From_1_to_4_bus1_77400" departureTime="21:30:00" vehicleRefId="From_1_to_4_bus1_77400"/>
+				<departure id="From_1_to_4_bus1_7800" departureTime="02:10:00" vehicleRefId="From_1_to_4_bus1_7800"/>
+				<departure id="From_1_to_4_bus1_78000" departureTime="21:40:00" vehicleRefId="From_1_to_4_bus1_78000"/>
+				<departure id="From_1_to_4_bus1_78600" departureTime="21:50:00" vehicleRefId="From_1_to_4_bus1_78600"/>
+				<departure id="From_1_to_4_bus1_79200" departureTime="22:00:00" vehicleRefId="From_1_to_4_bus1_79200"/>
+				<departure id="From_1_to_4_bus1_79800" departureTime="22:10:00" vehicleRefId="From_1_to_4_bus1_79800"/>
+				<departure id="From_1_to_4_bus1_80400" departureTime="22:20:00" vehicleRefId="From_1_to_4_bus1_80400"/>
+				<departure id="From_1_to_4_bus1_81000" departureTime="22:30:00" vehicleRefId="From_1_to_4_bus1_81000"/>
+				<departure id="From_1_to_4_bus1_81600" departureTime="22:40:00" vehicleRefId="From_1_to_4_bus1_81600"/>
+				<departure id="From_1_to_4_bus1_82200" departureTime="22:50:00" vehicleRefId="From_1_to_4_bus1_82200"/>
+				<departure id="From_1_to_4_bus1_82800" departureTime="23:00:00" vehicleRefId="From_1_to_4_bus1_82800"/>
+				<departure id="From_1_to_4_bus1_83400" departureTime="23:10:00" vehicleRefId="From_1_to_4_bus1_83400"/>
+				<departure id="From_1_to_4_bus1_8400" departureTime="02:20:00" vehicleRefId="From_1_to_4_bus1_8400"/>
+				<departure id="From_1_to_4_bus1_84000" departureTime="23:20:00" vehicleRefId="From_1_to_4_bus1_84000"/>
+				<departure id="From_1_to_4_bus1_84600" departureTime="23:30:00" vehicleRefId="From_1_to_4_bus1_84600"/>
+				<departure id="From_1_to_4_bus1_85200" departureTime="23:40:00" vehicleRefId="From_1_to_4_bus1_85200"/>
+				<departure id="From_1_to_4_bus1_85800" departureTime="23:50:00" vehicleRefId="From_1_to_4_bus1_85800"/>
+				<departure id="From_1_to_4_bus1_9000" departureTime="02:30:00" vehicleRefId="From_1_to_4_bus1_9000"/>
+				<departure id="From_1_to_4_bus1_9600" departureTime="02:40:00" vehicleRefId="From_1_to_4_bus1_9600"/>
+			</departures>
+		</transitRoute>
+		<transitRoute id="From_4_to_1_bus1">
+			<transportMode>bus</transportMode>
+			<routeProfile>
+				<stop refId="4r_4DDD_stop" arrivalOffset="00:00:00" departureOffset="00:00:30" awaitDeparture="false"/>
+				<stop refId="6r_6FFF_stop" arrivalOffset="00:10:30" departureOffset="00:11:00" awaitDeparture="false"/>
+				<stop refId="5r_5EEE_stop" arrivalOffset="00:21:00" departureOffset="00:21:30" awaitDeparture="false"/>
+				<stop refId="2r_2BBB_stop" arrivalOffset="00:31:30" departureOffset="00:32:00" awaitDeparture="false"/>
+				<stop refId="1r_1AAA_stop" arrivalOffset="00:42:00" departureOffset="00:42:30" awaitDeparture="false"/>
+			</routeProfile>
+			<route>
+				<link refId="4r_4_stop"/>
+				<link refId="4_6r"/>
+				<link refId="6r_6_stop"/>
+				<link refId="6_5r"/>
+				<link refId="5r_5_stop"/>
+				<link refId="5_2r"/>
+				<link refId="2r_2_stop"/>
+				<link refId="2_1r"/>
+				<link refId="1r_1_stop"/>
+			</route>
+			<departures>
+				<departure id="From_4_to_1_bus1_0" departureTime="00:00:00" vehicleRefId="From_4_to_1_bus1_0"/>
+				<departure id="From_4_to_1_bus1_10200" departureTime="02:50:00" vehicleRefId="From_4_to_1_bus1_10200"/>
+				<departure id="From_4_to_1_bus1_10800" departureTime="03:00:00" vehicleRefId="From_4_to_1_bus1_10800"/>
+				<departure id="From_4_to_1_bus1_11400" departureTime="03:10:00" vehicleRefId="From_4_to_1_bus1_11400"/>
+				<departure id="From_4_to_1_bus1_1200" departureTime="00:20:00" vehicleRefId="From_4_to_1_bus1_1200"/>
+				<departure id="From_4_to_1_bus1_12000" departureTime="03:20:00" vehicleRefId="From_4_to_1_bus1_12000"/>
+				<departure id="From_4_to_1_bus1_12600" departureTime="03:30:00" vehicleRefId="From_4_to_1_bus1_12600"/>
+				<departure id="From_4_to_1_bus1_13200" departureTime="03:40:00" vehicleRefId="From_4_to_1_bus1_13200"/>
+				<departure id="From_4_to_1_bus1_13800" departureTime="03:50:00" vehicleRefId="From_4_to_1_bus1_13800"/>
+				<departure id="From_4_to_1_bus1_14400" departureTime="04:00:00" vehicleRefId="From_4_to_1_bus1_14400"/>
+				<departure id="From_4_to_1_bus1_15000" departureTime="04:10:00" vehicleRefId="From_4_to_1_bus1_15000"/>
+				<departure id="From_4_to_1_bus1_15600" departureTime="04:20:00" vehicleRefId="From_4_to_1_bus1_15600"/>
+				<departure id="From_4_to_1_bus1_16200" departureTime="04:30:00" vehicleRefId="From_4_to_1_bus1_16200"/>
+				<departure id="From_4_to_1_bus1_16800" departureTime="04:40:00" vehicleRefId="From_4_to_1_bus1_16800"/>
+				<departure id="From_4_to_1_bus1_17400" departureTime="04:50:00" vehicleRefId="From_4_to_1_bus1_17400"/>
+				<departure id="From_4_to_1_bus1_1800" departureTime="00:30:00" vehicleRefId="From_4_to_1_bus1_1800"/>
+				<departure id="From_4_to_1_bus1_18000" departureTime="05:00:00" vehicleRefId="From_4_to_1_bus1_18000"/>
+				<departure id="From_4_to_1_bus1_18600" departureTime="05:10:00" vehicleRefId="From_4_to_1_bus1_18600"/>
+				<departure id="From_4_to_1_bus1_19200" departureTime="05:20:00" vehicleRefId="From_4_to_1_bus1_19200"/>
+				<departure id="From_4_to_1_bus1_19800" departureTime="05:30:00" vehicleRefId="From_4_to_1_bus1_19800"/>
+				<departure id="From_4_to_1_bus1_20400" departureTime="05:40:00" vehicleRefId="From_4_to_1_bus1_20400"/>
+				<departure id="From_4_to_1_bus1_21000" departureTime="05:50:00" vehicleRefId="From_4_to_1_bus1_21000"/>
+				<departure id="From_4_to_1_bus1_21600" departureTime="06:00:00" vehicleRefId="From_4_to_1_bus1_21600"/>
+				<departure id="From_4_to_1_bus1_22200" departureTime="06:10:00" vehicleRefId="From_4_to_1_bus1_22200"/>
+				<departure id="From_4_to_1_bus1_22800" departureTime="06:20:00" vehicleRefId="From_4_to_1_bus1_22800"/>
+				<departure id="From_4_to_1_bus1_23400" departureTime="06:30:00" vehicleRefId="From_4_to_1_bus1_23400"/>
+				<departure id="From_4_to_1_bus1_2400" departureTime="00:40:00" vehicleRefId="From_4_to_1_bus1_2400"/>
+				<departure id="From_4_to_1_bus1_24000" departureTime="06:40:00" vehicleRefId="From_4_to_1_bus1_24000"/>
+				<departure id="From_4_to_1_bus1_24600" departureTime="06:50:00" vehicleRefId="From_4_to_1_bus1_24600"/>
+				<departure id="From_4_to_1_bus1_25200" departureTime="07:00:00" vehicleRefId="From_4_to_1_bus1_25200"/>
+				<departure id="From_4_to_1_bus1_25800" departureTime="07:10:00" vehicleRefId="From_4_to_1_bus1_25800"/>
+				<departure id="From_4_to_1_bus1_26400" departureTime="07:20:00" vehicleRefId="From_4_to_1_bus1_26400"/>
+				<departure id="From_4_to_1_bus1_27000" departureTime="07:30:00" vehicleRefId="From_4_to_1_bus1_27000"/>
+				<departure id="From_4_to_1_bus1_27600" departureTime="07:40:00" vehicleRefId="From_4_to_1_bus1_27600"/>
+				<departure id="From_4_to_1_bus1_28200" departureTime="07:50:00" vehicleRefId="From_4_to_1_bus1_28200"/>
+				<departure id="From_4_to_1_bus1_28800" departureTime="08:00:00" vehicleRefId="From_4_to_1_bus1_28800"/>
+				<departure id="From_4_to_1_bus1_29400" departureTime="08:10:00" vehicleRefId="From_4_to_1_bus1_29400"/>
+				<departure id="From_4_to_1_bus1_3000" departureTime="00:50:00" vehicleRefId="From_4_to_1_bus1_3000"/>
+				<departure id="From_4_to_1_bus1_30000" departureTime="08:20:00" vehicleRefId="From_4_to_1_bus1_30000"/>
+				<departure id="From_4_to_1_bus1_30600" departureTime="08:30:00" vehicleRefId="From_4_to_1_bus1_30600"/>
+				<departure id="From_4_to_1_bus1_31200" departureTime="08:40:00" vehicleRefId="From_4_to_1_bus1_31200"/>
+				<departure id="From_4_to_1_bus1_31800" departureTime="08:50:00" vehicleRefId="From_4_to_1_bus1_31800"/>
+				<departure id="From_4_to_1_bus1_32400" departureTime="09:00:00" vehicleRefId="From_4_to_1_bus1_32400"/>
+				<departure id="From_4_to_1_bus1_33000" departureTime="09:10:00" vehicleRefId="From_4_to_1_bus1_33000"/>
+				<departure id="From_4_to_1_bus1_33600" departureTime="09:20:00" vehicleRefId="From_4_to_1_bus1_33600"/>
+				<departure id="From_4_to_1_bus1_34200" departureTime="09:30:00" vehicleRefId="From_4_to_1_bus1_34200"/>
+				<departure id="From_4_to_1_bus1_34800" departureTime="09:40:00" vehicleRefId="From_4_to_1_bus1_34800"/>
+				<departure id="From_4_to_1_bus1_35400" departureTime="09:50:00" vehicleRefId="From_4_to_1_bus1_35400"/>
+				<departure id="From_4_to_1_bus1_3600" departureTime="01:00:00" vehicleRefId="From_4_to_1_bus1_3600"/>
+				<departure id="From_4_to_1_bus1_36000" departureTime="10:00:00" vehicleRefId="From_4_to_1_bus1_36000"/>
+				<departure id="From_4_to_1_bus1_36600" departureTime="10:10:00" vehicleRefId="From_4_to_1_bus1_36600"/>
+				<departure id="From_4_to_1_bus1_37200" departureTime="10:20:00" vehicleRefId="From_4_to_1_bus1_37200"/>
+				<departure id="From_4_to_1_bus1_37800" departureTime="10:30:00" vehicleRefId="From_4_to_1_bus1_37800"/>
+				<departure id="From_4_to_1_bus1_38400" departureTime="10:40:00" vehicleRefId="From_4_to_1_bus1_38400"/>
+				<departure id="From_4_to_1_bus1_39000" departureTime="10:50:00" vehicleRefId="From_4_to_1_bus1_39000"/>
+				<departure id="From_4_to_1_bus1_39600" departureTime="11:00:00" vehicleRefId="From_4_to_1_bus1_39600"/>
+				<departure id="From_4_to_1_bus1_40200" departureTime="11:10:00" vehicleRefId="From_4_to_1_bus1_40200"/>
+				<departure id="From_4_to_1_bus1_40800" departureTime="11:20:00" vehicleRefId="From_4_to_1_bus1_40800"/>
+				<departure id="From_4_to_1_bus1_41400" departureTime="11:30:00" vehicleRefId="From_4_to_1_bus1_41400"/>
+				<departure id="From_4_to_1_bus1_4200" departureTime="01:10:00" vehicleRefId="From_4_to_1_bus1_4200"/>
+				<departure id="From_4_to_1_bus1_42000" departureTime="11:40:00" vehicleRefId="From_4_to_1_bus1_42000"/>
+				<departure id="From_4_to_1_bus1_42600" departureTime="11:50:00" vehicleRefId="From_4_to_1_bus1_42600"/>
+				<departure id="From_4_to_1_bus1_43200" departureTime="12:00:00" vehicleRefId="From_4_to_1_bus1_43200"/>
+				<departure id="From_4_to_1_bus1_43800" departureTime="12:10:00" vehicleRefId="From_4_to_1_bus1_43800"/>
+				<departure id="From_4_to_1_bus1_44400" departureTime="12:20:00" vehicleRefId="From_4_to_1_bus1_44400"/>
+				<departure id="From_4_to_1_bus1_45000" departureTime="12:30:00" vehicleRefId="From_4_to_1_bus1_45000"/>
+				<departure id="From_4_to_1_bus1_45600" departureTime="12:40:00" vehicleRefId="From_4_to_1_bus1_45600"/>
+				<departure id="From_4_to_1_bus1_46200" departureTime="12:50:00" vehicleRefId="From_4_to_1_bus1_46200"/>
+				<departure id="From_4_to_1_bus1_46800" departureTime="13:00:00" vehicleRefId="From_4_to_1_bus1_46800"/>
+				<departure id="From_4_to_1_bus1_47400" departureTime="13:10:00" vehicleRefId="From_4_to_1_bus1_47400"/>
+				<departure id="From_4_to_1_bus1_4800" departureTime="01:20:00" vehicleRefId="From_4_to_1_bus1_4800"/>
+				<departure id="From_4_to_1_bus1_48000" departureTime="13:20:00" vehicleRefId="From_4_to_1_bus1_48000"/>
+				<departure id="From_4_to_1_bus1_48600" departureTime="13:30:00" vehicleRefId="From_4_to_1_bus1_48600"/>
+				<departure id="From_4_to_1_bus1_49200" departureTime="13:40:00" vehicleRefId="From_4_to_1_bus1_49200"/>
+				<departure id="From_4_to_1_bus1_49800" departureTime="13:50:00" vehicleRefId="From_4_to_1_bus1_49800"/>
+				<departure id="From_4_to_1_bus1_50400" departureTime="14:00:00" vehicleRefId="From_4_to_1_bus1_50400"/>
+				<departure id="From_4_to_1_bus1_51000" departureTime="14:10:00" vehicleRefId="From_4_to_1_bus1_51000"/>
+				<departure id="From_4_to_1_bus1_51600" departureTime="14:20:00" vehicleRefId="From_4_to_1_bus1_51600"/>
+				<departure id="From_4_to_1_bus1_52200" departureTime="14:30:00" vehicleRefId="From_4_to_1_bus1_52200"/>
+				<departure id="From_4_to_1_bus1_52800" departureTime="14:40:00" vehicleRefId="From_4_to_1_bus1_52800"/>
+				<departure id="From_4_to_1_bus1_53400" departureTime="14:50:00" vehicleRefId="From_4_to_1_bus1_53400"/>
+				<departure id="From_4_to_1_bus1_5400" departureTime="01:30:00" vehicleRefId="From_4_to_1_bus1_5400"/>
+				<departure id="From_4_to_1_bus1_54000" departureTime="15:00:00" vehicleRefId="From_4_to_1_bus1_54000"/>
+				<departure id="From_4_to_1_bus1_54600" departureTime="15:10:00" vehicleRefId="From_4_to_1_bus1_54600"/>
+				<departure id="From_4_to_1_bus1_55200" departureTime="15:20:00" vehicleRefId="From_4_to_1_bus1_55200"/>
+				<departure id="From_4_to_1_bus1_55800" departureTime="15:30:00" vehicleRefId="From_4_to_1_bus1_55800"/>
+				<departure id="From_4_to_1_bus1_56400" departureTime="15:40:00" vehicleRefId="From_4_to_1_bus1_56400"/>
+				<departure id="From_4_to_1_bus1_57000" departureTime="15:50:00" vehicleRefId="From_4_to_1_bus1_57000"/>
+				<departure id="From_4_to_1_bus1_57600" departureTime="16:00:00" vehicleRefId="From_4_to_1_bus1_57600"/>
+				<departure id="From_4_to_1_bus1_58200" departureTime="16:10:00" vehicleRefId="From_4_to_1_bus1_58200"/>
+				<departure id="From_4_to_1_bus1_58800" departureTime="16:20:00" vehicleRefId="From_4_to_1_bus1_58800"/>
+				<departure id="From_4_to_1_bus1_59400" departureTime="16:30:00" vehicleRefId="From_4_to_1_bus1_59400"/>
+				<departure id="From_4_to_1_bus1_600" departureTime="00:10:00" vehicleRefId="From_4_to_1_bus1_600"/>
+				<departure id="From_4_to_1_bus1_6000" departureTime="01:40:00" vehicleRefId="From_4_to_1_bus1_6000"/>
+				<departure id="From_4_to_1_bus1_60000" departureTime="16:40:00" vehicleRefId="From_4_to_1_bus1_60000"/>
+				<departure id="From_4_to_1_bus1_60600" departureTime="16:50:00" vehicleRefId="From_4_to_1_bus1_60600"/>
+				<departure id="From_4_to_1_bus1_61200" departureTime="17:00:00" vehicleRefId="From_4_to_1_bus1_61200"/>
+				<departure id="From_4_to_1_bus1_61800" departureTime="17:10:00" vehicleRefId="From_4_to_1_bus1_61800"/>
+				<departure id="From_4_to_1_bus1_62400" departureTime="17:20:00" vehicleRefId="From_4_to_1_bus1_62400"/>
+				<departure id="From_4_to_1_bus1_63000" departureTime="17:30:00" vehicleRefId="From_4_to_1_bus1_63000"/>
+				<departure id="From_4_to_1_bus1_63600" departureTime="17:40:00" vehicleRefId="From_4_to_1_bus1_63600"/>
+				<departure id="From_4_to_1_bus1_64200" departureTime="17:50:00" vehicleRefId="From_4_to_1_bus1_64200"/>
+				<departure id="From_4_to_1_bus1_64800" departureTime="18:00:00" vehicleRefId="From_4_to_1_bus1_64800"/>
+				<departure id="From_4_to_1_bus1_65400" departureTime="18:10:00" vehicleRefId="From_4_to_1_bus1_65400"/>
+				<departure id="From_4_to_1_bus1_6600" departureTime="01:50:00" vehicleRefId="From_4_to_1_bus1_6600"/>
+				<departure id="From_4_to_1_bus1_66000" departureTime="18:20:00" vehicleRefId="From_4_to_1_bus1_66000"/>
+				<departure id="From_4_to_1_bus1_66600" departureTime="18:30:00" vehicleRefId="From_4_to_1_bus1_66600"/>
+				<departure id="From_4_to_1_bus1_67200" departureTime="18:40:00" vehicleRefId="From_4_to_1_bus1_67200"/>
+				<departure id="From_4_to_1_bus1_67800" departureTime="18:50:00" vehicleRefId="From_4_to_1_bus1_67800"/>
+				<departure id="From_4_to_1_bus1_68400" departureTime="19:00:00" vehicleRefId="From_4_to_1_bus1_68400"/>
+				<departure id="From_4_to_1_bus1_69000" departureTime="19:10:00" vehicleRefId="From_4_to_1_bus1_69000"/>
+				<departure id="From_4_to_1_bus1_69600" departureTime="19:20:00" vehicleRefId="From_4_to_1_bus1_69600"/>
+				<departure id="From_4_to_1_bus1_70200" departureTime="19:30:00" vehicleRefId="From_4_to_1_bus1_70200"/>
+				<departure id="From_4_to_1_bus1_70800" departureTime="19:40:00" vehicleRefId="From_4_to_1_bus1_70800"/>
+				<departure id="From_4_to_1_bus1_71400" departureTime="19:50:00" vehicleRefId="From_4_to_1_bus1_71400"/>
+				<departure id="From_4_to_1_bus1_7200" departureTime="02:00:00" vehicleRefId="From_4_to_1_bus1_7200"/>
+				<departure id="From_4_to_1_bus1_72000" departureTime="20:00:00" vehicleRefId="From_4_to_1_bus1_72000"/>
+				<departure id="From_4_to_1_bus1_72600" departureTime="20:10:00" vehicleRefId="From_4_to_1_bus1_72600"/>
+				<departure id="From_4_to_1_bus1_73200" departureTime="20:20:00" vehicleRefId="From_4_to_1_bus1_73200"/>
+				<departure id="From_4_to_1_bus1_73800" departureTime="20:30:00" vehicleRefId="From_4_to_1_bus1_73800"/>
+				<departure id="From_4_to_1_bus1_74400" departureTime="20:40:00" vehicleRefId="From_4_to_1_bus1_74400"/>
+				<departure id="From_4_to_1_bus1_75000" departureTime="20:50:00" vehicleRefId="From_4_to_1_bus1_75000"/>
+				<departure id="From_4_to_1_bus1_75600" departureTime="21:00:00" vehicleRefId="From_4_to_1_bus1_75600"/>
+				<departure id="From_4_to_1_bus1_76200" departureTime="21:10:00" vehicleRefId="From_4_to_1_bus1_76200"/>
+				<departure id="From_4_to_1_bus1_76800" departureTime="21:20:00" vehicleRefId="From_4_to_1_bus1_76800"/>
+				<departure id="From_4_to_1_bus1_77400" departureTime="21:30:00" vehicleRefId="From_4_to_1_bus1_77400"/>
+				<departure id="From_4_to_1_bus1_7800" departureTime="02:10:00" vehicleRefId="From_4_to_1_bus1_7800"/>
+				<departure id="From_4_to_1_bus1_78000" departureTime="21:40:00" vehicleRefId="From_4_to_1_bus1_78000"/>
+				<departure id="From_4_to_1_bus1_78600" departureTime="21:50:00" vehicleRefId="From_4_to_1_bus1_78600"/>
+				<departure id="From_4_to_1_bus1_79200" departureTime="22:00:00" vehicleRefId="From_4_to_1_bus1_79200"/>
+				<departure id="From_4_to_1_bus1_79800" departureTime="22:10:00" vehicleRefId="From_4_to_1_bus1_79800"/>
+				<departure id="From_4_to_1_bus1_80400" departureTime="22:20:00" vehicleRefId="From_4_to_1_bus1_80400"/>
+				<departure id="From_4_to_1_bus1_81000" departureTime="22:30:00" vehicleRefId="From_4_to_1_bus1_81000"/>
+				<departure id="From_4_to_1_bus1_81600" departureTime="22:40:00" vehicleRefId="From_4_to_1_bus1_81600"/>
+				<departure id="From_4_to_1_bus1_82200" departureTime="22:50:00" vehicleRefId="From_4_to_1_bus1_82200"/>
+				<departure id="From_4_to_1_bus1_82800" departureTime="23:00:00" vehicleRefId="From_4_to_1_bus1_82800"/>
+				<departure id="From_4_to_1_bus1_83400" departureTime="23:10:00" vehicleRefId="From_4_to_1_bus1_83400"/>
+				<departure id="From_4_to_1_bus1_8400" departureTime="02:20:00" vehicleRefId="From_4_to_1_bus1_8400"/>
+				<departure id="From_4_to_1_bus1_84000" departureTime="23:20:00" vehicleRefId="From_4_to_1_bus1_84000"/>
+				<departure id="From_4_to_1_bus1_84600" departureTime="23:30:00" vehicleRefId="From_4_to_1_bus1_84600"/>
+				<departure id="From_4_to_1_bus1_85200" departureTime="23:40:00" vehicleRefId="From_4_to_1_bus1_85200"/>
+				<departure id="From_4_to_1_bus1_85800" departureTime="23:50:00" vehicleRefId="From_4_to_1_bus1_85800"/>
+				<departure id="From_4_to_1_bus1_9000" departureTime="02:30:00" vehicleRefId="From_4_to_1_bus1_9000"/>
+				<departure id="From_4_to_1_bus1_9600" departureTime="02:40:00" vehicleRefId="From_4_to_1_bus1_9600"/>
+			</departures>
+		</transitRoute>
+	</transitLine>
+	<transitLine id="bus2">
+		<transitRoute id="From_2_to_3_bus2">
+			<transportMode>bus</transportMode>
+			<routeProfile>
+				<stop refId="2_2rBBB_stop" arrivalOffset="00:00:00" departureOffset="00:00:30" awaitDeparture="false"/>
+				<stop refId="5_5rEEE_stop" arrivalOffset="00:15:30" departureOffset="00:16:00" awaitDeparture="false"/>
+				<stop refId="7_7rGGG_stop" arrivalOffset="00:31:00" departureOffset="00:31:30" awaitDeparture="false"/>
+				<stop refId="6_6rFFF_stop" arrivalOffset="00:46:30" departureOffset="00:47:00" awaitDeparture="false"/>
+				<stop refId="3_3rCCC_stop" arrivalOffset="01:02:00" departureOffset="01:02:30" awaitDeparture="false"/>
+			</routeProfile>
+			<route>
+				<link refId="2_2r_stop"/>
+				<link refId="2r_5"/>
+				<link refId="5_5r_stop"/>
+				<link refId="5r_7"/>
+				<link refId="7_7r_stop"/>
+				<link refId="7r_6"/>
+				<link refId="6_6r_stop"/>
+				<link refId="6r_3"/>
+				<link refId="3_3r_stop"/>
+			</route>
+			<departures>
+				<departure id="From_2_to_3_bus2_0" departureTime="00:00:00" vehicleRefId="From_2_to_3_bus2_0"/>
+				<departure id="From_2_to_3_bus2_10800" departureTime="03:00:00" vehicleRefId="From_2_to_3_bus2_10800"/>
+				<departure id="From_2_to_3_bus2_11700" departureTime="03:15:00" vehicleRefId="From_2_to_3_bus2_11700"/>
+				<departure id="From_2_to_3_bus2_12600" departureTime="03:30:00" vehicleRefId="From_2_to_3_bus2_12600"/>
+				<departure id="From_2_to_3_bus2_13500" departureTime="03:45:00" vehicleRefId="From_2_to_3_bus2_13500"/>
+				<departure id="From_2_to_3_bus2_14400" departureTime="04:00:00" vehicleRefId="From_2_to_3_bus2_14400"/>
+				<departure id="From_2_to_3_bus2_15300" departureTime="04:15:00" vehicleRefId="From_2_to_3_bus2_15300"/>
+				<departure id="From_2_to_3_bus2_16200" departureTime="04:30:00" vehicleRefId="From_2_to_3_bus2_16200"/>
+				<departure id="From_2_to_3_bus2_17100" departureTime="04:45:00" vehicleRefId="From_2_to_3_bus2_17100"/>
+				<departure id="From_2_to_3_bus2_1800" departureTime="00:30:00" vehicleRefId="From_2_to_3_bus2_1800"/>
+				<departure id="From_2_to_3_bus2_18000" departureTime="05:00:00" vehicleRefId="From_2_to_3_bus2_18000"/>
+				<departure id="From_2_to_3_bus2_18900" departureTime="05:15:00" vehicleRefId="From_2_to_3_bus2_18900"/>
+				<departure id="From_2_to_3_bus2_19800" departureTime="05:30:00" vehicleRefId="From_2_to_3_bus2_19800"/>
+				<departure id="From_2_to_3_bus2_20700" departureTime="05:45:00" vehicleRefId="From_2_to_3_bus2_20700"/>
+				<departure id="From_2_to_3_bus2_21600" departureTime="06:00:00" vehicleRefId="From_2_to_3_bus2_21600"/>
+				<departure id="From_2_to_3_bus2_22500" departureTime="06:15:00" vehicleRefId="From_2_to_3_bus2_22500"/>
+				<departure id="From_2_to_3_bus2_23400" departureTime="06:30:00" vehicleRefId="From_2_to_3_bus2_23400"/>
+				<departure id="From_2_to_3_bus2_24300" departureTime="06:45:00" vehicleRefId="From_2_to_3_bus2_24300"/>
+				<departure id="From_2_to_3_bus2_25200" departureTime="07:00:00" vehicleRefId="From_2_to_3_bus2_25200"/>
+				<departure id="From_2_to_3_bus2_26100" departureTime="07:15:00" vehicleRefId="From_2_to_3_bus2_26100"/>
+				<departure id="From_2_to_3_bus2_2700" departureTime="00:45:00" vehicleRefId="From_2_to_3_bus2_2700"/>
+				<departure id="From_2_to_3_bus2_27000" departureTime="07:30:00" vehicleRefId="From_2_to_3_bus2_27000"/>
+				<departure id="From_2_to_3_bus2_27900" departureTime="07:45:00" vehicleRefId="From_2_to_3_bus2_27900"/>
+				<departure id="From_2_to_3_bus2_28800" departureTime="08:00:00" vehicleRefId="From_2_to_3_bus2_28800"/>
+				<departure id="From_2_to_3_bus2_29700" departureTime="08:15:00" vehicleRefId="From_2_to_3_bus2_29700"/>
+				<departure id="From_2_to_3_bus2_30600" departureTime="08:30:00" vehicleRefId="From_2_to_3_bus2_30600"/>
+				<departure id="From_2_to_3_bus2_31500" departureTime="08:45:00" vehicleRefId="From_2_to_3_bus2_31500"/>
+				<departure id="From_2_to_3_bus2_32400" departureTime="09:00:00" vehicleRefId="From_2_to_3_bus2_32400"/>
+				<departure id="From_2_to_3_bus2_33300" departureTime="09:15:00" vehicleRefId="From_2_to_3_bus2_33300"/>
+				<departure id="From_2_to_3_bus2_34200" departureTime="09:30:00" vehicleRefId="From_2_to_3_bus2_34200"/>
+				<departure id="From_2_to_3_bus2_35100" departureTime="09:45:00" vehicleRefId="From_2_to_3_bus2_35100"/>
+				<departure id="From_2_to_3_bus2_3600" departureTime="01:00:00" vehicleRefId="From_2_to_3_bus2_3600"/>
+				<departure id="From_2_to_3_bus2_36000" departureTime="10:00:00" vehicleRefId="From_2_to_3_bus2_36000"/>
+				<departure id="From_2_to_3_bus2_36900" departureTime="10:15:00" vehicleRefId="From_2_to_3_bus2_36900"/>
+				<departure id="From_2_to_3_bus2_37800" departureTime="10:30:00" vehicleRefId="From_2_to_3_bus2_37800"/>
+				<departure id="From_2_to_3_bus2_38700" departureTime="10:45:00" vehicleRefId="From_2_to_3_bus2_38700"/>
+				<departure id="From_2_to_3_bus2_39600" departureTime="11:00:00" vehicleRefId="From_2_to_3_bus2_39600"/>
+				<departure id="From_2_to_3_bus2_40500" departureTime="11:15:00" vehicleRefId="From_2_to_3_bus2_40500"/>
+				<departure id="From_2_to_3_bus2_41400" departureTime="11:30:00" vehicleRefId="From_2_to_3_bus2_41400"/>
+				<departure id="From_2_to_3_bus2_42300" departureTime="11:45:00" vehicleRefId="From_2_to_3_bus2_42300"/>
+				<departure id="From_2_to_3_bus2_43200" departureTime="12:00:00" vehicleRefId="From_2_to_3_bus2_43200"/>
+				<departure id="From_2_to_3_bus2_44100" departureTime="12:15:00" vehicleRefId="From_2_to_3_bus2_44100"/>
+				<departure id="From_2_to_3_bus2_4500" departureTime="01:15:00" vehicleRefId="From_2_to_3_bus2_4500"/>
+				<departure id="From_2_to_3_bus2_45000" departureTime="12:30:00" vehicleRefId="From_2_to_3_bus2_45000"/>
+				<departure id="From_2_to_3_bus2_45900" departureTime="12:45:00" vehicleRefId="From_2_to_3_bus2_45900"/>
+				<departure id="From_2_to_3_bus2_46800" departureTime="13:00:00" vehicleRefId="From_2_to_3_bus2_46800"/>
+				<departure id="From_2_to_3_bus2_47700" departureTime="13:15:00" vehicleRefId="From_2_to_3_bus2_47700"/>
+				<departure id="From_2_to_3_bus2_48600" departureTime="13:30:00" vehicleRefId="From_2_to_3_bus2_48600"/>
+				<departure id="From_2_to_3_bus2_49500" departureTime="13:45:00" vehicleRefId="From_2_to_3_bus2_49500"/>
+				<departure id="From_2_to_3_bus2_50400" departureTime="14:00:00" vehicleRefId="From_2_to_3_bus2_50400"/>
+				<departure id="From_2_to_3_bus2_51300" departureTime="14:15:00" vehicleRefId="From_2_to_3_bus2_51300"/>
+				<departure id="From_2_to_3_bus2_52200" departureTime="14:30:00" vehicleRefId="From_2_to_3_bus2_52200"/>
+				<departure id="From_2_to_3_bus2_53100" departureTime="14:45:00" vehicleRefId="From_2_to_3_bus2_53100"/>
+				<departure id="From_2_to_3_bus2_5400" departureTime="01:30:00" vehicleRefId="From_2_to_3_bus2_5400"/>
+				<departure id="From_2_to_3_bus2_54000" departureTime="15:00:00" vehicleRefId="From_2_to_3_bus2_54000"/>
+				<departure id="From_2_to_3_bus2_54900" departureTime="15:15:00" vehicleRefId="From_2_to_3_bus2_54900"/>
+				<departure id="From_2_to_3_bus2_55800" departureTime="15:30:00" vehicleRefId="From_2_to_3_bus2_55800"/>
+				<departure id="From_2_to_3_bus2_56700" departureTime="15:45:00" vehicleRefId="From_2_to_3_bus2_56700"/>
+				<departure id="From_2_to_3_bus2_57600" departureTime="16:00:00" vehicleRefId="From_2_to_3_bus2_57600"/>
+				<departure id="From_2_to_3_bus2_58500" departureTime="16:15:00" vehicleRefId="From_2_to_3_bus2_58500"/>
+				<departure id="From_2_to_3_bus2_59400" departureTime="16:30:00" vehicleRefId="From_2_to_3_bus2_59400"/>
+				<departure id="From_2_to_3_bus2_60300" departureTime="16:45:00" vehicleRefId="From_2_to_3_bus2_60300"/>
+				<departure id="From_2_to_3_bus2_61200" departureTime="17:00:00" vehicleRefId="From_2_to_3_bus2_61200"/>
+				<departure id="From_2_to_3_bus2_62100" departureTime="17:15:00" vehicleRefId="From_2_to_3_bus2_62100"/>
+				<departure id="From_2_to_3_bus2_6300" departureTime="01:45:00" vehicleRefId="From_2_to_3_bus2_6300"/>
+				<departure id="From_2_to_3_bus2_63000" departureTime="17:30:00" vehicleRefId="From_2_to_3_bus2_63000"/>
+				<departure id="From_2_to_3_bus2_63900" departureTime="17:45:00" vehicleRefId="From_2_to_3_bus2_63900"/>
+				<departure id="From_2_to_3_bus2_64800" departureTime="18:00:00" vehicleRefId="From_2_to_3_bus2_64800"/>
+				<departure id="From_2_to_3_bus2_65700" departureTime="18:15:00" vehicleRefId="From_2_to_3_bus2_65700"/>
+				<departure id="From_2_to_3_bus2_66600" departureTime="18:30:00" vehicleRefId="From_2_to_3_bus2_66600"/>
+				<departure id="From_2_to_3_bus2_67500" departureTime="18:45:00" vehicleRefId="From_2_to_3_bus2_67500"/>
+				<departure id="From_2_to_3_bus2_68400" departureTime="19:00:00" vehicleRefId="From_2_to_3_bus2_68400"/>
+				<departure id="From_2_to_3_bus2_69300" departureTime="19:15:00" vehicleRefId="From_2_to_3_bus2_69300"/>
+				<departure id="From_2_to_3_bus2_70200" departureTime="19:30:00" vehicleRefId="From_2_to_3_bus2_70200"/>
+				<departure id="From_2_to_3_bus2_71100" departureTime="19:45:00" vehicleRefId="From_2_to_3_bus2_71100"/>
+				<departure id="From_2_to_3_bus2_7200" departureTime="02:00:00" vehicleRefId="From_2_to_3_bus2_7200"/>
+				<departure id="From_2_to_3_bus2_72000" departureTime="20:00:00" vehicleRefId="From_2_to_3_bus2_72000"/>
+				<departure id="From_2_to_3_bus2_72900" departureTime="20:15:00" vehicleRefId="From_2_to_3_bus2_72900"/>
+				<departure id="From_2_to_3_bus2_73800" departureTime="20:30:00" vehicleRefId="From_2_to_3_bus2_73800"/>
+				<departure id="From_2_to_3_bus2_74700" departureTime="20:45:00" vehicleRefId="From_2_to_3_bus2_74700"/>
+				<departure id="From_2_to_3_bus2_75600" departureTime="21:00:00" vehicleRefId="From_2_to_3_bus2_75600"/>
+				<departure id="From_2_to_3_bus2_76500" departureTime="21:15:00" vehicleRefId="From_2_to_3_bus2_76500"/>
+				<departure id="From_2_to_3_bus2_77400" departureTime="21:30:00" vehicleRefId="From_2_to_3_bus2_77400"/>
+				<departure id="From_2_to_3_bus2_78300" departureTime="21:45:00" vehicleRefId="From_2_to_3_bus2_78300"/>
+				<departure id="From_2_to_3_bus2_79200" departureTime="22:00:00" vehicleRefId="From_2_to_3_bus2_79200"/>
+				<departure id="From_2_to_3_bus2_80100" departureTime="22:15:00" vehicleRefId="From_2_to_3_bus2_80100"/>
+				<departure id="From_2_to_3_bus2_8100" departureTime="02:15:00" vehicleRefId="From_2_to_3_bus2_8100"/>
+				<departure id="From_2_to_3_bus2_81000" departureTime="22:30:00" vehicleRefId="From_2_to_3_bus2_81000"/>
+				<departure id="From_2_to_3_bus2_81900" departureTime="22:45:00" vehicleRefId="From_2_to_3_bus2_81900"/>
+				<departure id="From_2_to_3_bus2_82800" departureTime="23:00:00" vehicleRefId="From_2_to_3_bus2_82800"/>
+				<departure id="From_2_to_3_bus2_83700" departureTime="23:15:00" vehicleRefId="From_2_to_3_bus2_83700"/>
+				<departure id="From_2_to_3_bus2_84600" departureTime="23:30:00" vehicleRefId="From_2_to_3_bus2_84600"/>
+				<departure id="From_2_to_3_bus2_85500" departureTime="23:45:00" vehicleRefId="From_2_to_3_bus2_85500"/>
+				<departure id="From_2_to_3_bus2_900" departureTime="00:15:00" vehicleRefId="From_2_to_3_bus2_900"/>
+				<departure id="From_2_to_3_bus2_9000" departureTime="02:30:00" vehicleRefId="From_2_to_3_bus2_9000"/>
+				<departure id="From_2_to_3_bus2_9900" departureTime="02:45:00" vehicleRefId="From_2_to_3_bus2_9900"/>
+			</departures>
+		</transitRoute>
+		<transitRoute id="From_3_to_2_bus2">
+			<transportMode>bus</transportMode>
+			<routeProfile>
+				<stop refId="3r_3CCC_stop" arrivalOffset="00:00:00" departureOffset="00:00:30" awaitDeparture="false"/>
+				<stop refId="6r_6FFF_stop" arrivalOffset="00:10:30" departureOffset="00:11:00" awaitDeparture="false"/>
+				<stop refId="7r_7GGG_stop" arrivalOffset="00:21:00" departureOffset="00:21:30" awaitDeparture="false"/>
+				<stop refId="5r_5EEE_stop" arrivalOffset="00:31:30" departureOffset="00:32:00" awaitDeparture="false"/>
+				<stop refId="2r_2BBB_stop" arrivalOffset="00:42:00" departureOffset="00:42:30" awaitDeparture="false"/>
+			</routeProfile>
+			<route>
+				<link refId="3r_3_stop"/>
+				<link refId="3_6r"/>
+				<link refId="6r_6_stop"/>
+				<link refId="6_7r"/>
+				<link refId="7r_7_stop"/>
+				<link refId="7_5r"/>
+				<link refId="5r_5_stop"/>
+				<link refId="5_2r"/>
+				<link refId="2r_2_stop"/>
+			</route>
+			<departures>
+				<departure id="From_3_to_2_bus2_0" departureTime="00:00:00" vehicleRefId="From_3_to_2_bus2_0"/>
+				<departure id="From_3_to_2_bus2_10800" departureTime="03:00:00" vehicleRefId="From_3_to_2_bus2_10800"/>
+				<departure id="From_3_to_2_bus2_11700" departureTime="03:15:00" vehicleRefId="From_3_to_2_bus2_11700"/>
+				<departure id="From_3_to_2_bus2_12600" departureTime="03:30:00" vehicleRefId="From_3_to_2_bus2_12600"/>
+				<departure id="From_3_to_2_bus2_13500" departureTime="03:45:00" vehicleRefId="From_3_to_2_bus2_13500"/>
+				<departure id="From_3_to_2_bus2_14400" departureTime="04:00:00" vehicleRefId="From_3_to_2_bus2_14400"/>
+				<departure id="From_3_to_2_bus2_15300" departureTime="04:15:00" vehicleRefId="From_3_to_2_bus2_15300"/>
+				<departure id="From_3_to_2_bus2_16200" departureTime="04:30:00" vehicleRefId="From_3_to_2_bus2_16200"/>
+				<departure id="From_3_to_2_bus2_17100" departureTime="04:45:00" vehicleRefId="From_3_to_2_bus2_17100"/>
+				<departure id="From_3_to_2_bus2_1800" departureTime="00:30:00" vehicleRefId="From_3_to_2_bus2_1800"/>
+				<departure id="From_3_to_2_bus2_18000" departureTime="05:00:00" vehicleRefId="From_3_to_2_bus2_18000"/>
+				<departure id="From_3_to_2_bus2_18900" departureTime="05:15:00" vehicleRefId="From_3_to_2_bus2_18900"/>
+				<departure id="From_3_to_2_bus2_19800" departureTime="05:30:00" vehicleRefId="From_3_to_2_bus2_19800"/>
+				<departure id="From_3_to_2_bus2_20700" departureTime="05:45:00" vehicleRefId="From_3_to_2_bus2_20700"/>
+				<departure id="From_3_to_2_bus2_21600" departureTime="06:00:00" vehicleRefId="From_3_to_2_bus2_21600"/>
+				<departure id="From_3_to_2_bus2_22500" departureTime="06:15:00" vehicleRefId="From_3_to_2_bus2_22500"/>
+				<departure id="From_3_to_2_bus2_23400" departureTime="06:30:00" vehicleRefId="From_3_to_2_bus2_23400"/>
+				<departure id="From_3_to_2_bus2_24300" departureTime="06:45:00" vehicleRefId="From_3_to_2_bus2_24300"/>
+				<departure id="From_3_to_2_bus2_25200" departureTime="07:00:00" vehicleRefId="From_3_to_2_bus2_25200"/>
+				<departure id="From_3_to_2_bus2_26100" departureTime="07:15:00" vehicleRefId="From_3_to_2_bus2_26100"/>
+				<departure id="From_3_to_2_bus2_2700" departureTime="00:45:00" vehicleRefId="From_3_to_2_bus2_2700"/>
+				<departure id="From_3_to_2_bus2_27000" departureTime="07:30:00" vehicleRefId="From_3_to_2_bus2_27000"/>
+				<departure id="From_3_to_2_bus2_27900" departureTime="07:45:00" vehicleRefId="From_3_to_2_bus2_27900"/>
+				<departure id="From_3_to_2_bus2_28800" departureTime="08:00:00" vehicleRefId="From_3_to_2_bus2_28800"/>
+				<departure id="From_3_to_2_bus2_29700" departureTime="08:15:00" vehicleRefId="From_3_to_2_bus2_29700"/>
+				<departure id="From_3_to_2_bus2_30600" departureTime="08:30:00" vehicleRefId="From_3_to_2_bus2_30600"/>
+				<departure id="From_3_to_2_bus2_31500" departureTime="08:45:00" vehicleRefId="From_3_to_2_bus2_31500"/>
+				<departure id="From_3_to_2_bus2_32400" departureTime="09:00:00" vehicleRefId="From_3_to_2_bus2_32400"/>
+				<departure id="From_3_to_2_bus2_33300" departureTime="09:15:00" vehicleRefId="From_3_to_2_bus2_33300"/>
+				<departure id="From_3_to_2_bus2_34200" departureTime="09:30:00" vehicleRefId="From_3_to_2_bus2_34200"/>
+				<departure id="From_3_to_2_bus2_35100" departureTime="09:45:00" vehicleRefId="From_3_to_2_bus2_35100"/>
+				<departure id="From_3_to_2_bus2_3600" departureTime="01:00:00" vehicleRefId="From_3_to_2_bus2_3600"/>
+				<departure id="From_3_to_2_bus2_36000" departureTime="10:00:00" vehicleRefId="From_3_to_2_bus2_36000"/>
+				<departure id="From_3_to_2_bus2_36900" departureTime="10:15:00" vehicleRefId="From_3_to_2_bus2_36900"/>
+				<departure id="From_3_to_2_bus2_37800" departureTime="10:30:00" vehicleRefId="From_3_to_2_bus2_37800"/>
+				<departure id="From_3_to_2_bus2_38700" departureTime="10:45:00" vehicleRefId="From_3_to_2_bus2_38700"/>
+				<departure id="From_3_to_2_bus2_39600" departureTime="11:00:00" vehicleRefId="From_3_to_2_bus2_39600"/>
+				<departure id="From_3_to_2_bus2_40500" departureTime="11:15:00" vehicleRefId="From_3_to_2_bus2_40500"/>
+				<departure id="From_3_to_2_bus2_41400" departureTime="11:30:00" vehicleRefId="From_3_to_2_bus2_41400"/>
+				<departure id="From_3_to_2_bus2_42300" departureTime="11:45:00" vehicleRefId="From_3_to_2_bus2_42300"/>
+				<departure id="From_3_to_2_bus2_43200" departureTime="12:00:00" vehicleRefId="From_3_to_2_bus2_43200"/>
+				<departure id="From_3_to_2_bus2_44100" departureTime="12:15:00" vehicleRefId="From_3_to_2_bus2_44100"/>
+				<departure id="From_3_to_2_bus2_4500" departureTime="01:15:00" vehicleRefId="From_3_to_2_bus2_4500"/>
+				<departure id="From_3_to_2_bus2_45000" departureTime="12:30:00" vehicleRefId="From_3_to_2_bus2_45000"/>
+				<departure id="From_3_to_2_bus2_45900" departureTime="12:45:00" vehicleRefId="From_3_to_2_bus2_45900"/>
+				<departure id="From_3_to_2_bus2_46800" departureTime="13:00:00" vehicleRefId="From_3_to_2_bus2_46800"/>
+				<departure id="From_3_to_2_bus2_47700" departureTime="13:15:00" vehicleRefId="From_3_to_2_bus2_47700"/>
+				<departure id="From_3_to_2_bus2_48600" departureTime="13:30:00" vehicleRefId="From_3_to_2_bus2_48600"/>
+				<departure id="From_3_to_2_bus2_49500" departureTime="13:45:00" vehicleRefId="From_3_to_2_bus2_49500"/>
+				<departure id="From_3_to_2_bus2_50400" departureTime="14:00:00" vehicleRefId="From_3_to_2_bus2_50400"/>
+				<departure id="From_3_to_2_bus2_51300" departureTime="14:15:00" vehicleRefId="From_3_to_2_bus2_51300"/>
+				<departure id="From_3_to_2_bus2_52200" departureTime="14:30:00" vehicleRefId="From_3_to_2_bus2_52200"/>
+				<departure id="From_3_to_2_bus2_53100" departureTime="14:45:00" vehicleRefId="From_3_to_2_bus2_53100"/>
+				<departure id="From_3_to_2_bus2_5400" departureTime="01:30:00" vehicleRefId="From_3_to_2_bus2_5400"/>
+				<departure id="From_3_to_2_bus2_54000" departureTime="15:00:00" vehicleRefId="From_3_to_2_bus2_54000"/>
+				<departure id="From_3_to_2_bus2_54900" departureTime="15:15:00" vehicleRefId="From_3_to_2_bus2_54900"/>
+				<departure id="From_3_to_2_bus2_55800" departureTime="15:30:00" vehicleRefId="From_3_to_2_bus2_55800"/>
+				<departure id="From_3_to_2_bus2_56700" departureTime="15:45:00" vehicleRefId="From_3_to_2_bus2_56700"/>
+				<departure id="From_3_to_2_bus2_57600" departureTime="16:00:00" vehicleRefId="From_3_to_2_bus2_57600"/>
+				<departure id="From_3_to_2_bus2_58500" departureTime="16:15:00" vehicleRefId="From_3_to_2_bus2_58500"/>
+				<departure id="From_3_to_2_bus2_59400" departureTime="16:30:00" vehicleRefId="From_3_to_2_bus2_59400"/>
+				<departure id="From_3_to_2_bus2_60300" departureTime="16:45:00" vehicleRefId="From_3_to_2_bus2_60300"/>
+				<departure id="From_3_to_2_bus2_61200" departureTime="17:00:00" vehicleRefId="From_3_to_2_bus2_61200"/>
+				<departure id="From_3_to_2_bus2_62100" departureTime="17:15:00" vehicleRefId="From_3_to_2_bus2_62100"/>
+				<departure id="From_3_to_2_bus2_6300" departureTime="01:45:00" vehicleRefId="From_3_to_2_bus2_6300"/>
+				<departure id="From_3_to_2_bus2_63000" departureTime="17:30:00" vehicleRefId="From_3_to_2_bus2_63000"/>
+				<departure id="From_3_to_2_bus2_63900" departureTime="17:45:00" vehicleRefId="From_3_to_2_bus2_63900"/>
+				<departure id="From_3_to_2_bus2_64800" departureTime="18:00:00" vehicleRefId="From_3_to_2_bus2_64800"/>
+				<departure id="From_3_to_2_bus2_65700" departureTime="18:15:00" vehicleRefId="From_3_to_2_bus2_65700"/>
+				<departure id="From_3_to_2_bus2_66600" departureTime="18:30:00" vehicleRefId="From_3_to_2_bus2_66600"/>
+				<departure id="From_3_to_2_bus2_67500" departureTime="18:45:00" vehicleRefId="From_3_to_2_bus2_67500"/>
+				<departure id="From_3_to_2_bus2_68400" departureTime="19:00:00" vehicleRefId="From_3_to_2_bus2_68400"/>
+				<departure id="From_3_to_2_bus2_69300" departureTime="19:15:00" vehicleRefId="From_3_to_2_bus2_69300"/>
+				<departure id="From_3_to_2_bus2_70200" departureTime="19:30:00" vehicleRefId="From_3_to_2_bus2_70200"/>
+				<departure id="From_3_to_2_bus2_71100" departureTime="19:45:00" vehicleRefId="From_3_to_2_bus2_71100"/>
+				<departure id="From_3_to_2_bus2_7200" departureTime="02:00:00" vehicleRefId="From_3_to_2_bus2_7200"/>
+				<departure id="From_3_to_2_bus2_72000" departureTime="20:00:00" vehicleRefId="From_3_to_2_bus2_72000"/>
+				<departure id="From_3_to_2_bus2_72900" departureTime="20:15:00" vehicleRefId="From_3_to_2_bus2_72900"/>
+				<departure id="From_3_to_2_bus2_73800" departureTime="20:30:00" vehicleRefId="From_3_to_2_bus2_73800"/>
+				<departure id="From_3_to_2_bus2_74700" departureTime="20:45:00" vehicleRefId="From_3_to_2_bus2_74700"/>
+				<departure id="From_3_to_2_bus2_75600" departureTime="21:00:00" vehicleRefId="From_3_to_2_bus2_75600"/>
+				<departure id="From_3_to_2_bus2_76500" departureTime="21:15:00" vehicleRefId="From_3_to_2_bus2_76500"/>
+				<departure id="From_3_to_2_bus2_77400" departureTime="21:30:00" vehicleRefId="From_3_to_2_bus2_77400"/>
+				<departure id="From_3_to_2_bus2_78300" departureTime="21:45:00" vehicleRefId="From_3_to_2_bus2_78300"/>
+				<departure id="From_3_to_2_bus2_79200" departureTime="22:00:00" vehicleRefId="From_3_to_2_bus2_79200"/>
+				<departure id="From_3_to_2_bus2_80100" departureTime="22:15:00" vehicleRefId="From_3_to_2_bus2_80100"/>
+				<departure id="From_3_to_2_bus2_8100" departureTime="02:15:00" vehicleRefId="From_3_to_2_bus2_8100"/>
+				<departure id="From_3_to_2_bus2_81000" departureTime="22:30:00" vehicleRefId="From_3_to_2_bus2_81000"/>
+				<departure id="From_3_to_2_bus2_81900" departureTime="22:45:00" vehicleRefId="From_3_to_2_bus2_81900"/>
+				<departure id="From_3_to_2_bus2_82800" departureTime="23:00:00" vehicleRefId="From_3_to_2_bus2_82800"/>
+				<departure id="From_3_to_2_bus2_83700" departureTime="23:15:00" vehicleRefId="From_3_to_2_bus2_83700"/>
+				<departure id="From_3_to_2_bus2_84600" departureTime="23:30:00" vehicleRefId="From_3_to_2_bus2_84600"/>
+				<departure id="From_3_to_2_bus2_85500" departureTime="23:45:00" vehicleRefId="From_3_to_2_bus2_85500"/>
+				<departure id="From_3_to_2_bus2_900" departureTime="00:15:00" vehicleRefId="From_3_to_2_bus2_900"/>
+				<departure id="From_3_to_2_bus2_9000" departureTime="02:30:00" vehicleRefId="From_3_to_2_bus2_9000"/>
+				<departure id="From_3_to_2_bus2_9900" departureTime="02:45:00" vehicleRefId="From_3_to_2_bus2_9900"/>
+			</departures>
+		</transitRoute>
+	</transitLine>
+</transitSchedule>
