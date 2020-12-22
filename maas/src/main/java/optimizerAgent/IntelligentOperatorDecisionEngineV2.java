@@ -173,6 +173,37 @@ public class IntelligentOperatorDecisionEngineV2 {
 		return totalGrad;
 	}
 	
+//	public Map<String,Map<String,Double[]>> calcSeperatedGovtObjectiveGrad(LinkedHashMap<String,Double> variables){
+//		
+////		this.setupAndRunMetaModel(variables);
+//		if(model!=null) {
+//			this.runMetamodel(variables);
+//		}else {
+//			this.setupAndRunMetaModel(variables);
+//		}
+//		ObjectiveAndGradientCalculator.measureAverreageTLWaitingTime(model, flow, "test/ averageWaitTime.csv");
+//		String PersonChangeWithCar_NAME = "person_TCSwithCar";
+//		String PersonChangeWithoutCar_NAME = "person_TCSwithoutCar";
+//		
+//		String PersonFixed_NAME = "trip_TCS";
+//		String GVChange_NAME = "person_GV";
+//		String GVFixed_NAME = "trip_GV";
+//		double vot_car = scenario.getConfig().planCalcScore().getOrCreateScoringParameters(PersonChangeWithCar_NAME).getOrCreateModeParams("car").getMarginalUtilityOfTraveling()/3600;
+//		double vot_transit = scenario.getConfig().planCalcScore().getOrCreateScoringParameters(PersonChangeWithoutCar_NAME).getOrCreateModeParams("pt").getMarginalUtilityOfTraveling()/3600;
+//		double vot_wait = scenario.getConfig().planCalcScore().getOrCreateScoringParameters(PersonChangeWithoutCar_NAME).getMarginalUtlOfWaitingPt_utils_hr()/3600;
+//		double vom = scenario.getConfig().planCalcScore().getOrCreateScoringParameters(PersonChangeWithoutCar_NAME).getMarginalUtilityOfMoney();
+//		Map<String,Map<String,Double>> revGrad = ObjectiveAndGradientCalculator.calcRevenueObjectiveGradient(model, flow, variables, this.operator, packages, fareCalculators);
+//		Map<String,Map<String,Double>> ttGrad = ObjectiveAndGradientCalculator.calcTotalSystemTravelTimeGradient(model, flow, variables, operator, vot_car, vot_transit, vot_wait, vom);
+//		Map<String,Map<String,Double>> totalGrad = new HashMap<>(revGrad);
+//		
+//		for(Entry<String,Map<String,Double>> operator:ttGrad.entrySet()) {
+//			for(Entry<String,Double> grad:operator.getValue().entrySet()) {
+//				totalGrad.get(operator.getKey()).compute(grad.getKey(), (k,v)->v=v+grad.getValue());
+//			}
+//		}
+//		return totalGrad;
+//	}
+	
 	
 	
 	public Map<String,Map<String,Double>> calcFDGradient(LinkedHashMap<String,Double> variables){

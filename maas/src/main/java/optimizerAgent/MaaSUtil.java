@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.Random;
+import java.util.*;
 
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
@@ -210,22 +211,37 @@ public final class MaaSUtil {
 			if(MaaSUtil.ifFareLinkVariableDetails(var.getKey())) {//variable is fareLink variable.
 				String pacakge = MaaSUtil.retrievePackageId(var.getKey());
 				String fareLink = MaaSUtil.retrieveFareLink(var.getKey());
+				if(var.getValue()>packages.getMassPackages().get(pacakge).getFullFare().get(fareLink)) {
+					System.out.println("discount is higher than fare.");
+				}
 				packages.getMassPackages().get(pacakge).setDiscountForFareLink(new FareLink(fareLink), var.getValue());
 				
 			}else if(MaaSUtil.ifMaaSPackageCostVariableDetails(var.getKey())) {//variable is package cost variable
 				String pacakge = MaaSUtil.retrievePackageId(var.getKey());
 				packages.getMassPackages().get(pacakge).setPackageCost(var.getValue());
 			}else if(MaaSUtil.ifMaaSTransitLinesDiscountVariableDetails(var.getKey())) {
+				if(var.getValue()>1) {
+					System.out.println("discount ratio cannot be greater than 1!!!");
+				}
 				String pacakge = MaaSUtil.retrievePackageId(var.getKey());
 				Set<Id<TransitLine>> linesId = MaaSUtil.retrieveTransitLineId(var.getKey());
 				MaaSPackage pac = packages.getMassPackages().get(pacakge);
 				Set<FareLink> affectedFareLinks = new HashSet<>();
-				for(Id<TransitLine> lineId:linesId) {
-					affectedFareLinks.addAll(MaaSUtil.getTransitLineToFareLinkIncidence(lineId, ts, pacakge, packages));
-				}
+//				for(FareLink fl:pac.getFareLinks().values()) {
+//					if(linesId.contains(fl.getTransitLine())) {
+//						double fullFare = pac.getFullFare().get(fl.toString());
+//						pac.setDiscountForFareLink(fl, fullFare*var.getValue());
+//					}
+//				}
+				
+
+				affectedFareLinks = MaaSUtil.getTransitLinesToFareLinkIncidence(linesId, ts, pacakge, packages);
+
 				for(FareLink fl: affectedFareLinks) {
-					double fullFare = pac.getFullFare().get(fl.toString());
-					pac.setDiscountForFareLink(fl, fullFare*var.getValue());
+					if(linesId.contains(fl.getTransitLine())) {
+						double fullFare = pac.getFullFare().get(fl.toString());
+						pac.setDiscountForFareLink(fl, fullFare*var.getValue());
+					}
 				}
 			}else if(MaaSUtil.ifMaaSFareLinkClusterVariableDetails(var.getKey())) {
 				String pacakge = MaaSUtil.retrievePackageId(var.getKey());
@@ -319,7 +335,7 @@ public final class MaaSUtil {
 		return platformReimbursementFactorName+"___"+operatorId;
 	}
 	
-	
+	@Deprecated
 	public static Set<FareLink> getTransitLineToFareLinkIncidence(Id<TransitLine> linId, TransitSchedule ts, String packageId, MaaSPackages pacs){
 		Set<Id<TransitStopFacility>> stops = new HashSet<>();
 		Set<FareLink> fareLinks = new HashSet<>();
@@ -337,18 +353,41 @@ public final class MaaSUtil {
 	}
 	
 	public static Set<FareLink> getTransitLinesToFareLinkIncidence(Set<Id<TransitLine>> linesId, TransitSchedule ts, String packageId, MaaSPackages pacs){
-		Set<Id<TransitStopFacility>> stops = new HashSet<>();
+		//Set<Id<TransitStopFacility>> stops = new HashSet<>();
 		Set<FareLink> fareLinks = new HashSet<>();
-		for(Id<TransitLine>linId:linesId) {
-			ts.getTransitLines().get(linId).getRoutes().values().stream().forEach(r->{
-				r.getStops().stream().forEach(trs->{
-					stops.add(trs.getStopFacility().getId());
-				});
+//		for(Id<TransitLine>linId:linesId) {
+//			ts.getTransitLines().get(linId).getRoutes().values().stream().forEach(r->{
+//				r.getStops().stream().forEach(trs->{
+//					stops.add(trs.getStopFacility().getId());
+//				});
+//			});
+//		}
+//		for(FareLink fl:pacs.getMassPackages().get(packageId).getFareLinks().values()) {
+//			if(stops.contains(fl.getBoardingStopFacility()) && stops.contains(fl.getAlightingStopFacility())) {
+//				fareLinks.add(fl);
+//			}
+//		}
+		Map<String,Set<Id<TransitStopFacility>>> modeSpecificStops = new HashMap<>();
+		for(Id<TransitLine> lineId:linesId) {
+			String mode = new ArrayList<>(ts.getTransitLines().get(lineId).getRoutes().values()).get(0).getTransportMode();
+			if(!modeSpecificStops.containsKey(mode)) {
+				modeSpecificStops.put(mode, new HashSet<>());
+			}
+			ts.getTransitLines().get(lineId).getRoutes().values().forEach(r->{
+				r.getStops().forEach(trs->modeSpecificStops.get(mode).add(trs.getStopFacility().getId()));
+			
+			//modeSpecificStops.get(mode).addAll(c)
 			});
 		}
 		for(FareLink fl:pacs.getMassPackages().get(packageId).getFareLinks().values()) {
-			if(stops.contains(fl.getBoardingStopFacility()) && stops.contains(fl.getAlightingStopFacility())) {
-				fareLinks.add(fl);
+			if(fl.getType().equals(FareLink.InVehicleFare)) {
+				if(linesId.contains(fl.getTransitLine())) {
+					fareLinks.add(fl);
+				}
+			}else {
+				if(modeSpecificStops.get(fl.getMode())!=null && modeSpecificStops.get(fl.getMode()).contains(fl.getBoardingStopFacility()) && modeSpecificStops.get(fl.getMode()).contains(fl.getAlightingStopFacility())) {
+					fareLinks.add(fl);
+				}
 			}
 		}
 		return fareLinks;

@@ -201,7 +201,7 @@ class MaaSDiscountAndChargeHandlerTest {
 				
 				//Set<Set<Id<TransitLine>>> tlSets = new RandomCluster<Id<TransitLine>>().createRandomSplit(scenario.getTransitSchedule().getTransitLines().keySet(), 5);
 				Set<Set<Id<TransitLine>>> tlSets = new UsageBasedCluster<TransitLine>().createUsageBasedSplit(scenario.getTransitSchedule().getTransitLines(), 
-						ObjectiveAndGradientCalculator.readSimpleMap("test/ averageWaitTime.csv"), 5);
+						ObjectiveAndGradientCalculator.readSimpleMap("test/ averageWaitTime.csv"), 20);
 				
 				ObjectAttributes obj = new ObjectAttributes();
 				new ObjectAttributesXmlReader(obj).readFile("new Data/core/personAttributesHKI.xml");
@@ -249,11 +249,11 @@ class MaaSDiscountAndChargeHandlerTest {
 					variableLimits.get("Govt").put(MaaSUtil.generateMaaSTransitLinesDiscountKey("allPack", sss, "tl"+i),new Tuple<Double,Double>(0.01,1.));
 					i++;
 				};
-				variables.get("Govt").keySet().forEach(v->{
-					for(Id<TransitLine>lineId:MaaSUtil.retrieveTransitLineId(v)) {
-						MaaSUtil.getTransitLineToFareLinkIncidence(lineId, scenario.getTransitSchedule(), MaaSUtil.retrievePackageId(v), packages);	
-					}
-				});
+//				variables.get("Govt").keySet().forEach(v->{
+//					for(Id<TransitLine>lineId:MaaSUtil.retrieveTransitLineId(v)) {
+//						MaaSUtil.getTransitLineToFareLinkIncidence(lineId, scenario.getTransitSchedule(), MaaSUtil.retrievePackageId(v), packages);	
+//					}
+//				});
 				
 				Activity act = MaaSUtil.createMaaSOperator(packages, scenario.getPopulation(), "test/agentPop.xml",new Tuple<>(.5,4.5),variables,variableLimits);
 				
