@@ -15,7 +15,6 @@
 		<param name="mutationAffectsDuration" value="true" />
 		<!-- Default:1800.0; Defines how many seconds a time mutation can maximally shift a time. -->
 		<param name="mutationRange" value="1800.0" />
-		<!-- false; Use individual settings for each subpopulation. If enabled but no settings are found, regular settings are uses as fallback. -->
 	</module>
 	<module name="changeMode" >
 		<!-- Defines whether car availability is considered be considered or not. An agent has no car only if it has no license, or never access to a car. Default: true -->
@@ -26,18 +25,20 @@
 		<param name="modes" value="car,pt" />
 	</module>
 	<module name="controler" >
+		<!-- Compression algorithm to use when writing out data to files. Possible values: [none, gzip, lz4, zst] -->
+		<param name="compressionType" value="gzip" />
 		<!-- Sets whether graphs showing some analyses should automatically be generated during the simulation. The generation of graphs usually takes a small amount of time that does not have any weight in big simulations, but add a significant overhead in smaller runs or in test cases where the graphical output is not even requested. -->
 		<param name="createGraphs" value="true" />
 		<!-- true if at the end of a run, plans, network, config etc should be dumped to a file -->
 		<param name="dumpDataAtEnd" value="true" />
 		<!-- Default=false. If enabled, the router takes travel times needed for turning moves into account. Cannot be used if the (Fast)AStarLandmarks routing or TravelTimeCalculator.separateModes is enabled. -->
 		<param name="enableLinkToLinkRouting" value="false" />
-		<!-- Default=xml; Specifies the file format for writing events. Currently supported: xml.
+		<!-- Default=xml; Specifies the file format for writing events. Currently supported: [xml, pb, json]
 		Multiple values can be specified separated by commas (','). -->
 		<param name="eventsFileFormat" value="xml" />
-		<!-- Default=0;  -->
+		<!-- Default=0. First Iteration of a simulation. -->
 		<param name="firstIteration" value="0" />
-		<!-- Default=1000;  -->
+		<!-- Default=1000. Last Iteration of a simulation. -->
 		<param name="lastIteration" value="150" />
 		<!-- Defines which mobility simulation will be used. Currently supported: qsim JDEQSim 
 		Depending on the chosen mobsim, you'll have to add additional config modules to configure the corresponding mobsim.
@@ -53,11 +54,13 @@
 		<!-- Comma-separated list of visualizer output file formats. `transims', `googleearth', and `otfvis'. -->
 		<param name="snapshotFormat" value="" />
 		<!-- iterationNumber % writeEventsInterval == 0 defines in which iterations events are written to a file. `0' disables events writing completely. -->
-		<param name="writeEventsInterval" value="10" />
+		<param name="writeEventsInterval" value="50" />
 		<!-- iterationNumber % writePlansInterval == 0 defines (hopefully) in which iterations plans are written to a file. `0' disables plans writing completely.  Some plans in early iterations are always written -->
-		<param name="writePlansInterval" value="1" />
+		<param name="writePlansInterval" value="50" />
 		<!-- iterationNumber % writeSnapshotsInterval == 0 defines in which iterations snapshots are written to a file. `0' disables snapshots writing completely -->
 		<param name="writeSnapshotsInterval" value="1" />
+		<!-- iterationNumber % writeEventsInterval == 0 defines in which iterations trips CSV are written to a file. `0' disables trips writing completely. -->
+		<param name="writeTripsInterval" value="10" />
 	</module>
 	<module name="counts" >
 		<!-- Transport modes that will be respected for the counts comparison. 'car' is default, which includes also bussed from the pt simulation module. Use this parameter in combination with 'filterModes' = true! -->
@@ -82,7 +85,7 @@
 		<param name="writeCountsInterval" value="10" />
 	</module>
 	<module name="facilities" >
-		<!-- This defines how facilities should be created. Possible values: none fromFile setInScenario onePerActivityLinkInPlansFile onePerActivityLocationInPlansFile  -->
+		<!-- This defines how facilities should be created. Possible values: none fromFile setInScenario onePerActivityLinkInPlansFile onePerActivityLinkInPlansFileExceptWhenCoordinatesAreGiven onePerActivityLocationInPlansFile  -->
 		<param name="facilitiesSource" value="none" />
 		<!-- A prefix to be used for auto-generated IDs. -->
 		<param name="idPrefix" value="autogen_" />
@@ -90,17 +93,20 @@
 		<param name="inputCRS" value="null" />
 		<param name="inputFacilitiesFile" value="null" />
 		<param name="inputFacilityAttributesFile" value="null" />
+		<param name="insistingOnUsingDeprecatedFacilitiesAttributeFile" value="false" />
 	</module>
 	<module name="global" >
 		<param name="coordinateSystem" value="arbitrary" />
+		<param name="defaultDelimiter" value=";" />
 		<param name="insistingOnDeprecatedConfigVersion" value="true" />
 		<!-- "global" number of threads.  This number is used, e.g., for replanning, but NOT in the mobsim.  This can typically be set to as many cores as you have available, or possibly even slightly more. -->
-		<param name="numberOfThreads" value="2" />
+		<param name="numberOfThreads" value="4" />
 		<param name="randomSeed" value="4711" />
 	</module>
 	<module name="households" >
 		<param name="inputFile" value="null" />
 		<param name="inputHouseholdAttributesFile" value="null" />
+		<param name="insistingOnUsingDeprecatedHouseholdsAttributeFile" value="false" />
 	</module>
 	<module name="linkStats" >
 		<!-- Specifies over how many iterations the link volumes should be averaged that are used for the link statistics. Use 1 or 0 to only use the link volumes of a single iteration. This values cannot be larger than the value specified for writeLinkStatsInterval -->
@@ -310,19 +316,25 @@
 	<module name="plans" >
 		<!-- String: minOfDurationAndEndTime tryEndTimeThenDuration endTimeOnly. Anything besides minOfDurationAndEndTime will internally use a different (simpler) version of the TimeAllocationMutator. -->
 		<param name="activityDurationInterpretation" value="tryEndTimeThenDuration" />
+		<!-- Possible values: reject, useMainModeIdentifier -->
+		<param name="handlingOfPlansWithoutRoutingMode" value="reject" />
 		<!-- The Coordinates Reference System in which the coordinates are expressed in the input file. At import, the coordinates will be converted to the coordinate system defined in "global", and willbe converted back at export. If not specified, no conversion happens. -->
 		<param name="inputCRS" value="null" />
 		<param name="inputPersonAttributesFile" value="null" />
 		<param name="inputPlansFile" value="src/main/resources/toyScenarioData/population.xml" />
+		<param name="insistingOnUsingDeprecatedPersonAttributeFile" value="false" />
 		<!-- Defines how routes are stored in memory. Currently supported: LinkNetworkRoute, CompressedNetworkRoute. -->
 		<param name="networkRouteType" value="LinkNetworkRoute" />
 		<!-- (not tested) will remove plan attributes that are presumably not used, such as activityStartTime. default=false. Use with Caution! -->
 		<param name="removingUnnecessaryPlanAttributes" value="false" />
-		<!-- Name of the (Object)Attribute defining the subpopulation to which pertains a Person (as freight, through traffic, etc.). The attribute must be of String type.  Change away from default only in desperate situations. -->
 	</module>
 	<module name="planscalcroute" >
+		<!-- Some typical teleportation routing params are set by default, such as for walk and bike.  Setting this switch to "true" will clear them.  Note that this will also clear settings for helper modes such as for non_network_walk -->
+		<param name="clearDefaultTeleportedModeParams" value="false" />
 		<!-- All the modes for which the router is supposed to generate network routes (like car) -->
 		<param name="networkModes" value="car" />
+		<!-- strength of the randomness for the utility of money in routing under toll.  Leads to Pareto-optimal route with randomly drawn money-vs-other-attributes tradeoff. Technically the width parameter of a log-normal distribution. 3.0 seems to be a good value.  -->
+		<param name="routingRandomness" value="3.0" />
 		<parameterset type="teleportedModeParameters" >
 			<param name="beelineDistanceFactor" value="1.3" />
 			<param name="mode" value="bike" />
@@ -387,7 +399,7 @@
 		<param name="ptCountsInterval" value="10" />
 	</module>
 	<module name="qsim" >
-		<param name="endTime" value="undefined" />
+		<param name="endTime" value="27:00:00" />
 		<param name="flowCapacityFactor" value="1.0" />
 		<!-- decides if waiting vehicles enter the network after or before the already driving vehicles were moved. Default: false -->
 		<param name="insertingWaitingVehiclesBeforeDrivingVehicles" value="true" />
@@ -416,7 +428,7 @@
 		<!-- snapshotStyle. One of: equiDist queue withHoles withHolesAndShowHoles kinematicWaves  -->
 		<param name="snapshotStyle" value="equiDist" />
 		<param name="snapshotperiod" value="00:00:00" />
-		<param name="startTime" value="undefined" />
+		<param name="startTime" value="00:00:00" />
 		<param name="storageCapacityFactor" value="1.0" />
 		<!-- time in seconds.  Time after which the frontmost vehicle on a link is called `stuck' if it does not move. -->
 		<param name="stuckTime" value="10.0" />
@@ -430,6 +442,7 @@
 		<!-- If false, the qsim accumulates fractional flows up to one flow unit in every time step.  If true, flows are updated only if an agent wants to enter the link or an agent is added to buffer. Default is true. -->
 		<param name="usingFastCapacityUpdate" value="true" />
 		<!-- if the qsim should use as many runners as there are threads (Christoph's dissertation version) or more of them, together with a thread pool (seems to be faster in some situations, but is not tested). -->
+		<param name="usingThreadpool" value="true" />
 		<!-- Defines what happens if an agent wants to depart, but the specified vehicle is not available. One of: teleport wait exception  -->
 		<param name="vehicleBehavior" value="teleport" />
 		<!-- If vehicles should all be the same default vehicle, or come from the vehicles file, or something else.  Possible values:  defaultVehicle modeVehicleTypesFromVehiclesData fromVehiclesData -->
@@ -443,11 +456,44 @@
 		<!-- root directory for temporary files generated by the external executable. Provided as a service; I don't think this is used by MATSim. -->
 		<param name="ExternalExeTmpFileRootDir" value="null" />
 		<!-- fraction of iterations where innovative strategies are switched off.  Something like 0.8 should be good.  E.g. if you run from iteration 400 to iteration 500, innovation is switched off at iteration 480 -->
-		<param name="fractionOfIterationsToDisableInnovation" value="Infinity" />
+		<param name="fractionOfIterationsToDisableInnovation" value="0.8" />
 		<!-- maximum number of plans per agent.  ``0'' means ``infinity''.  Currently (2010), ``5'' is a good number -->
 		<param name="maxAgentPlanMemorySize" value="5" />
 		<!-- strategyName of PlanSelector for plans removal.  Possible defaults: WorstPlanSelector SelectRandom SelectExpBetaForRemoval ChangeExpBetaForRemoval PathSizeLogitSelectorForRemoval . The current default, WorstPlanSelector is not a good choice from a discrete choice theoretical perspective. Alternatives, however, have not been systematically tested. kai, feb'12 -->
 		<param name="planSelectorForRemoval" value="WorstPlanSelector" />
+		<parameterset type="strategysettings" >
+			<!-- iteration after which strategy will be disabled.  most useful for ``innovative'' strategies (new routes, new times, ...). Normally, better use fractionOfIterationsToDisableInnovation -->
+			<param name="disableAfterIteration" value="-1" />
+			<!-- path to external executable (if applicable) -->
+			<param name="executionPath" value="null" />
+			<!-- strategyName of strategy.  Possible default names: SelectRandom BestScore KeepLastSelected ChangeExpBeta SelectExpBeta SelectPathSizeLogit      (selectors), ReRouteTimeAllocationMutatorTimeAllocationMutator_ReRouteChangeSingleTripModeChangeTripModeSubtourModeChoice (innovative strategies). -->
+			<param name="strategyName" value="ChangeExpBeta" />
+			<!-- subpopulation to which the strategy applies. "null" refers to the default population, that is, the set of persons for which no explicit subpopulation is defined (ie no subpopulation attribute) -->
+			<param name="subpopulation" value="null" />
+			<!-- weight of a strategy: for each agent, a strategy will be selected with a probability proportional to its weight -->
+			<param name="weight" value="0.8" />
+		</parameterset>
+		<parameterset type="strategysettings" >
+			<param name="disableAfterIteration" value="-1" />
+			<param name="executionPath" value="null" />
+			<param name="strategyName" value="ReRoute" />
+			<param name="subpopulation" value="null" />
+			<param name="weight" value="0.05" />
+		</parameterset>
+		<parameterset type="strategysettings" >
+			<param name="disableAfterIteration" value="-1" />
+			<param name="executionPath" value="null" />
+			<param name="strategyName" value="TimeAllocationMutator" />
+			<param name="subpopulation" value="null" />
+			<param name="weight" value="0.1" />
+		</parameterset>
+		<parameterset type="strategysettings" >
+			<param name="disableAfterIteration" value="-1" />
+			<param name="executionPath" value="null" />
+			<param name="strategyName" value="ChangeTripMode" />
+			<param name="subpopulation" value="null" />
+			<param name="weight" value="0.05" />
+		</parameterset>
 	</module>
 	<module name="subtourModeChoice" >
 		<!-- Only for backwards compatibility.  Defines if only trips from modes list should change mode, or all trips.  Options: fromAllModesToSpecifiedModes fromSpecifiedModesToSpecifiedModes  -->
@@ -462,6 +508,7 @@
 	<module name="transit" >
 		<!-- The Coordinates Reference System in which the coordinates are expressed in the input file. At import, the coordinates will be converted to the coordinate system defined in "global", and willbe converted back at export. If not specified, no conversion happens. -->
 		<param name="inputScheduleCRS" value="null" />
+		<param name="insistingOnUsingDeprecatedAttributeFiles" value="false" />
 		<!-- Optional input file containing additional attributes for transit lines, stored as ObjectAttributes. -->
 		<param name="transitLinesAttributesFile" value="null" />
 		<!-- Comma-separated list of transportation modes that are handled as transit. Defaults to 'pt'. -->
@@ -472,6 +519,7 @@
 		<param name="transitStopsAttributesFile" value="null" />
 		<!-- Set this parameter to true if transit should be simulated, false if not. -->
 		<param name="useTransit" value="true" />
+		<param name="usingTransitInMobsim" value="true" />
 		<!-- Input file containing the vehicles used by the departures in the transit schedule. -->
 		<param name="vehiclesFile" value="src/main/resources/toyScenarioData/transitVehicles.xml" />
 	</module>
