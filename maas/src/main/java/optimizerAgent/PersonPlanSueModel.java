@@ -1434,14 +1434,15 @@ private void fixIncidenceMaps(Population population) {
 											}
 											this.transitLineFareLinkMap.put(var, fareLinkSet);
 										}
-										
+										Set<String> fls = new HashSet<>();
+										for(FareLink fll:fareLinkSet)fls.add(fll.toString());
 										double flGrad = 0;
 										if(trPlan.getMaasPacakgeId().equals(MaaSUtil.retrievePackageId(this.simpleVarKeys.inverse().get(var)))) {
 											for(FareLink f:trRoute.getFareLinks()){
-												if(fareLinkSet.contains(f)){
+												if(fls.contains(f.toString())){
 													//double fare = this.farecalculators.get(f.getMode()).getFares(f.getTransitRoute(), f.getTransitLine(), f.getBoardingStopFacility(), f.getAlightingStopFacility()).get(0);
 													double discount = this.maasPakages.getMassPackages().get(trPlan.getMaasPacakgeId()).getDiscountForFareLink(f);
-													flGrad += discount*params.get(CNLSUEModel.MarginalUtilityofMoneyName)/params.get(var);//error here
+													flGrad += discount*params.get(CNLSUEModel.MarginalUtilityofMoneyName)/Oparams.get(this.simpleVarKeys.inverse().get(var));//error here
 												}
 											}
 										}

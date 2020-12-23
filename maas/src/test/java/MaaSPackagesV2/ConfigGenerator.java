@@ -22,10 +22,12 @@ public class ConfigGenerator {
 		config.vehicles().setVehiclesFile("src/main/resources/toyScenarioData/vehicles.xml");
 		config.transit().setVehiclesFile("src/main/resources/toyScenarioData/transitVehicles.xml");
 		config.transit().setUseTransit(true);
-		config.plansCalcRoute().setInsertingAccessEgressWalk(false);
+		//config.plansCalcRoute().setInsertingAccessEgressWalk(false);
 		addPlanParameter(config.planCalcScore(), "home", 16*60*60);
 		addPlanParameter(config.planCalcScore(), "work", 8*60*60);
 		config.qsim().setUsePersonIdForMissingVehicleId(true);
+		config.qsim().setStartTime(0);
+		config.qsim().setEndTime(27*3600);
 		config.global().setCoordinateSystem("arbitrary");
 		config.parallelEventHandling().setNumberOfThreads(5);
 		config.controler().setWritePlansInterval(50);
