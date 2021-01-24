@@ -15,10 +15,11 @@ import optimizerAgent.VariableDetails;
 
 public class Adam implements Optimizer{
 
-	private double alpha = .05;
+	private double alpha = .008;
 	private double beta1 = .9;
 	private double beta2 = 0.999;
 	private double eta = 10e-8;
+	private double c = 100;
 	private Map<String,VariableDetails> variables = new HashMap<>();
 	//private Map<String,Double> m = new HashMap<>();
 	private RealVector m;
@@ -72,6 +73,13 @@ public class Adam implements Optimizer{
 		MapToArray<String> m2a = new MapToArray<String>("",this.variables.keySet());
 		RealVector p = m2a.getRealVector(this.variables.keySet().stream().collect(Collectors.toMap(k->k, k->this.variables.get(k).getCurrentValue())));
 		RealVector g = m2a.getRealVector(gradient);
+		if(g.getNorm()>c*g.getDimension()) {//Clipping
+			if(!Double.isInfinite(g.getNorm())) {
+				g = g.mapDivide(g.getNorm()).mapMultiply(c*g.getDimension());
+			}else {
+				g = g.mapDivide(g.getL1Norm()).mapMultiply(c*g.getDimension());
+			}
+		}
 		m = m.mapMultiply(this.beta1).add(g.mapMultiply(1-beta1));
 		v = v.mapMultiply(this.beta2).add(g.ebeMultiply(g).mapMultiply(1-this.beta2));
 		RealVector m_h = m.mapDivide(1-Math.pow(this.beta1,counter));

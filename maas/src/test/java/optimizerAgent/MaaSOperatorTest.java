@@ -86,7 +86,7 @@ public class MaaSOperatorTest {
 		
 		MaaSPackages packages = new MaaSPackagesReader().readPackagesFile("test/packages.xml");
 		
-		MaaSUtil.createMaaSOperator(packages, scenario.getPopulation(), "test/agentPop.xml",new Tuple<>(.5,2.),null,null);
+		MaaSUtil.createMaaSOperator(packages, scenario.getPopulation(), "test/agentPop.xml",new Tuple<>(.5,2.),null,null,true);
 		
 		
 		for(LanesToLinkAssignment l2l:scenario.getLanes().getLanesToLinkAssignments().values()) {

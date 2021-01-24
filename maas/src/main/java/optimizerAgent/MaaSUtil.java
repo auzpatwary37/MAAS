@@ -71,7 +71,7 @@ public final class MaaSUtil {
 	
 
 	public static Activity createMaaSOperator(MaaSPackages packages, Population population, String popOutLoc, 
-			Tuple<Double,Double> boundsMultiplier, Map<String,Map<String,Double>> additionalVariables, Map<String,Map<String, Tuple<Double,Double>>> additionalVariableLimits) {
+			Tuple<Double,Double> boundsMultiplier, Map<String,Map<String,Double>> additionalVariables, Map<String,Map<String, Tuple<Double,Double>>> additionalVariableLimits, boolean addCostVar) {
 		int totalPop = population.getPersons().values().size();
 		int rnd = new Random().nextInt(totalPop);
 		PlanElement pe = ((Person)population.getPersons().values().toArray()[rnd]).getPlans().get(0).getPlanElements().get(0);
@@ -86,10 +86,12 @@ public final class MaaSUtil {
 			Map<String,Double> variable = new HashMap<>();
 			Map<String,Tuple<Double,Double>> variableLimit = new HashMap<>();
 			
-			for(MaaSPackage m:operator.getValue()) {
-				//For now only create price of package 
-				variable.put(MaaSUtil.generateMaaSPackageCostKey(m.getId()),m.getPackageCost());
-				variableLimit.put(MaaSUtil.generateMaaSPackageCostKey(m.getId()),new Tuple<>(boundsMultiplier.getFirst()*m.getPackageCost(),boundsMultiplier.getSecond()*m.getPackageCost()));
+			if(addCostVar) {
+				for(MaaSPackage m:operator.getValue()) {
+					//For now only create price of package 
+					variable.put(MaaSUtil.generateMaaSPackageCostKey(m.getId()),m.getPackageCost());
+					variableLimit.put(MaaSUtil.generateMaaSPackageCostKey(m.getId()),new Tuple<>(boundsMultiplier.getFirst()*m.getPackageCost(),boundsMultiplier.getSecond()*m.getPackageCost()));
+				}
 			}
 			if(additionalVariables!=null) {
 				variable.putAll(additionalVariables.get(operator.getKey()));
@@ -226,7 +228,7 @@ public final class MaaSUtil {
 				String pacakge = MaaSUtil.retrievePackageId(var.getKey());
 				Set<Id<TransitLine>> linesId = MaaSUtil.retrieveTransitLineId(var.getKey());
 				MaaSPackage pac = packages.getMassPackages().get(pacakge);
-				Set<FareLink> affectedFareLinks = new HashSet<>();
+				Set<String> affectedFareLinks = new HashSet<>();
 //				for(FareLink fl:pac.getFareLinks().values()) {
 //					if(linesId.contains(fl.getTransitLine())) {
 //						double fullFare = pac.getFullFare().get(fl.toString());
@@ -237,11 +239,11 @@ public final class MaaSUtil {
 
 				affectedFareLinks = MaaSUtil.getTransitLinesToFareLinkIncidence(linesId, ts, pacakge, packages);
 
-				for(FareLink fl: affectedFareLinks) {
-					if(linesId.contains(fl.getTransitLine())) {
+				for(String fl: affectedFareLinks) {
+//					if(linesId.contains(fl.getTransitLine())) {
 						double fullFare = pac.getFullFare().get(fl.toString());
-						pac.setDiscountForFareLink(fl, fullFare*var.getValue());
-					}
+						pac.setDiscountForFareLink(new FareLink(fl), fullFare*var.getValue());
+					//}
 				}
 			}else if(MaaSUtil.ifMaaSFareLinkClusterVariableDetails(var.getKey())) {
 				String pacakge = MaaSUtil.retrievePackageId(var.getKey());
@@ -352,9 +354,9 @@ public final class MaaSUtil {
 		return fareLinks;
 	}
 	
-	public static Set<FareLink> getTransitLinesToFareLinkIncidence(Set<Id<TransitLine>> linesId, TransitSchedule ts, String packageId, MaaSPackages pacs){
+	public static Set<String> getTransitLinesToFareLinkIncidence(Set<Id<TransitLine>> linesId, TransitSchedule ts, String packageId, MaaSPackages pacs){
 		//Set<Id<TransitStopFacility>> stops = new HashSet<>();
-		Set<FareLink> fareLinks = new HashSet<>();
+		Set<String> fareLinks = new HashSet<>();
 //		for(Id<TransitLine>linId:linesId) {
 //			ts.getTransitLines().get(linId).getRoutes().values().stream().forEach(r->{
 //				r.getStops().stream().forEach(trs->{
@@ -382,11 +384,11 @@ public final class MaaSUtil {
 		for(FareLink fl:pacs.getMassPackages().get(packageId).getFareLinks().values()) {
 			if(fl.getType().equals(FareLink.InVehicleFare)) {
 				if(linesId.contains(fl.getTransitLine())) {
-					fareLinks.add(fl);
+					fareLinks.add(fl.toString());
 				}
 			}else {
 				if(modeSpecificStops.get(fl.getMode())!=null && modeSpecificStops.get(fl.getMode()).contains(fl.getBoardingStopFacility()) && modeSpecificStops.get(fl.getMode()).contains(fl.getAlightingStopFacility())) {
-					fareLinks.add(fl);
+					fareLinks.add(fl.toString());
 				}
 			}
 		}

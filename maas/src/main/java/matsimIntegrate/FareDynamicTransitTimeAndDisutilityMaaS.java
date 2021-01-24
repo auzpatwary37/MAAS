@@ -191,6 +191,9 @@ public class FareDynamicTransitTimeAndDisutilityMaaS extends FareDynamicTransitT
 				fareDiff = newHelper.realiseUnrealisedDiscount(fareDiff);
 		} else	//check if all the discount is realised
 			fareDiff = newHelper.realiseUnrealisedDiscount(fareDiff);
+		if(fareDiff<0) {
+			System.out.println();
+		}
 		return fareDiff;
 	}
 }

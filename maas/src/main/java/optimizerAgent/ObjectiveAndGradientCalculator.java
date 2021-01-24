@@ -172,8 +172,9 @@ public class ObjectiveAndGradientCalculator {
 					volume = flow.getMaaSPackageUsage().get(pacakgeId);
 				}
 			}else if(MaaSUtil.ifMaaSTransitLinesDiscountVariableDetails(skey)||MaaSUtil.ifMaaSFareLinkClusterVariableDetails(skey)) {
-				Set<FareLink> fls = sue.getTransitLineFareLinkMap().get(key);
-				for(FareLink f:fls) {
+				Set<String> fls = sue.getTransitLineFareLinkMap().get(key); 
+				for(String ff:fls) {
+					FareLink f = new FareLink(ff);
 					double flvolume=0;
 					for(Entry<String, Map<String, Map<String, Double>>> timeFl:flow.getMaaSSpecificFareLinkFlow().entrySet()) {
 						if(timeFl.getValue().get(pacakgeId)!=null && timeFl.getValue().get(pacakgeId).get(f.toString())!=null) {
@@ -249,10 +250,12 @@ public class ObjectiveAndGradientCalculator {
 	
 	public static Map<String,Map<String,Double>> calcTotalSystemTravelTimeGradient(PersonPlanSueModel sue, SUEModelOutput flow, Map<String,Double> variables, Map<String,Map<String,VariableDetails>> operators,Double vot_car, Double vot_transit, Double vot_wait, Double vom){
 		Map<String,Map<String,Double>>operatorGradient = new HashMap<>();
+		Map<String,Map<String,Double>>operatorSmGradient = new HashMap<>();
 		operators.keySet().forEach(o->operatorGradient.put(o, new HashMap<>()));
-		
+		operators.keySet().forEach(o->operatorSmGradient.put(o, new HashMap<>()));
 		operators.entrySet().stream().forEach(o->{
-			o.getValue().entrySet().parallelStream().forEach(v->{
+			for(Entry<String,VariableDetails> v:o.getValue().entrySet()){
+			//o.getValue().entrySet().parallelStream().forEach(v->{
 				String skey = v.getKey();
 				String key = MaaSUtil.retrieveName(skey);
 				if(key == "") key =skey;
@@ -264,6 +267,10 @@ public class ObjectiveAndGradientCalculator {
 						if(sue.getLinkTravelTimeGradient().get(net.getKey()).get(link.getKey())==null) {
 							System.out.println("Debug!!!");
 						}
+						double lVol = flow.getLinkVolume().get(net.getKey()).get(link.getKey());
+						double ttGrad = sue.getLinkTravelTimeGradient().get(net.getKey()).get(link.getKey()).get(key);
+						double lGrad = sue.getLinkGradient().get(net.getKey()).get(link.getKey()).get(key);
+						double lTT = flow.getLinkTravelTime().get(net.getKey()).get(link.getKey());
 						tslttGrad+=flow.getLinkVolume().get(net.getKey()).get(link.getKey())*sue.getLinkTravelTimeGradient().get(net.getKey()).get(link.getKey()).get(key)+
 								sue.getLinkGradient().get(net.getKey()).get(link.getKey()).get(key)*flow.getLinkTravelTime().get(net.getKey()).get(link.getKey());
 					}
@@ -284,9 +291,14 @@ public class ObjectiveAndGradientCalculator {
 				}
 				totalSystemTTGrad = tslttGrad*vot_car/vom+tstdlttGrad*vot_transit/vom+tsttlttGrad*vot_wait/vom;
 				operatorGradient.get(o.getKey()).put(skey, totalSystemTTGrad);
-			});
+				operatorSmGradient.get(o.getKey()).put(key, totalSystemTTGrad);
+			//});
+		}
+			if(o.getValue().size()!=operatorGradient.get(o.getKey()).size()) {
+				System.out.println("Debug!!!");
+			}
 		});
-		
+		System.out.println();
 		return operatorGradient;
 	}
 	

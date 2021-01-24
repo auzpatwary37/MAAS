@@ -180,6 +180,10 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 						//o.getValue().takeStep(null);
 						for(String s:vName) {
 							try {
+								if(grad.get(o.getKey()).get(s)==null) {
+									String ss = MaaSUtil.retrieveName(s);
+									logger.debug("gradient is null here. Debug!!!!");
+								}
 								fw.append(","+grad.get(o.getKey()).get(s));
 							} catch (IOException e) {
 								// TODO Auto-generated catch block

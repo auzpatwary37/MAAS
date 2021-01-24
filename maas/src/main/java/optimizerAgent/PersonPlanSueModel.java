@@ -193,7 +193,7 @@ public class PersonPlanSueModel{
 	private PopulationCompressor populationCompressor = null;
 	private Map<Id<Person>,Double> personEquivalence = new HashMap<>();
 	private Map<Id<Person>, ? extends Person> compressedPersons = new HashMap<>();
-	private Map<String,Set<FareLink>> transitLineFareLinkMap = new HashMap<>();
+	private Map<String,Set<String>> transitLineFareLinkMap = new HashMap<>();
 	private BiMap<String,String>simpleVarKeys = HashBiMap.create();
 	private boolean fixGradient = false;
 	private boolean ifNeedToFixIncidenceMap = false;
@@ -1248,7 +1248,7 @@ private void fixIncidenceMaps(Population population) {
 						//double grad = anaParam.get(PersonPlanSueModel.BPRalphaName)*beta*t_0/Math.pow(cap, beta)*Math.pow(flow,beta-1)*this.linkGradient.get(timeMap.getKey()).get(link.getId()).get(var.getKey());
 						
 						RealVector g = MatrixUtils.createRealVector(gradArray.getMatrix(this.linkGradient.get(timeMap.getKey()).get(link.getId())));
-						this.linkGradient.get(timeMap.getKey()).put(link.getId(), gradArray.getMap(g.mapMultiply(anaParam.get(PersonPlanSueModel.BPRalphaName)*beta*t_0/Math.pow(cap, beta)*Math.pow(flow,beta-1)).toArray()));
+						this.linkTravelTimeGradient.get(timeMap.getKey()).put(link.getId(), gradArray.getMap(g.mapMultiply(anaParam.get(PersonPlanSueModel.BPRalphaName)*beta*t_0/Math.pow(cap, beta)*Math.pow(flow,beta-1)).toArray()));
 //						if(grad>1000) {
 //							logger.debug("High Gradient");
 //						}
@@ -1376,10 +1376,10 @@ private void fixIncidenceMaps(Population population) {
 //					if(MaaSUtil.ifMaaSPackageCostVariableDetails(this.simpleVarKeys.inverse().get(var)) && trPlan.getMaasPacakgeId().equals(MaaSUtil.retrievePackageId(this.simpleVarKeys.inverse().get(var)))) {
 //						planGradient-=params.get(CNLSUEModel.MarginalUtilityofMoneyName);//This should be minus not plus?
 //					}
-					if(trPlan.getMaasPacakgeId()!=null) {
+					if(trPlan.getMaasPacakgeId()!=null ) {
 						Map<String,Double> gradToAdd = new HashMap<>();
 						for(String s:this.gradientKeys) {
-							if(trPlan.getMaasPacakgeId().equals(MaaSUtil.retrievePackageId(this.simpleVarKeys.inverse().get(s)))) {
+							if(MaaSUtil.ifMaaSPackageCostVariableDetails(this.simpleVarKeys.inverse().get(s)) && trPlan.getMaasPacakgeId().equals(MaaSUtil.retrievePackageId(this.simpleVarKeys.inverse().get(s)))) {
 								gradToAdd.put(s, -1*params.get(CNLSUEModel.MarginalUtilityofMoneyName));
 							}
 						}
@@ -1423,28 +1423,30 @@ private void fixIncidenceMaps(Population population) {
 //											routeGradient+=params.get(CNLSUEModel.MarginalUtilityofMoneyName);//Should It be minus? I think plus as the discount increases utility (Ashraf, 17Nov20)
 											selfRouteGrad.compute(var, (k,v)->(v==null)?params.get(CNLSUEModel.MarginalUtilityofMoneyName):v+params.get(CNLSUEModel.MarginalUtilityofMoneyName));
 									}else if(MaaSUtil.ifMaaSTransitLinesDiscountVariableDetails(this.simpleVarKeys.inverse().get(var))||MaaSUtil.ifMaaSFareLinkClusterVariableDetails(this.simpleVarKeys.inverse().get(var))) {
-										Set<FareLink> fareLinkSet = this.transitLineFareLinkMap.get(var);
+										Set<String> fareLinkSet = this.transitLineFareLinkMap.get(var);
 										//Set<FareLink>fareLinkSet1 = new HashSet<>();
 										if(fareLinkSet==null) {
 											if(MaaSUtil.ifMaaSTransitLinesDiscountVariableDetails(this.simpleVarKeys.inverse().get(var))) {
 												Set<Id<TransitLine>> transitLine = MaaSUtil.retrieveTransitLineId(this.simpleVarKeys.inverse().get(var));
 												fareLinkSet = MaaSUtil.getTransitLinesToFareLinkIncidence(transitLine, ts, MaaSUtil.retrievePackageId(this.simpleVarKeys.inverse().get(var)), this.maasPakages);
 											}else if(MaaSUtil.ifMaaSFareLinkClusterVariableDetails(this.simpleVarKeys.inverse().get(var))) {
-												fareLinkSet = MaaSUtil.retrieveFareLinksIds(this.simpleVarKeys.inverse().get(var));
+												fareLinkSet = new HashSet<>();
+												for(FareLink fl:MaaSUtil.retrieveFareLinksIds(this.simpleVarKeys.inverse().get(var)))fareLinkSet.add(fl.toString());
 											}
 											this.transitLineFareLinkMap.put(var, fareLinkSet);
 										}
-										Set<String> fls = new HashSet<>();
-										for(FareLink fll:fareLinkSet)fls.add(fll.toString());
+										
 										double flGrad = 0;
-										if(trPlan.getMaasPacakgeId().equals(MaaSUtil.retrievePackageId(this.simpleVarKeys.inverse().get(var)))) {
+										String pcId = MaaSUtil.retrievePackageId(this.simpleVarKeys.inverse().get(var));
+										if(trPlan.getMaasPacakgeId().equals(pcId)) {
 											for(FareLink f:trRoute.getFareLinks()){
-												if(fls.contains(f.toString())){
+												if(fareLinkSet.contains(f.toString())){
 													//double fare = this.farecalculators.get(f.getMode()).getFares(f.getTransitRoute(), f.getTransitLine(), f.getBoardingStopFacility(), f.getAlightingStopFacility()).get(0);
 													double discount = this.maasPakages.getMassPackages().get(trPlan.getMaasPacakgeId()).getDiscountForFareLink(f);
+													//double dd = discount*params.get(CNLSUEModel.MarginalUtilityofMoneyName)/params.get(var);
 													flGrad += discount*params.get(CNLSUEModel.MarginalUtilityofMoneyName)/Oparams.get(this.simpleVarKeys.inverse().get(var));//error here
 												}
-											}
+											} 
 										}
 //										routeGradient += flGrad;
 										final double flg = flGrad;
@@ -1475,6 +1477,9 @@ private void fixIncidenceMaps(Population population) {
 //								logger.debug("Debug point. Gradient is NAN");
 							
 //							planGradient+=grad;
+//							if(routeGrad.getNorm()!=0) {
+//								logger.debug("no gradient generated yet route grad is non zero!!!");
+//							}
 							planGrad = planGrad.add(routeGrad);
 //							if(Double.isNaN(planGradient))
 //								logger.debug("Debug point. Gradient is NAN..");
@@ -1740,7 +1745,7 @@ private void fixIncidenceMaps(Population population) {
 		return networks;
 	}
 
-	public Map<String, Set<FareLink>> getTransitLineFareLinkMap() {
+	public Map<String, Set<String>> getTransitLineFareLinkMap() {
 		return transitLineFareLinkMap;
 	}
 //	public static void main(String[] args) {

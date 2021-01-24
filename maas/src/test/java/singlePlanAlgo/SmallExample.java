@@ -321,7 +321,7 @@ public class SmallExample {
 		MaaSPackages packages = new MaaSPackagesReader().readPackagesFile(inputPackage); //It has to be consistent with the config.
 
 		//Create activity for MaaS operator
-		Activity act = MaaSUtil.createMaaSOperator(packages, scenario.getPopulation(), "test/agentPop.xml",new Tuple<>(.5,2.5),null,null);
+		Activity act = MaaSUtil.createMaaSOperator(packages, scenario.getPopulation(), "test/agentPop.xml",new Tuple<>(.5,2.5),null,null,true);
 		ActivityParams param = new ActivityParams(act.getType());
 		param.setTypicalDuration(20*3600);
 		param.setMinimalDuration(8*3600);

@@ -234,7 +234,7 @@ public static void main(String[] args) {
 //					}
 //				});
 				
-				Activity act = MaaSUtil.createMaaSOperator(packages, scenario.getPopulation(), "test/agentPopToy.xml",new Tuple<>(.5,4.5),variables,variableLimits);
+				Activity act = MaaSUtil.createMaaSOperator(packages, scenario.getPopulation(), "test/agentPopToy.xml",new Tuple<>(.5,4.5),variables,variableLimits,true);
 				
 				ActivityParams param = new ActivityParams(act.getType());
 				param.setTypicalDuration(20*3600);

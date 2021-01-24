@@ -38,7 +38,7 @@ public class MaaSDataLoaderV2 extends AbstractModule{
 
 	public static final String typeGovt = "Govt";
 	public static final String typeOperator = "operator";
-	
+	public static final String typeGovtTT = "GovtTT";
 	
 	public MaaSDataLoaderV2(String type) {
 		this.maasPacakges = null;
@@ -52,19 +52,19 @@ public class MaaSDataLoaderV2 extends AbstractModule{
 	}
 	public MaaSDataLoaderV2(MaaSPackages packages, Map<String,Tuple<Double,Double>> timeBeans,Scenario scenario, String type) {
 		this.maasPacakges = packages;
-		MaaSUtil.createMaaSOperator(this.maasPacakges, scenario.getPopulation(), null, new Tuple<>(.5,2.),null,null);
+		MaaSUtil.createMaaSOperator(this.maasPacakges, scenario.getPopulation(), null, new Tuple<>(.5,2.),null,null,true);
 		this.type = type;
 	}
 	public MaaSDataLoaderV2(MaaSPackages packages, Map<String,Tuple<Double,Double>> timeBeans,Scenario scenario, String type,Map<String,Map<String,Double>> variables, Map<String,Map<String,Tuple<Double,Double>>>variableLimits) {
 		this.maasPacakges = packages;
-		MaaSUtil.createMaaSOperator(this.maasPacakges, scenario.getPopulation(), null, new Tuple<>(.5,2.),variables,variableLimits);
+		MaaSUtil.createMaaSOperator(this.maasPacakges, scenario.getPopulation(), null, new Tuple<>(.5,2.),variables,variableLimits,true);
 		this.type = type;
 	}
 
 	public MaaSDataLoaderV2(MaaSPackages packages, Map<String,Tuple<Double,Double>> timeBeans,Scenario scenario, String type,  Map<String,Double>subsidyRatio) {
 		this.maasPacakges = packages;
 		this.subsidyRatio = subsidyRatio;
-		MaaSUtil.createMaaSOperator(this.maasPacakges, scenario.getPopulation(), null, new Tuple<>(.5,2.),null,null);
+		MaaSUtil.createMaaSOperator(this.maasPacakges, scenario.getPopulation(), null, new Tuple<>(.5,2.),null,null,true);
 		this.type = type;
 	}
 	@Override
