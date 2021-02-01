@@ -288,7 +288,7 @@ class MaaSDiscountAndChargeHandlerTest {
 				
 				scenario.addScenarioElement(SignalsData.ELEMENT_NAME, new SignalsDataLoader(config).loadSignalsData());	
 				Controler controler = new Controler(scenario);
-				controler.addOverridingModule(new MaaSDataLoaderV2(MaaSDataLoaderV2.typeGovt));
+				controler.addOverridingModule(new MaaSDataLoaderV2(MaaSDataLoaderV2.typeGovtTT));
 				//controler.addOverridingModule(new MaaSOperatorOptimizationModule("new Data/data/odNetwork.xml",5));
 				controler.addOverridingModule(new MaaSOperatorOptimizationModule());
 				ZonalFareXMLParserV2 busFareGetter = new ZonalFareXMLParserV2(scenario.getTransitSchedule());
