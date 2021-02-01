@@ -1,13 +1,16 @@
 package elasticDemand;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.annotation.Nullable;
 import javax.inject.Provider;
 
+import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.network.Network;
+import org.matsim.api.core.v01.population.Activity;
 import org.matsim.api.core.v01.population.HasPlansAndId;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.Plan;
@@ -17,36 +20,29 @@ import org.matsim.core.config.groups.ChangeModeConfigGroup;
 import org.matsim.core.config.groups.GlobalConfigGroup;
 import org.matsim.core.config.groups.PlansConfigGroup;
 import org.matsim.core.config.groups.TimeAllocationMutatorConfigGroup;
-import org.matsim.core.controler.OutputDirectoryHierarchy;
+import org.matsim.core.network.NetworkUtils;
 import org.matsim.core.replanning.PlanStrategy;
 import org.matsim.core.replanning.PlanStrategyImpl;
 import org.matsim.core.replanning.ReplanningContext;
 import org.matsim.core.replanning.modules.ChangeLegMode;
 import org.matsim.core.replanning.modules.ReRoute;
 import org.matsim.core.replanning.selectors.RandomPlanSelector;
-import org.matsim.core.replanning.strategies.TimeAllocationMutator;
 import org.matsim.core.router.TripRouter;
+import org.matsim.core.utils.misc.OptionalTime;
 import org.matsim.facilities.ActivityFacilities;
-import org.matsim.withinday.controller.ExecutedPlansServiceImpl;
-
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-import dynamicTransitRouter.fareCalculators.FareCalculator;
 import maasPackagesV2.MaaSPackages;
 import optimizerAgent.MaaSUtil;
-import optimizerAgent.PopulationCompressor;
-import optimizerAgent.timeBeansWrapper;
-import singlePlanAlgo.MaaSConsistancyChecker;
-import singlePlanAlgo.MaaSStrategyModule;
 
 public class ActivityAdditionStrategy implements PlanStrategy{
 
 	private final PlanStrategy planStrategyDelegate;
 	
-	private Map<String,Network> activityLocationMap;
-	private Map<String,Double> activityDurationMap;
-	private Set<String> unmodifiableActivities;
+	private Map<String,Network> activityLocationMap = new HashMap<>();
+	private Map<String,Double> activityDurationMap = new HashMap<>();
+	private Set<String> unmodifiableActivities= new HashSet<>();
 	
 	
 	
@@ -63,11 +59,38 @@ public class ActivityAdditionStrategy implements PlanStrategy{
         //eventsManager.addHandler(planSelector);
 
         // if you just want to select plans, you can stop here.
-
-
+		
+		scenario.getPopulation().getPersons().entrySet().forEach(p->{
+			p.getValue().getPlans().forEach(pl->{
+				pl.getPlanElements().forEach(pe->{
+					if(pe instanceof Activity) {
+						Activity act = (Activity)pe;
+						if(!this.activityLocationMap.containsKey(act.getType()))this.activityLocationMap.put(act.getType(), NetworkUtils.createNetwork());
+						Network net = this.activityLocationMap.get(act.getType());
+						String id = Double.toString(act.getCoord().getX())+"_"+Double.toString(act.getCoord().getY());
+						if(!net.getNodes().containsKey(Id.createNodeId(id)))NetworkUtils.createAndAddNode(net, Id.createNodeId(id), act.getCoord());
+						if(act.getType().contains("work")||act.getType().contains("home")||act.getType().contains("school")) {
+							this.unmodifiableActivities.add(act.getType());
+						}
+						OptionalTime typicalD = config.planCalcScore().getActivityParams(act.getType()).getTypicalDuration();
+						double t = 0;
+						if(typicalD==null) {
+							t = 60;
+						}else {
+							t = typicalD.seconds();
+						}
+						if(!this.activityDurationMap.containsKey(act.getType()))this.activityDurationMap.put(act.getType(),t);
+					}
+				});
+			});
+		});
+		
+		
+		
+		
         // Otherwise, to do something with that plan, one needs to add modules into the strategy.  If there is at least
         // one module added here, then the plan is copied and then modified.
-		ActivityAdditionStrategyModule mod = new ActivityAdditionStrategyModule();
+		ActivityAdditionStrategyModule mod = new ActivityAdditionStrategyModule(this.activityLocationMap,this.activityDurationMap,this.unmodifiableActivities);
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		PlanStrategyImpl.Builder builder = new PlanStrategyImpl.Builder(new RandomPlanSelector());
 		//PlanStrategyImpl.Builder builder = new PlanStrategyImpl.Builder(new ExpBetaPlanSelector(config.planCalcScore()));

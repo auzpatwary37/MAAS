@@ -26,6 +26,12 @@ public class ActivityAdditionStrategyModule implements PlanStrategyModule{
 	private Set<String> unmodifiableActivities;
 	private Set<Plan> plans;
 	
+	public ActivityAdditionStrategyModule(Map<String,Network> activityLocationMap, Map<String,Double> activityDurationMap,Set<String>unmodifiableActivities) {
+		this.activityLocationMap = activityLocationMap;
+		this.activityDurationMap = activityDurationMap;
+		this.unmodifiableActivities = unmodifiableActivities;
+	}
+	
 	@Override
 	public void prepareReplanning(ReplanningContext replanningContext) {
 		// TODO Auto-generated method stub
@@ -57,6 +63,7 @@ public class ActivityAdditionStrategyModule implements PlanStrategyModule{
 				List<String> acts = new ArrayList<>(activityDurationMap.keySet());
 				acts.remove(act.getType());
 				acts.remove(actNext.getType());
+				acts.removeAll(this.unmodifiableActivities);
 				String actToInsert = acts.get(random.nextInt(acts.size()));
 				Coord coord = NetworkUtils.getNearestNode(this.activityLocationMap.get(actToInsert), act.getCoord()).getCoord();
 				Activity actNew = PopulationUtils.createActivityFromCoord(actToInsert, coord);
