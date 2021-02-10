@@ -38,8 +38,8 @@ public class MaaSOperatorStrategyModule implements PlanStrategyModule{
 	
 	@Inject
 	private @Named(MaaSUtil.MaaSPackagesAttributeName) MaaSPackages packages;
-	private int MaaSPacakgeOptimizationStartingCounter = 40;
-	private int MaaSPacakgeInertia = 40;
+	private int MaaSPacakgeOptimizationStartingCounter = 2;
+	private int MaaSPacakgeInertia = 2;
 	private Scenario scenario;
 	private int maxCounter = 15;
 	private OutputDirectoryHierarchy controlerIO;

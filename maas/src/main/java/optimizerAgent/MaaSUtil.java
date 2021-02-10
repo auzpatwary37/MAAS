@@ -371,6 +371,11 @@ public final class MaaSUtil {
 //		}
 		Map<String,Set<Id<TransitStopFacility>>> modeSpecificStops = new HashMap<>();
 		for(Id<TransitLine> lineId:linesId) {
+			if(ts.getTransitLines().get(lineId)==null) {
+				System.out.println();
+			}else if(new ArrayList<>(ts.getTransitLines().get(lineId).getRoutes().values()).get(0)==null) {
+				System.out.println();
+			}
 			String mode = new ArrayList<>(ts.getTransitLines().get(lineId).getRoutes().values()).get(0).getTransportMode();
 			if(!modeSpecificStops.containsKey(mode)) {
 				modeSpecificStops.put(mode, new HashSet<>());

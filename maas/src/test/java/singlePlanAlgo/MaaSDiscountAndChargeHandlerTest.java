@@ -58,6 +58,7 @@ import maasPackagesV2.MaaSPackagesReader;
 import maasPackagesV2.MaaSPackagesWriter;
 import dynamicTransitRouter.DynamicRoutingModule;
 import dynamicTransitRouter.fareCalculators.ZonalFareXMLParserV2;
+import elasticDemand.ActivityAdditionStrategy;
 import matsimIntegrate.DynamicRoutingModuleWithMaas;
 import optimizerAgent.MaaSOperator;
 import optimizerAgent.MaaSOperatorOptimizationModule;
@@ -165,17 +166,19 @@ class MaaSDiscountAndChargeHandlerTest {
 				config.strategy().addStrategySettings(createStrategySettings(MaaSPlanStrategy.class.getName(),.05,225,"person_TCSwithCar"));
 				config.strategy().addStrategySettings(createStrategySettings(MaaSPlanStrategy.class.getName(),.05,225,"person_TCSwithoutCar"));
 				config.strategy().addStrategySettings(createStrategySettings(MaaSPlanStrategy.class.getName(),.05,225,"trip_TCS"));
-				config.strategy().addStrategySettings(createStrategySettings(MaaSOperatorStrategy.class.getName(),1,200,MaaSUtil.MaaSOperatorAgentSubPopulationName));
+				//config.strategy().addStrategySettings(createStrategySettings(MaaSOperatorStrategy.class.getName(),1,200,MaaSUtil.MaaSOperatorAgentSubPopulationName));
 				
 				config.strategy().addStrategySettings(createStrategySettings(UnnecessaryMaaSPlanRemovalStrategy.class.getName(),.05,225,"person_TCSwithCar"));
 				config.strategy().addStrategySettings(createStrategySettings(UnnecessaryMaaSPlanRemovalStrategy.class.getName(),.05,225,"person_TCSwithoutCar"));
 				config.strategy().addStrategySettings(createStrategySettings(UnnecessaryMaaSPlanRemovalStrategy.class.getName(),.05,225,"trip_TCS"));
 				
+				config.strategy().addStrategySettings(createStrategySettings(ActivityAdditionStrategy.class.getName(),.05,225,"person_TCSwithCar"));
+				config.strategy().addStrategySettings(createStrategySettings(ActivityAdditionStrategy.class.getName(),.05,225,"person_TCSwithoutCar"));
 				
 				//___________________
 				
-//				RunUtils.addStrategy(config, "KeepLastSelected", MaaSUtil.MaaSOperatorAgentSubPopulationName, 
-//						1, 400);
+				RunUtils.addStrategy(config, "KeepLastSelected", MaaSUtil.MaaSOperatorAgentSubPopulationName, 
+						1, 400);
 				
 				
 				config.global().setNumberOfThreads(20);
@@ -199,10 +202,10 @@ class MaaSDiscountAndChargeHandlerTest {
 				
 				Scenario scenario = ScenarioUtils.loadScenario(config);
 				
-				//Set<Set<Id<TransitLine>>> tlSets = new RandomCluster<Id<TransitLine>>().createRandomSplit(scenario.getTransitSchedule().getTransitLines().keySet(), 5);
-				Set<Set<Id<TransitLine>>> tlSets = new UsageBasedCluster<TransitLine>().createUsageBasedSplit(scenario.getTransitSchedule().getTransitLines(), 
-						ObjectiveAndGradientCalculator.readSimpleMap("test/ averageWaitTime.csv"), 20);
-				
+				Set<Set<Id<TransitLine>>> tlSets = new RandomCluster<Id<TransitLine>>().createRandomSplit(scenario.getTransitSchedule().getTransitLines().keySet(), 20);
+//				Set<Set<Id<TransitLine>>> tlSets = new UsageBasedCluster<TransitLine>().createUsageBasedSplit(scenario.getTransitSchedule().getTransitLines(), 
+//						ObjectiveAndGradientCalculator.readSimpleMap("test/ averageWaitTime.csv"), 20);
+//				
 				ObjectAttributes obj = new ObjectAttributes();
 				new ObjectAttributesXmlReader(obj).readFile("new Data/core/personAttributesHKI.xml");
 				

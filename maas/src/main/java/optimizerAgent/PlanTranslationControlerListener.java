@@ -13,7 +13,10 @@ import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.Plan;
+import org.matsim.api.core.v01.population.Population;
+import org.matsim.api.core.v01.population.PopulationWriter;
 import org.matsim.core.api.experimental.events.EventsManager;
+import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.controler.OutputDirectoryHierarchy;
 import org.matsim.core.controler.events.AfterMobsimEvent;
 import org.matsim.core.controler.events.BeforeMobsimEvent;
@@ -52,6 +55,9 @@ public class PlanTranslationControlerListener implements IterationStartsListener
 	
 	public final String customerFileName = "customer.csv";
 	public final int maxPlansPerAgent = 5;
+	public final int writeExtPopInterval = 40;
+	
+	public Population Extpopulation=PopulationUtils.createPopulation(ConfigUtils.createConfig());
 	
 	@Inject
 	private MaaSDiscountAndChargeHandlerV2 maasHandler;
@@ -108,11 +114,12 @@ public class PlanTranslationControlerListener implements IterationStartsListener
 
 	@Override
 	public void notifyAfterMobsim(AfterMobsimEvent event) {
-		scenario.getPopulation().getPersons().entrySet().parallelStream().forEach(p->{
+		scenario.getPopulation().getPersons().entrySet().stream().forEach(p->{
 			if(!this.operators.containsKey(p.getKey())) {
 				List<Plan> plans;
 				if((plans = (List<Plan>)p.getValue().getAttributes().getAttribute(MaaSUtil.uniqueMaaSIncludedPlanAttributeName))==null) {
 					plans = new ArrayList<>();
+					this.Extpopulation.addPerson(this.Extpopulation.getFactory().createPerson(p.getKey()));
 					p.getValue().getAttributes().putAttribute(MaaSUtil.uniqueMaaSIncludedPlanAttributeName,plans);
 				}
 				boolean unique = true;
@@ -129,6 +136,10 @@ public class PlanTranslationControlerListener implements IterationStartsListener
 				if(fareSaved == null) fareSaved = 0.;
 				if(unique) {
 				plans.add(p.getValue().getSelectedPlan());
+				if(this.Extpopulation.getPersons().get(p.getKey())==null) {
+					this.Extpopulation.addPerson(this.Extpopulation.getFactory().createPerson(p.getKey()));
+				}
+				this.Extpopulation.getPersons().get(p.getKey()).addPlan(p.getValue().getSelectedPlan());
 				}
 				if(plans.size()>this.maxPlansPerAgent) {
 					MaaSUtil.sortPlan(plans);
@@ -210,6 +221,7 @@ public class PlanTranslationControlerListener implements IterationStartsListener
 			e.printStackTrace();
 		}
 		this.maasHandler.writeStat(this.controlerIO.getIterationFilename(event.getIteration(), "maasAnalysis.csv"));
+		if(event.getIteration()%this.writeExtPopInterval==0)new PopulationWriter(this.Extpopulation).write("test/extpopulation.xml");
 	}
 
 
