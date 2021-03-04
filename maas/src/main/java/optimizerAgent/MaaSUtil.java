@@ -22,6 +22,7 @@ import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.api.core.v01.population.Population;
 import org.matsim.api.core.v01.population.PopulationFactory;
 import org.matsim.api.core.v01.population.PopulationWriter;
+import org.matsim.pt.routes.ExperimentalTransitRoute;
 import org.matsim.pt.transitSchedule.api.TransitLine;
 import org.matsim.pt.transitSchedule.api.TransitSchedule;
 import org.matsim.pt.transitSchedule.api.TransitStopFacility;
@@ -275,6 +276,14 @@ public final class MaaSUtil {
 			return true;
 		}else if(leg1.getRoute().getRouteDescription()!=null && leg2.getRoute().getRouteDescription()!=null && leg1.getRoute().getRouteDescription().equals(leg2.getRoute().getRouteDescription())) {
 			return true;
+		}else if (leg1.getMode().equals(leg2.getMode()) && leg1.getMode().equals("pt")) {
+			ExperimentalTransitRoute r1 = (ExperimentalTransitRoute)leg1.getRoute();
+			ExperimentalTransitRoute r2 = (ExperimentalTransitRoute)leg2.getRoute();
+			boolean result =  r1.getAccessStopId().equals(r2.getAccessStopId()) && r1.getEgressStopId().equals(r2.getEgressStopId()) && r1.getLineId().equals(r2.getLineId());
+			if (result==false) {
+				System.out.println();
+			}
+			return result;
 		}
 		return false;
 	}

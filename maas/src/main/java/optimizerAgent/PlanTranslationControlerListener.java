@@ -26,6 +26,7 @@ import org.matsim.core.controler.listener.AfterMobsimListener;
 import org.matsim.core.controler.listener.BeforeMobsimListener;
 import org.matsim.core.controler.listener.IterationStartsListener;
 import org.matsim.core.controler.listener.StartupListener;
+import org.matsim.core.population.PersonUtils;
 import org.matsim.core.population.PopulationUtils;
 
 import com.google.inject.Inject;
@@ -139,7 +140,9 @@ public class PlanTranslationControlerListener implements IterationStartsListener
 				if(this.Extpopulation.getPersons().get(p.getKey())==null) {
 					this.Extpopulation.addPerson(this.Extpopulation.getFactory().createPerson(p.getKey()));
 				}
-				this.Extpopulation.getPersons().get(p.getKey()).addPlan(p.getValue().getSelectedPlan());
+				Plan newPlan = PopulationUtils.createPlan(this.Extpopulation.getPersons().get(p.getKey()));
+				PopulationUtils.copyFromTo(p.getValue().getSelectedPlan(), newPlan);
+				this.Extpopulation.getPersons().get(p.getKey()).addPlan(newPlan);
 				}
 				if(plans.size()>this.maxPlansPerAgent) {
 					MaaSUtil.sortPlan(plans);

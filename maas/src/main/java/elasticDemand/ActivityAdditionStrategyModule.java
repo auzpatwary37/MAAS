@@ -79,8 +79,13 @@ public class ActivityAdditionStrategyModule implements PlanStrategyModule{
 		String actType = actInPlan.get(random.nextInt(actInPlan.size())).getType();
 		boolean removeLeg = false;
 		boolean finishActAddition = false;
+		double timeShift = 0;
 		for(int i = 0; i<oldPlanElements.size();i++) {
 			if(!(plan.getPlanElements().get(i) instanceof Leg) ||!removeLeg == true) {
+				if(plan.getPlanElements().get(i) instanceof Activity) {
+					if(((Activity)plan.getPlanElements().get(i)).getStartTime().isDefined())((Activity)plan.getPlanElements().get(i)).setStartTime(((Activity)plan.getPlanElements().get(i)).getStartTime().seconds()+timeShift);
+					if(((Activity)plan.getPlanElements().get(i)).getEndTime().isDefined())((Activity)plan.getPlanElements().get(i)).setEndTime(((Activity)plan.getPlanElements().get(i)).getEndTime().seconds()+timeShift);
+				}
 				newPlanElements.add(plan.getPlanElements().get(i));
 			}else {
 				removeLeg = false;
@@ -117,12 +122,13 @@ public class ActivityAdditionStrategyModule implements PlanStrategyModule{
 						100.0, Sets.newHashSet(TransportMode.car), 70/3.6, new HashSet<>()).get(0));
 				double startTime = 0;
 				if(act.getEndTime().isDefined()) {
-					startTime = act.getEndTime().seconds();
+					startTime = act.getEndTime().seconds()+1.5*(NetworkUtils.getEuclideanDistance(act.getCoord(), actNew.getCoord()))/(45*1000/3600);
 				}else {
-					startTime = ((Leg)oldPlanElements.get(i+1)).getDepartureTime().seconds();
+					startTime = ((Leg)oldPlanElements.get(i+1)).getDepartureTime().seconds()+1.5*(NetworkUtils.getEuclideanDistance(act.getCoord(), actNew.getCoord()))/(45*1000/3600);
 				}
 				actNew.setStartTime(startTime);
-				actNew.setEndTime(act.getEndTime().seconds());
+				actNew.setEndTime(startTime+this.activityDurationMap.get(actNew.getType()));
+				timeShift = 1.5*(NetworkUtils.getEuclideanDistance(act.getCoord(), actNew.getCoord()))/(45*1000/3600)+this.activityDurationMap.get(actNew.getType());
 				String legMode = leg.getMode();
 				if(legMode.equals("transit_walk"))legMode = "pt";
 				Leg leg1 = PopulationUtils.createLeg(legMode);

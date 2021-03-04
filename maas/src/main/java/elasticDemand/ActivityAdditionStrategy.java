@@ -77,17 +77,20 @@ public class ActivityAdditionStrategy implements PlanStrategy{
 							net.add(act.getCoord());
 							this.pointToLinkIdMap.put(act.getCoord(), act.getLinkId());
 						}
-						if(act.getType().contains("work")||act.getType().contains("Home")||act.getType().contains("school")||act.getType().equals(MaaSUtil.dummyActivityTypeForMaasOperator)) {
+						if(act.getType().contains("work")||act.getType().contains("Home")||act.getType().contains("school")||act.getType().equals(MaaSUtil.dummyActivityTypeForMaasOperator)||act.getType().equals("pt interaction")) {
 							this.unmodifiableActivities.add(act.getType());
 						}
-						OptionalTime typicalD = config.planCalcScore().getOrCreateScoringParameters(PopulationUtils.getSubpopulation(p.getValue())).getActivityParams(act.getType()).getTypicalDuration();
-						double t = 0;
-						if(typicalD==null) {
-							t = 60;
-						}else {
-							t = typicalD.seconds();
+						
+						if(!this.activityDurationMap.containsKey(act.getType())) {
+							OptionalTime typicalD = config.planCalcScore().getOrCreateScoringParameters(PopulationUtils.getSubpopulation(p.getValue())).getActivityParams(act.getType()).getTypicalDuration();
+							double t = 0;
+							if(typicalD.isUndefined()) {
+								t = 60;
+							}else {
+								t = typicalD.seconds();
+							}
+							this.activityDurationMap.put(act.getType(),t);
 						}
-						if(!this.activityDurationMap.containsKey(act.getType()))this.activityDurationMap.put(act.getType(),t);
 					}
 				};
 			};
@@ -106,7 +109,9 @@ public class ActivityAdditionStrategy implements PlanStrategy{
 //      builder.addStrategyModule(new TripsToLegsModule(tripRouterProvider, globalConfigGroup));
         
 		builder.addStrategyModule(new TimeAllocationMutatorModule(tripRouterProvider, plansConfigGroup, timeAllocationMutatorConfigGroup, globalConfigGroup ));
-        builder.addStrategyModule(new ChangeLegMode(globalConfigGroup, changeLegModeConfigGroup));
+		builder.addStrategyModule(new TimeAllocationMutatorModule(tripRouterProvider, plansConfigGroup, timeAllocationMutatorConfigGroup, globalConfigGroup ));
+		builder.addStrategyModule(new TimeAllocationMutatorModule(tripRouterProvider, plansConfigGroup, timeAllocationMutatorConfigGroup, globalConfigGroup ));
+       // builder.addStrategyModule(new ChangeLegMode(globalConfigGroup, changeLegModeConfigGroup));
 		builder.addStrategyModule(new ReRoute(activityFacilities, tripRouterProvider, globalConfigGroup));
         // these modules may, at the same time, be events listeners (so that they can collect information):
         //eventsManager.addHandler(mod);
