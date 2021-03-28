@@ -93,7 +93,7 @@ class MaaSDiscountAndChargeHandlerTest {
 				new ConfigWriter(config).write("RunUtilsConfig.xml");
 				//OutputDirectoryLogging.catchLogEntries();
 				config.addModule(new MaaSConfigGroup());
-				config.controler().setFirstIteration(250);
+				config.controler().setFirstIteration(0);
 				config.controler().setLastIteration(250);
 //				MaaSPackages pac = new MaaSPackagesReader().readPackagesFile("test/packages_all.xml");
 //				pac.getMassPackages().values().forEach(p->p.setReimbursementRatio(0.9));
@@ -138,8 +138,8 @@ class MaaSDiscountAndChargeHandlerTest {
 				
 				config.plans().setInsistingOnUsingDeprecatedPersonAttributeFile(true);
 				config.plans().setInputPersonAttributeFile("new Data/core/personAttributesHKI.xml");
-				config.plans().setInputFile("toyScenarioLarge/output_optim_operatorPlatformGovt/output_plans.xml.gz");
-				config.controler().setOutputDirectory("toyScenarioLarge/output_optim_operatorPlatform2"+operatorID);
+				//config.plans().setInputFile("toyScenarioLarge/output_optim_operatorPlatformGovt/ITERS/it.200/200.plans.xml.gz");
+				config.controler().setOutputDirectory("toyScenarioLarge/output_optim_operatorPlatform_March21"+operatorID);
 				config.controler().setWritePlansInterval(50);
 				config.planCalcScore().setWriteExperiencedPlans(true);
 //				

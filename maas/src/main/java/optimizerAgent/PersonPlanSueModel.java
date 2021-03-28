@@ -163,7 +163,7 @@ public class PersonPlanSueModel{
 	
 	private double alphaMSA=1.9;//parameter for decreasing MSA step size
 	private double gammaMSA=.1;//parameter for decreasing MSA step size
-	
+	private boolean performWithOriginalPlan = true;
 	//other Parameters for the Calibration Process
 	private double tollerance= 1;
 	private double tolleranceLink=.1;
@@ -236,6 +236,7 @@ public class PersonPlanSueModel{
 	
 	private Map<String,Map<String,Double>> planProbabilityGradient = new ConcurrentHashMap<>();
 	private Map<String,Map<String,Double>> pacakgeUserGradient = new ConcurrentHashMap<>();
+
 	
 	private MapToArray<String> gradArray;
 	
@@ -319,7 +320,12 @@ public class PersonPlanSueModel{
 		if(this.populationCompressor == null) {
 			for(Entry<Id<Person>, ? extends Person> p:population.getPersons().entrySet()) {
 				if(PopulationUtils.getSubpopulation(p.getValue()).equals(MaaSUtil.MaaSOperatorAgentSubPopulationName))continue;
-				List<Plan> plans = (List<Plan>) p.getValue().getAttributes().getAttribute(MaaSUtil.uniqueMaaSIncludedPlanAttributeName);
+				List<Plan> plans = null;
+				if(!this.performWithOriginalPlan) {
+					plans = (List<Plan>) p.getValue().getAttributes().getAttribute(MaaSUtil.uniqueMaaSIncludedPlanAttributeName);
+				}else {
+					plans = (List<Plan>) p.getValue().getPlans();
+				}
 				List<Plan> feasiblePlans = new ArrayList<>();
 				Plan bestPlan = null;
 				for(Plan pl:plans) {
@@ -540,11 +546,11 @@ public class PersonPlanSueModel{
 			}
 						
 			trPlans.put(planKey, trPlan);
-//			Activity f = trPlan.getActivities().get(0);
-//			Activity l = trPlan.getActivities().get(trPlan.getActivities().size()-1);
-//			for(Activity ac:trPlan.getActivities()) {// for now this class is not implemented: done may 2 2020
-//				utility += this.calcActivityUtility(ac, this.scenario.getConfig(),subpopulation,f,l);
-//			}
+			Activity f = trPlan.getActivities().get(0);
+			Activity l = trPlan.getActivities().get(trPlan.getActivities().size()-1);
+			for(Activity ac:trPlan.getActivities()) {// for now this class is not implemented: done may 2 2020
+				utility += this.calcActivityUtility(ac, this.scenario.getConfig(),subpopulation,f,l);
+			}
 			
 			if(Double.isNaN(utility)||!Double.isFinite(utility))
 				logger.debug("utility is nan or infinite. Debug!!!");
@@ -1115,7 +1121,7 @@ private void fixIncidenceMaps(Population population) {
 		/**
 		 * This is the bare-bone activity utility from matsim book; refer to page 25, Ch:3 A Closer Look at Scoring 
 		 */
-		double utility = scParam.marginalUtilityOfPerforming_s*typicalDuration*Math.log((duration+1)/(minDuration*3600));
+		double utility = scParam.marginalUtilityOfPerforming_s*typicalDuration/3600*Math.log((duration+1)/(minDuration));
 		if(!Double.isFinite(utility)||Double.isNaN(utility))
 			logger.debug("Utility is nan or infinity. Debug!!!");
 		utility = 0;// Change this

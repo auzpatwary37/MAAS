@@ -19,6 +19,7 @@ import org.matsim.api.core.v01.population.HasPlansAndId;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.Plan;
 import org.matsim.api.core.v01.population.PlanElement;
+import org.matsim.api.core.v01.replanning.PlanStrategyModule;
 import org.matsim.core.api.experimental.events.EventsManager;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.groups.ChangeModeConfigGroup;
@@ -101,7 +102,7 @@ public class ActivityAdditionStrategy implements PlanStrategy{
 		
         // Otherwise, to do something with that plan, one needs to add modules into the strategy.  If there is at least
         // one module added here, then the plan is copied and then modified.
-		ActivityAdditionStrategyModule mod = new ActivityAdditionStrategyModule(this.activityLocationMap,this.activityDurationMap,this.unmodifiableActivities,scenario, this.pointToLinkIdMap);
+		PlanStrategyModule mod = new ActivityAdditionStrategyModuleV2(this.activityLocationMap,this.activityDurationMap,this.unmodifiableActivities,scenario);
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		PlanStrategyImpl.Builder builder = new PlanStrategyImpl.Builder(new RandomPlanSelector());
 		//PlanStrategyImpl.Builder builder = new PlanStrategyImpl.Builder(new ExpBetaPlanSelector(config.planCalcScore()));
@@ -110,7 +111,7 @@ public class ActivityAdditionStrategy implements PlanStrategy{
         
 		builder.addStrategyModule(new TimeAllocationMutatorModule(tripRouterProvider, plansConfigGroup, timeAllocationMutatorConfigGroup, globalConfigGroup ));
 		builder.addStrategyModule(new TimeAllocationMutatorModule(tripRouterProvider, plansConfigGroup, timeAllocationMutatorConfigGroup, globalConfigGroup ));
-		builder.addStrategyModule(new TimeAllocationMutatorModule(tripRouterProvider, plansConfigGroup, timeAllocationMutatorConfigGroup, globalConfigGroup ));
+
        // builder.addStrategyModule(new ChangeLegMode(globalConfigGroup, changeLegModeConfigGroup));
 		builder.addStrategyModule(new ReRoute(activityFacilities, tripRouterProvider, globalConfigGroup));
         // these modules may, at the same time, be events listeners (so that they can collect information):

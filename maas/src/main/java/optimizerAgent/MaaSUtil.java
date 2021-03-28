@@ -272,6 +272,7 @@ public final class MaaSUtil {
 	}
 	
 	private static boolean legEquals(Leg leg1,Leg leg2) {
+		//return true;
 		if (leg1.getRoute().getRouteDescription()==null && leg2.getRoute().getRouteDescription()==null ) {
 			return true;
 		}else if(leg1.getRoute().getRouteDescription()!=null && leg2.getRoute().getRouteDescription()!=null && leg1.getRoute().getRouteDescription().equals(leg2.getRoute().getRouteDescription())) {
@@ -280,9 +281,9 @@ public final class MaaSUtil {
 			ExperimentalTransitRoute r1 = (ExperimentalTransitRoute)leg1.getRoute();
 			ExperimentalTransitRoute r2 = (ExperimentalTransitRoute)leg2.getRoute();
 			boolean result =  r1.getAccessStopId().equals(r2.getAccessStopId()) && r1.getEgressStopId().equals(r2.getEgressStopId()) && r1.getLineId().equals(r2.getLineId());
-			if (result==false) {
-				System.out.println();
-			}
+//			if (result==false) {
+//				System.out.println();
+//			}
 			return result;
 		}
 		return false;
@@ -290,6 +291,18 @@ public final class MaaSUtil {
 	
 	public static boolean planEquals(Plan p1, Plan p2) {
 		boolean isequal = true;
+		int n1 = countActs(p1);
+		int n2 = countActs(p2);
+		if(n1>n2) {
+			if(p1.getScore()<p2.getScore()) {
+				return true;
+			}
+		}else if(n2>n1) {
+			if(p1.getScore()>p2.getScore()) {
+				return true;
+			}
+		}
+		
 		String maas1 = (String) p1.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName);
 		String maas2 = (String) p2.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName);
 		if((maas1==null && maas2!=null)||(maas1!=null && maas2==null)) {
@@ -434,6 +447,16 @@ public final class MaaSUtil {
 		allPack.addMaaSPacakge(pac);
 		allPack.updateOperatorToFareLinkMap();
 		return allPack;
+	}
+	
+	public static int countActs(Plan p) {
+		int n = 0;
+		for(PlanElement pe:p.getPlanElements()){
+			if(pe instanceof Activity) {
+				if(!((Activity)pe).getType().equals("pt interaction"))n++;
+			}
+		}
+		return n;
 	}
 	
 }

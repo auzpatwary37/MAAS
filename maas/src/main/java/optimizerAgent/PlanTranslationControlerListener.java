@@ -58,7 +58,7 @@ public class PlanTranslationControlerListener implements IterationStartsListener
 	public final int maxPlansPerAgent = 5;
 	public final int writeExtPopInterval = 40;
 	
-	public Population Extpopulation=PopulationUtils.createPopulation(ConfigUtils.createConfig());
+	public Population Extpopulation=null;
 	
 	@Inject
 	private MaaSDiscountAndChargeHandlerV2 maasHandler;
@@ -79,6 +79,13 @@ public class PlanTranslationControlerListener implements IterationStartsListener
 			
 		}
 		events.addHandler(maasHandler);
+		if(event.getServices().getConfig().controler().getFirstIteration()==0) {
+			this.Extpopulation = PopulationUtils.createPopulation(ConfigUtils.createConfig());
+		}else {
+			this.Extpopulation = PopulationUtils.createPopulation(ConfigUtils.createConfig());
+			//this.Extpopulation = PopulationUtils.readPopulation("test/extpopulation.xml");
+		}
+		
 	}
 	@Override
 	public void notifyIterationStarts(IterationStartsEvent event) {

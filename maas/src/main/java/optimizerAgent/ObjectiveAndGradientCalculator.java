@@ -1,6 +1,7 @@
 package optimizerAgent;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -11,17 +12,9 @@ import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.pt.transitSchedule.api.*;
 
-import optimizerAgent.MaaSUtil;
-import optimizerAgent.PersonPlanSueModel;
-import optimizerAgent.VariableDetails;
-
-
 import dynamicTransitRouter.fareCalculators.FareCalculator;
 import transitCalculatorsWithFare.FareLink;
-import ucar.nc2.ft2.coverage.remote.CdmrFeatureProto.CoordSysOrBuilder;
 import ust.hk.praisehk.metamodelcalibration.analyticalModel.SUEModelOutput;
-import ust.hk.praisehk.metamodelcalibration.analyticalModel.AnalyticalModel;
-import ust.hk.praisehk.metamodelcalibration.analyticalModel.AnalyticalModelNetwork;
 import ust.hk.praisehk.metamodelcalibration.analyticalModel.*;
 import ust.hk.praisehk.metamodelcalibration.analyticalModelImpl.CNLLink;
 import ust.hk.praisehk.metamodelcalibration.analyticalModelImpl.CNLTransitTransferLink;
@@ -34,7 +27,8 @@ import maasPackagesV2.MaaSPackages;
  *
  */
 public class ObjectiveAndGradientCalculator {
-
+	
+	
 	/**
 	 * 
 	 * @param flow
@@ -44,6 +38,8 @@ public class ObjectiveAndGradientCalculator {
 	 * @return
 	 */
 	public static Map<String,Double> calcRevenueObjective(SUEModelOutput flow, Set<String>operator, MaaSPackages packages, Map<String,FareCalculator> fareCalculators){
+		
+		
 		Map<String,Double> obj = operator.stream().collect(Collectors.toMap(k->k, k->0.));
 		for(String o: operator) {
 			//add the revenue from package price
@@ -59,6 +55,7 @@ public class ObjectiveAndGradientCalculator {
 					FareLink fl = new FareLink(fareLinkMap.getKey());
 					String fareLinkOperator = packages.getOperatorId(fl);
 					String mode = fl.getMode();
+					double flFlow = fareLinkMap.getValue();
 					double fare = 0;
 					if(fl.getType().equals(FareLink.NetworkWideFare)) {
 						fare = fareCalculators.get(mode).getFares(null, null, fl.getBoardingStopFacility(), fl.getAlightingStopFacility()).get(0);
@@ -68,8 +65,9 @@ public class ObjectiveAndGradientCalculator {
 					if(maasMap.getKey().equals(MaaSUtil.nullMaaSPacakgeKeyName)) {// no maas 
 						if(fareLinkOperator!=null && operator.contains(fareLinkOperator)) {
 							double f = fare;
-							obj.compute(fareLinkOperator, (k,v)->v = v+f);
+							obj.compute(fareLinkOperator, (k,v)->v = v+f*flFlow);
 						}
+
 					}else {
 						double discount = packages.getMassPackages().get(maasMap.getKey()).getDiscountForFareLink(fl); 
 						if(discount>0) {
@@ -78,25 +76,117 @@ public class ObjectiveAndGradientCalculator {
 							double rr = pac.getOperatorReimburesementRatio().get(fareLinkOperator);
 							if(fareLinkOperator!=null && operator.contains(fareLinkOperator)) {
 								double f = fare+(rr-1)*discount;
-								obj.compute(fareLinkOperator, (k,v)->v = v+f);
+								obj.compute(fareLinkOperator, (k,v)->v = v+f*flFlow);
 							}
+							
 							if(operator.contains(maasOperator)) {
 								double f = -1*rr*discount;
-								obj.compute(maasOperator, (k,v)->v = v+f);
+								obj.compute(maasOperator, (k,v)->v = v+f*flFlow);
 							}
 						}else {
 							if(fareLinkOperator!=null && operator.contains(fareLinkOperator)) {
 								double f = fare;
-								obj.compute(fareLinkOperator, (k,v)->v = v+f);
+								obj.compute(fareLinkOperator, (k,v)->v = v+f*flFlow);
 								
+							}
+
+						}
+					}
+				}
+			}
+		}
+
+		
+		return obj;
+	}
+	
+	
+	
+	
+	
+
+	/**
+	 * 
+	 * @param flow
+	 * @param operator
+	 * @param packages
+	 * @param fareCalculators
+	 * @return
+	 */
+	public static packUsageStat calcPackUsageStat(SUEModelOutput flow, MaaSPackages packages, Map<String,FareCalculator> fareCalculators){
+		Map<String,Double> packagesSold = new HashMap<>();//packages Sold 
+		Map<String,Double> selfPackageTrip = new HashMap<>();// package trips owned by the fareLink operators. 
+		Map<String,Double> packageTrip = new HashMap<>();//package trips owned by the package operator
+		Map<String,Double> totalTrip = new HashMap<>();
+		Map<String,Double> revenue = new HashMap<>();
+		Set<String>operators = new HashSet<>();
+		
+		
+		for(String o: packages.getMassPackagesPerOperator().keySet()) {
+			//add the revenue from package price
+			for(MaaSPackage pac:packages.getMassPackagesPerOperator().get(o)) {
+				if(flow.getMaaSPackageUsage().get(pac.getId())!=null) {
+					packagesSold.compute(o, (k,v)->v==null?flow.getMaaSPackageUsage().get(pac.getId()):v+flow.getMaaSPackageUsage().get(pac.getId()));
+					revenue.compute(o, (k,v)->v==null?flow.getMaaSPackageUsage().get(pac.getId())*pac.getPackageCost() :v+flow.getMaaSPackageUsage().get(pac.getId())*pac.getPackageCost());
+				}
+			}
+		}
+		for(Entry<String,Map<String,Map<String,Double>>> timeMap:flow.getMaaSSpecificFareLinkFlow().entrySet()) {
+			for(Entry<String, Map<String,Double>> maasMap:timeMap.getValue().entrySet()) {
+				for(Entry<String,Double> fareLinkMap:maasMap.getValue().entrySet()) {
+					FareLink fl = new FareLink(fareLinkMap.getKey());
+					String fareLinkOperator = packages.getOperatorId(fl);
+					String mode = fl.getMode();
+					double flFlow = fareLinkMap.getValue();
+					double fare = 0;
+					if(fl.getType().equals(FareLink.NetworkWideFare)) {
+						fare = fareCalculators.get(mode).getFares(null, null, fl.getBoardingStopFacility(), fl.getAlightingStopFacility()).get(0);
+					}else {
+						fare = fareCalculators.get(mode).getFares(fl.getTransitRoute(), fl.getTransitLine(), fl.getBoardingStopFacility(), fl.getAlightingStopFacility()).get(0);
+					}
+					if(maasMap.getKey().equals(MaaSUtil.nullMaaSPacakgeKeyName)) {// no maas 
+						if(fareLinkOperator!=null) {
+							totalTrip.compute(fareLinkOperator, (k,v)->v==null?flFlow:v+flFlow);
+							double f = fare;
+							revenue.compute(fareLinkOperator, (k,v)->v==null?f*flFlow:v+f*flFlow);
+						}
+					}else {
+						double discount = packages.getMassPackages().get(maasMap.getKey()).getDiscountForFareLink(fl); 
+						if(discount>0) {
+							MaaSPackage pac = packages.getMassPackages().get(maasMap.getKey());
+							String maasOperator = pac.getOperatorId();
+							double rr = pac.getOperatorReimburesementRatio().get(fareLinkOperator);
+							if(fareLinkOperator!=null) {
+								selfPackageTrip.compute(fareLinkOperator, (k,v)->v==null?flFlow:v+flFlow);
+								packageTrip.compute(maasOperator, (k,v)->v==null?flFlow:v+flFlow);
+								totalTrip.compute(fareLinkOperator, (k,v)->v==null?flFlow:v+flFlow);
+								operators.add(fareLinkOperator);
+								operators.add(maasOperator);
+								double f = fare;
+								
+								revenue.compute(fareLinkOperator, (k,v)->v==null?f+(rr-1)*discount*flFlow:v+f+(rr-1)*discount*flFlow);
+								revenue.compute(maasOperator, (k,v)->v==null?-1*rr*discount*flFlow:v-1*rr*discount*flFlow);
+							}
+							
+						}else {
+							if(fareLinkOperator!=null) {
+								double f = fare;
+								totalTrip.compute(fareLinkOperator, (k,v)->v==null?flFlow:v+flFlow);
+								revenue.compute(fareLinkOperator, (k,v)->v==null?f*flFlow:v+f*flFlow);
 							}
 						}
 					}
 				}
 			}
 		}
+		for(String s:operators) {
+			packagesSold.compute(s,(k,v)->v==null?0:v);
+			selfPackageTrip.compute(s,(k,v)->v==null?0:v);
+			packageTrip.compute(s,(k,v)->v==null?0:v);
+			totalTrip.compute(s,(k,v)->v==null?0:v);
+		}
 		
-		return obj;
+		return new packUsageStat(totalTrip, selfPackageTrip,revenue,packagesSold,packageTrip);
 	}
 	
 	/**
@@ -341,3 +431,6 @@ public class ObjectiveAndGradientCalculator {
 		return map;
 	}
 }
+
+
+

@@ -59,8 +59,12 @@ public class IntelligentOperatorDecisionEngineV2 {
 	 * @param key
 	 * @param variable details
 	 */
-	public void addNewVariable(String key, VariableDetails vd) {
+	public void addNewVariable(String operatorId, String key, VariableDetails vd) {
 		this.variables.put(key, vd);
+		if(!this.operator.containsKey(operatorId)) {
+			this.operator.put(operatorId, new HashMap<>());
+		}
+		this.operator.get(operatorId).put(key, vd);
 	}
 	
 	
@@ -318,6 +322,13 @@ public class IntelligentOperatorDecisionEngineV2 {
 	
 	public BiMap<String,String> getSimpleVariableKey(){
 		return this.model.getSimpleVarKeys();
+	}
+	/**
+	 * 
+	 * @return
+	 */
+	public packUsageStat getPackageUsageStat() {
+		return ObjectiveAndGradientCalculator.calcPackUsageStat(this.flow, this.packages, this.fareCalculators);
 	}
 
 }

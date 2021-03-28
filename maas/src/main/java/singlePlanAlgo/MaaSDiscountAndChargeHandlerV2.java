@@ -96,7 +96,6 @@ public class MaaSDiscountAndChargeHandlerV2 implements PersonMoneyEventHandler, 
 			FareLink fl = new FareLink(event.getAttributes().get(PersonMoneyEvent.ATTRIBUTE_TRANSACTION_PARTNER));
 			Person person = this.scenario.getPopulation().getPersons().get(personId);
 			Plan plan = person.getSelectedPlan();
-			
 			double fare = Double.parseDouble(event.getAttributes().get(PersonMoneyEvent.ATTRIBUTE_AMOUNT));
 			double time = event.getTime(); // Obtain the time
 			String chosenMaaSid = (String) plan.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName);

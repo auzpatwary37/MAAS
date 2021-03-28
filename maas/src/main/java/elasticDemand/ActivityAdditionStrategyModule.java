@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
 
@@ -64,6 +65,9 @@ public class ActivityAdditionStrategyModule implements PlanStrategyModule{
 	public void finishReplanning() {
 		// TODO Auto-generated method stub
 		this.plans.parallelStream().forEach(plan->{
+		Double maxAllowedTimeShift = 24-((Activity)plan.getPlanElements().get(plan.getPlanElements().size()-1)).getStartTime().seconds();
+		if(Double.isNaN(maxAllowedTimeShift)||maxAllowedTimeShift<0)return;
+		
 		Random random = new Random();
 		List<Activity> actInPlan = new ArrayList<>();  
 		List<PlanElement> oldPlanElements = plan.getPlanElements();
@@ -76,9 +80,10 @@ public class ActivityAdditionStrategyModule implements PlanStrategyModule{
 			}
 			kk++;
 		};
-		String actType = actInPlan.get(random.nextInt(actInPlan.size())).getType();
+		String actType = actInPlan.get(random.nextInt(actInPlan.size())).getType();// Which plan to put a new activity after this assumes there is no two activity in the same name in the same day.
 		boolean removeLeg = false;
 		boolean finishActAddition = false;
+		
 		double timeShift = 0;
 		for(int i = 0; i<oldPlanElements.size();i++) {
 			if(!(plan.getPlanElements().get(i) instanceof Leg) ||!removeLeg == true) {
@@ -92,6 +97,7 @@ public class ActivityAdditionStrategyModule implements PlanStrategyModule{
 			}
 			if(i%2==0 && i<oldPlanElements.size()-2 && finishActAddition == false && ((Activity)oldPlanElements.get(i)).getType().equals(actType)) {
 				finishActAddition = true;
+				
 				Activity act = (Activity)oldPlanElements.get(i);
 				Activity actNext = (Activity)oldPlanElements.get(i+2);
 				Leg leg = (Leg)oldPlanElements.get(i+1);
@@ -99,6 +105,13 @@ public class ActivityAdditionStrategyModule implements PlanStrategyModule{
 				acts.remove(act.getType());
 				acts.remove(actNext.getType());
 				acts.removeAll(this.unmodifiableActivities);
+				Set<String> tooLongActivities = new HashSet<>();
+				for(Entry<String, Double> fd:this.activityDurationMap.entrySet()) {
+					if(maxAllowedTimeShift<fd.getValue()/2) {
+						tooLongActivities.add(fd.getKey());
+					}
+				}
+				acts.removeAll(tooLongActivities);
 				String actToInsert = acts.get(random.nextInt(acts.size()));
 				final Coord c = act.getCoord();
 				final Coord nearest = Collections.min(this.activityLocationMap.get(actToInsert), new Comparator<Coord>() {
@@ -127,7 +140,7 @@ public class ActivityAdditionStrategyModule implements PlanStrategyModule{
 					startTime = ((Leg)oldPlanElements.get(i+1)).getDepartureTime().seconds()+1.5*(NetworkUtils.getEuclideanDistance(act.getCoord(), actNew.getCoord()))/(45*1000/3600);
 				}
 				actNew.setStartTime(startTime);
-				actNew.setEndTime(startTime+this.activityDurationMap.get(actNew.getType()));
+				actNew.setEndTime(startTime+this.activityDurationMap.get(actNew.getType())/2.);
 				timeShift = 1.5*(NetworkUtils.getEuclideanDistance(act.getCoord(), actNew.getCoord()))/(45*1000/3600)+this.activityDurationMap.get(actNew.getType());
 				String legMode = leg.getMode();
 				if(legMode.equals("transit_walk"))legMode = "pt";
