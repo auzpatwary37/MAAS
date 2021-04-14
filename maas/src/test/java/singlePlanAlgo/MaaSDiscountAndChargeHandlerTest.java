@@ -58,7 +58,9 @@ import maasPackagesV2.MaaSPackagesReader;
 import maasPackagesV2.MaaSPackagesWriter;
 import dynamicTransitRouter.DynamicRoutingModule;
 import dynamicTransitRouter.fareCalculators.ZonalFareXMLParserV2;
+import elasticDemand.ActivityAdditionConfigGroup;
 import elasticDemand.ActivityAdditionStrategy;
+import elasticDemand.ActivityAdditionStrategyV2;
 import matsimIntegrate.DynamicRoutingModuleWithMaas;
 import optimizerAgent.MaaSOperator;
 import optimizerAgent.MaaSOperatorOptimizationModule;
@@ -139,10 +141,13 @@ class MaaSDiscountAndChargeHandlerTest {
 				config.plans().setInsistingOnUsingDeprecatedPersonAttributeFile(true);
 				config.plans().setInputPersonAttributeFile("new Data/core/personAttributesHKI.xml");
 				//config.plans().setInputFile("toyScenarioLarge/output_optim_operatorPlatformGovt/ITERS/it.200/200.plans.xml.gz");
-				config.controler().setOutputDirectory("toyScenarioLarge/output_optim_operatorPlatform_March21"+operatorID);
+				config.controler().setOutputDirectory("toyScenarioLarge/output_optim_operatorPlatform_Apr12"+operatorID);
 				config.controler().setWritePlansInterval(50);
 				config.planCalcScore().setWriteExperiencedPlans(true);
-//				
+				ActivityAdditionConfigGroup configAct = new ActivityAdditionConfigGroup();
+				configAct.setActToInsertInputFile("test/ActsToInsert.csv");
+				configAct.setLocationAggregationNetworkFile("test/odNetwork.xml");
+				config.addModule(configAct);
 				RunUtils.createStrategies(config, PersonChangeWithCar_NAME, 0.015, 0.015, 0.01, 0);
 				RunUtils.createStrategies(config, PersonChangeWithoutCar_NAME, 0.015, 0.015, 0.01, 0);
 				RunUtils.addStrategy(config, DefaultPlanStrategiesModule.DefaultStrategy.ChangeTripMode.toString(), PersonChangeWithCar_NAME, 
@@ -173,8 +178,8 @@ class MaaSDiscountAndChargeHandlerTest {
 				config.strategy().addStrategySettings(createStrategySettings(UnnecessaryMaaSPlanRemovalStrategy.class.getName(),.05,225,"person_TCSwithoutCar"));
 				config.strategy().addStrategySettings(createStrategySettings(UnnecessaryMaaSPlanRemovalStrategy.class.getName(),.05,225,"trip_TCS"));
 				
-				config.strategy().addStrategySettings(createStrategySettings(ActivityAdditionStrategy.class.getName(),.05,180,"person_TCSwithCar"));
-				config.strategy().addStrategySettings(createStrategySettings(ActivityAdditionStrategy.class.getName(),.05,180,"person_TCSwithoutCar"));
+				config.strategy().addStrategySettings(createStrategySettings(ActivityAdditionStrategyV2.class.getName(),.05,180,"person_TCSwithCar"));
+				config.strategy().addStrategySettings(createStrategySettings(ActivityAdditionStrategyV2.class.getName(),.05,180,"person_TCSwithoutCar"));
 				
 				//___________________
 				

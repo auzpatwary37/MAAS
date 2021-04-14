@@ -22,6 +22,7 @@ import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.population.Activity;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.PlanElement;
+import org.matsim.api.core.v01.population.Population;
 import org.matsim.contrib.signals.data.SignalsData;
 import org.matsim.contrib.signals.data.SignalsDataLoader;
 import org.matsim.core.config.Config;
@@ -56,9 +57,11 @@ import maasPackagesV2.MaaSPackages;
 import maasPackagesV2.MaaSPackagesReader;
 import optimizer.Adam;
 import optimizer.Optimizer;
+import optimizer.ScaledAdam;
 import optimizerAgent.IntelligentOperatorDecisionEngineV2;
 import optimizerAgent.MaaSOperator;
 import optimizerAgent.MaaSUtil;
+import optimizerAgent.ObjectiveAndGradientCalculator;
 import optimizerAgent.PersonPlanSueModel;
 import optimizerAgent.VariableDetails;
 import optimizerAgent.packUsageStat;
@@ -68,6 +71,7 @@ import singlePlanAlgo.MaaSConfigGroup;
 import singlePlanAlgo.MaaSDataLoaderV2;
 import singlePlanAlgo.MaaSPlanStrategy;
 import singlePlanAlgo.UnnecessaryMaaSPlanRemovalStrategy;
+import ust.hk.praisehk.metamodelcalibration.analyticalModel.SUEModelOutput;
 import ust.hk.praisehk.metamodelcalibration.calibrator.ObjectiveCalculator;
 import ust.hk.praisehk.metamodelcalibration.matsimIntegration.SignalFlowReductionGenerator;
 import ust.hk.praisehk.metamodelcalibration.measurements.Measurements;
@@ -82,13 +86,15 @@ public class MetaModelRunWithElasticDemand {
 		String GVChange_NAME = "person_GV";
 		String GVFixed_NAME = "trip_GV";
 		String operatorID = "Govt";
+		boolean optimizeForBreakEven = true;
+		Double initialTotalSystemTravelTimeInMoney = null;
 		
 		MaaSPackages pac = new MaaSPackagesReader().readPackagesFile("test/packages_July2020_20.xml");
 		MaaSPackages pacAll = MaaSUtil.createUnifiedMaaSPackages(pac, "Govt", "allPack");
 		pac = null;
 		pacAll.setAllOPeratorReimbursementRatio(0.9);
 		Config config = singlePlanAlgo.RunUtils.provideConfig();
-		config.plans().setInputFile("test/refinedPop.xml");
+		config.plans().setInputFile("test/refinedPop_13Apr.xml");
 		new ConfigWriter(config).write("RunUtilsConfig.xml");
 		//OutputDirectoryLogging.catchLogEntries();
 		config.addModule(new MaaSConfigGroup());
@@ -175,6 +181,9 @@ public class MetaModelRunWithElasticDemand {
 	ObjectAttributes objATT = new ObjectAttributes();
 	new ObjectAttributesXmlReader(objATT).readFile("new Data/core/personAttributesHKI.xml");
 	
+	
+	
+	
 	for(Person person: scenario.getPopulation().getPersons().values()) {
 		String subPop = (String) objATT.getAttribute(person.getId().toString(), "SUBPOP_ATTRIB_NAME");
 		PopulationUtils.putSubpopulation(person, subPop);
@@ -203,6 +212,7 @@ public class MetaModelRunWithElasticDemand {
 		
 		
 	}
+	
 	Map<String,Map<String,Double>> variables  = new HashMap<>();
 	Map<String,Map<String,Tuple<Double,Double>>> variableLimits  = new HashMap<>();
 	variables.put("Govt", new HashMap<>());
@@ -210,9 +220,13 @@ public class MetaModelRunWithElasticDemand {
 	Map<String,Map<String,VariableDetails>> operatorVariables = new HashMap<>(); 
 	operatorVariables.put("Govt", new HashMap<>());
 	Map<String,Optimizer> operatorOptimizers = new HashMap<>();
-	
+	String costKey = MaaSUtil.generateMaaSPackageCostKey("allPack");
+	variables.get("Govt").put(costKey,20.);
+	variableLimits.get("Govt").put(costKey,new Tuple<Double,Double>(0.01,50.));
 	int i=0;
 	Map<String,VariableDetails> Param = new HashMap<>();
+	Param.put(costKey, new VariableDetails(costKey, variableLimits.get("Govt").get(costKey), variables.get("Govt").get(costKey)));
+	operatorVariables.get("Govt").put(costKey, Param.get(costKey));
 	for(Set<Id<TransitLine>>sss:tlSets){
 		String key  = MaaSUtil.generateMaaSTransitLinesDiscountKey("allPack", sss,"tl"+i);
 		variables.get("Govt").put(key,0.8);
@@ -260,12 +274,12 @@ public class MetaModelRunWithElasticDemand {
 		hour = hour + 1;
 	}
 	operatorVariables.entrySet().forEach(op->{
-		operatorOptimizers.put(op.getKey(), new Adam(op.getKey(),op.getValue()));
+		operatorOptimizers.put(op.getKey(), new ScaledAdam(op.getKey(),op.getValue()));
 	});
 	
-	String type =  MaaSDataLoaderV2.typeGovtTT;
-	String fileLoc = "test/"+operatorID+type+"_OptimIter.csv";
-	String usageFileLoc = "test/"+operatorID+type+"_UsageDetails.csv";
+	String type =  MaaSDataLoaderV2.typeGovt;
+	String fileLoc = "test/"+operatorID+type+"_WithCostOptimIterBreakEven.csv";
+	String usageFileLoc = "test/"+operatorID+type+"_WithCostUsageDetailsBreakEven.csv";
 	
 	FileWriter fw = new FileWriter(new File(fileLoc));
 	fw.append("optimIter");
@@ -299,13 +313,33 @@ public class MetaModelRunWithElasticDemand {
 		for(Entry<String, VariableDetails> v:d.getValue().entrySet())
 		modelHandler.addNewVariable(d.getKey(),v.getKey(), v.getValue());
 	}
+	
+	if(optimizeForBreakEven == true && initialTotalSystemTravelTimeInMoney == null) {
+		PersonPlanSueModel model = new PersonPlanSueModel(timeBeans, config);
+		Population withOutMaaSPop = PopulationUtils.readPopulation("toyScenarioLarge/output_withoutMaaS/output_plans.xml.gz");
+		model.populateModel(scenario, fareCalculators, pacAll);
+		SUEModelOutput flow = model.performAssignment(withOutMaaSPop, new LinkedHashMap<>());
+		double vot_car = scenario.getConfig().planCalcScore().getOrCreateScoringParameters(PersonChangeWithCar_NAME).getOrCreateModeParams("car").getMarginalUtilityOfTraveling()/3600;
+		double vot_transit = scenario.getConfig().planCalcScore().getOrCreateScoringParameters(PersonChangeWithoutCar_NAME).getOrCreateModeParams("pt").getMarginalUtilityOfTraveling()/3600;
+		double vot_wait = scenario.getConfig().planCalcScore().getOrCreateScoringParameters(PersonChangeWithoutCar_NAME).getMarginalUtlOfWaitingPt_utils_hr()/3600;
+		double vom = scenario.getConfig().planCalcScore().getOrCreateScoringParameters(PersonChangeWithoutCar_NAME).getMarginalUtilityOfMoney();
+		initialTotalSystemTravelTimeInMoney = ObjectiveAndGradientCalculator.calcTotalSystemTravelTime(model, flow,vot_car,vot_transit, vot_wait, vom);
+		FileWriter fwTTBase = new FileWriter(new File("toyScenarioLarge/output_withoutMaaS/TTBase.txt"));
+		fwTTBase.append("totalSystemTTinMoney = "+initialTotalSystemTravelTimeInMoney);
+		fwTTBase.flush();
+		fwTTBase.close();
+	}
+	
+	
 	for(int counter = 0;counter<100;counter++) {
 		//System.out.println("GB: " + (double) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024*1024*1024));
 	
 		fw.append(counter+"");
 		long t = System.currentTimeMillis();
 		Map<String,Map<String,Double>>grad =  modelHandler.calcApproximateObjectiveGradient();
-		
+		if(optimizeForBreakEven) {
+			
+		}
 		
 //		if(counter == 1) {
 //		Map<String,Map<String,Double>>fdgrad =  this.decisionEngine.calcFDGradient();//This line is for testing only. 
@@ -314,6 +348,14 @@ public class MetaModelRunWithElasticDemand {
 //		logger.info("FD Grad = "+ fdgrad);
 //	}
 		Map<String,Double> obj = modelHandler.calcApproximateObjective();
+		
+		if(optimizeForBreakEven) {
+			final double tt = initialTotalSystemTravelTimeInMoney;
+			obj.entrySet().forEach(e->e.setValue(e.getValue()-tt));
+			grad.entrySet().forEach(e->{
+				e.getValue().entrySet().forEach(ee->ee.setValue(ee.getValue()*obj.get(e.getKey())));
+			});
+		}
 		//double ttObj = this.decisionEngine.calcApproximateGovtTTObjective(this.decisionEngine.getVariables)
 		if(counter%10==0||counter==99) {
 		packUsageStat stat = modelHandler.getPackageUsageStat();

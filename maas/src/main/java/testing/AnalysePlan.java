@@ -68,7 +68,7 @@ public class AnalysePlan {
 				}
 			}
 		}
-		new PopulationWriter(scenario.getPopulation()).write("test/refinedPop.xml");
+		new PopulationWriter(scenario.getPopulation()).write("test/refinedPop_13Apr.xml");
 	}
 
 }

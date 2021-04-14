@@ -14,6 +14,8 @@ import java.util.*;
 
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
+import org.matsim.api.core.v01.network.Network;
+import org.matsim.api.core.v01.network.Node;
 import org.matsim.api.core.v01.population.Activity;
 import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
@@ -28,9 +30,12 @@ import org.matsim.pt.transitSchedule.api.TransitSchedule;
 import org.matsim.pt.transitSchedule.api.TransitStopFacility;
 import org.matsim.pt.transitSchedule.api.TransitRouteStop;
 import org.matsim.pt.transitSchedule.api.TransitRoute;
+import org.matsim.core.gbl.Gbl;
 import org.matsim.core.network.NetworkUtils;
+import org.matsim.core.network.SearchableNetwork;
 import org.matsim.core.population.PopulationUtils;
 import org.matsim.core.router.TripStructureUtils;
+import org.matsim.core.utils.collections.QuadTree;
 import org.matsim.core.utils.collections.Tuple;
 import org.matsim.utils.objectattributes.attributable.AttributesUtils;
 
@@ -458,5 +463,51 @@ public final class MaaSUtil {
 		}
 		return n;
 	}
+	
+	
+	public static QuadTree<Node> getNodeQuadTree(Network net){
+			/* the method must be synchronized to ensure we only build one quadTree
+			 * in case that multiple threads call a method that requires the quadTree.
+			 */
+			
+		double startTime = System.currentTimeMillis();
+		double minx = Double.POSITIVE_INFINITY;
+		double miny = Double.POSITIVE_INFINITY;
+		double maxx = Double.NEGATIVE_INFINITY;
+		double maxy = Double.NEGATIVE_INFINITY;
+		for (Node n : net.getNodes().values()) {
+			if (n.getCoord().getX() < minx) { minx = n.getCoord().getX(); }
+			if (n.getCoord().getY() < miny) { miny = n.getCoord().getY(); }
+			if (n.getCoord().getX() > maxx) { maxx = n.getCoord().getX(); }
+			if (n.getCoord().getY() > maxy) { maxy = n.getCoord().getY(); }
+		}
+		minx -= 1.0;
+		miny -= 1.0;
+		maxx += 1.0;
+		maxy += 1.0;
+		// yy the above four lines are problematic if the coordinate values are much smaller than one. kai, oct'15
+
+		QuadTree<Node> quadTree = new QuadTree<>(minx, miny, maxx, maxy);
+		for (Node n : net.getNodes().values()) {
+			quadTree.put(n.getCoord().getX(), n.getCoord().getY(), n);
+		}
+		/* assign the quadTree at the very end, when it is complete.
+		 * otherwise, other threads may already start working on an incomplete quadtree
+		 */
+		
+		return quadTree;
+		
+	}
+	
+	
+	public static Collection<Node> getNearestNodesAroundTwoNodes(Network net, Coord coord1, Coord coord2,double distance) {
+		if ( net instanceof SearchableNetwork ) {
+			QuadTree<Node> nodeTree = ((SearchableNetwork)net).getNodeQuadTree();
+			return nodeTree.getElliptical(coord1.getX(), coord1.getY(), coord2.getX(), coord2.getY(), distance);
+		} else {
+			throw new RuntimeException( Gbl.WRONG_IMPLEMENTATION + " Network, SearchableNetwork" ) ;
+		}
+	}
+	
 	
 }
