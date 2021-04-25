@@ -19,6 +19,7 @@ public class ScaledAdam implements Optimizer{
 	private double beta2 = 0.999;
 	private double eta = 10e-8;
 	private double c = 100;
+	private double l2RegConst = 0;
 	private Map<String,VariableDetails> variables = new HashMap<>();
 	//private Map<String,Double> m = new HashMap<>();
 	private RealVector m;
@@ -54,6 +55,17 @@ public class ScaledAdam implements Optimizer{
 		this.initialize();
 	}
 	
+	public ScaledAdam(String id, Map<String,VariableDetails> variables,double alpha,double beta1,double beta2,double eta,double l2Reg) {
+		this.variables = variables;
+		this.alpha = alpha;
+		this.beta1 = beta1;
+		this.beta2 = beta2;
+		this.eta = eta;
+		this.id = id;
+		this.l2RegConst = l2Reg;
+		this.initialize();
+	}
+	
 	private void initialize() {
 //		this.variables.keySet().forEach(var->{
 //			m.put(var, 0.);
@@ -79,6 +91,8 @@ public class ScaledAdam implements Optimizer{
 		p=p.ebeDivide(p_max.subtract(p_min));
 		RealVector g = m2a.getRealVector(gradient);
 		g = g.ebeDivide(p_max.subtract(p_min));
+		
+		g.add(p.mapMultiply(l2RegConst));//regularization
 		if(g.getNorm()>c*g.getDimension()) {//Clipping
 			if(!Double.isInfinite(g.getNorm())) {
 				g = g.mapDivide(g.getNorm()).mapMultiply(c*g.getDimension());

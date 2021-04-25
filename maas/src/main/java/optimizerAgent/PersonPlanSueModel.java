@@ -265,6 +265,8 @@ public class PersonPlanSueModel{
 	}
 
 	public SUEModelOutput performAssignment(Population population, LinkedHashMap<String,Double> params) {
+		this.population = population;
+		this.extractFeasiblePlans(population);
 		MaaSUtil.updateMaaSVariables(this.maasPakages, params,ts, this.simpleVarKeys);
 		//this.extractFeasiblePlans(population);
 		if(this.ifNeedToCreateIncidenceMap) {
@@ -489,7 +491,6 @@ public class PersonPlanSueModel{
 	 * @param population
 	 */
 	public void populateModel(Scenario scenario, Map<String,FareCalculator> fareCalculator, MaaSPackages packages) {
-		this.population = scenario.getPopulation();
 		this.scenario = scenario;
 		SignalFlowReductionGenerator sg=new SignalFlowReductionGenerator(scenario);
 		Network network = scenario.getNetwork();
@@ -505,7 +506,6 @@ public class PersonPlanSueModel{
 		this.farecalculators = fareCalculator;
 		this.maasPakages = packages;
 		this.ts = scenario.getTransitSchedule();
-		this.extractFeasiblePlans(population);
 	}
 	
 
@@ -668,7 +668,19 @@ public class PersonPlanSueModel{
 	}
 	//TODO: check this function
 	private void createIncidenceMaps(Population population) {
-		
+//		int maasPlan = 0;	
+//		for(Person p:scenario.getPopulation().getPersons().values()) {
+//			for(Plan pl:p.getPlans()) {
+//				if(pl.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName)!=null)maasPlan++;
+//			}
+//		}
+//		
+//		int maasPlan2 = 0;	
+//		for(List<Plan> plans:this.feasibleplans.values()) {
+//			for(Plan pl:plans) {
+//				if(pl.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName)!=null)maasPlan2++;
+//			}
+//		}
 		for(Person p:this.compressedPersons.values()) {
 			int planNo = 0;
 			if(this.feasibleplans == null) {
@@ -692,7 +704,9 @@ public class PersonPlanSueModel{
 					trPlan.setPlanKey(planKey);
 					this.plans.put(planKey, trPlan);
 					planNo++;
-					if(maas!=null && plan.getAttributes().getAttribute(MaaSUtil.projectedNullMaaS)==null) {trPlan.setMaasPacakgeId(maas.getId());}
+					if(maas!=null && plan.getAttributes().getAttribute(MaaSUtil.projectedNullMaaS)==null) {
+						trPlan.setMaasPacakgeId(maas.getId());
+						}
 					else {trPlan.setMaasPacakgeId(MaaSUtil.nullMaaSPacakgeKeyName);}
 					if(!this.maasPackagePlanIncidence.containsKey(trPlan.getMaasPacakgeId())) {
 						this.maasPackagePlanIncidence.put(trPlan.getMaasPacakgeId(), new ArrayList<>());	
@@ -1173,7 +1187,7 @@ private void fixIncidenceMaps(Population population) {
 	public void initializeGradients(LinkedHashMap<String,Double> Oparams) {
 		Map<String,Double> zeroGrad = new HashMap<>();
 		Oparams.keySet().forEach(k->{
-			if(k.contains(MaaSUtil.MaaSOperatorFareLinkDiscountVariableSubscript)||k.contains(MaaSUtil.MaaSOperatorPacakgePriceVariableSubscript)||k.contains(MaaSUtil.MaaSOperatorFareLinkClusterDiscountVariableName)||k.contains(MaaSUtil.MaaSOperatorTransitLinesDiscountVariableName)){
+			if(k.contains(MaaSUtil.packageFLOperatorReimbursementRatioVaribleName)||k.contains(MaaSUtil.MaaSOperatorFareLinkDiscountVariableSubscript)||k.contains(MaaSUtil.MaaSOperatorPacakgePriceVariableSubscript)||k.contains(MaaSUtil.MaaSOperatorFareLinkClusterDiscountVariableName)||k.contains(MaaSUtil.MaaSOperatorTransitLinesDiscountVariableName)){
 				String key = k;
 				if(MaaSUtil.retrieveName(k)!="") {
 					key = MaaSUtil.retrieveName(k);

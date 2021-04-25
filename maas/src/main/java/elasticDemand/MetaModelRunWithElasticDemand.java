@@ -21,6 +21,7 @@ import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.population.Activity;
 import org.matsim.api.core.v01.population.Person;
+import org.matsim.api.core.v01.population.Plan;
 import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.api.core.v01.population.Population;
 import org.matsim.contrib.signals.data.SignalsData;
@@ -53,6 +54,7 @@ import dynamicTransitRouter.fareCalculators.LRFareCalculator;
 import dynamicTransitRouter.fareCalculators.MTRFareCalculator;
 import dynamicTransitRouter.fareCalculators.UniformFareCalculator;
 import dynamicTransitRouter.fareCalculators.ZonalFareXMLParserV2;
+import maasPackagesV2.MaaSPackage;
 import maasPackagesV2.MaaSPackages;
 import maasPackagesV2.MaaSPackagesReader;
 import optimizer.Adam;
@@ -87,7 +89,7 @@ public class MetaModelRunWithElasticDemand {
 		String GVFixed_NAME = "trip_GV";
 		String operatorID = "Govt";
 		boolean optimizeForBreakEven = true;
-		Double initialTotalSystemTravelTimeInMoney = null;
+		Double initialTotalSystemTravelTimeInMoney = -1100083.461623168;
 		
 		MaaSPackages pac = new MaaSPackagesReader().readPackagesFile("test/packages_July2020_20.xml");
 		MaaSPackages pacAll = MaaSUtil.createUnifiedMaaSPackages(pac, "Govt", "allPack");
@@ -330,16 +332,19 @@ public class MetaModelRunWithElasticDemand {
 		fwTTBase.close();
 	}
 	
-	
+	int maasPlan = 0;	
+	for(Person p:scenario.getPopulation().getPersons().values()) {
+		for(Plan pl:p.getPlans()) {
+			if(pl.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName)!=null)maasPlan++;
+		}
+	}
 	for(int counter = 0;counter<100;counter++) {
 		//System.out.println("GB: " + (double) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024*1024*1024));
 	
 		fw.append(counter+"");
 		long t = System.currentTimeMillis();
 		Map<String,Map<String,Double>>grad =  modelHandler.calcApproximateObjectiveGradient();
-		if(optimizeForBreakEven) {
-			
-		}
+	
 		
 //		if(counter == 1) {
 //		Map<String,Map<String,Double>>fdgrad =  this.decisionEngine.calcFDGradient();//This line is for testing only. 
@@ -353,7 +358,7 @@ public class MetaModelRunWithElasticDemand {
 			final double tt = initialTotalSystemTravelTimeInMoney;
 			obj.entrySet().forEach(e->e.setValue(e.getValue()-tt));
 			grad.entrySet().forEach(e->{
-				e.getValue().entrySet().forEach(ee->ee.setValue(ee.getValue()*obj.get(e.getKey())));
+				e.getValue().entrySet().forEach(ee->ee.setValue(-1*ee.getValue()*obj.get(e.getKey())));
 			});
 		}
 		//double ttObj = this.decisionEngine.calcApproximateGovtTTObjective(this.decisionEngine.getVariables)
@@ -450,5 +455,37 @@ public static StrategySettings createStrategySettings(String name,double weight,
 	stratSets.setDisableAfter(disableAfter);
 	stratSets.setSubpopulation(subPop);
 	return stratSets;
+}
+
+/**
+ * 
+ * @param pacs
+ * @param tlSets
+ * @param priceVarsLimit if null then price variables are ignored
+ * @param discountVaraibleLimits if null then discount variables are ignored
+ * @return
+ */
+public static Map<String,Map<String,VariableDetails>> createVariables(MaaSPackages pacs, Set<Set<Id<TransitLine>>>tlSets, Tuple<Double,Double>priceVarsLimit,Tuple<Double,Double>discountVaraibleLimits,double initDiscount){
+	Map<String,Map<String,VariableDetails>> variables = new HashMap<>();
+	pacs.getMassPackagesPerOperator().entrySet().forEach(o->{
+		variables.put(o.getKey(),new HashMap<>());
+		for(MaaSPackage pac:o.getValue()) {
+			if(priceVarsLimit!=null) {
+				VariableDetails price = new VariableDetails(MaaSUtil.generateMaaSPackageCostKey(pac.getId()),priceVarsLimit,pac.getPackageCost());
+				variables.get(o.getKey()).put(price.getVariableName(), price);
+			}
+			if(discountVaraibleLimits!=null) {
+				int i = 0;
+				for(Set<Id<TransitLine>>tlSet:tlSets) {
+					VariableDetails tl = new VariableDetails(MaaSUtil.generateMaaSTransitLinesDiscountKey(pac.getId(), tlSet, "tl"+i),discountVaraibleLimits,initDiscount);
+					variables.get(o.getKey()).put(tl.getVariableName(),tl);
+					i++;
+				}
+			}
+		}
+		
+		});
+	
+	return variables;
 }
 }

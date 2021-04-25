@@ -56,8 +56,8 @@ public final class MaaSUtil {
 	public static final String MaaSOperatorAgentSubPopulationName = MaaSOperator.type;
 	public static final String MaaSOperatorPacakgePriceVariableSubscript = "_price";//maas package id + MaaSUtil.MaaSOperatorPacakgePriceVariableSubscript
 	public static final String MaaSOperatorFareLinkDiscountVariableSubscript = "_discount";//fareLink.toString() + MaaSUtil.MaaSOperatorPacakgePriceVariableSubscript
-	public static final String MaaSOperatorTransitLinesDiscountVariableName = "__tlDiscount";//TransitLine.toString() + MaaSUtil.MaaSOperatorPacakgePriceVariableSubscript
-	public static final String MaaSOperatorFareLinkClusterDiscountVariableName = "__flClusterDiscount";
+	public static final String MaaSOperatorTransitLinesDiscountVariableName = "_tlDiscount";//TransitLine.toString() + MaaSUtil.MaaSOperatorPacakgePriceVariableSubscript
+	public static final String MaaSOperatorFareLinkClusterDiscountVariableName = "_flClusterDiscount";
 	public static final String operatorRevenueName = "revenue";
 	public static final String dummyActivityTypeForMaasOperator = "maasOperatorAct";
 	public static final String nullMaaSPacakgeKeyName = "noMass";
@@ -70,6 +70,7 @@ public final class MaaSUtil {
 	public static final String uniqueMaaSIncludedPlanAttributeName = "UniquePlans";
 	public static final String detourRatio = "dr";
 	public static final String platformReimbursementFactorName = "alpha";
+	public static final String packageFLOperatorReimbursementRatioVaribleName = "_rr";
 	public static final String govSubsidyName = "Subsidy";
 	public static final String fareLinkOperatorReimbursementTransactionName = "fareLinkOperatorTransaction";
 	public static final String maasOperatorToFareLinkOperatorReimbursementTransactionName = "maasLooseFlgain";
@@ -136,6 +137,8 @@ public final class MaaSUtil {
 			packageId = variableDetailsKey.split("\\^")[0];
 		}else if(variableDetailsKey.contains(MaaSUtil.MaaSOperatorFareLinkClusterDiscountVariableName)) {
 			packageId = variableDetailsKey.split("\\^")[0];
+		}else if(variableDetailsKey.contains(MaaSUtil.packageFLOperatorReimbursementRatioVaribleName)) {
+			packageId = variableDetailsKey.split("\\^")[0];
 		}
 		return packageId;
 	}
@@ -161,13 +164,24 @@ public final class MaaSUtil {
 		return variableDetailsKey.split("\\^")[1];
 	}
 	
+	public static String retrieveFareLinkOperator(String variableDetailsKey) {
+		if(!variableDetailsKey.contains(MaaSUtil.packageFLOperatorReimbursementRatioVaribleName)) throw new IllegalArgumentException("This is not a reimburesement ratio variable details!!!");
+		return variableDetailsKey.split("\\^")[1];
+	}
+	
 	public static String retrieveName(String variableDetailsKey) {
 		if(variableDetailsKey.split("\\^").length<3)return variableDetailsKey;
-		return variableDetailsKey.split("\\^")[2].split("_")[0];
+		String name =  variableDetailsKey.split("\\^")[2].split("_")[0];
+		if(name.equals(""))return variableDetailsKey;
+		else return name;
 	}
 	
 	public static String generateMaaSFareLinkDiscountKey(String packageId, FareLink fareLink) {
-		return packageId+"^"+fareLink.toString()+MaaSOperatorPacakgePriceVariableSubscript;
+		return packageId+"^"+fareLink.toString()+"^"+MaaSOperatorPacakgePriceVariableSubscript;
+	}
+	
+	public static String generateMaaSPackageFareOperatorReimbursementRatioKey(String packageId, String fareLinkOp) {
+		return packageId+"^"+fareLinkOp+"^"+packageFLOperatorReimbursementRatioVaribleName;
 	}
 	
 	public static String generateMaaSFareLinkClusterDiscountKey(String packageId, Set<FareLink> fareLinks,String name) {
@@ -208,6 +222,10 @@ public final class MaaSUtil {
 	
 	public static boolean ifMaaSFareLinkClusterVariableDetails(String key) {
 		return key.contains(MaaSUtil.MaaSOperatorFareLinkClusterDiscountVariableName);
+	}
+	
+	public static boolean ifMaaSPackageFareLinkReimbursementRatioVariableDetails(String key) {
+		return key.contains(MaaSUtil.packageFLOperatorReimbursementRatioVaribleName);
 	}
 	
 	public static void updateMaaSVariables(MaaSPackages packages, Map<String,Double> variables1, TransitSchedule ts, BiMap<String,String> varKeys) {
@@ -259,6 +277,11 @@ public final class MaaSUtil {
 					double fullFare = pac.getFullFare().get(fl.toString());
 					pac.setDiscountForFareLink(fl, fullFare*var.getValue());
 				}
+			}else if(MaaSUtil.ifMaaSPackageFareLinkReimbursementRatioVariableDetails(var.getKey())){
+				String pacakge = MaaSUtil.retrievePackageId(var.getKey());
+				String fareLinkOp = MaaSUtil.retrieveFareLinkOperator(var.getKey());
+				packages.getMassPackages().get(pacakge).getOperatorReimburesementRatio().put(fareLinkOp, var.getValue());
+				
 			}else{//variable is not related to maas
 				continue;
 			}

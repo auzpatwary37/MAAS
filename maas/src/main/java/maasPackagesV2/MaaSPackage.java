@@ -342,4 +342,7 @@ public class MaaSPackage {
 		this.operatorReimburesementRatio.keySet().forEach(k->this.operatorReimburesementRatio.compute(k, (kk,v)->ratio));
 	}
 	
+	public void updateFareLinkOperatorReimbursementRatio(String fareLinkOp,double rr) {
+		if(this.operatorReimburesementRatio.containsKey(fareLinkOp))this.operatorReimburesementRatio.put(fareLinkOp, rr);
+	}
 }

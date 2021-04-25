@@ -50,7 +50,7 @@ public class IntelligentOperatorDecisionEngineV2 {
 	private PersonPlanSueModel model;
 	private Map<String,Map<String,VariableDetails>>operator = new HashMap<>();
 	private Map<String,VariableDetails> variables = new HashMap<>();
-	
+	private boolean ifCalculateFull = false;
 	private SUEModelOutput flow;
 	
 	private String type = null;
@@ -80,6 +80,16 @@ public class IntelligentOperatorDecisionEngineV2 {
 
 	
 	
+	public boolean isIfCalculateFull() {
+		return ifCalculateFull;
+	}
+
+
+	public void setIfCalculateFull(boolean ifCalculateFull) {
+		this.ifCalculateFull = ifCalculateFull;
+	}
+
+
 	public void setupAndRunMetaModel(LinkedHashMap<String,Double> variables) {
 		model = new PersonPlanSueModel(TimeBeans.timeBeans, scenario.getConfig());
 		model.setPopulationCompressor(populationCompressor);
@@ -143,8 +153,11 @@ public class IntelligentOperatorDecisionEngineV2 {
 		}else {
 			this.setupAndRunMetaModel(variables);
 		}
-		
-		return ObjectiveAndGradientCalculator.calcRevenueObjectiveGradient(model, flow, variables, this.operator, packages, fareCalculators);
+		if(!this.ifCalculateFull) {
+			return ObjectiveAndGradientCalculator.calcRevenueObjectiveGradient(model, flow, variables, this.operator, packages, fareCalculators);
+		}else {
+			return ObjectiveAndGradientCalculator.calcCompleteRevenueObjectiveGradient(model, flow, variables, this.operator, packages, fareCalculators);
+		}
 	}
 	
 	public Map<String,Map<String,Double>> calcGovtObjectiveGrad(LinkedHashMap<String,Double> variables){
@@ -166,8 +179,19 @@ public class IntelligentOperatorDecisionEngineV2 {
 		double vot_transit = scenario.getConfig().planCalcScore().getOrCreateScoringParameters(PersonChangeWithoutCar_NAME).getOrCreateModeParams("pt").getMarginalUtilityOfTraveling()/3600;
 		double vot_wait = scenario.getConfig().planCalcScore().getOrCreateScoringParameters(PersonChangeWithoutCar_NAME).getMarginalUtlOfWaitingPt_utils_hr()/3600;
 		double vom = scenario.getConfig().planCalcScore().getOrCreateScoringParameters(PersonChangeWithoutCar_NAME).getMarginalUtilityOfMoney();
-		Map<String,Map<String,Double>> revGrad = ObjectiveAndGradientCalculator.calcRevenueObjectiveGradient(model, flow, variables, this.operator, packages, fareCalculators);
-		Map<String,Map<String,Double>> ttGrad = ObjectiveAndGradientCalculator.calcTotalSystemTravelTimeGradient(model, flow, variables, operator, vot_car, vot_transit, vot_wait, vom);
+		
+		Map<String,Map<String,Double>> revGrad = null;
+		if(!this.ifCalculateFull) {
+			revGrad = ObjectiveAndGradientCalculator.calcRevenueObjectiveGradient(model, flow, variables, this.operator, packages, fareCalculators);
+		}else {
+			revGrad = ObjectiveAndGradientCalculator.calcCompleteRevenueObjectiveGradient(model, flow, variables, this.operator, packages, fareCalculators);
+		}
+		Map<String,Map<String,Double>> ttGrad = null;
+		if(!this.ifCalculateFull) {
+			ttGrad = ObjectiveAndGradientCalculator.calcTotalSystemTravelTimeGradient(model, flow, variables, operator, vot_car, vot_transit, vot_wait, vom);
+		}else {
+			ttGrad = ObjectiveAndGradientCalculator.calcCompleteTotalSystemTravelTimeGradient(model, flow, variables, operator, vot_car, vot_transit, vot_wait, vom);
+		}
 		Map<String,Map<String,Double>> totalGrad = new HashMap<>(revGrad);
 		
 		for(Entry<String,Map<String,Double>> operator:ttGrad.entrySet()) {
@@ -198,7 +222,12 @@ public class IntelligentOperatorDecisionEngineV2 {
 		double vot_wait = scenario.getConfig().planCalcScore().getOrCreateScoringParameters(PersonChangeWithoutCar_NAME).getMarginalUtlOfWaitingPt_utils_hr()/3600;
 		double vom = scenario.getConfig().planCalcScore().getOrCreateScoringParameters(PersonChangeWithoutCar_NAME).getMarginalUtilityOfMoney();
 		//Map<String,Map<String,Double>> revGrad = ObjectiveAndGradientCalculator.calcRevenueObjectiveGradient(model, flow, variables, this.operator, packages, fareCalculators);
-		Map<String,Map<String,Double>> ttGrad = ObjectiveAndGradientCalculator.calcTotalSystemTravelTimeGradient(model, flow, variables, operator, vot_car, vot_transit, vot_wait, vom);
+		Map<String,Map<String,Double>> ttGrad = null;
+		if(!this.ifCalculateFull) {
+			ttGrad = ObjectiveAndGradientCalculator.calcTotalSystemTravelTimeGradient(model, flow, variables, operator, vot_car, vot_transit, vot_wait, vom);
+		}else {
+			ttGrad = ObjectiveAndGradientCalculator.calcCompleteTotalSystemTravelTimeGradient(model, flow, variables, operator, vot_car, vot_transit, vot_wait, vom);
+		}
 		//Map<String,Map<String,Double>> totalGrad = new HashMap<>(revGrad);
 		
 //		for(Entry<String,Map<String,Double>> operator:ttGrad.entrySet()) {
@@ -270,8 +299,11 @@ public class IntelligentOperatorDecisionEngineV2 {
 		if(model==null) {
 			this.setupAndRunMetaModel(variables);
 		}
-		
-		return ObjectiveAndGradientCalculator.calcRevenueObjective(flow, operator.keySet(), packages, fareCalculators);
+		if(!this.ifCalculateFull) {
+			return ObjectiveAndGradientCalculator.calcRevenueObjective(flow, operator.keySet(), packages, fareCalculators);
+		}else {
+			return ObjectiveAndGradientCalculator.calcCompleteRevenueObjective(flow, operator.keySet(), packages, fareCalculators);
+		}
 	}
 	
 	public Map<String,Double> calcApproximateGovtObjective(LinkedHashMap<String,Double>variables){
@@ -289,9 +321,22 @@ public class IntelligentOperatorDecisionEngineV2 {
 		double vot_transit = scenario.getConfig().planCalcScore().getOrCreateScoringParameters(PersonChangeWithoutCar_NAME).getOrCreateModeParams("pt").getMarginalUtilityOfTraveling()/3600;
 		double vot_wait = scenario.getConfig().planCalcScore().getOrCreateScoringParameters(PersonChangeWithoutCar_NAME).getMarginalUtlOfWaitingPt_utils_hr()/3600;
 		double vom = scenario.getConfig().planCalcScore().getOrCreateScoringParameters(PersonChangeWithoutCar_NAME).getMarginalUtilityOfMoney();
-		Map<String,Double> revObj = ObjectiveAndGradientCalculator.calcRevenueObjective(flow, operator.keySet(), packages, fareCalculators);
+		
+		Map<String,Double> revObj = null;
+		if(!this.ifCalculateFull) {
+			revObj = ObjectiveAndGradientCalculator.calcRevenueObjective(flow, operator.keySet(), packages, fareCalculators);
+		}else {
+			revObj = ObjectiveAndGradientCalculator.calcCompleteRevenueObjective(flow, operator.keySet(), packages, fareCalculators);
+		}
+		
 		double ttObj = ObjectiveAndGradientCalculator.calcTotalSystemTravelTime(model, flow, vot_car, vot_transit, vot_wait, vom);
-		revObj.keySet().forEach(l->revObj.compute(l, (k,v)->v=v+ttObj));
+		if(!this.ifCalculateFull) {
+			for(String l:revObj.keySet()){
+				revObj.compute(l, (k,v)->v=v+ttObj);
+			}
+		}else {
+			revObj.compute("Govt", (k,v)->v=v+ttObj);
+		}
 		logger.info("Travel time Objective = "+ttObj);
 		logger.info("RevenueObjective = "+revObj.toString());
 		return revObj;
