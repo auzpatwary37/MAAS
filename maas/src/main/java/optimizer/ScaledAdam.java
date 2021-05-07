@@ -55,7 +55,7 @@ public class ScaledAdam implements Optimizer{
 		this.initialize();
 	}
 	
-	public ScaledAdam(String id, Map<String,VariableDetails> variables,double alpha,double beta1,double beta2,double eta,double l2Reg) {
+	public ScaledAdam(String id, Map<String,VariableDetails> variables,double alpha,double beta1,double beta2,double eta,double l2Reg, double c) {
 		this.variables = variables;
 		this.alpha = alpha;
 		this.beta1 = beta1;
@@ -64,6 +64,7 @@ public class ScaledAdam implements Optimizer{
 		this.id = id;
 		this.l2RegConst = l2Reg;
 		this.initialize();
+		this.c = c;
 	}
 	
 	private void initialize() {

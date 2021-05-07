@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.Map.Entry;
 import java.io.*;
@@ -397,11 +398,12 @@ public class ObjectiveAndGradientCalculator {
 						FareLink fl = new FareLink(fareGrad.getKey());
 						String fareLinkOpId = packages.getOperatorId(fl); 
 						double discount = 0;
-						double rr = 1;
+						Double rr = 1.;
 						double fullFare = fareCalculators.get(fl.getMode()).getFares(fl.getTransitRoute(), fl.getTransitLine(), fl.getBoardingStopFacility(), fl.getAlightingStopFacility()).get(0);
 						if(maasOperatorId!=null) {
 							discount = packages.getMassPackages().get(maasFareGrad.getKey()).getDiscountForFareLink(fl);
 							rr = packages.getMassPackages().get(maasFareGrad.getKey()).getOperatorReimburesementRatio().get(fareLinkOpId);
+							if(rr == null)rr = 1.0;
 							//for maaspackage operator
 							//each element should be -1*reimbursementRatio*discount*gradient
 							if(discount>0 && operators.containsKey(maasOperatorId)) {
@@ -549,9 +551,10 @@ public class ObjectiveAndGradientCalculator {
 						}
 					}
 //					double fare = fareCalculators.get(f.getMode()).getFares(f.getTransitRoute(), f.getTransitLine(), f.getBoardingStopFacility(), f.getAlightingStopFacility()).get(0);
-					volume+=-1*flvolume*pac.getDiscountForFareLink(f)/v.getValue()*pac.getOperatorReimburesementRatio().get(packages.getOperatorId(f));
+					volume=-1*flvolume*pac.getDiscountForFareLink(f)/v.getValue()*pac.getOperatorReimburesementRatio().get(packages.getOperatorId(f));
 					double flGrad = -1*flvolume*(1-pac.getOperatorReimburesementRatio().get(packages.getOperatorId(f)))*pac.getDiscountForFareLink(f)/v.getValue();
 					if(packages.getOperatorId(f)!=null) {
+						String opId = packages.getOperatorId(f);
 						optionalFareLinkOperatorGradientComponent.compute(packages.getOperatorId(f),(k,vv)->vv==null?flGrad:vv+flGrad);
 					}
 				}
@@ -638,11 +641,150 @@ public class ObjectiveAndGradientCalculator {
 		return operatorGradient;
 	}
 	
-	public static Map<String,Map<String,Double>> calcCompleteTotalSystemTravelTimeGradient(PersonPlanSueModel sue, SUEModelOutput flow, Map<String,Double> variables, Map<String,Map<String,VariableDetails>> operators,Double vot_car, Double vot_transit, Double vot_wait, Double vom){
+	public static packUsageStat fastCalculateRevenueObjectiveAndGradient(PersonPlanSueModel sue, SUEModelOutput flow, Map<String,Double> variables, Map<String,Map<String,VariableDetails>> operators, MaaSPackages packages, Map<String,FareCalculator> fareCalculators) {
+		Map<String,Double> packageSold = packages.getOPeratorList().stream().collect(Collectors.toMap(k->k, k->0.));
+		Map<String,Double> revenue = packages.getOPeratorList().stream().collect(Collectors.toMap(k->k, k->0.));
+		Map<String,Double> selfPackageTrip = packages.getOPeratorList().stream().collect(Collectors.toMap(k->k, k->0.));
+		Map<String,Double> totalTrip = packages.getOPeratorList().stream().collect(Collectors.toMap(k->k, k->0.));;
+		Map<String,Double> packageTrip = packages.getOPeratorList().stream().collect(Collectors.toMap(k->k, k->0.));
+		Map<String,Map<String,Double>> operatorGradient = new HashMap<>();
+		packages.getOPeratorList().forEach(o->operatorGradient.put(o, variables.keySet().stream().collect(Collectors.toConcurrentMap(k->k, k->0.))));
+		Map<String,Set<String>> fareLinkClusters = new HashMap<>();
+		Map<String,Set<Id<TransitLine>>> tlClusters = new HashMap<>();
+		variables.entrySet().stream().forEach(v->{
+			if(MaaSUtil.ifMaaSFareLinkClusterVariableDetails(v.getKey())) {
+				fareLinkClusters.put(v.getKey(), MaaSUtil.retrieveFareLinksIds(v.getKey()).stream().map(k->k.toString()).collect(Collectors.toSet()));
+			}else if(MaaSUtil.ifMaaSTransitLinesDiscountVariableDetails(v.getKey())) {
+				tlClusters.put(v.getKey(),MaaSUtil.retrieveTransitLineId(v.getKey()));
+			}
+		});
+		
+		boolean alreadyAccountedPacakgeUsage = false;
+		for(Entry<String, Map<String, Map<String, Map<String, Double>>>> timeFl:sue.getFareLinkGradient().entrySet()){
+			for(Entry<String, Map<String, Map<String, Double>>> maasFl:timeFl.getValue().entrySet()){
+				String maasId = maasFl.getKey();
+				MaaSPackage pac = packages.getMassPackages().get(maasId);
+				String maasOperator = null;
+				double packagePrice = 0;
+				if(!maasId.equals(MaaSUtil.nullMaaSPacakgeKeyName)) {
+					
+					maasOperator = pac.getOperatorId();
+					packagePrice = pac.getPackageCost();
+				}
+				String op = maasOperator;
+				double packageUsage = flow.getMaaSPackageUsage().get(maasId);
+				Map<String,Double> pacGrad = sue.getPacakgeUserGradient().get(maasId);
+				
+				if(!alreadyAccountedPacakgeUsage) {
+					double p = packagePrice;
+					packageSold.put(op, packageUsage);
+					if(op!=null) {
+						revenue.put(op, revenue.get(op)+packagePrice*packageUsage);
+					}
+					variables.entrySet().parallelStream().forEach(v->{
+						String skey = MaaSUtil.retrieveName(v.getKey());
+						if(skey == "") skey = v.getKey();
+						if(MaaSUtil.ifMaaSPackageCostVariableDetails(v.getKey()) && MaaSUtil.retrievePackageId(v.getKey()).equals(op)) {
+							if(op!=null) {
+								operatorGradient.get(op).put(v.getKey(), operatorGradient.get(op).get(v.getKey())+packageUsage);
+							}
+						}
+						if(op!=null) {
+							operatorGradient.get(op).put(v.getKey(),operatorGradient.get(op).get(v.getKey())+p*pacGrad.get(skey));
+						}
+					});
+					
+				}
+				
+				for(Entry<String, Map<String, Double>> fareLinkGrad:maasFl.getValue().entrySet()) {
+					FareLink fl = new FareLink(fareLinkGrad.getKey());
+					double fare = fareCalculators.get(fl.getMode()).getFares(fl.getTransitRoute(), fl.getTransitLine(), fl.getBoardingStopFacility(), fl.getAlightingStopFacility()).get(0);
+					String fareOp = packages.getOperatorId(fl);
+					double d = 0;
+					double rr_ = 1;
+					if(pac!=null) {
+						d = pac.getDiscountForFareLink(fl);
+						rr_ = pac.getOperatorReimburesementRatio().get(fareOp);
+					}
+					double discount = d;
+					double rr = rr_;
+					double usage = flow.getMaaSSpecificFareLinkFlow().get(timeFl.getKey()).get(maasId).get(fareLinkGrad.getKey());
+					Map<String,Double> grad = sue.getFareLinkGradient().get(timeFl.getKey()).get(maasId).get(fareLinkGrad.getKey());
+					
+					double opRevenue = -1*discount*usage*rr;
+					double fareOpRevenue = (fare-(1-rr)*discount)*usage;
+					if(op!=null) {
+						revenue.put(op, revenue.get(op)+opRevenue);
+						packageTrip.put(op, packageTrip.get(op)+usage);
+					}
+					if(fareOp!=null) {
+						revenue.put(fareOp, revenue.get(fareOp)+fareOpRevenue);
+						totalTrip.put(fareOp, totalTrip.get(fareOp)+usage);
+					}
+					
+					if(op!=null && fareOp!=null && fareOp.equals(op)) {
+						selfPackageTrip.put(op, selfPackageTrip.get(op)+usage);
+					}
+					for(Entry<String, Double> v:variables.entrySet()) {
+						String skey = MaaSUtil.retrieveName(v.getKey());
+						if(skey == "") skey = v.getKey();
+						double opGrad = 0;
+						double fareOpGrad = 0;
+						if(pac!=null &&MaaSUtil.ifFareLinkVariableDetails(v.getKey()) && fl.toString().equals(MaaSUtil.retrieveFareLink(v.getKey())) &&  maasId.equals(MaaSUtil.retrievePackageId(v.getKey()))) {//the first variable dependent term
+							opGrad += -1*usage*rr;
+							fareOpGrad += -1*(1-rr)*usage;
+						}else if(pac!=null &&MaaSUtil.ifMaaSFareLinkClusterVariableDetails(v.getKey())  && maasId.equals(MaaSUtil.retrievePackageId(v.getKey())) && fareLinkClusters.get(v.getKey()).contains(fl.toString())) {
+							opGrad += -1*usage*discount*(1-rr)/v.getValue();
+							fareOpGrad += -1*(1-rr)*usage*discount/v.getValue();
+						}else if (pac!=null && MaaSUtil.ifMaaSTransitLinesDiscountVariableDetails(v.getKey()) && maasId.equals(MaaSUtil.retrievePackageId(v.getKey())) && tlClusters.get(v.getKey()).contains(fl.getTransitLine()) ) {
+							opGrad += -1*usage*discount*(1-rr)/v.getValue();
+							fareOpGrad += -1*(1-rr)*usage*discount/v.getValue();
+						}else if (pac!=null && MaaSUtil.ifMaaSPackageFareLinkReimbursementRatioVariableDetails(v.getKey()) && pac.getId().equals(MaaSUtil.retrievePackageId(v.getKey())) && MaaSUtil.retrieveFareLinkOperator(v.getKey()).equals(fareOp)) {
+							opGrad += -1*usage*discount;
+							fareOpGrad += usage*discount;		
+						}
+						
+						//Now the second term
+//						if(MaaSUtil.ifMaaSPackageFareLinkReimbursementRatioVariableDetails(v.getKey()) && grad.get(skey)!=0) {
+//							System.out.println("why the discount is not zero??");
+//						}
+						
+						opGrad+=-1*rr*discount*grad.get(skey);
+						fareOpGrad+=(fare-(1-rr)*discount)*grad.get(skey);
+						
+						if(op!=null) {
+							operatorGradient.get(op).put(v.getKey(),operatorGradient.get(op).get(v.getKey())+opGrad);
+						}
+						if(fareOp!=null) {
+							operatorGradient.get(fareOp).put(v.getKey(),operatorGradient.get(fareOp).get(v.getKey())+fareOpGrad);
+						}
+//						if(pac!=null && MaaSUtil.ifMaaSPackageFareLinkReimbursementRatioVariableDetails(v.getKey()) && operatorGradient.get(op).get(v.getKey())+operatorGradient.get(fareOp).get(v.getKey())>0.00001) {
+//							System.out.println( operatorGradient.get(op).get(v.getKey())+operatorGradient.get(fareOp).get(v.getKey()) );
+//						}
+						
+					}
+					
+					
+				}
+				
+			}
+			alreadyAccountedPacakgeUsage = true;
+		}
+		packUsageStat usage = new packUsageStat(totalTrip, selfPackageTrip, revenue, packageSold, packageTrip);
+		usage.setGrad(operatorGradient);
+		usage.setObjective(revenue);
+		return usage;
+	}
+	
+	public static Tuple<Map<String,Map<String,Double>>,Double> calcCompleteTotalSystemTravelTimeGradient(PersonPlanSueModel sue, SUEModelOutput flow, Map<String,Double> variables, Map<String,Map<String,VariableDetails>> operators,Double vot_car, Double vot_transit, Double vot_wait, Double vom){
 		Map<String,Map<String,Double>>operatorGradient = new HashMap<>();
 		Map<String,Map<String,Double>>operatorSmGradient = new HashMap<>();
 		operatorGradient.put("Govt", new HashMap<>());
 		operatorSmGradient.put("Govt", new HashMap<>());
+		double tsltt = 0;
+		double tstdltt = 0;
+		double tsttltt = 0;
+		double totalSystemTT = 0;
 		for(Entry<String, Double> v:variables.entrySet()){
 			//o.getValue().entrySet().parallelStream().forEach(v->{
 				String skey = v.getKey();
@@ -662,6 +804,7 @@ public class ObjectiveAndGradientCalculator {
 						double lTT = flow.getLinkTravelTime().get(net.getKey()).get(link.getKey());
 						tslttGrad+=flow.getLinkVolume().get(net.getKey()).get(link.getKey())*sue.getLinkTravelTimeGradient().get(net.getKey()).get(link.getKey()).get(key)+
 								sue.getLinkGradient().get(net.getKey()).get(link.getKey()).get(key)*flow.getLinkTravelTime().get(net.getKey()).get(link.getKey());
+						tsltt+=lVol*lTT;
 					}
 				}
 				//only transit direct link flow 
@@ -672,19 +815,36 @@ public class ObjectiveAndGradientCalculator {
 						if(flow.getTransitDirectLinkTT().get(trLinks.getKey()).containsKey(link.getKey())){
 							tstdlttGrad+=link.getValue()*sue.getTrLinkTravelTimeGradient().get(trLinks.getKey()).get(link.getKey()).get(key)+
 									sue.getTrLinkGradient().get(trLinks.getKey()).get(link.getKey()).get(key)*flow.getTransitDirectLinkTT().get(trLinks.getKey()).get(link.getKey());
+							tstdltt+=link.getValue()*flow.getTransitDirectLinkTT().get(trLinks.getKey()).get(link.getKey());
 						}else {
 							tsttlttGrad+=link.getValue()*sue.getTrLinkTravelTimeGradient().get(trLinks.getKey()).get(link.getKey()).get(key)+
 									sue.getTrLinkGradient().get(trLinks.getKey()).get(link.getKey()).get(key)*flow.getTransitTransferLinkTT().get(trLinks.getKey()).get(link.getKey());
+							tsttltt+=link.getValue()*flow.getTransitTransferLinkTT().get(trLinks.getKey()).get(link.getKey());
 						}
 					}
 				}
 				totalSystemTTGrad = tslttGrad*vot_car/vom+tstdlttGrad*vot_transit/vom+tsttlttGrad*vot_wait/vom;
+				totalSystemTT = tsltt*vot_car/vom+tstdltt*vot_transit/vom+tsttltt*vot_wait/vom;
 				operatorGradient.get("Govt").put(skey, totalSystemTTGrad);
 				operatorSmGradient.get("Govt").put(key, totalSystemTTGrad);
 			//});
 		}
 		
-		return operatorGradient;
+		return new Tuple<Map<String,Map<String,Double>>,Double>(operatorGradient,totalSystemTT);
+	}
+	
+	
+	public static Tuple<Map<String,Double>,Double> calcTotalSystemUtilityGradientAndObjective(PersonPlanSueModel model) {
+		Map<String,Double> totalSystemUtilityGrad = new HashMap<>();
+		double tsU = 0;
+		for(Entry<String, Map<String, Double>> probGrad:model.getPlanProbabilityGradient().entrySet()){
+			for(Entry<String, Double> var:probGrad.getValue().entrySet()) {
+				totalSystemUtilityGrad.put(var.getKey(), model.getPlanProbability().get(probGrad.getKey())*model.getPlanUtilityGradient().get(probGrad.getKey()).get(var.getKey())+var.getValue()*model.getPlanUtility().get(probGrad.getKey()));
+				
+			}
+			tsU+=model.getPlanProbability().get(probGrad.getKey())*model.getPlanUtility().get(probGrad.getKey());
+		}
+		return new Tuple<Map<String,Double>,Double>(totalSystemUtilityGrad,tsU);
 	}
 	
 	public static void measureAverreageTLWaitingTime(PersonPlanSueModel model, SUEModelOutput flow, String fileLoc) {

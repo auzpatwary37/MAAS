@@ -12,6 +12,7 @@ import org.jboss.logging.Logger;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.Plan;
+import org.matsim.core.utils.collections.Tuple;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -46,12 +47,13 @@ public class IntelligentOperatorDecisionEngineV2 {
 	private PopulationCompressor populationCompressor = null;
 	
 	private static final Logger logger = Logger.getLogger(IntelligentOperatorDecisionEngineV2.class);
-	
+	private boolean newPop = false;
 	private PersonPlanSueModel model;
 	private Map<String,Map<String,VariableDetails>>operator = new HashMap<>();
 	private Map<String,VariableDetails> variables = new HashMap<>();
 	private boolean ifCalculateFull = false;
 	private SUEModelOutput flow;
+	private packUsageStat modelStat=null;
 	
 	private String type = null;
 	/**
@@ -91,6 +93,7 @@ public class IntelligentOperatorDecisionEngineV2 {
 
 
 	public void setupAndRunMetaModel(LinkedHashMap<String,Double> variables) {
+		modelStat = null;
 		model = new PersonPlanSueModel(TimeBeans.timeBeans, scenario.getConfig());
 		model.setPopulationCompressor(populationCompressor);
 		model.populateModel(scenario, fareCalculators, packages);
@@ -99,7 +102,12 @@ public class IntelligentOperatorDecisionEngineV2 {
 	}
 	
 	public void runMetamodel(LinkedHashMap<String,Double> variables) {
-		this.flow = model.performAssignment(scenario.getPopulation(),variables);
+		modelStat = null;
+		if(newPop) {
+			this.flow = model.performAssignment(scenario.getPopulation(),variables);
+		}else {
+			this.flow = model.performAssignment(variables);
+		}
 	}
 	
 	
@@ -137,6 +145,8 @@ public class IntelligentOperatorDecisionEngineV2 {
 			return this.calcGovtObjectiveGrad(variables);
 		}else if(type.equals(MaaSDataLoaderV2.typeGovtTT)){
 			return this.calcSeperatedGovtObjectiveGrad(variables);
+		}else if(type.equals(MaaSDataLoaderV2.typeGovtTU)) {
+			return this.calcGovtTUCombinedObjectiveGrad(variables);
 		}
 		return null;
 	}
@@ -146,6 +156,42 @@ public class IntelligentOperatorDecisionEngineV2 {
 	
 	
 	
+	private Map<String, Map<String, Double>> calcGovtTUCombinedObjectiveGrad(LinkedHashMap<String, Double> variables) {
+//		this.setupAndRunMetaModel(variables);
+		if(model!=null) {
+			this.runMetamodel(variables);
+		}else {
+			this.setupAndRunMetaModel(variables);
+		}
+		ObjectiveAndGradientCalculator.measureAverreageTLWaitingTime(model, flow, "test/ averageWaitTime.csv");
+		String PersonChangeWithCar_NAME = "person_TCSwithCar";
+		String PersonChangeWithoutCar_NAME = "person_TCSwithoutCar";
+		
+		double vom = scenario.getConfig().planCalcScore().getOrCreateScoringParameters(PersonChangeWithoutCar_NAME).getMarginalUtilityOfMoney();
+		
+		Map<String,Map<String,Double>> revGrad = null;
+		if(!this.ifCalculateFull) {
+			revGrad = ObjectiveAndGradientCalculator.calcRevenueObjectiveGradient(model, flow, variables, this.operator, packages, fareCalculators);
+		}else {
+			this.modelStat = ObjectiveAndGradientCalculator.fastCalculateRevenueObjectiveAndGradient(model, flow, variables, this.operator, packages, fareCalculators);
+			revGrad = modelStat.getGrad();
+		}
+		Map<String,Map<String,Double>> tuGrad = new HashMap<>();
+		
+		Tuple<Map<String,Double>,Double> tuTuple = ObjectiveAndGradientCalculator.calcTotalSystemUtilityGradientAndObjective(model);
+		tuGrad.put("Govt", tuTuple.getFirst());
+		if(this.modelStat!=null)this.modelStat.getObjective().compute("Govt", (k,v)->v=v+tuTuple.getSecond());
+		
+		for(Entry<String,Map<String,Double>> operator:tuGrad.entrySet()) {
+			for(Entry<String,Double> grad:operator.getValue().entrySet()) {
+				revGrad.get(operator.getKey()).compute(grad.getKey(), (k,v)->v=v+grad.getValue()/vom);
+			}
+		}
+		if(this.modelStat!=null)this.modelStat.setGrad(tuGrad);
+		return tuGrad;
+	}
+
+
 	private Map<String,Map<String,Double>> calcOperatorObjectiveGrad(LinkedHashMap<String,Double> variables){
 //		this.setupAndRunMetaModel(variables);
 		if(model!=null) {
@@ -156,7 +202,8 @@ public class IntelligentOperatorDecisionEngineV2 {
 		if(!this.ifCalculateFull) {
 			return ObjectiveAndGradientCalculator.calcRevenueObjectiveGradient(model, flow, variables, this.operator, packages, fareCalculators);
 		}else {
-			return ObjectiveAndGradientCalculator.calcCompleteRevenueObjectiveGradient(model, flow, variables, this.operator, packages, fareCalculators);
+			this.modelStat = ObjectiveAndGradientCalculator.fastCalculateRevenueObjectiveAndGradient(model, flow, variables, this.operator, packages, fareCalculators);
+			return modelStat.getGrad();
 		}
 	}
 	
@@ -184,22 +231,27 @@ public class IntelligentOperatorDecisionEngineV2 {
 		if(!this.ifCalculateFull) {
 			revGrad = ObjectiveAndGradientCalculator.calcRevenueObjectiveGradient(model, flow, variables, this.operator, packages, fareCalculators);
 		}else {
-			revGrad = ObjectiveAndGradientCalculator.calcCompleteRevenueObjectiveGradient(model, flow, variables, this.operator, packages, fareCalculators);
+			this.modelStat = ObjectiveAndGradientCalculator.fastCalculateRevenueObjectiveAndGradient(model, flow, variables, this.operator, packages, fareCalculators);
+			revGrad = modelStat.getGrad();
 		}
 		Map<String,Map<String,Double>> ttGrad = null;
+		
 		if(!this.ifCalculateFull) {
 			ttGrad = ObjectiveAndGradientCalculator.calcTotalSystemTravelTimeGradient(model, flow, variables, operator, vot_car, vot_transit, vot_wait, vom);
 		}else {
-			ttGrad = ObjectiveAndGradientCalculator.calcCompleteTotalSystemTravelTimeGradient(model, flow, variables, operator, vot_car, vot_transit, vot_wait, vom);
+			Tuple<Map<String, Map<String, Double>>, Double> a = ObjectiveAndGradientCalculator.calcCompleteTotalSystemTravelTimeGradient(model, flow, variables, operator, vot_car, vot_transit, vot_wait, vom);
+			ttGrad = a.getFirst();
+			this.modelStat.getObjective().compute("Govt", (k,v)->v=v+a.getSecond());
 		}
-		Map<String,Map<String,Double>> totalGrad = new HashMap<>(revGrad);
 		
 		for(Entry<String,Map<String,Double>> operator:ttGrad.entrySet()) {
 			for(Entry<String,Double> grad:operator.getValue().entrySet()) {
-				totalGrad.get(operator.getKey()).compute(grad.getKey(), (k,v)->v=v+grad.getValue());
+				revGrad.get(operator.getKey()).compute(grad.getKey(), (k,v)->v=v+grad.getValue());
 			}
 		}
-		return totalGrad;
+		
+		if(this.modelStat!=null)this.modelStat.setGrad(revGrad);
+		return revGrad;
 	}
 	
 	public Map<String,Map<String,Double>> calcSeperatedGovtObjectiveGrad(LinkedHashMap<String,Double> variables){
@@ -226,7 +278,7 @@ public class IntelligentOperatorDecisionEngineV2 {
 		if(!this.ifCalculateFull) {
 			ttGrad = ObjectiveAndGradientCalculator.calcTotalSystemTravelTimeGradient(model, flow, variables, operator, vot_car, vot_transit, vot_wait, vom);
 		}else {
-			ttGrad = ObjectiveAndGradientCalculator.calcCompleteTotalSystemTravelTimeGradient(model, flow, variables, operator, vot_car, vot_transit, vot_wait, vom);
+			ttGrad = ObjectiveAndGradientCalculator.calcCompleteTotalSystemTravelTimeGradient(model, flow, variables, operator, vot_car, vot_transit, vot_wait, vom).getFirst();
 		}
 		//Map<String,Map<String,Double>> totalGrad = new HashMap<>(revGrad);
 		
@@ -276,7 +328,7 @@ public class IntelligentOperatorDecisionEngineV2 {
 		this.variables.values().stream().forEach(vd->{
 			variables.put(vd.getVariableName(), vd.getCurrentValue());
 		});
-
+		if(this.modelStat!=null)return modelStat.getObjective();
 		return this.calcApproximateObjective(variables);
 	}
 	
@@ -373,6 +425,7 @@ public class IntelligentOperatorDecisionEngineV2 {
 	 * @return
 	 */
 	public packUsageStat getPackageUsageStat() {
+		if(this.modelStat!=null)return this.modelStat;
 		return ObjectiveAndGradientCalculator.calcPackUsageStat(this.flow, this.packages, this.fareCalculators);
 	}
 

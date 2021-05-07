@@ -221,6 +221,7 @@ public class PersonPlanSueModel{
 	//Save plan probability
 	
 	private Map<String,Double> planProbability = new ConcurrentHashMap<>();//done
+	private Map<String,Double> planUtility = new ConcurrentHashMap<>();//done
 	
 	//Gradient Keys
 	private Set<String> gradientKeys = new HashSet<>();
@@ -235,6 +236,7 @@ public class PersonPlanSueModel{
 	private Map<String,Map<Id<TransitLink>,Map<String,Double>>> trLinkTravelTimeGradient = new ConcurrentHashMap<>();
 	
 	private Map<String,Map<String,Double>> planProbabilityGradient = new ConcurrentHashMap<>();
+	private Map<String,Map<String,Double>> planUtilityGradient = new ConcurrentHashMap<>();
 	private Map<String,Map<String,Double>> pacakgeUserGradient = new ConcurrentHashMap<>();
 
 	
@@ -265,6 +267,20 @@ public class PersonPlanSueModel{
 	}
 
 	public SUEModelOutput performAssignment(Population population, LinkedHashMap<String,Double> params) {
+		this.population = population;
+		this.extractFeasiblePlans(population);
+		MaaSUtil.updateMaaSVariables(this.maasPakages, params,ts, this.simpleVarKeys);
+		//this.extractFeasiblePlans(population);
+		if(this.ifNeedToCreateIncidenceMap) {
+			this.createIncidenceMaps(population);
+		}else if(this.ifNeedToFixIncidenceMap) {
+			this.fixIncidenceMaps(population);
+		}
+		SUEModelOutput flow = this.performAssignment(population, params,this.AnalyticalModelInternalParams);
+		return flow;
+	} 
+	
+	public SUEModelOutput performAssignment(LinkedHashMap<String,Double> params) {
 		this.population = population;
 		this.extractFeasiblePlans(population);
 		MaaSUtil.updateMaaSVariables(this.maasPakages, params,ts, this.simpleVarKeys);
@@ -528,7 +544,7 @@ public class PersonPlanSueModel{
 		t1 = System.currentTimeMillis()-t1;
 		//Calculate the utility, Should we move the utility calculation part inside the simple translated plan itself? makes more sense. (April 2020)
 		for(Plan plan:this.feasibleplans.get(person.getId())) {
-
+			Map<String,Double> eleUtil = new HashMap<>();
 			//Give an identifier to the plan. We will give a String identifier which will be saved as plan attribute
 			SimpleTranslatedPlan trPlan = (SimpleTranslatedPlan) plan.getAttributes().getAttribute(SimpleTranslatedPlan.SimplePlanAttributeName);//extract the translated plan first
 			String planKey = trPlan.getPlanKey();
@@ -548,27 +564,38 @@ public class PersonPlanSueModel{
 			trPlans.put(planKey, trPlan);
 			Activity f = trPlan.getActivities().get(0);
 			Activity l = trPlan.getActivities().get(trPlan.getActivities().size()-1);
+			int i = 0;
 			for(Activity ac:trPlan.getActivities()) {// for now this class is not implemented: done may 2 2020
-				utility += this.calcActivityUtility(ac, this.scenario.getConfig(),subpopulation,f,l);
+				double d = this.calcActivityUtility(ac, this.scenario.getConfig(),subpopulation,f,l);
+				eleUtil.put("a"+i, d);
+				utility += d;
+				i++;
 			}
 			
 			if(Double.isNaN(utility)||!Double.isFinite(utility))
 				logger.debug("utility is nan or infinite. Debug!!!");
 			
 			//System.out.println();
+			i=0;
 			for(Entry<String, Map<Id<AnalyticalModelTransitRoute>, AnalyticalModelTransitRoute>> trRouteMap:trPlan.getTrroutes().entrySet()) {
 				for(AnalyticalModelTransitRoute trRoute : trRouteMap.getValue().values()) {
-					utility += trRoute.calcRouteUtility(params, anaParams, this.networks.get(trRouteMap.getKey()),this.transitLinks.get(trRouteMap.getKey()), this.farecalculators,additionalInfo, this.timeBeans.get(trRouteMap.getKey()));
+					double d = trRoute.calcRouteUtility(params, anaParams, this.networks.get(trRouteMap.getKey()),this.transitLinks.get(trRouteMap.getKey()), this.farecalculators,additionalInfo, this.timeBeans.get(trRouteMap.getKey()));
+					utility += d;
+					eleUtil.put("tr"+i, d);
+					i++;
 				}
 				
 				if(Double.isNaN(utility)||!Double.isFinite(utility))
 					logger.debug("utility is nan or infinite. Debug!!!");
 			}
-			
+			i=0;
 			for(Entry<String, Map<Id<AnalyticalModelRoute>, AnalyticalModelRoute>> trRouteMap:trPlan.getRoutes().entrySet()) {
 				
 				for(AnalyticalModelRoute route: trPlan.getRoutes().get(trRouteMap.getKey()).values()) {
-					utility += route.calcRouteUtility(params, anaParams, this.networks.get(trRouteMap.getKey()), this.timeBeans.get(trRouteMap.getKey())); 
+					double d= route.calcRouteUtility(params, anaParams, this.networks.get(trRouteMap.getKey()), this.timeBeans.get(trRouteMap.getKey())); 
+					utility += d;
+					eleUtil.put("r"+i, d);
+					i++;
 				}
 				
 				if(Double.isNaN(utility)||!Double.isFinite(utility))
@@ -576,8 +603,10 @@ public class PersonPlanSueModel{
 			}
 			
 			utilities.put(planKey,utility);
-			
-			
+			if(utility<0) {
+				logger.debug("Negative plan utility!!!");
+			}
+			this.planUtility.put(planKey, utility);
 		}
 		List<Plan> pls = this.feasibleplans.get(person.getId());
 		if(utilities.size()!=this.feasibleplans.get(person.getId()).size()) {
@@ -764,6 +793,7 @@ private void fixIncidenceMaps(Population population) {
 			this.trLinkPlanIncidence.put(timeBeanId, new HashMap<>());
 			this.fareLinkPlanIncidence.put(timeBeanId, new HashMap<>());
 			}
+		this.maasPackagePlanIncidence.clear();
 		this.plans.clear();
 		for(Person p:this.compressedPersons.values()) {
 			
@@ -1124,21 +1154,41 @@ private void fixIncidenceMaps(Population population) {
 		ActivityUtilityParameters actParams = scParam.utilParams.get(activity.getType());
 		double startTime = 0;
 		double endTime = 24*3600;
-		if(lastActivity.getEndTime().isDefined())startTime = lastActivity.getEndTime().seconds();
-		if(firstActivity.getEndTime().isDefined())endTime = firstActivity.getEndTime().seconds();
+		if(lastActivity.getEndTime().isDefined())startTime = lastActivity.getEndTime().seconds()-24*3600;
+		if(firstActivity.getEndTime().isDefined())endTime = firstActivity.getEndTime().seconds()+3600*24;
 		if(activity.getEndTime().isDefined()) endTime = activity.getEndTime().seconds();
 		if(activity.getStartTime().isDefined()) startTime = activity.getStartTime().seconds();
 		double duration = endTime - startTime;
 		if(duration<0)duration=0;
 		double typicalDuration = actParams.getTypicalDuration();
-		double minDuration = actParams.getZeroUtilityDuration_h();
+		double minDuration = actParams.getZeroUtilityDuration_h()*3600;
 		/**
 		 * This is the bare-bone activity utility from matsim book; refer to page 25, Ch:3 A Closer Look at Scoring 
 		 */
-		double utility = scParam.marginalUtilityOfPerforming_s*typicalDuration/3600*Math.log((duration+1)/(minDuration));
+		double utility = 0;
+		if(duration>minDuration) {
+			utility = scParam.marginalUtilityOfPerforming_s*typicalDuration*Math.log((duration)/(minDuration));
+		}else {
+			double slopeAtZeroUtility = scParam.marginalUtilityOfPerforming_s * typicalDuration / ( 3600.*minDuration ) ;
+			if ( slopeAtZeroUtility < 0. ) {
+				// (beta_perf might be = 0)
+				System.err.println("beta_perf: " + scParam.marginalUtilityOfPerforming_s);
+				System.err.println("typicalDuration: " + typicalDuration );
+				System.err.println( "zero utl duration: " + actParams.getZeroUtilityDuration_h() );
+				throw new RuntimeException( "slope at zero utility < 0.; this should not happen ...");
+			}
+			double durationUnderrun = minDuration - duration ;
+			if ( durationUnderrun < 0. ) {
+				throw new RuntimeException( "durationUnderrun < 0; this should not happen ...") ;
+			}
+			utility -= slopeAtZeroUtility * durationUnderrun ;
+		}
 		if(!Double.isFinite(utility)||Double.isNaN(utility))
 			logger.debug("Utility is nan or infinity. Debug!!!");
-		utility = 0;// Change this
+		//utility = 0;// Change this
+		if(utility<0) {
+			logger.debug("Act utility negative!!!");
+		}
 		return utility;
 		
 		
@@ -1212,6 +1262,7 @@ private void fixIncidenceMaps(Population population) {
 	
 		for(String planKey:this.planProbability.keySet()) {
 			this.planProbabilityGradient.put(planKey, new HashMap<>(zeroGrad));
+			this.planUtilityGradient.put(planKey, new HashMap<>(zeroGrad));
 		}
 		this.initializeGradient = false;
 		// this.fixGradient = false;
@@ -1506,8 +1557,10 @@ private void fixIncidenceMaps(Population population) {
 						}
 					}
 					
+					this.planUtilityGradient.put(planKey, gradArray.getMap(planGrad.toArray()));
+					
 //					if(!utilityGradient.containsKey(planKey))utilityGradient.put(planKey, new HashMap<>());
-					if(!utilityGradient.containsKey(planKey))utilityGradient.put(planKey, gradArray.getMap(planGrad.toArray()));
+					if(!utilityGradient.containsKey(planKey))utilityGradient.put(planKey, this.planUtilityGradient.get(planKey));
 //					utilityGradient.get(planKey).put(var, planGradient);
 //					if(planGradient>1000) {
 //						logger.debug("High Gradient");
@@ -1521,6 +1574,7 @@ private void fixIncidenceMaps(Population population) {
 //				}
 				
 			}
+			
 			for(Plan plan:this.feasibleplans.get(p.getValue().getId())) {
 //				for(String var:this.gradientKeys) {
 //					if(Math.abs(planProbSum.get(var)-1.)>.00001) {
@@ -1654,7 +1708,11 @@ private void fixIncidenceMaps(Population population) {
 			
 			for(String plan:packageDetails.getValue()) {
 				Id<Person> personId = Id.createPersonId(plan.split("_\\^_")[0]);
-				volume+=this.planProbability.get(plan)*this.personEquivalence.get(personId);
+				double vv = this.planProbability.get(plan)*this.personEquivalence.get(personId);;
+				volume+=vv;
+				if(vv>1) {
+					logger.debug("Problem here.");
+				}
 			}
 			packageUsage.put(packageDetails.getKey(), volume);
 //			for(String var:this.gradientKeys) {
@@ -1715,6 +1773,19 @@ private void fixIncidenceMaps(Population population) {
 	}
 
 	
+	
+	public Map<String, Double> getPlanProbability() {
+		return planProbability;
+	}
+
+	public Map<String, Double> getPlanUtility() {
+		return planUtility;
+	}
+
+	public Map<String, Map<String, Double>> getPlanUtilityGradient() {
+		return planUtilityGradient;
+	}
+
 	public MaaSPackages getMaasPakages() {
 		return maasPakages;
 	}

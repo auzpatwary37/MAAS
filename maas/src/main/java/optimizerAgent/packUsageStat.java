@@ -8,6 +8,8 @@ public class packUsageStat{
 	public final Map<String,Double> packageTrip;//package trips owned by the package operator
 	public final Map<String,Double> totalTrip;
 	public final Map<String,Double> revenue;
+	private Map<String,Map<String,Double>> grad;
+	private Map<String,Double> objective;
 	public packUsageStat(Map<String, Double> totalTrip, Map<String, Double> selfPackageTrip, Map<String, Double> revenue, Map<String, Double> packagesSold, Map<String, Double> packageTrip) {
 		this.packagesSold = packagesSold;
 		this.selfPackageTrip = selfPackageTrip;
@@ -16,4 +18,17 @@ public class packUsageStat{
 		this.revenue = revenue;
 		
 	}
+	public Map<String, Map<String, Double>> getGrad() {
+		return grad;
+	}
+	public void setGrad(Map<String, Map<String, Double>> grad) {
+		this.grad = grad;
+	}
+	public Map<String, Double> getObjective() {
+		return objective;
+	}
+	public void setObjective(Map<String, Double> objective) {
+		this.objective = objective;
+	}
+	
 }

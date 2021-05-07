@@ -39,6 +39,7 @@ public class MaaSDataLoaderV2 extends AbstractModule{
 	public static final String typeGovt = "Govt";
 	public static final String typeOperator = "operator";
 	public static final String typeGovtTT = "GovtTT";
+	public static final String typeGovtTU = "GovtTU";
 	
 	public MaaSDataLoaderV2(String type) {
 		this.maasPacakges = null;

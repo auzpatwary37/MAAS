@@ -27,7 +27,7 @@ public class PopulationCompressor {
 	private Map<Id<Person>,List<Plan>> feasiblePlans = new HashMap<>();
 	private BiMap<String,Id<Person>> personId = HashBiMap.create();
 	private final int maxPlanSize;
-	private Map<Id<Person>,Person> compressedPopulation = new HashMap<>();
+	protected Map<Id<Person>,Person> compressedPopulation = new HashMap<>();
 	
 	public PopulationCompressor(Network odNetwork, int maxPlanSize) {
 		this.odNetwork = odNetwork;
