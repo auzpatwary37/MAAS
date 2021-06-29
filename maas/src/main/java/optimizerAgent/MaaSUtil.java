@@ -75,7 +75,7 @@ public final class MaaSUtil {
 	public static final String fareLinkOperatorReimbursementTransactionName = "fareLinkOperatorTransaction";
 	public static final String maasOperatorToFareLinkOperatorReimbursementTransactionName = "maasLooseFlgain";
 	public static final String projectedNullMaaS = "projectedNullMaaS";
-	
+	public static final String metaModelPlanProbabilityKey = "metaModelPlanProb";
 
 	public static Activity createMaaSOperator(MaaSPackages packages, Population population, String popOutLoc, 
 			Tuple<Double,Double> boundsMultiplier, Map<String,Map<String,Double>> additionalVariables, Map<String,Map<String, Tuple<Double,Double>>> additionalVariableLimits, boolean addCostVar) {
@@ -204,7 +204,22 @@ public final class MaaSUtil {
 		return packageId+"^"+tlString+"^"+name+MaaSUtil.MaaSOperatorTransitLinesDiscountVariableName;
 	}
 	
-	
+	public static List<? extends Plan> sortPlanBasedOnUtility(List<? extends Plan> list) {
+        // Sort the list 
+        Collections.sort(list, new Comparator<Plan>() { 
+            public int compare(Plan o1,  
+                               Plan o2) 
+            { 
+            	//if((Double)o1.getAttributes().getAttribute(MaaSUtil.detourRatio) == null) calcDetaourRatio(o1);
+            	//if((Double)o2.getAttributes().getAttribute(MaaSUtil.detourRatio) == null) calcDetaourRatio(o2);
+            	if(o1.getScore()==null)o1.setScore(0.);
+            	if(o2.getScore()==null)o2.setScore(0.);
+            	
+                return ((Double)o1.getScore()).compareTo((Double)o2.getScore()); 
+            } 
+        }); 
+        return list; 
+	}
 
 	
 	
@@ -321,6 +336,7 @@ public final class MaaSUtil {
 		boolean isequal = true;
 		int n1 = countActs(p1);
 		int n2 = countActs(p2);
+		if(p1.getScore()!=null && p2.getScore()!=null) {
 		if(n1>n2) {
 			if(p1.getScore()<p2.getScore()) {
 				return true;
@@ -330,7 +346,7 @@ public final class MaaSUtil {
 				return true;
 			}
 		}
-		
+		}
 		String maas1 = (String) p1.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName);
 		String maas2 = (String) p2.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName);
 		if((maas1==null && maas2!=null)||(maas1!=null && maas2==null)) {
@@ -531,6 +547,49 @@ public final class MaaSUtil {
 			throw new RuntimeException( Gbl.WRONG_IMPLEMENTATION + " Network, SearchableNetwork" ) ;
 		}
 	}
-	
+	/**
+	 * Caution!!!! it changes the both populations
+	 * @param pop1
+	 * @param pop2
+	 * @param writeLoc
+	 * @return
+	 */
+	public static Population mergePopulations(Population pop1, Population pop2, String writeLoc, int maxPlansPerPop) {
+		
+		for(Person p:pop1.getPersons().values()){
+			if(!PopulationUtils.getSubpopulation(p).equals(MaaSUtil.MaaSOperatorAgentSubPopulationName)) {
+				if(p.getPlans().size()>maxPlansPerPop) {
+					MaaSUtil.sortPlanBasedOnUtility(p.getPlans());
+					p.getPlans().subList(0,p.getPlans().size()-maxPlansPerPop).clear();
+				}
+			}
+		}
+		
+		for(Person p:pop2.getPersons().values()){
+			if(!PopulationUtils.getSubpopulation(pop1.getPersons().get(p.getId())).equals(MaaSUtil.MaaSOperatorAgentSubPopulationName)) {
+				if(p.getPlans().size()>maxPlansPerPop) {
+					MaaSUtil.sortPlanBasedOnUtility(p.getPlans());
+					p.getPlans().subList(0, p.getPlans().size()-maxPlansPerPop).clear();
+				}
+			}
+		}
+		
+		for(Person p:pop1.getPersons().values()) {
+			if(!PopulationUtils.getSubpopulation(p).equals(MaaSUtil.MaaSOperatorAgentSubPopulationName)) {
+			for(Plan pl:pop2.getPersons().get(p.getId()).getPlans()) {
+				boolean isDuplicate = false;
+				for(Plan plOr: p.getPlans()) {
+					if(MaaSUtil.planEquals(plOr, pl)) {
+						isDuplicate = true;
+						break;
+					}
+				}
+				if(!isDuplicate)p.addPlan(pl);
+			}
+			}
+		}
+		new org.matsim.core.population.io.PopulationWriter(pop1).write(writeLoc);
+		return pop1;
+	}
 	
 }

@@ -132,6 +132,7 @@ class MaaSDiscountAndChargeHandlerTest {
 //					}
 //				});
 				pacAll.setAllOPeratorReimbursementRatio(0.9);
+				pacAll.getMassPackagesPerOperator().get(operatorID).forEach(m->m.getOperatorReimburesementRatio().put(operatorID, 1.0));
 				new MaaSPackagesWriter(pacAll).write("test/packages_"+operatorID+".xml");
 				config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"test/packages_"+operatorID+".xml");
 				//new MaaSPackagesWriter(pac).write("test/packages_"+operatorID+".xml");

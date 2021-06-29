@@ -684,7 +684,7 @@ public class ObjectiveAndGradientCalculator {
 					variables.entrySet().parallelStream().forEach(v->{
 						String skey = MaaSUtil.retrieveName(v.getKey());
 						if(skey == "") skey = v.getKey();
-						if(MaaSUtil.ifMaaSPackageCostVariableDetails(v.getKey()) && MaaSUtil.retrievePackageId(v.getKey()).equals(op)) {
+						if(MaaSUtil.ifMaaSPackageCostVariableDetails(v.getKey()) && MaaSUtil.retrievePackageId(v.getKey()).equals(maasId)) {
 							if(op!=null) {
 								operatorGradient.get(op).put(v.getKey(), operatorGradient.get(op).get(v.getKey())+packageUsage);
 							}
@@ -839,7 +839,10 @@ public class ObjectiveAndGradientCalculator {
 		double tsU = 0;
 		for(Entry<String, Map<String, Double>> probGrad:model.getPlanProbabilityGradient().entrySet()){
 			for(Entry<String, Double> var:probGrad.getValue().entrySet()) {
-				totalSystemUtilityGrad.put(var.getKey(), model.getPlanProbability().get(probGrad.getKey())*model.getPlanUtilityGradient().get(probGrad.getKey()).get(var.getKey())+var.getValue()*model.getPlanUtility().get(probGrad.getKey()));
+				double gc =model.getPlanProbability().get(probGrad.getKey())*model.getPlanUtilityGradient().get(probGrad.getKey()).get(var.getKey())
+						+var.getValue()*model.getPlanUtility().get(probGrad.getKey());
+				totalSystemUtilityGrad.compute(var.getKey(), (k,v)->v==null?gc:v+gc);
+				
 				
 			}
 			tsU+=model.getPlanProbability().get(probGrad.getKey())*model.getPlanUtility().get(probGrad.getKey());
@@ -925,6 +928,7 @@ public class ObjectiveAndGradientCalculator {
 				gradKeys.forEach(g->outGrad.compute(g,(k,v)-> v==null?outObj.get(o.getKey())*-1*gradients.get(o.getKey()).get(k):v+outObj.get(o.getKey())*-1*gradients.get(o.getKey()).get(k)));
 			}else {
 				outObj.put(o.getKey(),o.getValue());
+				//gradKeys.forEach(g->outGrad.compute(g,(k,v)-> v==null?gradients.get(o.getKey()).get(k)*outObj.get(o.getKey()):v+outObj.get(o.getKey())*gradients.get(o.getKey()).get(k)));
 				gradKeys.forEach(g->outGrad.compute(g,(k,v)-> v==null?gradients.get(o.getKey()).get(k):v+gradients.get(o.getKey()).get(k)));
 			}
 		});

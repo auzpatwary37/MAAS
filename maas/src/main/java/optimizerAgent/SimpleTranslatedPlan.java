@@ -45,6 +45,8 @@ import ust.hk.praisehk.metamodelcalibration.analyticalModelImpl.CNLTripChain;
 public class SimpleTranslatedPlan {
 	public final static String SimplePlanAttributeName = "SIMPLE_PLAN";
 	
+	private final Plan plan;
+	
 	// this is the time Bean to be used for the model
 	private final Map<String,Tuple<Double,Double>> timeBean;
 	
@@ -68,6 +70,8 @@ public class SimpleTranslatedPlan {
 	
 	private String maasPacakgeId =null;
 	
+	private double pathSize = 1;
+	
 	
 	private List<Activity> activities;
 	
@@ -80,6 +84,7 @@ public class SimpleTranslatedPlan {
 	double totalWalkDistance = 0;
 	
 	public SimpleTranslatedPlan(Map<String,Tuple<Double,Double>> timeBean, Plan plan, Scenario scenario) {
+		this.plan = plan;
 		this.timeBean=timeBean;
 		
 		for(String s:timeBean.keySet()) {
@@ -201,6 +206,14 @@ public class SimpleTranslatedPlan {
 
 	
 
+	public double getPathSize() {
+		return pathSize;
+	}
+
+	public void setPathSize(double pathSize) {
+		this.pathSize = pathSize;
+	}
+
 	/**
 	 * Returns the attribute name by which this attribute is stored in plan attribute map
 	 * @return
@@ -270,6 +283,10 @@ public class SimpleTranslatedPlan {
 
 	public void setMaasPacakgeId(String maasPacakgeId) {
 		this.maasPacakgeId = maasPacakgeId;
+	}
+
+	public Plan getPlan() {
+		return plan;
 	}
 	
 	

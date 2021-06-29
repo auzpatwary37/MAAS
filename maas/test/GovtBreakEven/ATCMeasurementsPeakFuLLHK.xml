@@ -1,0 +1,2959 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Measurements>
+    <timeBeans>
+        <timeBean EndingTime="36000.0" StartingTime="32400.0" timeBeanId="10"/>
+        <timeBean EndingTime="61200.0" StartingTime="57600.0" timeBeanId="17"/>
+        <timeBean EndingTime="64800.0" StartingTime="61200.0" timeBeanId="18"/>
+        <timeBean EndingTime="68400.0" StartingTime="64800.0" timeBeanId="19"/>
+        <timeBean EndingTime="28800.0" StartingTime="25200.0" timeBeanId="8"/>
+        <timeBean EndingTime="32400.0" StartingTime="28800.0" timeBeanId="9"/>
+    </timeBeans>
+    <Measurement LINK_LIST="[102122_102187]" MeasurementId="1101_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="170.0" TimeBeanId="17"/>
+            <Volume PCUVolume="380.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="102122_102187"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101315_101316]" MeasurementId="1029_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="900.0" TimeBeanId="17"/>
+            <Volume PCUVolume="870.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101315_101316"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101316_101315]" MeasurementId="1029_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="790.0" TimeBeanId="18"/>
+            <Volume PCUVolume="790.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101316_101315"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[303180_206126]" MeasurementId="2401_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="20.0" TimeBeanId="17"/>
+            <Volume PCUVolume="20.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="303180_206126"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[206212_205058]" MeasurementId="1009_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="1050.0" TimeBeanId="18"/>
+            <Volume PCUVolume="940.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="206212_205058"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[656436_656434]" MeasurementId="5037_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="1660.0" TimeBeanId="19"/>
+            <Volume PCUVolume="3720.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="656436_656434"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[508475_508470]" MeasurementId="3014_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="1110.0" TimeBeanId="17"/>
+            <Volume PCUVolume="1460.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="508475_508470"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[652119_652084]" MeasurementId="6211_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="860.0" TimeBeanId="18"/>
+            <Volume PCUVolume="1400.0" TimeBeanId="8"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="652119_652084"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[984021_986032]" MeasurementId="6221_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="450.0" TimeBeanId="17"/>
+            <Volume PCUVolume="350.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="984021_986032"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[&quot;206055_206316,  206203_201166,  201164_201160&quot;,  201164_201167]" MeasurementId="1003_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="3620.0" TimeBeanId="18"/>
+            <Volume PCUVolume="4830.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="&quot;206055_206316"/>
+            <LinkId Id=" 206203_201166"/>
+            <LinkId Id=" 201164_201160&quot;"/>
+            <LinkId Id=" 201164_201167"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[652084_652119]" MeasurementId="6211_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="1020.0" TimeBeanId="19"/>
+            <Volume PCUVolume="890.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="652084_652119"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[986032_984021]" MeasurementId="6221_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="570.0" TimeBeanId="17"/>
+            <Volume PCUVolume="620.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="986032_984021"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[303155_303156]" MeasurementId="1103_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="500.0" TimeBeanId="18"/>
+            <Volume PCUVolume="370.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="303155_303156"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[503036_503031]" MeasurementId="3011_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="910.0" TimeBeanId="19"/>
+            <Volume PCUVolume="860.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="503036_503031"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[a91080_a91085]" MeasurementId="5031_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="1400.0" TimeBeanId="18"/>
+            <Volume PCUVolume="1810.0" TimeBeanId="8"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="a91080_a91085"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[982066_982024]" MeasurementId="5018_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="940.0" TimeBeanId="19"/>
+            <Volume PCUVolume="920.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="982066_982024"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[982218_982221]" MeasurementId="5038_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="1590.0" TimeBeanId="19"/>
+            <Volume PCUVolume="1500.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="982218_982221"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[875430_875425]" MeasurementId="6207_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="800.0" TimeBeanId="18"/>
+            <Volume PCUVolume="640.0" TimeBeanId="8"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="875430_875425"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[26198_653525]" MeasurementId="6210_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="370.0" TimeBeanId="19"/>
+            <Volume PCUVolume="300.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="26198_653525"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[982220_982217]" MeasurementId="5038_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="1830.0" TimeBeanId="19"/>
+            <Volume PCUVolume="2010.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="982220_982217"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[878175_876000]" MeasurementId="5008_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="450.0" TimeBeanId="19"/>
+            <Volume PCUVolume="370.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="878175_876000"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[988203_988196]" MeasurementId="5012_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="4570.0" TimeBeanId="18"/>
+            <Volume PCUVolume="3390.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="988203_988196"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[503451_503456]" MeasurementId="3104_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="130.0" TimeBeanId="8"/>
+            <Volume PCUVolume="160.0" TimeBeanId="19"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="503451_503456"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101307_103001]" MeasurementId="1108_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="900.0" TimeBeanId="19"/>
+            <Volume PCUVolume="960.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101307_103001"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[503456_503451]" MeasurementId="3104_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="130.0" TimeBeanId="18"/>
+            <Volume PCUVolume="270.0" TimeBeanId="8"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="503456_503451"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[303027_303030]" MeasurementId="1109_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="1100.0" TimeBeanId="17"/>
+            <Volume PCUVolume="1350.0" TimeBeanId="8"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="303027_303030"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101178_101163]" MeasurementId="1104">
+        <Volumes>
+            <Volume PCUVolume="230.0" TimeBeanId="18"/>
+            <Volume PCUVolume="210.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101178_101163"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[982064_982025]" MeasurementId="5018_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="1530.0" TimeBeanId="18"/>
+            <Volume PCUVolume="1950.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="982064_982025"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[875540_879866]" MeasurementId="6208_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="230.0" TimeBeanId="19"/>
+            <Volume PCUVolume="220.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="875540_879866"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[206121_206127]" MeasurementId="1102">
+        <Volumes>
+            <Volume PCUVolume="340.0" TimeBeanId="18"/>
+            <Volume PCUVolume="320.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="206121_206127"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[401680_401433]" MeasurementId="5030_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="3630.0" TimeBeanId="18"/>
+            <Volume PCUVolume="4610.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="401680_401433"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[875425_875430]" MeasurementId="6207_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="670.0" TimeBeanId="17"/>
+            <Volume PCUVolume="690.0" TimeBeanId="8"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="875425_875430"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[502157_508852]" MeasurementId="4401_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="120.0" TimeBeanId="19"/>
+            <Volume PCUVolume="80.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="502157_508852"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[982028_982026]" MeasurementId="5033_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="3080.0" TimeBeanId="18"/>
+            <Volume PCUVolume="4830.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="982028_982026"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[761158_506351]" MeasurementId="5021_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="2700.0" TimeBeanId="18"/>
+            <Volume PCUVolume="2990.0" TimeBeanId="8"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="761158_506351"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[876000_878175]" MeasurementId="5008_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="360.0" TimeBeanId="19"/>
+            <Volume PCUVolume="330.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="876000_878175"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[401159_502157]" MeasurementId="4205_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="1380.0" TimeBeanId="19"/>
+            <Volume PCUVolume="1440.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="401159_502157"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[503043_761333]" MeasurementId="5017_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="1070.0" TimeBeanId="19"/>
+            <Volume PCUVolume="840.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="503043_761333"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[ 105140_101565,  105139_101563&quot;,  101561_101563, &quot;105141_101565]" MeasurementId="1002_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="4610.0" TimeBeanId="19"/>
+            <Volume PCUVolume="5700.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id=" 105140_101565"/>
+            <LinkId Id=" 105139_101563&quot;"/>
+            <LinkId Id=" 101561_101563"/>
+            <LinkId Id="&quot;105141_101565"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[501068_508320]" MeasurementId="4207_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="590.0" TimeBeanId="19"/>
+            <Volume PCUVolume="640.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="501068_508320"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[982156_982157]" MeasurementId="5027_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="2090.0" TimeBeanId="8"/>
+            <Volume PCUVolume="3500.0" TimeBeanId="19"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="982156_982157"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[102688_101283]" MeasurementId="2210">
+        <Volumes>
+            <Volume PCUVolume="270.0" TimeBeanId="19"/>
+            <Volume PCUVolume="280.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="102688_101283"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[303165_303164]" MeasurementId="1018_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="110.0" TimeBeanId="17"/>
+            <Volume PCUVolume="100.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="303165_303164"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[983018_983162]" MeasurementId="5007_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="340.0" TimeBeanId="19"/>
+            <Volume PCUVolume="270.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="983018_983162"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[506350_761158]" MeasurementId="5021_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="3130.0" TimeBeanId="19"/>
+            <Volume PCUVolume="2500.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="506350_761158"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101447_101663]" MeasurementId="1028_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="3870.0" TimeBeanId="17"/>
+            <Volume PCUVolume="4490.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101447_101663"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[a91085_a91080]" MeasurementId="5031_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="1340.0" TimeBeanId="8"/>
+            <Volume PCUVolume="1920.0" TimeBeanId="19"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="a91085_a91080"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[401205_502158]" MeasurementId="4204_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="1330.0" TimeBeanId="19"/>
+            <Volume PCUVolume="1360.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="401205_502158"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[&quot;501172_508355,  508354_508355&quot;]" MeasurementId="4208_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="4180.0" TimeBeanId="18"/>
+            <Volume PCUVolume="3850.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="&quot;501172_508355"/>
+            <LinkId Id=" 508354_508355&quot;"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[988199_988204]" MeasurementId="5012_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="3840.0" TimeBeanId="18"/>
+            <Volume PCUVolume="5510.0" TimeBeanId="8"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="988199_988204"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101679_101673]" MeasurementId="2408_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="610.0" TimeBeanId="19"/>
+            <Volume PCUVolume="640.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101679_101673"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101287_101151]" MeasurementId="2208">
+        <Volumes>
+            <Volume PCUVolume="730.0" TimeBeanId="18"/>
+            <Volume PCUVolume="710.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101287_101151"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[983415_401407]" MeasurementId="6203_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="940.0" TimeBeanId="19"/>
+            <Volume PCUVolume="1190.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="983415_401407"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[983423_401421]" MeasurementId="6204_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="500.0" TimeBeanId="18"/>
+            <Volume PCUVolume="670.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="983423_401421"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[503741_503743]" MeasurementId="3016_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="570.0" TimeBeanId="17"/>
+            <Volume PCUVolume="490.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="503741_503743"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[401407_983415]" MeasurementId="6203_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="1000.0" TimeBeanId="17"/>
+            <Volume PCUVolume="1020.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="401407_983415"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[a91211_a91190]" MeasurementId="5032_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="730.0" TimeBeanId="18"/>
+            <Volume PCUVolume="700.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="a91211_a91190"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[657014_652296]" MeasurementId="6206_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="1490.0" TimeBeanId="17"/>
+            <Volume PCUVolume="1600.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="657014_652296"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101148_101143]" MeasurementId="1013_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="100.0" TimeBeanId="17"/>
+            <Volume PCUVolume="100.0" TimeBeanId="8"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101148_101143"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[503743_503741]" MeasurementId="3016_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="480.0" TimeBeanId="17"/>
+            <Volume PCUVolume="550.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="503743_503741"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[401421_983423]" MeasurementId="6204_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="570.0" TimeBeanId="18"/>
+            <Volume PCUVolume="630.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="401421_983423"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[503372_503370]" MeasurementId="3018_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="460.0" TimeBeanId="18"/>
+            <Volume PCUVolume="510.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="503372_503370"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[303152_303150]" MeasurementId="1011_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="530.0" TimeBeanId="18"/>
+            <Volume PCUVolume="590.0" TimeBeanId="8"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="303152_303150"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[403102_401467]" MeasurementId="4206_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="760.0" TimeBeanId="17"/>
+            <Volume PCUVolume="890.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="403102_401467"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[102198_102200]" MeasurementId="2213_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="230.0" TimeBeanId="17"/>
+            <Volume PCUVolume="240.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="102198_102200"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[102167_102160]" MeasurementId="1016_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="270.0" TimeBeanId="17"/>
+            <Volume PCUVolume="240.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="102167_102160"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101244_101245]" MeasurementId="2209_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="290.0" TimeBeanId="18"/>
+            <Volume PCUVolume="230.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101244_101245"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[878011_878012]" MeasurementId="5106_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="740.0" TimeBeanId="17"/>
+            <Volume PCUVolume="1000.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="878011_878012"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[501049_503484]" MeasurementId="3020_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="750.0" TimeBeanId="19"/>
+            <Volume PCUVolume="710.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="501049_503484"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101275_101276]" MeasurementId="2212">
+        <Volumes>
+            <Volume PCUVolume="3550.0" TimeBeanId="19"/>
+            <Volume PCUVolume="3260.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101275_101276"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[303100_303055]" MeasurementId="1017_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="1150.0" TimeBeanId="17"/>
+            <Volume PCUVolume="1500.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="303100_303055"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101255_101256]" MeasurementId="2211">
+        <Volumes>
+            <Volume PCUVolume="3030.0" TimeBeanId="19"/>
+            <Volume PCUVolume="3160.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101255_101256"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[102250_134621]" MeasurementId="1014_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="460.0" TimeBeanId="18"/>
+            <Volume PCUVolume="430.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="102250_134621"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[503370_503372]" MeasurementId="3018_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="430.0" TimeBeanId="8"/>
+            <Volume PCUVolume="570.0" TimeBeanId="19"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="503370_503372"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[652296_657014]" MeasurementId="6206_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="1420.0" TimeBeanId="18"/>
+            <Volume PCUVolume="1410.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="652296_657014"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[ 502705_502298&quot;, &quot;502392_502703]" MeasurementId="4216_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="5290.0" TimeBeanId="18"/>
+            <Volume PCUVolume="5470.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id=" 502705_502298&quot;"/>
+            <LinkId Id="&quot;502392_502703"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101544_105166]" MeasurementId="1015_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="720.0" TimeBeanId="18"/>
+            <Volume PCUVolume="880.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101544_105166"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[207990_101503]" MeasurementId="2214_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="750.0" TimeBeanId="19"/>
+            <Volume PCUVolume="800.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="207990_101503"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[&quot;405017_401150,  20300_401150&quot;]" MeasurementId="4214_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="2600.0" TimeBeanId="17"/>
+            <Volume PCUVolume="1880.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="&quot;405017_401150"/>
+            <LinkId Id=" 20300_401150&quot;"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[502708_501415]" MeasurementId="4218_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="600.0" TimeBeanId="19"/>
+            <Volume PCUVolume="390.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="502708_501415"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[988047_988002]" MeasurementId="6209_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="290.0" TimeBeanId="19"/>
+            <Volume PCUVolume="540.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="988047_988002"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[761184_761016]" MeasurementId="5023_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="470.0" TimeBeanId="19"/>
+            <Volume PCUVolume="350.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="761184_761016"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[988002_988047]" MeasurementId="6209_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="540.0" TimeBeanId="19"/>
+            <Volume PCUVolume="260.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="988002_988047"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[652082_652081]" MeasurementId="5006_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="870.0" TimeBeanId="17"/>
+            <Volume PCUVolume="1290.0" TimeBeanId="8"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="652082_652081"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[651958_17156]" MeasurementId="5020_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="1990.0" TimeBeanId="19"/>
+            <Volume PCUVolume="2170.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="651958_17156"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[110003_110005]" MeasurementId="2217_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="980.0" TimeBeanId="19"/>
+            <Volume PCUVolume="980.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="110003_110005"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101720_102842]" MeasurementId="1019">
+        <Volumes>
+            <Volume PCUVolume="490.0" TimeBeanId="18"/>
+            <Volume PCUVolume="580.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101720_102842"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[401433_401680]" MeasurementId="5030_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="4190.0" TimeBeanId="19"/>
+            <Volume PCUVolume="3840.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="401433_401680"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[401325_401326]" MeasurementId="3017_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="620.0" TimeBeanId="18"/>
+            <Volume PCUVolume="550.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="401325_401326"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101048_101049]" MeasurementId="1012">
+        <Volumes>
+            <Volume PCUVolume="470.0" TimeBeanId="17"/>
+            <Volume PCUVolume="480.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101048_101049"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101515_206020]" MeasurementId="2204_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="540.0" TimeBeanId="19"/>
+            <Volume PCUVolume="440.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101515_206020"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101197_101441]" MeasurementId="1001_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="2670.0" TimeBeanId="17"/>
+            <Volume PCUVolume="3340.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101197_101441"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[401163_408391]" MeasurementId="4403">
+        <Volumes>
+            <Volume PCUVolume="220.0" TimeBeanId="19"/>
+            <Volume PCUVolume="190.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="401163_408391"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[401153_403113]" MeasurementId="4404">
+        <Volumes>
+            <Volume PCUVolume="240.0" TimeBeanId="19"/>
+            <Volume PCUVolume="200.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="401153_403113"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[508470_508475]" MeasurementId="3014_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="430.0" TimeBeanId="19"/>
+            <Volume PCUVolume="320.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="508470_508475"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[652081_652082]" MeasurementId="5006_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="1030.0" TimeBeanId="18"/>
+            <Volume PCUVolume="1050.0" TimeBeanId="8"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="652081_652082"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[502219_502218]" MeasurementId="4203_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="3140.0" TimeBeanId="18"/>
+            <Volume PCUVolume="3170.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="502219_502218"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[24754_24707]" MeasurementId="1107_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="990.0" TimeBeanId="18"/>
+            <Volume PCUVolume="730.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="24754_24707"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[876830_876925]" MeasurementId="5019_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="860.0" TimeBeanId="18"/>
+            <Volume PCUVolume="1010.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="876830_876925"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[508955_508580]" MeasurementId="3004_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="1910.0" TimeBeanId="19"/>
+            <Volume PCUVolume="2090.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="508955_508580"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[103001_101307]" MeasurementId="1108_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="860.0" TimeBeanId="19"/>
+            <Volume PCUVolume="800.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="103001_101307"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[876945_876840]" MeasurementId="5019_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="1460.0" TimeBeanId="19"/>
+            <Volume PCUVolume="1170.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="876945_876840"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[ 101440_101198&quot;&quot;&quot;, &quot; 101444_101198, &quot;&quot;101754_101755]" MeasurementId="1001_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="6470.0" TimeBeanId="19"/>
+            <Volume PCUVolume="6390.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id=" 101440_101198&quot;&quot;&quot;"/>
+            <LinkId Id="&quot; 101444_101198"/>
+            <LinkId Id="&quot;&quot;101754_101755"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[205020_205010]" MeasurementId="1008_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="1370.0" TimeBeanId="17"/>
+            <Volume PCUVolume="1510.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="205020_205010"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[25983_653508]" MeasurementId="5013_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="4600.0" TimeBeanId="18"/>
+            <Volume PCUVolume="5860.0" TimeBeanId="8"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="25983_653508"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[508852_502157]" MeasurementId="4401_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="130.0" TimeBeanId="18"/>
+            <Volume PCUVolume="170.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="508852_502157"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[651608_651718]" MeasurementId="5002_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="2680.0" TimeBeanId="18"/>
+            <Volume PCUVolume="1960.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="651608_651718"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101211_101186]" MeasurementId="2207_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="1090.0" TimeBeanId="19"/>
+            <Volume PCUVolume="1090.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101211_101186"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[&quot;&quot;101461_101462&quot;, &quot; 101418_101419&quot;&quot;]" MeasurementId="1028_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="4500.0" TimeBeanId="18"/>
+            <Volume PCUVolume="5380.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="&quot;&quot;101461_101462&quot;"/>
+            <LinkId Id="&quot; 101418_101419&quot;&quot;"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[24707_101520]" MeasurementId="1107_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="210.0" TimeBeanId="17"/>
+            <Volume PCUVolume="180.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="24707_101520"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[ 502601_502278&quot;, &quot;502279_502278]" MeasurementId="3023_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="4140.0" TimeBeanId="19"/>
+            <Volume PCUVolume="4220.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id=" 502601_502278&quot;"/>
+            <LinkId Id="&quot;502279_502278"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101268_101304]" MeasurementId="1007_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="3060.0" TimeBeanId="19"/>
+            <Volume PCUVolume="3360.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101268_101304"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[984020_983334]" MeasurementId="5010_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="140.0" TimeBeanId="18"/>
+            <Volume PCUVolume="150.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="984020_983334"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[502430_502429]" MeasurementId="3003_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="5010.0" TimeBeanId="18"/>
+            <Volume PCUVolume="5000.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="502430_502429"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[879520_988114]" MeasurementId="5029_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="1760.0" TimeBeanId="18"/>
+            <Volume PCUVolume="3760.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="879520_988114"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[983115_16645]" MeasurementId="5004_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="1010.0" TimeBeanId="17"/>
+            <Volume PCUVolume="1100.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="983115_16645"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[27423_503701]" MeasurementId="3019_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="750.0" TimeBeanId="18"/>
+            <Volume PCUVolume="980.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="27423_503701"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[401397_401398]" MeasurementId="3101">
+        <Volumes>
+            <Volume PCUVolume="950.0" TimeBeanId="19"/>
+            <Volume PCUVolume="920.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="401397_401398"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101673_101679]" MeasurementId="2408_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="340.0" TimeBeanId="17"/>
+            <Volume PCUVolume="320.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101673_101679"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[988114_879520]" MeasurementId="5029_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="2550.0" TimeBeanId="19"/>
+            <Volume PCUVolume="1540.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="988114_879520"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[16645_983115]" MeasurementId="5004_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="860.0" TimeBeanId="18"/>
+            <Volume PCUVolume="1010.0" TimeBeanId="8"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="16645_983115"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[507107_507106]" MeasurementId="3022_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="300.0" TimeBeanId="8"/>
+            <Volume PCUVolume="240.0" TimeBeanId="19"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="507107_507106"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[877041_875232]" MeasurementId="5102_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="210.0" TimeBeanId="19"/>
+            <Volume PCUVolume="170.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="877041_875232"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[501202_508821]" MeasurementId="3001_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="2490.0" TimeBeanId="19"/>
+            <Volume PCUVolume="1840.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="501202_508821"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[ 404013_404015&quot;, &quot;404006_404015]" MeasurementId="3024_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="2110.0" TimeBeanId="19"/>
+            <Volume PCUVolume="1560.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id=" 404013_404015&quot;"/>
+            <LinkId Id="&quot;404006_404015"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[401871_404015]" MeasurementId="3024_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="3140.0" TimeBeanId="19"/>
+            <Volume PCUVolume="4060.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="401871_404015"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[875232_877041]" MeasurementId="5102_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="120.0" TimeBeanId="19"/>
+            <Volume PCUVolume="110.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="875232_877041"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[401007_401018]" MeasurementId="3005_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="450.0" TimeBeanId="19"/>
+            <Volume PCUVolume="340.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="401007_401018"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[508845_508365]" MeasurementId="3001_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="2020.0" TimeBeanId="8"/>
+            <Volume PCUVolume="2380.0" TimeBeanId="19"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="508845_508365"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[761333_503043]" MeasurementId="5017_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="1390.0" TimeBeanId="8"/>
+            <Volume PCUVolume="1040.0" TimeBeanId="19"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="761333_503043"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[507106_507107]" MeasurementId="3022_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="580.0" TimeBeanId="19"/>
+            <Volume PCUVolume="650.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="507106_507107"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[134621_102250]" MeasurementId="1014_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="410.0" TimeBeanId="19"/>
+            <Volume PCUVolume="430.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="134621_102250"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[401274_401281]" MeasurementId="3009_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="760.0" TimeBeanId="19"/>
+            <Volume PCUVolume="560.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="401274_401281"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[875401_877031]" MeasurementId="6213_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="1170.0" TimeBeanId="19"/>
+            <Volume PCUVolume="940.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="875401_877031"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[401281_401274]" MeasurementId="3009_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="610.0" TimeBeanId="19"/>
+            <Volume PCUVolume="610.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="401281_401274"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[875402_875401]" MeasurementId="6213_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="1000.0" TimeBeanId="18"/>
+            <Volume PCUVolume="1380.0" TimeBeanId="8"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="875402_875401"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101245_101244]" MeasurementId="2209_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="180.0" TimeBeanId="19"/>
+            <Volume PCUVolume="150.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101245_101244"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[102200_102198]" MeasurementId="2213_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="550.0" TimeBeanId="17"/>
+            <Volume PCUVolume="500.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="102200_102198"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[205059_203171]" MeasurementId="1021_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="260.0" TimeBeanId="19"/>
+            <Volume PCUVolume="270.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="205059_203171"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[203171_205059]" MeasurementId="1021_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="430.0" TimeBeanId="18"/>
+            <Volume PCUVolume="470.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="203171_205059"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[401018_401007]" MeasurementId="3005_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="600.0" TimeBeanId="19"/>
+            <Volume PCUVolume="500.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="401018_401007"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[875503_878014]" MeasurementId="5105_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="1110.0" TimeBeanId="18"/>
+            <Volume PCUVolume="900.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="875503_878014"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[ 502702_502707,  505130_502707&quot;, &quot;502292_502299]" MeasurementId="4216_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="5550.0" TimeBeanId="17"/>
+            <Volume PCUVolume="5070.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id=" 502702_502707"/>
+            <LinkId Id=" 505130_502707&quot;"/>
+            <LinkId Id="&quot;502292_502299"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[401544_401046]" MeasurementId="3007_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="2510.0" TimeBeanId="18"/>
+            <Volume PCUVolume="2190.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="401544_401046"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[201158_209709]" MeasurementId="1025_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="3120.0" TimeBeanId="19"/>
+            <Volume PCUVolume="2840.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="201158_209709"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[508751_508745]" MeasurementId="3103_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="300.0" TimeBeanId="19"/>
+            <Volume PCUVolume="270.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="508751_508745"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101542_303010]" MeasurementId="1004_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="2180.0" TimeBeanId="8"/>
+            <Volume PCUVolume="1910.0" TimeBeanId="19"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101542_303010"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[503718_503717]" MeasurementId="3105">
+        <Volumes>
+            <Volume PCUVolume="750.0" TimeBeanId="18"/>
+            <Volume PCUVolume="770.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="503718_503717"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[508745_508751]" MeasurementId="3103_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="190.0" TimeBeanId="18"/>
+            <Volume PCUVolume="210.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="508745_508751"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101629_101630]" MeasurementId="1027_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="560.0" TimeBeanId="18"/>
+            <Volume PCUVolume="1060.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101629_101630"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[209710_201157]" MeasurementId="1025_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="2930.0" TimeBeanId="19"/>
+            <Volume PCUVolume="3030.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="209710_201157"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[302208_303158]" MeasurementId="1023_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="430.0" TimeBeanId="18"/>
+            <Volume PCUVolume="390.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="302208_303158"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[988122_988121]" MeasurementId="5035_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="3410.0" TimeBeanId="19"/>
+            <Volume PCUVolume="2050.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="988122_988121"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[401151_401152]" MeasurementId="3102">
+        <Volumes>
+            <Volume PCUVolume="440.0" TimeBeanId="19"/>
+            <Volume PCUVolume="370.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="401151_401152"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[303158_302208]" MeasurementId="1023_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="320.0" TimeBeanId="8"/>
+            <Volume PCUVolume="290.0" TimeBeanId="19"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="303158_302208"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[401046_401544]" MeasurementId="3007_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="2470.0" TimeBeanId="19"/>
+            <Volume PCUVolume="2760.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="401046_401544"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[&quot; 201156_201163&quot;&quot;,  201159_201163, &quot;&quot;201159_201161&quot;]" MeasurementId="1003_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="3270.0" TimeBeanId="19"/>
+            <Volume PCUVolume="3310.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="&quot; 201156_201163&quot;&quot;"/>
+            <LinkId Id=" 201159_201163"/>
+            <LinkId Id="&quot;&quot;201159_201161&quot;"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[a93030_a92540]" MeasurementId="5015_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="140.0" TimeBeanId="17"/>
+            <Volume PCUVolume="140.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="a93030_a92540"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[508752_508600]" MeasurementId="4212_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="1150.0" TimeBeanId="19"/>
+            <Volume PCUVolume="930.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="508752_508600"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[303010_101542]" MeasurementId="1004_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="1570.0" TimeBeanId="17"/>
+            <Volume PCUVolume="2200.0" TimeBeanId="8"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="303010_101542"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[501415_502708]" MeasurementId="4218_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="220.0" TimeBeanId="17"/>
+            <Volume PCUVolume="380.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="501415_502708"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[401167_408389]" MeasurementId="4215_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="700.0" TimeBeanId="19"/>
+            <Volume PCUVolume="600.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="401167_408389"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[401151_401888]" MeasurementId="4210">
+        <Volumes>
+            <Volume PCUVolume="460.0" TimeBeanId="18"/>
+            <Volume PCUVolume="400.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="401151_401888"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[401248_502220]" MeasurementId="4202_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="2580.0" TimeBeanId="19"/>
+            <Volume PCUVolume="2520.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="401248_502220"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[ 877070_878150,  878149_878148&quot;, &quot;877180_141103]" MeasurementId="5016_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="3540.0" TimeBeanId="18"/>
+            <Volume PCUVolume="3510.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id=" 877070_878150"/>
+            <LinkId Id=" 878149_878148&quot;"/>
+            <LinkId Id="&quot;877180_141103"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101668_101145]" MeasurementId="1105_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="430.0" TimeBeanId="19"/>
+            <Volume PCUVolume="500.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101668_101145"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[508593_508410]" MeasurementId="4213_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="1800.0" TimeBeanId="8"/>
+            <Volume PCUVolume="1450.0" TimeBeanId="19"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="508593_508410"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[502334_401916]" MeasurementId="3002_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="3940.0" TimeBeanId="19"/>
+            <Volume PCUVolume="3710.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="502334_401916"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[503556_502294]" MeasurementId="3012_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="2630.0" TimeBeanId="19"/>
+            <Volume PCUVolume="2440.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="503556_502294"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[509135_508440]" MeasurementId="4212_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="840.0" TimeBeanId="8"/>
+            <Volume PCUVolume="700.0" TimeBeanId="19"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="509135_508440"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[ 401150_405017&quot;, &quot;401150_401149]" MeasurementId="4214_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="2510.0" TimeBeanId="19"/>
+            <Volume PCUVolume="2490.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id=" 401150_405017&quot;"/>
+            <LinkId Id="&quot;401150_401149"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101644_101643]" MeasurementId="1006_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="1390.0" TimeBeanId="19"/>
+            <Volume PCUVolume="2170.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101644_101643"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[653117_653147]" MeasurementId="5104_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="210.0" TimeBeanId="17"/>
+            <Volume PCUVolume="240.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="653117_653147"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101145_101668]" MeasurementId="1105_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="430.0" TimeBeanId="19"/>
+            <Volume PCUVolume="600.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101145_101668"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101630_101629]" MeasurementId="1027_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="930.0" TimeBeanId="19"/>
+            <Volume PCUVolume="1030.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101630_101629"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[401916_502337]" MeasurementId="3002_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="3370.0" TimeBeanId="17"/>
+            <Volume PCUVolume="3610.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="401916_502337"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[ 101080_101135&quot;, &quot;101134_101136]" MeasurementId="1006_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="1420.0" TimeBeanId="19"/>
+            <Volume PCUVolume="1860.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id=" 101080_101135&quot;"/>
+            <LinkId Id="&quot;101134_101136"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[502220_401248]" MeasurementId="4202_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="500.0" TimeBeanId="8"/>
+            <Volume PCUVolume="530.0" TimeBeanId="19"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="502220_401248"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[503555_503540]" MeasurementId="3012_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="2670.0" TimeBeanId="19"/>
+            <Volume PCUVolume="2660.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="503555_503540"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[403114_401152]" MeasurementId="4209">
+        <Volumes>
+            <Volume PCUVolume="990.0" TimeBeanId="17"/>
+            <Volume PCUVolume="750.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="403114_401152"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[303022_309005]" MeasurementId="1010_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="1940.0" TimeBeanId="19"/>
+            <Volume PCUVolume="1880.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="303022_309005"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[&quot;101232_101233,  101200_101201&quot;]" MeasurementId="1030_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="4520.0" TimeBeanId="18"/>
+            <Volume PCUVolume="4290.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="&quot;101232_101233"/>
+            <LinkId Id=" 101200_101201&quot;"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101189_101190]" MeasurementId="2216_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="2700.0" TimeBeanId="19"/>
+            <Volume PCUVolume="4110.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101189_101190"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101207_101189]" MeasurementId="2216_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="3710.0" TimeBeanId="19"/>
+            <Volume PCUVolume="2920.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101207_101189"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101402_101492]" MeasurementId="1020_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="690.0" TimeBeanId="19"/>
+            <Volume PCUVolume="570.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101402_101492"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[&quot;101194_101195,  101222_101224&quot;]" MeasurementId="1030_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="3920.0" TimeBeanId="17"/>
+            <Volume PCUVolume="4210.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="&quot;101194_101195"/>
+            <LinkId Id=" 101222_101224&quot;"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[509030_509025]" MeasurementId="3010">
+        <Volumes>
+            <Volume PCUVolume="2920.0" TimeBeanId="19"/>
+            <Volume PCUVolume="2920.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="509030_509025"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101033_101032]" MeasurementId="2206_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="370.0" TimeBeanId="19"/>
+            <Volume PCUVolume="380.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101033_101032"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[&quot;309005_303023,  309006_303023&quot;]" MeasurementId="1010_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="2130.0" TimeBeanId="17"/>
+            <Volume PCUVolume="2450.0" TimeBeanId="8"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="&quot;309005_303023"/>
+            <LinkId Id=" 309006_303023&quot;"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[875317_875229]" MeasurementId="5001_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="4410.0" TimeBeanId="8"/>
+            <Volume PCUVolume="3700.0" TimeBeanId="19"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="875317_875229"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[201184_206205]" MeasurementId="2215_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="1960.0" TimeBeanId="17"/>
+            <Volume PCUVolume="1880.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="201184_206205"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[651892_651609]" MeasurementId="5002_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="2380.0" TimeBeanId="19"/>
+            <Volume PCUVolume="2890.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="651892_651609"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[651880_651612]" MeasurementId="5024_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="2880.0" TimeBeanId="19"/>
+            <Volume PCUVolume="2340.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="651880_651612"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101032_101033]" MeasurementId="2206_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="350.0" TimeBeanId="18"/>
+            <Volume PCUVolume="540.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101032_101033"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[653513_654049]" MeasurementId="5013_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="3450.0" TimeBeanId="18"/>
+            <Volume PCUVolume="4050.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="653513_654049"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101492_101402]" MeasurementId="1020_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="210.0" TimeBeanId="18"/>
+            <Volume PCUVolume="150.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101492_101402"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[879410_878201]" MeasurementId="5014_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="190.0" TimeBeanId="18"/>
+            <Volume PCUVolume="170.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="879410_878201"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[508121_508137]" MeasurementId="4221_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="610.0" TimeBeanId="19"/>
+            <Volume PCUVolume="640.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="508121_508137"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[502157_401159]" MeasurementId="4205_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="1180.0" TimeBeanId="19"/>
+            <Volume PCUVolume="1210.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="502157_401159"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[508320_501068]" MeasurementId="4207_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="570.0" TimeBeanId="18"/>
+            <Volume PCUVolume="540.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="508320_501068"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[401553_17976]" MeasurementId="4201_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="1280.0" TimeBeanId="19"/>
+            <Volume PCUVolume="910.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="401553_17976"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[&quot;508356_501171,  508410_501171&quot;]" MeasurementId="4208_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="2700.0" TimeBeanId="8"/>
+            <Volume PCUVolume="1850.0" TimeBeanId="19"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="&quot;508356_501171"/>
+            <LinkId Id=" 508410_501171&quot;"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[502309_27293]" MeasurementId="5022_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="2720.0" TimeBeanId="19"/>
+            <Volume PCUVolume="2180.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="502309_27293"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[502290_502289]" MeasurementId="4219_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="2450.0" TimeBeanId="19"/>
+            <Volume PCUVolume="2950.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="502290_502289"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[402227_401017]" MeasurementId="3021">
+        <Volumes>
+            <Volume PCUVolume="830.0" TimeBeanId="19"/>
+            <Volume PCUVolume="630.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="402227_401017"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[100716_303201]" MeasurementId="2202_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="980.0" TimeBeanId="17"/>
+            <Volume PCUVolume="940.0" TimeBeanId="8"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="100716_303201"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101067_302072]" MeasurementId="2201_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="810.0" TimeBeanId="19"/>
+            <Volume PCUVolume="850.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101067_302072"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[102159_102160]" MeasurementId="1016_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="800.0" TimeBeanId="18"/>
+            <Volume PCUVolume="760.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="102159_102160"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[ 502277_502270&quot;, &quot;502277_502379]" MeasurementId="3023_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="3170.0" TimeBeanId="19"/>
+            <Volume PCUVolume="4100.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id=" 502277_502270&quot;"/>
+            <LinkId Id="&quot;502277_502379"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[503701_503041]" MeasurementId="3019_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="720.0" TimeBeanId="8"/>
+            <Volume PCUVolume="840.0" TimeBeanId="19"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="503701_503041"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[401053_401052]" MeasurementId="3013_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="980.0" TimeBeanId="17"/>
+            <Volume PCUVolume="940.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="401053_401052"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[201185_201183]" MeasurementId="2215_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="1910.0" TimeBeanId="17"/>
+            <Volume PCUVolume="2200.0" TimeBeanId="8"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="201185_201183"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[303164_303165]" MeasurementId="1018_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="130.0" TimeBeanId="18"/>
+            <Volume PCUVolume="130.0" TimeBeanId="8"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="303164_303165"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[303055_303100]" MeasurementId="1017_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="1140.0" TimeBeanId="19"/>
+            <Volume PCUVolume="1130.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="303055_303100"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[401221_401220]" MeasurementId="3015">
+        <Volumes>
+            <Volume PCUVolume="770.0" TimeBeanId="18"/>
+            <Volume PCUVolume="780.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="401221_401220"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101543_102810]" MeasurementId="2203_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="490.0" TimeBeanId="18"/>
+            <Volume PCUVolume="570.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101543_102810"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[502306_504224]" MeasurementId="3003_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="3620.0" TimeBeanId="19"/>
+            <Volume PCUVolume="3680.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="502306_504224"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[303201_100716]" MeasurementId="2202_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="1250.0" TimeBeanId="19"/>
+            <Volume PCUVolume="1280.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="303201_100716"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[302072_101067]" MeasurementId="2201_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="1600.0" TimeBeanId="19"/>
+            <Volume PCUVolume="2100.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="302072_101067"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[102192_101546]" MeasurementId="2205_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="700.0" TimeBeanId="18"/>
+            <Volume PCUVolume="760.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="102192_101546"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[988121_988122]" MeasurementId="5035_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="2690.0" TimeBeanId="18"/>
+            <Volume PCUVolume="3540.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="988121_988122"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[878014_875503]" MeasurementId="5105_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="830.0" TimeBeanId="17"/>
+            <Volume PCUVolume="1130.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="878014_875503"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[875406_874336]" MeasurementId="5025_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="3770.0" TimeBeanId="18"/>
+            <Volume PCUVolume="3680.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="875406_874336"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[a92540_a93030]" MeasurementId="5015_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="120.0" TimeBeanId="18"/>
+            <Volume PCUVolume="140.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="a92540_a93030"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[503791_503701]" MeasurementId="4217_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="2650.0" TimeBeanId="8"/>
+            <Volume PCUVolume="3050.0" TimeBeanId="19"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="503791_503701"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[401180_402356]" MeasurementId="4220_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="470.0" TimeBeanId="19"/>
+            <Volume PCUVolume="430.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="401180_402356"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[105166_101544]" MeasurementId="1015_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="490.0" TimeBeanId="19"/>
+            <Volume PCUVolume="590.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="105166_101544"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[982148_982023]" MeasurementId="5034_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="2290.0" TimeBeanId="19"/>
+            <Volume PCUVolume="3170.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="982148_982023"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[401326_401325]" MeasurementId="3017_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="690.0" TimeBeanId="18"/>
+            <Volume PCUVolume="560.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="401326_401325"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[402356_401704]" MeasurementId="4220_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="520.0" TimeBeanId="17"/>
+            <Volume PCUVolume="530.0" TimeBeanId="8"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="402356_401704"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[401705_404016]" MeasurementId="3026">
+        <Volumes>
+            <Volume PCUVolume="1730.0" TimeBeanId="19"/>
+            <Volume PCUVolume="2820.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="401705_404016"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[404002_401831]" MeasurementId="3025">
+        <Volumes>
+            <Volume PCUVolume="1410.0" TimeBeanId="19"/>
+            <Volume PCUVolume="960.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="404002_401831"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[303150_303152]" MeasurementId="1011_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="570.0" TimeBeanId="17"/>
+            <Volume PCUVolume="520.0" TimeBeanId="8"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="303150_303152"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[502311_503708]" MeasurementId="3027_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="2570.0" TimeBeanId="17"/>
+            <Volume PCUVolume="3140.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="502311_503708"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[656434_656435]" MeasurementId="5037_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="2970.0" TimeBeanId="19"/>
+            <Volume PCUVolume="1720.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="656434_656435"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[17172_651958]" MeasurementId="5020_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="1950.0" TimeBeanId="19"/>
+            <Volume PCUVolume="2070.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="17172_651958"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[761016_761184]" MeasurementId="5023_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="480.0" TimeBeanId="19"/>
+            <Volume PCUVolume="990.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="761016_761184"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[408389_401167]" MeasurementId="4215_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="620.0" TimeBeanId="19"/>
+            <Volume PCUVolume="490.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="408389_401167"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[982056_982020]" MeasurementId="6219_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="1640.0" TimeBeanId="18"/>
+            <Volume PCUVolume="2080.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="982056_982020"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[&quot;878148_878149,  141103_877180&quot;,  878151_877080]" MeasurementId="5016_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="3250.0" TimeBeanId="18"/>
+            <Volume PCUVolume="3800.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="&quot;878148_878149"/>
+            <LinkId Id=" 141103_877180&quot;"/>
+            <LinkId Id=" 878151_877080"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[a92020_a92080]" MeasurementId="5036_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="530.0" TimeBeanId="18"/>
+            <Volume PCUVolume="660.0" TimeBeanId="8"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="a92020_a92080"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[983257_983029]" MeasurementId="5103">
+        <Volumes>
+            <Volume PCUVolume="170.0" TimeBeanId="17"/>
+            <Volume PCUVolume="270.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="983257_983029"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[878201_879410]" MeasurementId="5014_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="200.0" TimeBeanId="18"/>
+            <Volume PCUVolume="250.0" TimeBeanId="8"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="878201_879410"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[982163_982027]" MeasurementId="5033_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="4270.0" TimeBeanId="19"/>
+            <Volume PCUVolume="2690.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="982163_982027"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[983334_984020]" MeasurementId="5010_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="160.0" TimeBeanId="17"/>
+            <Volume PCUVolume="170.0" TimeBeanId="8"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="983334_984020"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[102187_102122]" MeasurementId="1101_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="160.0" TimeBeanId="17"/>
+            <Volume PCUVolume="270.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="102187_102122"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[206020_101515]" MeasurementId="2204_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="370.0" TimeBeanId="19"/>
+            <Volume PCUVolume="390.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="206020_101515"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[301053_301054]" MeasurementId="1005_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="920.0" TimeBeanId="19"/>
+            <Volume PCUVolume="1020.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="301053_301054"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[503421_503031]" MeasurementId="3011_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="610.0" TimeBeanId="18"/>
+            <Volume PCUVolume="640.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="503421_503031"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101186_101211]" MeasurementId="2207_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="1540.0" TimeBeanId="19"/>
+            <Volume PCUVolume="1720.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101186_101211"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[406024_406032]" MeasurementId="3106_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="470.0" TimeBeanId="19"/>
+            <Volume PCUVolume="390.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="406024_406032"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[a92080_a92020]" MeasurementId="5036_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="640.0" TimeBeanId="17"/>
+            <Volume PCUVolume="640.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="a92080_a92020"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[303156_303155]" MeasurementId="1103_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="400.0" TimeBeanId="8"/>
+            <Volume PCUVolume="410.0" TimeBeanId="19"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="303156_303155"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101503_207990]" MeasurementId="2214_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="1240.0" TimeBeanId="17"/>
+            <Volume PCUVolume="1130.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101503_207990"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[205058_206212]" MeasurementId="1009_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="740.0" TimeBeanId="19"/>
+            <Volume PCUVolume="910.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="205058_206212"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[982020_982056]" MeasurementId="6219_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="1440.0" TimeBeanId="19"/>
+            <Volume PCUVolume="1410.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="982020_982056"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[206126_303180]" MeasurementId="2401_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="140.0" TimeBeanId="18"/>
+            <Volume PCUVolume="160.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="206126_303180"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101304_101268]" MeasurementId="1007_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="1350.0" TimeBeanId="19"/>
+            <Volume PCUVolume="1400.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101304_101268"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[502218_502219]" MeasurementId="4203_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="150.0" TimeBeanId="17"/>
+            <Volume PCUVolume="120.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="502218_502219"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[205010_205020]" MeasurementId="1008_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="250.0" TimeBeanId="17"/>
+            <Volume PCUVolume="220.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="205010_205020"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[102810_101543]" MeasurementId="2203_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="530.0" TimeBeanId="19"/>
+            <Volume PCUVolume="530.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="102810_101543"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[652063_652049]" MeasurementId="5009_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="500.0" TimeBeanId="18"/>
+            <Volume PCUVolume="470.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="652063_652049"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[303030_303027]" MeasurementId="1109_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="590.0" TimeBeanId="18"/>
+            <Volume PCUVolume="530.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="303030_303027"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[509010_401205]" MeasurementId="4204_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="1300.0" TimeBeanId="19"/>
+            <Volume PCUVolume="1510.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="509010_401205"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[508580_508955]" MeasurementId="3004_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="1600.0" TimeBeanId="17"/>
+            <Volume PCUVolume="1710.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="508580_508955"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[875229_875317]" MeasurementId="5001_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="4320.0" TimeBeanId="19"/>
+            <Volume PCUVolume="3790.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="875229_875317"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[110004_110002]" MeasurementId="2217_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="300.0" TimeBeanId="18"/>
+            <Volume PCUVolume="390.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="110004_110002"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[27313_502310]" MeasurementId="5022_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="2750.0" TimeBeanId="8"/>
+            <Volume PCUVolume="2070.0" TimeBeanId="19"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="27313_502310"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[652295_652293]" MeasurementId="5003_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="2060.0" TimeBeanId="19"/>
+            <Volume PCUVolume="2240.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="652295_652293"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[652049_652063]" MeasurementId="5009_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="750.0" TimeBeanId="19"/>
+            <Volume PCUVolume="670.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="652049_652063"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[983247_983254]" MeasurementId="5026_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="1800.0" TimeBeanId="8"/>
+            <Volume PCUVolume="1940.0" TimeBeanId="19"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="983247_983254"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[401052_401053]" MeasurementId="3013_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="680.0" TimeBeanId="19"/>
+            <Volume PCUVolume="660.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="401052_401053"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[655442_656016]" MeasurementId="5005_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="1150.0" TimeBeanId="19"/>
+            <Volume PCUVolume="700.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="655442_656016"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101546_102192]" MeasurementId="2205_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="790.0" TimeBeanId="19"/>
+            <Volume PCUVolume="660.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101546_102192"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[&quot;101483_101569,  101732_101569&quot;]" MeasurementId="1002_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="4540.0" TimeBeanId="17"/>
+            <Volume PCUVolume="4770.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="&quot;101483_101569"/>
+            <LinkId Id=" 101732_101569&quot;"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[141974_21563]" MeasurementId="5024_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="2930.0" TimeBeanId="8"/>
+            <Volume PCUVolume="2890.0" TimeBeanId="19"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="141974_21563"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[508137_508121]" MeasurementId="4221_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="560.0" TimeBeanId="19"/>
+            <Volume PCUVolume="690.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="508137_508121"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[652292_652294]" MeasurementId="5003_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="2230.0" TimeBeanId="19"/>
+            <Volume PCUVolume="2420.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="652292_652294"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[653340_655443]" MeasurementId="5005_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="610.0" TimeBeanId="18"/>
+            <Volume PCUVolume="1090.0" TimeBeanId="8"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="653340_655443"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[983254_983247]" MeasurementId="5026_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="4030.0" TimeBeanId="19"/>
+            <Volume PCUVolume="4240.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="983254_983247"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101722_105176]" MeasurementId="2405">
+        <Volumes>
+            <Volume PCUVolume="50.0" TimeBeanId="17"/>
+            <Volume PCUVolume="50.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101722_105176"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101721_101295]" MeasurementId="2404">
+        <Volumes>
+            <Volume PCUVolume="280.0" TimeBeanId="19"/>
+            <Volume PCUVolume="320.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101721_101295"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101760_101282]" MeasurementId="2403">
+        <Volumes>
+            <Volume PCUVolume="780.0" TimeBeanId="18"/>
+            <Volume PCUVolume="760.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101760_101282"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[651674_651675]" MeasurementId="5101_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="370.0" TimeBeanId="18"/>
+            <Volume PCUVolume="470.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="651674_651675"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101243_101691]" MeasurementId="2402">
+        <Volumes>
+            <Volume PCUVolume="260.0" TimeBeanId="17"/>
+            <Volume PCUVolume="240.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101243_101691"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[982175_982179]" MeasurementId="5027_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="2360.0" TimeBeanId="18"/>
+            <Volume PCUVolume="3750.0" TimeBeanId="8"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="982175_982179"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[17976_401553]" MeasurementId="4201_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="1320.0" TimeBeanId="17"/>
+            <Volume PCUVolume="2170.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="17976_401553"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[a91190_a91211]" MeasurementId="5032_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="520.0" TimeBeanId="18"/>
+            <Volume PCUVolume="740.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="a91190_a91211"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[879866_879872]" MeasurementId="6208_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="270.0" TimeBeanId="17"/>
+            <Volume PCUVolume="220.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="879866_879872"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[653525_26198]" MeasurementId="6210_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="230.0" TimeBeanId="18"/>
+            <Volume PCUVolume="500.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="653525_26198"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[983162_983018]" MeasurementId="5007_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="810.0" TimeBeanId="19"/>
+            <Volume PCUVolume="820.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="983162_983018"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[502288_502492]" MeasurementId="4219_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="2570.0" TimeBeanId="18"/>
+            <Volume PCUVolume="2320.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="502288_502492"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[878012_878011]" MeasurementId="5106_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="940.0" TimeBeanId="18"/>
+            <Volume PCUVolume="820.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="878012_878011"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[651675_651674]" MeasurementId="5101_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="340.0" TimeBeanId="18"/>
+            <Volume PCUVolume="280.0" TimeBeanId="8"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="651675_651674"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[401426_401428]" MeasurementId="6214_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="830.0" TimeBeanId="17"/>
+            <Volume PCUVolume="960.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="401426_401428"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[401317_402105]" MeasurementId="3008_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="730.0" TimeBeanId="19"/>
+            <Volume PCUVolume="760.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="401317_402105"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[875430_879390]" MeasurementId="6212_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="430.0" TimeBeanId="19"/>
+            <Volume PCUVolume="390.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="875430_879390"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[871290_871280]" MeasurementId="5011">
+        <Volumes>
+            <Volume PCUVolume="310.0" TimeBeanId="19"/>
+            <Volume PCUVolume="330.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="871290_871280"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[401154_403112]" MeasurementId="3006_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="720.0" TimeBeanId="17"/>
+            <Volume PCUVolume="490.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="401154_403112"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[401428_401426]" MeasurementId="6214_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="850.0" TimeBeanId="17"/>
+            <Volume PCUVolume="1280.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="401428_401426"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[401171_401154]" MeasurementId="3006_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="840.0" TimeBeanId="19"/>
+            <Volume PCUVolume="860.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="401171_401154"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[503709_502312]" MeasurementId="3027_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="5170.0" TimeBeanId="18"/>
+            <Volume PCUVolume="4580.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="503709_502312"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[401467_401454]" MeasurementId="4206_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="770.0" TimeBeanId="18"/>
+            <Volume PCUVolume="780.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="401467_401454"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[879390_875430]" MeasurementId="6212_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="460.0" TimeBeanId="19"/>
+            <Volume PCUVolume="460.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="879390_875430"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[302998_101065]" MeasurementId="2407_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="130.0" TimeBeanId="19"/>
+            <Volume PCUVolume="160.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="302998_101065"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101374_101375]" MeasurementId="1022_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="2880.0" TimeBeanId="17"/>
+            <Volume PCUVolume="2730.0" TimeBeanId="8"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101374_101375"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101065_302998]" MeasurementId="2407_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="500.0" TimeBeanId="19"/>
+            <Volume PCUVolume="590.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101065_302998"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101642_101640]" MeasurementId="1026_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="2410.0" TimeBeanId="19"/>
+            <Volume PCUVolume="3820.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101642_101640"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[102152_102150]" MeasurementId="1024_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="700.0" TimeBeanId="19"/>
+            <Volume PCUVolume="1000.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="102152_102150"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[301054_301053]" MeasurementId="1005_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="1050.0" TimeBeanId="18"/>
+            <Volume PCUVolume="1480.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="301054_301053"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[508800_508415]" MeasurementId="4211_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="830.0" TimeBeanId="19"/>
+            <Volume PCUVolume="1120.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="508800_508415"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[503484_501049]" MeasurementId="3020_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="1340.0" TimeBeanId="17"/>
+            <Volume PCUVolume="1620.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="503484_501049"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[102150_102152]" MeasurementId="1024_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="900.0" TimeBeanId="19"/>
+            <Volume PCUVolume="750.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="102150_102152"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[406032_406024]" MeasurementId="3106_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="390.0" TimeBeanId="19"/>
+            <Volume PCUVolume="390.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="406032_406024"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[982023_982148]" MeasurementId="5034_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="2760.0" TimeBeanId="19"/>
+            <Volume PCUVolume="2260.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="982023_982148"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[ 874667_874334, &quot;874337_874334,  874668_874334&quot;]" MeasurementId="5025_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="3470.0" TimeBeanId="19"/>
+            <Volume PCUVolume="3570.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id=" 874667_874334"/>
+            <LinkId Id="&quot;874337_874334"/>
+            <LinkId Id=" 874668_874334&quot;"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101375_101374]" MeasurementId="1022_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="2970.0" TimeBeanId="8"/>
+            <Volume PCUVolume="2860.0" TimeBeanId="19"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101375_101374"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[653147_653117]" MeasurementId="5104_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="150.0" TimeBeanId="17"/>
+            <Volume PCUVolume="190.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="653147_653117"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[508415_508800]" MeasurementId="4211_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="690.0" TimeBeanId="19"/>
+            <Volume PCUVolume="680.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="508415_508800"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[508410_508593]" MeasurementId="4213_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="2910.0" TimeBeanId="19"/>
+            <Volume PCUVolume="2830.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="508410_508593"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[401316_401317]" MeasurementId="3008_SOUTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="500.0" TimeBeanId="19"/>
+            <Volume PCUVolume="440.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="401316_401317"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101640_101642]" MeasurementId="1026_NORTH BOUND">
+        <Volumes>
+            <Volume PCUVolume="3640.0" TimeBeanId="19"/>
+            <Volume PCUVolume="2240.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101640_101642"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[503701_503791]" MeasurementId="4217_WEST BOUND">
+        <Volumes>
+            <Volume PCUVolume="2290.0" TimeBeanId="18"/>
+            <Volume PCUVolume="2510.0" TimeBeanId="9"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="503701_503791"/>
+        </LinkIds>
+    </Measurement>
+    <Measurement LINK_LIST="[101143_101148]" MeasurementId="1013_EAST BOUND">
+        <Volumes>
+            <Volume PCUVolume="440.0" TimeBeanId="19"/>
+            <Volume PCUVolume="430.0" TimeBeanId="10"/>
+        </Volumes>
+        <LinkIds>
+            <LinkId Id="101143_101148"/>
+        </LinkIds>
+    </Measurement>
+</Measurements>
