@@ -647,7 +647,7 @@ public class PersonPlanSueModel{
 			}
 			
 			utilities.put(planKey,utility+anaParams.get(pathSizeConstVarName)*Math.log(trPlan.getPathSize()));
-			if(utility<0) {
+			if(utility<-1000) {
 				logger.debug("Negative plan utility!!!");
 			}
 			this.planUtility.put(planKey, utility);
@@ -1091,6 +1091,7 @@ private void fixIncidenceMaps(Population population) {
 	
 	private SUEModelOutput performAssignment(Population population, LinkedHashMap<String,Double> params, LinkedHashMap<String,Double> anaParams) {
 		SUEModelOutput flow = null;
+		params.put(CNLSUEModel.CapacityMultiplierName, this.scenario.getConfig().qsim().getFlowCapFactor());
 		for(int counter = 1; counter < this.maxIter; counter++) {
 //			if(counter == 1 && this.createLinkIncidence == true) {
 //				this.createIncidenceMaps(population);
@@ -1115,7 +1116,7 @@ private void fixIncidenceMaps(Population population) {
 		}
 		flow.setMaaSPackageUsage(this.calculateMaaSPackageUsage());
 		//this.calculateFareLinkFlowAndGradient(flow);
-		params.put(CNLSUEModel.CapacityMultiplierName, this.scenario.getConfig().qsim().getFlowCapFactor());
+		
 		Map<String,Map<Id<Link>,Double>> linkTT = new HashMap<>();
 		for(Entry<String,AnalyticalModelNetwork> network:this.networks.entrySet()) {
 			linkTT.put(network.getKey(), new HashMap<>());
@@ -1125,7 +1126,7 @@ private void fixIncidenceMaps(Population population) {
 			}
 		}
 		flow.setLinkTravelTime(linkTT);
-		params.put(CNLSUEModel.CapacityMultiplierName, this.scenario.getConfig().qsim().getFlowCapFactor());
+		
 		Map<String,Map<Id<TransitLink>,Double>> trDrlinkTT = new HashMap<>();
 		Map<String,Map<Id<TransitLink>,Double>> trTrlinkTT = new HashMap<>();
 		
@@ -1138,11 +1139,20 @@ private void fixIncidenceMaps(Population population) {
 				if(link.getValue() instanceof TransitDirectLink) {
 					drLink.put(link.getKey(), ((CNLTransitDirectLink)link.getValue()).getLinkTravelTime(networks.get(timeLink.getKey()), this.timeBeans.get(timeLink.getKey()), params, anaParams));
 				}else {
-					trLink.put(link.getKey(),((CNLTransitTransferLink)link.getValue()).getWaitingTime(anaParams, networks.get(timeLink.getKey())));
+					trLink.put(link.getKey(),((CNLTransitTransferLink)link.getValue()).getWaitingTime(params, anaParams, networks.get(timeLink.getKey())));
 				}
 			}
 		}
+		double autoFlow = 0;
 		
+		
+		for(Entry<String, SimpleTranslatedPlan> plan:this.plans.entrySet()) {
+			double p = this.planProbability.get(plan.getKey());
+			for(Map<Id<AnalyticalModelRoute>, AnalyticalModelRoute> routes:plan.getValue().getRoutes().values()) {
+				autoFlow+=routes.size()*p;
+			}
+		}
+		flow.setAutoFlow(autoFlow);
 		flow.setTransitDirectLinkTT(trDrlinkTT);
 		flow.setTransitTransferLinkTT(trTrlinkTT);
 		params.remove(CNLSUEModel.CapacityMultiplierName);
@@ -1260,7 +1270,7 @@ private void fixIncidenceMaps(Population population) {
 		if(!Double.isFinite(utility)||Double.isNaN(utility))
 			logger.debug("Utility is nan or infinity. Debug!!!");
 		//utility = 0;// Change this
-		if(utility<0) {
+		if(utility<-1000) {
 			logger.debug("Act utility negative!!!");
 		}
 		return utility;
@@ -1386,7 +1396,7 @@ private void fixIncidenceMaps(Population population) {
 					CNLLink link = (CNLLink) this.networks.get(timeMap.getKey()).getLinks().get(linkGradientMap.getKey());
 					if(link.getAllowedModes().contains("train"))return;
 					//for(Entry<String, Double> var:linkGradientMap.getValue().entrySet()) {
-						double flow = link.getLinkCarVolume()+link.getLinkTransitVolume();
+						double flow = link.getLinkCarVolume()+link.getLinkTransitVolume()*Oparams.get(CNLSUEModel.CapacityMultiplierName);
 						double t_0 = link.getLength()/link.getFreespeed();//should be in sec
 						double cap = link.getCapacity()*(this.timeBeans.get(timeMap.getKey()).getSecond()-this.timeBeans.get(timeMap.getKey()).getFirst())/3600;
 						double beta = anaParam.get(PersonPlanSueModel.BPRbetaName);
@@ -1439,7 +1449,7 @@ private void fixIncidenceMaps(Population population) {
 								//The gradient for this link's travel time is zero as the waiting time for a alighting only link is always zero.
 								CNLLink plink = (CNLLink) this.networks.get(timeMap.getKey()).getLinks().get(transferLink.getStartingLinkId());
 								double headway = dlink.getHeadway();
-								double cap = dlink.getCapacity();
+								double cap = dlink.getCapacity()*Oparams.get(CNLSUEModel.CapacityMultiplierName);
 								double freq = dlink.getFrequency();
 								double beta = anaParam.get(PersonPlanSueModel.TransferbetaName);
 								double passengerTobeBorded = transferLink.getPassangerCount();//This should not be necessary

@@ -186,12 +186,14 @@ public class ObjectiveAndGradientCalculator {
 	 */
 	public static packUsageStat calcPackUsageStat(SUEModelOutput flow, MaaSPackages packages, Map<String,FareCalculator> fareCalculators){
 		Map<String,Double> packagesSold = new HashMap<>();//packages Sold 
-		Map<String,Double> selfPackageTrip = new HashMap<>();// package trips owned by the fareLink operators. 
-		Map<String,Double> packageTrip = new HashMap<>();//package trips owned by the package operator
+		Map<String,Double> selfPackageTrip = new HashMap<>();// package trips  (fare link operator trips where the package is owned by the fare link operator)
+		Map<String,Double> crossPackageTrip = new HashMap<>();// Package trips (fare link operator trips where the package is owned by another operator)
+		Map<String,Double> packageTrip = new HashMap<>();//package trips (all trips under a maas Operator)
 		Map<String,Double> totalTrip = new HashMap<>();
 		Map<String,Double> revenue = new HashMap<>();
 		Set<String>operators = new HashSet<>();
-		
+		double autoTrip = 0;
+		double act = 0;
 		
 		for(String o: packages.getMassPackagesPerOperator().keySet()) {
 			//add the revenue from package price
@@ -275,7 +277,10 @@ public class ObjectiveAndGradientCalculator {
 		double tsltt = 0;
 		for(Entry<String,Map<Id<Link>,Map<String,Double>>> net : sue.getLinkGradient().entrySet()) {
 			for(Entry<Id<Link>,Map<String,Double>> link:net.getValue().entrySet()) {
-				tsltt+=(flow.getLinkVolume().get(net.getKey()).get(link.getKey())-((CNLLink)sue.getNetworks().get(net.getKey()).getLinks().get(link.getKey())).getLinkTransitVolume())*flow.getLinkTravelTime().get(net.getKey()).get(link.getKey());
+				//double lTv= ((CNLLink)sue.getNetworks().get(net.getKey()).getLinks().get(link.getKey())).getLinkTransitVolume();
+				double tt = flow.getLinkTravelTime().get(net.getKey()).get(link.getKey());
+				double lv = flow.getLinkVolume().get(net.getKey()).get(link.getKey());
+				tsltt+=lv*tt;
 			}
 		}
 		//only transit direct link flow 
@@ -705,6 +710,7 @@ public class ObjectiveAndGradientCalculator {
 					if(pac!=null) {
 						d = pac.getDiscountForFareLink(fl);
 						rr_ = pac.getOperatorReimburesementRatio().get(fareOp);
+						
 					}
 					double discount = d;
 					double rr = rr_;
@@ -722,8 +728,8 @@ public class ObjectiveAndGradientCalculator {
 						totalTrip.put(fareOp, totalTrip.get(fareOp)+usage);
 					}
 					
-					if(op!=null && fareOp!=null && fareOp.equals(op)) {
-						selfPackageTrip.put(op, selfPackageTrip.get(op)+usage);
+					if(op!=null && fareOp!=null ) {//&& fareOp.equals(op)
+						selfPackageTrip.put(fareOp, selfPackageTrip.get(fareOp)+usage);
 					}
 					for(Entry<String, Double> v:variables.entrySet()) {
 						String skey = MaaSUtil.retrieveName(v.getKey());
@@ -845,7 +851,15 @@ public class ObjectiveAndGradientCalculator {
 				
 				
 			}
-			tsU+=model.getPlanProbability().get(probGrad.getKey())*model.getPlanUtility().get(probGrad.getKey());
+			double p = model.getPlanProbability().get(probGrad.getKey());
+			double u = model.getPlanUtility().get(probGrad.getKey());
+//			if(p<0) {
+//				System.out.println("Debug Here!!!");
+//			}
+//			if(u<0) {
+//				System.out.println("Utility is negative!!!");
+//			}
+			tsU+=p*u;
 		}
 		return new Tuple<Map<String,Double>,Double>(totalSystemUtilityGrad,tsU);
 	}
@@ -901,11 +915,12 @@ public class ObjectiveAndGradientCalculator {
 	public static Tuple<Map<String,Double>,Map<String,Double>> calcBreakEvenGradient(Map<String,Map<String,Double>>gradients, Map<String,Double>objective,Map<String,Double>targets){
 		Map<String,Double> outGrad = new HashMap<>();
 		Map<String,Double> outObj = new HashMap<>();
+		double m = 10000000;// a large number
 		Set<String> gradKeys = new HashSet<>();
 		gradients.entrySet().forEach(g->gradKeys.addAll(g.getValue().keySet()));
 		objective.entrySet().forEach(o->{
 			outObj.put(o.getKey(),o.getValue()-targets.get(o.getKey()));
-			gradKeys.forEach(g->outGrad.compute(g,(k,v)-> v==null?-1*outObj.get(o.getKey())*gradients.get(o.getKey()).get(k):v+outObj.get(o.getKey())*-1*gradients.get(o.getKey()).get(k)));
+			gradKeys.forEach(g->outGrad.compute(g,(k,v)-> v==null?-1*outObj.get(o.getKey())*gradients.get(o.getKey()).get(k)*m:v+outObj.get(o.getKey())*-1*m*gradients.get(o.getKey()).get(k)));
 		});
 		return new Tuple<>(outGrad,outObj);
 	}
@@ -920,12 +935,13 @@ public class ObjectiveAndGradientCalculator {
 	public static Tuple<Map<String,Double>,Map<String,Double>> calcOptimizedBreakEvenGradient(Map<String,Map<String,Double>>gradients, Map<String,Double>objective,Map<String,Double>targets,String opToOptimize){
 		Map<String,Double> outGrad = new HashMap<>();
 		Map<String,Double> outObj = new HashMap<>();
+		double m = 100000;// a large number
 		Set<String> gradKeys = new HashSet<>();
 		gradients.entrySet().forEach(g->gradKeys.addAll(g.getValue().keySet()));
 		objective.entrySet().forEach(o->{
 			if(!o.getKey().equals(opToOptimize)) {
 				outObj.put(o.getKey(),o.getValue()-targets.get(o.getKey()));
-				gradKeys.forEach(g->outGrad.compute(g,(k,v)-> v==null?outObj.get(o.getKey())*-1*gradients.get(o.getKey()).get(k):v+outObj.get(o.getKey())*-1*gradients.get(o.getKey()).get(k)));
+				gradKeys.forEach(g->outGrad.compute(g,(k,v)-> v==null?outObj.get(o.getKey())*-1*gradients.get(o.getKey()).get(k)*m:v+outObj.get(o.getKey())*-1*m*gradients.get(o.getKey()).get(k)));
 			}else {
 				outObj.put(o.getKey(),o.getValue());
 				//gradKeys.forEach(g->outGrad.compute(g,(k,v)-> v==null?gradients.get(o.getKey()).get(k)*outObj.get(o.getKey()):v+outObj.get(o.getKey())*gradients.get(o.getKey()).get(k)));

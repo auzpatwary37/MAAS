@@ -52,4 +52,4 @@ trip_GV,DistanceBasedMoneyCostCar,trip_GV DistanceBasedMoneyCostCar,0,0,0,25,FAL
 trip_GV,MarginalUtilityOfWalking,trip_GV MarginalUtilityOfWalking,-240,-160,-200,26,TRUE
 trip_GV,DistanceBasedMoneyCostWalk,trip_GV DistanceBasedMoneyCostWalk,-0.006,-0.004,-0.005,27,TRUE
 trip_GV,MarginalUtilityofPerform,trip_GV MarginalUtilityofPerform,80,120,100,13,TRUE
-All,CapacityMultiplier,All_CapacityMultiplier,0.05,0.2,0.14,28,TRUE
+All,CapacityMultiplier,All_CapacityMultiplier,0.08,0.8,0.14,28,TRUE

@@ -213,7 +213,7 @@ public class BobyqaObjective implements MultivariateFunction, MatlabObj,Calcfc{
 //		double highUseLink=((CNLSUEModel)sue).getHighUseLink();
 		this.writeMeasurementComparison(fileLoc, this.measurements, anaMeasurements, iterCounter);
 		new MeasurementsWriter(anaMeasurements).write(fileLoc+"measurements"+iterCounter+".xml");
-		double Objective=ObjectiveCalculator.calcObjective(this.measurements, anaMeasurements, ObjectiveCalculator.TypeMeasurementAndTimeSpecific);
+		double Objective=ObjectiveCalculator.calcGEHObjective(this.measurements, anaMeasurements, ObjectiveCalculator.TypeMeasurementAndTimeSpecific);
 		this.logOoptimizationDetails(this.iterCounter, this.fileLoc, params, Objective);
 		//if(highUseLink<.95)highUseLink=.95;
 //		Objective=Objective*highUseLink;
@@ -399,8 +399,8 @@ public class BobyqaObjective implements MultivariateFunction, MatlabObj,Calcfc{
 		
 		model.populateModel(scenario, fareCalculators, pacAll);
 		model.setCalculateGradient(false);
-		params.putAll(model.getInternalParamters());
-		paramLimits.putAll(model.getAnalyticalModelParamsLimit());
+//		params.putAll(model.getInternalParamters());
+//		paramLimits.putAll(model.getAnalyticalModelParamsLimit());
 		mm.applyFator(.1);
 		BobyqaObjective objective = new BobyqaObjective(params, pReader, model, mm, resultWriteLoc, scenario.getPopulation());
 		

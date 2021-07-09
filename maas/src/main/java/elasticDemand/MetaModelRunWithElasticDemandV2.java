@@ -99,22 +99,22 @@ public class MetaModelRunWithElasticDemandV2 {
 		
 		//parameters
 		String maasOwner = "Govt";//"Govt";// MTR, bus, separate
-		boolean optimizeForBreakEven = true;
+		boolean optimizeForBreakEven = false;
 		boolean optimizeForCombinedBreakEven = false;
 		boolean optimizeForCombinedRevenue = true;
 		boolean logAllGradient = true;
 		
-		Double initialTotalSystemTravelTimeInMoney = null; 		
+		Double initialTotalSystemTravelTimeInMoney = 10.; 		
 
 		Map<String,Double> breakEvenTarget = new HashMap<>();
-		breakEvenTarget.put("bus", 1172416.551);//Previously taken 687123.679044381
-		breakEvenTarget.put("MTR", 1607515.224);//Previously taken 1678198.3128105325
-		breakEvenTarget.put("ferry", 7252.617272);//previously taken 11015.027733073915
-		breakEvenTarget.put("Govt", 574765437.424591);//tstt = -1481786.677 tsu = 574771136.314861 previously taken tu =  5.763817E8 tstu = -1890100.409490016
+		breakEvenTarget.put("bus", 1036815.461485263);//Previously taken 687123.679044381
+		breakEvenTarget.put("MTR", 1565757.8901090259);//Previously taken 1678198.3128105325
+		breakEvenTarget.put("ferry", 6433.161727042853);//previously taken 11015.027733073915
+		breakEvenTarget.put("Govt", 5.284980419851977E8);//tstt = -8256001.499058168
 		
 
 		
-		String refinedPopLoc = "test/GovtBreakEven2/withMaaSPopulationMay27Allpac.xml";// GovtBreakEven/refinedPop_13Apr.xml
+		String refinedPopLoc = "test\\populations\\withMaaSPopulationMay27Allpac.xml";// "test\\populations\\extPopulation_allPackGovt.xml"
 		String MaaSPacakgeFileLoc = "test/packages_July2020_20.xml";
 		String newMaaSWriteLoc = "test/packages_"+maasOwner+".xml";
 		String averageDurationMapFileLoc = "test/actAverageDurations.csv";
@@ -127,13 +127,13 @@ public class MetaModelRunWithElasticDemandV2 {
 		Double packagePrice = 10.0;//Make it null to initiate from the original package price 
 		
 		String type =  MaaSDataLoaderV2.typeGovtTU;
-		String fileLoc = "test/GovtBreakEven2/"+maasOwner+type+"_CPMaxTUOptimIterJun24_negMoney.csv";
-		String usageFileLoc = "test/GovtBreakEven2/"+maasOwner+type+"_CPUsageDetailsMaxTUJun24_negMoney.csv";
-		String varLocation = "test/GovtBreakEven2/variables"+maasOwner+type+"_CPMaxTUVarsJun24_negMoney.csv";
-		String metaPopsub = "test/GovtBreakEven2/"+maasOwner+type+"Jun24";
+		String fileLoc = "test/GovtBreakEven2/"+maasOwner+type+"_CPMaxTUOptimIterJul4_negMoney.csv";
+		String usageFileLoc = "test/GovtBreakEven2/"+maasOwner+type+"_CPUsageDetailsMaxTUJul4_negMoney.csv";
+		String varLocation = "test/GovtBreakEven2/variables"+maasOwner+type+"_CPMaxTUVarsJul4_negMoney.csv";
+		String metaPopsub = "test/GovtBreakEven2/"+maasOwner+type+"Jul4";
 		double reimbursementRatio = 1.0;
-		String baseCaseLoc = "test/GovtBreakEven/extPopulation_NoMaaSMay17.xml";
-		String baseTTWriteLoc = "test/GovtBreakEven2/output_plans_WithoutMaaS_115_combined_noMaasAndMaasAllPackJun24.csv";
+		String baseCaseLoc = "test/populations/extPopulation_NoMaaSMay17.xml";
+		String baseTTWriteLoc = "test/GovtBreakEven2/output_plans_WithoutMaaS_115_Calibrated_noMaasAndMaasAllPackJul4.csv";
 		String combinedPopWriteLoc = "test/GovtBreakEven2/CombinedPopGovtJun24.xml";
 		List<String> operatorsObjectiveToWrite = new ArrayList<>();
 		
@@ -141,16 +141,18 @@ public class MetaModelRunWithElasticDemandV2 {
 		//LinkMiu	ModeMiu	BPRalpha	BPRbeta	Transferalpha	Transferbeta	pathSizeConst
 
 		//0.417365406	3.824547207	6.829215846	2.265271803	2.042034559	43.13903973
+		//1.818738825	0.5	1.675718742	4.303474896	2.028420358	0.944423396	44.00672215
 
-		anaParams.put("LinkMiu", 1.144888275);
-		anaParams.put("ModeMiu", 0.417365406);
-		anaParams.put("BPRalpha", 3.824547207);
-		anaParams.put("BPRbeta", 6.829215846);
-		anaParams.put("Transferalpha", 2.265271803);
-		anaParams.put("Transferbeta", 2.042034559);
-		anaParams.put("pathSizeConst", 43.13903973);
+
+		anaParams.put("LinkMiu", 1.818738825);
+		anaParams.put("ModeMiu", 0.5);
+		anaParams.put("BPRalpha", 1.675718742);
+		anaParams.put("BPRbeta", 4.303474896);
+		anaParams.put("Transferalpha", 2.028420358);
+		anaParams.put("Transferbeta", 0.944423396);
+		anaParams.put("pathSizeConst", 44.00672215);
 		
-		ParamReader pReader = new ParamReader("test\\GovtBreakEven\\Calibration\\subPopParamAndLimit_calibrated_allPack.csv");
+		ParamReader pReader = new ParamReader("test\\GovtBreakEven2\\Calibration\\subPopParamAndLimit_Calibrated.csv");
 		
 		
 		//Load the MaaS Packages
@@ -401,7 +403,7 @@ public class MetaModelRunWithElasticDemandV2 {
 			//model.setPopulationCompressor(new SelectedPlanPopulationCompressor());
 			model.populateModel(scenario, fareCalculators, pacAll);
 			model.getInternalParamters().putAll(anaParams);
-			//modelHandler.getModel().getInternalParamters().putAll(anaParams);
+//			modelHandler.getModel().getInternalParamters().putAll(anaParams);
 			SUEModelOutput flow = model.performAssignment(maasPopulation, new LinkedHashMap<>());
 			double vot_car = scenario.getConfig().planCalcScore().getOrCreateScoringParameters(PersonChangeWithCar_NAME).getOrCreateModeParams("car").getMarginalUtilityOfTraveling()/3600;
 			double vot_transit = scenario.getConfig().planCalcScore().getOrCreateScoringParameters(PersonChangeWithoutCar_NAME).getOrCreateModeParams("pt").getMarginalUtilityOfTraveling()/3600;
@@ -449,6 +451,7 @@ public class MetaModelRunWithElasticDemandV2 {
 				fwTTBase.append(","+stat.totalTrip.get(op));
 			}
 			fwTTBase.append("\n");
+			fwTTBase.append("autoFlow = "+flow.getAutoFlow()+"\n");
 			fwTTBase.flush();
 			fwTTBase.close();
 			throw new IllegalArgumentException("Finished generating base case and population!!!Stopping");
@@ -460,7 +463,7 @@ public class MetaModelRunWithElasticDemandV2 {
 			if(pl.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName)!=null)maasPlan++;
 		}
 	}
-	
+	modelHandler.setAnaParams(anaParams);
 	for(int counter = 0;counter<100;counter++) {
 		//System.out.println("GB: " + (double) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024*1024*1024));
 	
@@ -546,6 +549,7 @@ public class MetaModelRunWithElasticDemandV2 {
 			fwU.append(","+stat.totalTrip.get(op));
 		}
 		fwU.append("\n");
+		fwU.append("autoFlow = "+modelHandler.getFlow().getAutoFlow()+"\n");
 		fwU.flush();
 		}
 		if(grad==null)

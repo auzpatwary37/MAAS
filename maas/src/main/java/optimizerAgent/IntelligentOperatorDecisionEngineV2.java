@@ -55,6 +55,8 @@ public class IntelligentOperatorDecisionEngineV2 {
 	private SUEModelOutput flow;
 	private packUsageStat modelStat=null;
 	
+	private Map<String,Double> anaParams = null;
+	
 	private String type = null;
 	/**
 	 * Variable Details already contain the key as variable name. Maybe the key is not necessary
@@ -70,6 +72,11 @@ public class IntelligentOperatorDecisionEngineV2 {
 	}
 	
 	
+	public void setAnaParams(Map<String, Double> anaParams) {
+		this.anaParams = anaParams;
+	}
+
+
 	public PersonPlanSueModel getModel() {
 		return model;
 	}
@@ -107,6 +114,7 @@ public class IntelligentOperatorDecisionEngineV2 {
 		model = new PersonPlanSueModel(TimeBeans.timeBeans, scenario.getConfig());
 		model.setPopulationCompressor(populationCompressor);
 		model.populateModel(scenario, fareCalculators, packages);
+		if(this.anaParams!=null)model.getInternalParamters().putAll(anaParams);
 		this.flow = model.performAssignment(scenario.getPopulation(),variables);
 		this.model.setCreateLinkIncidence(false);
 	}
@@ -188,9 +196,10 @@ public class IntelligentOperatorDecisionEngineV2 {
 			double govtObj = this.modelStat.getObjective().get("Govt");
 			modelStat.GovtSepRevenue = govtObj;
 			if(govtObj>0) {
+				double m2 = 100000;
 				Map<String,Double>additionalGovtGrad = new HashMap<>();
 				revGrad.get("Govt").entrySet().forEach(g->{
-					additionalGovtGrad.put(g.getKey(),-1*g.getValue()*govtObj);
+					additionalGovtGrad.put(g.getKey(),-1*g.getValue()*govtObj*m2);
 				});
 				modelStat.additionalGovtGrad = additionalGovtGrad;
 			
