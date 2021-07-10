@@ -6,6 +6,10 @@ import java.util.Map;
 import org.matsim.core.config.ConfigGroup;
 import org.matsim.core.config.ReflectiveConfigGroup;
 
+/**
+ * @author envf
+ *
+ */
 public class ActivityAdditionConfigGroup extends ReflectiveConfigGroup{
 	
 	public static final String GROUP_NAME = "ActivityAddition";
@@ -14,16 +18,17 @@ public class ActivityAdditionConfigGroup extends ReflectiveConfigGroup{
 	public static final String UNMODIFIABLE_INPUT_FILE= "UnmodifiableActivityFile";
 	public static final String ACTIVITY_AGGREGATION_NETWORK_FILE = "TPUSBnet";
 	public static final String DRAW_METHOD_FROM_CHOICE_POOL = "Draw method from choice pool";
-	public static final String MarginalUtilityOfAttraction = "marginalUtilityOfAttraction";
+	public static final String MarginalUtilityOfAttraction = "marginalUtilityOfActivityAttraction";
 	public static final String MarginalUtilityOfDurationSway = "marginalUtilityOfDurationSway";
 	public static final String MarginalUtilityOfDistanceAndTime = "marginalUtilityOfDistanceAndTime";
+
 	
 	
 	private String actToInsertFile = null;
 	private String unmodifiableActs = null;
 	private String TPUSBnetFile = null;
 	private String drawMethodFromChoicePool = DrawFromChoice.logitDraw;
-	private double marginalUtilityOfAttraction = 1000;//this will be multiplied to the location probability. For now just given a filler
+	private double marginalUtilityOfAttraction = 1500;//this will be multiplied to the location probability. For now just given a filler
 	private double marginalUtilityOfDurationSway = -.0072;//taken as the square of marginal utility of performing
 	private double marginalUtilityOfDistanceAndTime = -0.005-.004;//marginal utility of distance + marginal utility of travel per second/free flow travel time per m
 	
@@ -42,6 +47,8 @@ public class ActivityAdditionConfigGroup extends ReflectiveConfigGroup{
 		comments.put(DRAW_METHOD_FROM_CHOICE_POOL, "Choose From "+DrawFromChoice.randomDraw+", "+DrawFromChoice.bestDraw+" or "+DrawFromChoice.logitDraw+". "+DrawFromChoice.logitDraw+" is chosen by default.");
 		comments.put(MarginalUtilityOfDurationSway, "taken as the square of marginal utility of performing");
 		comments.put(MarginalUtilityOfDistanceAndTime, "marginal utility of distance + marginal utility of travel per second/free flow travel time per m");
+		comments.put(MarginalUtilityOfAttraction, "Currently used 1000. Needs to be calibrated");
+
 		
 		return comments;
 	}
@@ -107,6 +114,5 @@ public class ActivityAdditionConfigGroup extends ReflectiveConfigGroup{
 	public void setMarginalUtilityOfDistanceAndTime(double marginalUtilityOfDistanceAndTime) {
 		this.marginalUtilityOfDistanceAndTime = marginalUtilityOfDistanceAndTime;
 	}
-	
 	
 }

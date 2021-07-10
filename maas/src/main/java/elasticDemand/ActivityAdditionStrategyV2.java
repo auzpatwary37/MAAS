@@ -91,6 +91,7 @@ public class ActivityAdditionStrategyV2 implements PlanStrategy{
         //eventsManager.addHandler(planSelector);
 
         // if you just want to select plans, you can stop here.
+        int totalAct = 0;
 		
 		for (Entry<Id<Person>, ? extends Person> p:scenario.getPopulation().getPersons().entrySet()){
 			for(Plan pl:p.getValue().getPlans()){
@@ -113,6 +114,7 @@ public class ActivityAdditionStrategyV2 implements PlanStrategy{
 							if(!ActvityToZoneAttractionMap.containsKey(act.getType()))ActvityToZoneAttractionMap.put(act.getType(),new HashMap<>());
 							ActvityToZoneAttractionMap.get(act.getType()).compute(currentTPUSB, (k,v)->v==null?1:v+1);
 							totalActivityPerformerCount.compute(act.getType(), (k,v)->v==null?1:v+1);
+							totalAct++;
 						}
 							
 						OptionalTime typicalD = config.planCalcScore().getOrCreateScoringParameters(PopulationUtils.getSubpopulation(p.getValue())).getActivityParams(act.getType()).getTypicalDuration();
@@ -148,6 +150,10 @@ public class ActivityAdditionStrategyV2 implements PlanStrategy{
 		
         // Otherwise, to do something with that plan, one needs to add modules into the strategy.  If there is at least
         // one module added here, then the plan is copied and then modified.
+		final int tA = totalAct;
+		this.ActvityToZoneAttractionMap.entrySet().forEach(e->{
+			e.getValue().entrySet().forEach(e2->e2.setValue(e2.getValue()/tA));
+		});
 		PlanStrategyModule mod = new ActivityAdditionStrategyModuleV3(this.ActvityToZoneAttractionMap,this.tpusbActCoords,this.activityDurationMap,this.unmodifiableActivities,tpusbNet,scenario, actConfig.getDrawMethodFromChoicePool(),actConfig);
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		PlanStrategyImpl.Builder builder = new PlanStrategyImpl.Builder(new RandomPlanSelector());

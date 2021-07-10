@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE config SYSTEM "http://www.matsim.org/files/dtd/config_v2.dtd">
 <config>
+	<module name="ActivityAddition" >
+		<!-- Activity to insert file. Should be one column csv file. Each row contains one activity type. -->
+		<param name="ActivityToInsertFile" value="test/ActsToInsert.csv" />
+	</module>
 	<module name="JDEQSim" >
 		<param name="carSize" value="7.5" />
 		<param name="endTime" value="undefined" />
@@ -12,7 +16,7 @@
 	</module>
 	<module name="MAAS" >
 		<!-- Use the xml file format reader and writer. -->
-		<param name="inputPacakgesFile" value="test/packages_Govt.xml" />
+		<param name="inputPacakgesFile" value="test/packages_null.xml" />
 	</module>
 	<module name="TimeAllocationMutator" >
 		<!-- Default:true; Defines whether time mutation changes an activity's duration. -->
@@ -48,7 +52,9 @@
 		Depending on the chosen mobsim, you'll have to add additional config modules to configure the corresponding mobsim.
 		For 'qsim', add a module 'qsim' to the config. -->
 		<param name="mobsim" value="qsim" />
-		<param name="outputDirectory" value="toyScenarioLarge/output_optim_operatorPlatform2Govt" />
+
+		<param name="outputDirectory" value="toyScenarioLarge/output_Elastic_May17sepOpnull" />
+
 		<!-- Possible values: failIfDirectoryExists, overwriteExistingFiles, deleteDirectoryIfExists -->
 		<param name="overwriteFiles" value="overwriteExistingFiles" />
 		<!-- The type of routing (least cost path) algorithm used, may have the values: Dijkstra, FastDijkstra, AStarLandmarks or FastAStarLandmarks -->
@@ -6027,15 +6033,24 @@
 		<parameterset type="strategysettings" >
 			<param name="disableAfterIteration" value="180" />
 			<param name="executionPath" value="null" />
-			<param name="strategyName" value="elasticDemand.ActivityAdditionStrategy" />
+
+			<param name="strategyName" value="elasticDemand.ActivityAdditionStrategyV2" />
 			<param name="subpopulation" value="person_TCSwithCar" />
 			<param name="weight" value="0.05" />
 		</parameterset>
 		<parameterset type="strategysettings" >
 			<param name="disableAfterIteration" value="180" />
 			<param name="executionPath" value="null" />
-			<param name="strategyName" value="elasticDemand.ActivityAdditionStrategy" />
+			<param name="strategyName" value="elasticDemand.ActivityAdditionStrategyV2" />
 			<param name="subpopulation" value="person_TCSwithoutCar" />
+			<param name="weight" value="0.05" />
+		</parameterset>
+		<parameterset type="strategysettings" >
+			<param name="disableAfterIteration" value="180" />
+			<param name="executionPath" value="null" />
+			<param name="strategyName" value="elasticDemand.ActivityAdditionStrategyV2" />
+			<param name="subpopulation" value="person_GV" />
+
 			<param name="weight" value="0.05" />
 		</parameterset>
 		<parameterset type="strategysettings" >

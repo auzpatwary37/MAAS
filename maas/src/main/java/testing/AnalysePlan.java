@@ -6,10 +6,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
+import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.Plan;
@@ -30,7 +34,7 @@ public class AnalysePlan {
 		Config config = ConfigUtils.createConfig();
 		Scenario scenario = ScenarioUtils.createScenario(config);
 //		
-		new PopulationReader(scenario).readFile("test\\extpopulation.xml");
+		new PopulationReader(scenario).readFile("toyScenarioLarge\\output_Elastic_May17sepOpnull\\extPopulation.xml");
 		Population population = scenario.getPopulation();
 //		List<Plan> plans = new ArrayList<>();
 //	
@@ -48,7 +52,7 @@ public class AnalysePlan {
 //		}
 //		System.out.println();
 		try {
-			RandomAccessFile ra = new RandomAccessFile("test\\extpopulation.xml","r");
+			RandomAccessFile ra = new RandomAccessFile("toyScenarioLarge\\output_Elastic_May17sepOpnull\\extPopulation.xml","r");
 			FileWriter fw = new FileWriter(new File("test/tempFile.txt"));
 			for(int i=0;i<10000;i++) {
 				fw.append(ra.readLine()+"\n");
@@ -59,16 +63,28 @@ public class AnalysePlan {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		int maxPlans = 10;
+		int maxPlans = 5;
 		for(Person p:scenario.getPopulation().getPersons().values()) {
-			MaaSUtil.sortPlan((List<Plan>) p.getPlans());
+			if(p.getId().toString().equals("32591.0_3.0_2")) {
+				System.out.println("");
+			}
+			MaaSUtil.sortPlanBasedOnUtility((List<Plan>) p.getPlans());
 			if(p.getPlans().size()>maxPlans) {
 				for(int i=p.getPlans().size()-1;i>=maxPlans;i--) {
 					p.getPlans().remove(i);
 				}
 			}
 		}
-		new PopulationWriter(scenario.getPopulation()).write("test/refinedPop_13Apr.xml");
+		Map<String,Integer> maasPac = new HashMap<>();
+		for(Entry<Id<Person>, ? extends Person> p:scenario.getPopulation().getPersons().entrySet()){
+			for(Plan pl:p.getValue().getPlans()) {
+				String maas = (String) pl.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName);
+				if(maas!=null && maas.equals("ferry"))pl.getAttributes().removeAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName);
+				maasPac.compute(maas, (k,v)->v==null?1:v+1);
+			}
+		}
+		System.out.println(maasPac);
+		new PopulationWriter(scenario.getPopulation()).write("test/refinedPop_individualPac1May.xml");
 	}
 
 }

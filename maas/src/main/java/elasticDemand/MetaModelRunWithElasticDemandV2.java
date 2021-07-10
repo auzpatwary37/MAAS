@@ -98,11 +98,13 @@ public class MetaModelRunWithElasticDemandV2 {
 		
 		
 		//parameters
+
 		String maasOwner = "Govt";//"Govt";// MTR, bus, separate
 		boolean optimizeForBreakEven = false;
 		boolean optimizeForCombinedBreakEven = false;
 		boolean optimizeForCombinedRevenue = true;
 		boolean logAllGradient = true;
+
 		
 		Double initialTotalSystemTravelTimeInMoney = 10.; 		
 
@@ -126,11 +128,13 @@ public class MetaModelRunWithElasticDemandV2 {
 		double initReimbursement = 0.9;
 		Double packagePrice = 10.0;//Make it null to initiate from the original package price 
 		
+
 		String type =  MaaSDataLoaderV2.typeGovtTU;
 		String fileLoc = "test/GovtBreakEven2/"+maasOwner+type+"_CPMaxTUOptimIterJul4_negMoney.csv";
 		String usageFileLoc = "test/GovtBreakEven2/"+maasOwner+type+"_CPUsageDetailsMaxTUJul4_negMoney.csv";
 		String varLocation = "test/GovtBreakEven2/variables"+maasOwner+type+"_CPMaxTUVarsJul4_negMoney.csv";
 		String metaPopsub = "test/GovtBreakEven2/"+maasOwner+type+"Jul4";
+
 		double reimbursementRatio = 1.0;
 		String baseCaseLoc = "test/populations/extPopulation_NoMaaSMay17.xml";
 		String baseTTWriteLoc = "test/GovtBreakEven2/output_plans_WithoutMaaS_115_Calibrated_noMaasAndMaasAllPackJul4.csv";

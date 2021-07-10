@@ -61,7 +61,13 @@ public class Analysis {
 //		};
 //		System.out.println("Total number of sub optimal plan choice = " + subOptimalPlans);
 //		System.out.println("Total number of agents that saved money = " + moneySaved);output_optim_operatorPlatform_Apr11Govt/output_plans.xml.gz
-		countBeforAndAfterAct("new Data/core/populationHKI.xml","toyScenarioLarge/output_optim_operatorPlatform_Apr12Govt/output_plans.xml.gz","test/odNetwork.xml");
+		Population pp = PopulationUtils.readPopulation("new Data/core/populationHKI.xml");
+		for(Entry<Id<Person>, ? extends Person> d:pp.getPersons().entrySet()) {
+			if(d.getKey().toString().equals("32591.0_3.0_2")) {
+				System.out.println(d.getValue().getPlans());
+			}
+		}
+		countBeforAndAfterAct("new Data/core/populationHKI.xml","toyScenarioLarge/output_optim_noMaas_Elastic_NoPhantom_Apr14Govt/output_plans.xml.gz","test/odNetwork.xml");
 	}
 	
 	public static void countBeforAndAfterAct(String beforePopPath, String afterPopPath,String odNetFilePath) throws IOException {
@@ -105,7 +111,7 @@ public class Analysis {
 			}
 		}
 		
-		FileWriter fw = new FileWriter(new File("test/beforeAfterActPatterns.csv"));
+		FileWriter fw = new FileWriter(new File("toyScenarioLarge/output_optim_noMaas_Elastic_NoPhantom_Apr14Govt/beforeAfterActPatterns.csv"));
 		fw.append("ActKey,BeforeCount,AfterCount,beforeDur,AfterDur\n");
 		Set<String> acts = new HashSet<>(beforeActs.keySet());
 		acts.addAll(afterActs.keySet());
@@ -122,7 +128,7 @@ public class Analysis {
 		});
 		fw.close();
 		
-		FileWriter fwLoc = new FileWriter(new File("test/beforeAfterActLocationPatterns.csv"));
+		FileWriter fwLoc = new FileWriter(new File("toyScenarioLarge/output_optim_noMaas_Elastic_NoPhantom_Apr14Govt/beforeAfterActLocationPatterns.csv"));
 		fwLoc.append("TPUSBKey,BeforeCount,AfterCount\n");
 		Set<Id<Node>> tpusbs = new HashSet<>(beforeLocationInfo.keySet());
 		tpusbs.addAll(afterLocationInfo.keySet());

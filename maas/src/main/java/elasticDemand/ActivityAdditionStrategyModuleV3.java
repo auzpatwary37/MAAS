@@ -264,7 +264,7 @@ class basePlanV2{
 	private double calcSlotActLocTripletUtility(String type,double att, double d1, double d2, double dur) {
 		double timeUtil = 0;
 		if(dur-this.activityDurations.get(type)<0)timeUtil = this.marginalUtilityOfDurationSway*Math.pow((dur-this.activityDurations.get(type)),2);
-		return this.marginalUtilityOfAttraction/this.totalPopulation*att+this.marginalUtilityOfDistanceAndTime*(d1+d2)+timeUtil;
+		return this.marginalUtilityOfAttraction*att+this.marginalUtilityOfDistanceAndTime*(d1+d2)+timeUtil;
 	}
 	
 	public Plan generateModifiedPlan() {

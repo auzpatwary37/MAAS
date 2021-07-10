@@ -134,6 +134,7 @@ public class PlanTranslationControlerListener implements IterationStartsListener
 				for(Plan pl: plans) {
 					if(MaaSUtil.planEquals(pl, p.getValue().getSelectedPlan())) {
 						unique = false;
+						if(pl.getScore()<p.getValue().getSelectedPlan().getScore())pl.setScore(p.getValue().getSelectedPlan().getScore());
 						break;
 					}
 				}
@@ -153,7 +154,12 @@ public class PlanTranslationControlerListener implements IterationStartsListener
 				}
 				if(plans.size()>this.maxPlansPerAgent) {
 					MaaSUtil.sortPlan(plans);
-					plans.remove(plans.size()-1);
+					plans.remove(0);
+				}
+				List<Plan> extPlans = (List<Plan>) this.Extpopulation.getPersons().get(p.getKey()).getPlans();
+				if(extPlans.size()>this.maxPlansPerAgent) {
+					MaaSUtil.sortPlanBasedOnUtility(extPlans);
+					extPlans.remove(0);
 				}
 			}
 		});
@@ -231,7 +237,7 @@ public class PlanTranslationControlerListener implements IterationStartsListener
 			e.printStackTrace();
 		}
 		this.maasHandler.writeStat(this.controlerIO.getIterationFilename(event.getIteration(), "maasAnalysis.csv"));
-		if(event.getIteration()%this.writeExtPopInterval==0)new PopulationWriter(this.Extpopulation).write("test/extpopulation.xml");
+		if(event.getIteration()%this.writeExtPopInterval==0||event.getIteration()==250)new PopulationWriter(this.Extpopulation).write(controlerIO.getOutputFilename("extPopulation.xml"));
 	}
 
 

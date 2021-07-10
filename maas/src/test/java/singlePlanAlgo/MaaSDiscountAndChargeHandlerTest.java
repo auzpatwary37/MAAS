@@ -101,15 +101,20 @@ class MaaSDiscountAndChargeHandlerTest {
 //				pac.getMassPackages().values().forEach(p->p.setReimbursementRatio(0.9));
 //				new MaaSPackagesWriter(pac).write("test/packages_all.xml");
 				MaaSPackages pac = new MaaSPackagesReader().readPackagesFile("test/packages_July2020_20.xml");
-				MaaSPackages pacAll = MaaSUtil.createUnifiedMaaSPackages(pac, "Govt", "allPack");
+				
 				//pacAll.getMassPackages().get("platform").setSelfFareLinks(new HashSet<>());
 //				Set<MaaSPackage> pacIds = pac.getMassPackagesPerOperator().get("train");
 				
 				//config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"test/packages_all.xml");
 				//config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"packages_July2020_400.xml");
 				
-				String operatorID = "Govt";
-				
+				String operatorID = null;
+//				MaaSPackages pacAll = MaaSUtil.createUnifiedMaaSPackages(pac, operatorID, "allPack");
+				MaaSPackages pacAll = pac;
+				for(MaaSPackage pac1: pacAll.getMassPackages().values()) {
+					pac1.setPackageCost(0.0);
+					pac1.getFareLinks().entrySet().forEach(fl->pac1.setDiscountForFareLink(fl.getValue(), pac1.getFullFare().get(fl.getValue().toString())));
+				}
 //				new HashMap<>(pac.getMassPackagesPerOperator()).entrySet().forEach(oPacs->{
 //					if(!oPacs.getKey().equals(operatorID)) {
 //						oPacs.getValue().forEach(p->{
@@ -131,8 +136,10 @@ class MaaSDiscountAndChargeHandlerTest {
 //						});
 //					}
 //				});
-				pacAll.setAllOPeratorReimbursementRatio(0.9);
-				pacAll.getMassPackagesPerOperator().get(operatorID).forEach(m->m.getOperatorReimburesementRatio().put(operatorID, 1.0));
+
+				//pacAll.setAllOPeratorReimbursementRatio(1.0); 
+				//String operatorID = "allSpr";
+
 				new MaaSPackagesWriter(pacAll).write("test/packages_"+operatorID+".xml");
 				config.getModules().get(MaaSConfigGroup.GROUP_NAME).addParam(MaaSConfigGroup.INPUT_FILE,"test/packages_"+operatorID+".xml");
 				//new MaaSPackagesWriter(pac).write("test/packages_"+operatorID+".xml");
@@ -142,7 +149,7 @@ class MaaSDiscountAndChargeHandlerTest {
 				config.plans().setInsistingOnUsingDeprecatedPersonAttributeFile(true);
 				config.plans().setInputPersonAttributeFile("new Data/core/personAttributesHKI.xml");
 				//config.plans().setInputFile("toyScenarioLarge/output_optim_operatorPlatformGovt/ITERS/it.200/200.plans.xml.gz");
-				config.controler().setOutputDirectory("toyScenarioLarge/output_optim_operatorPlatform_Apr12"+operatorID);
+				config.controler().setOutputDirectory("toyScenarioLarge/output_Elastic_May17sepOp"+operatorID);
 				config.controler().setWritePlansInterval(50);
 				config.planCalcScore().setWriteExperiencedPlans(true);
 				ActivityAdditionConfigGroup configAct = new ActivityAdditionConfigGroup();
@@ -181,7 +188,7 @@ class MaaSDiscountAndChargeHandlerTest {
 				
 				config.strategy().addStrategySettings(createStrategySettings(ActivityAdditionStrategyV2.class.getName(),.05,180,"person_TCSwithCar"));
 				config.strategy().addStrategySettings(createStrategySettings(ActivityAdditionStrategyV2.class.getName(),.05,180,"person_TCSwithoutCar"));
-				
+				config.strategy().addStrategySettings(createStrategySettings(ActivityAdditionStrategyV2.class.getName(),.05,180,"person_GV"));
 				//___________________
 				
 				RunUtils.addStrategy(config, "KeepLastSelected", MaaSUtil.MaaSOperatorAgentSubPopulationName, 
@@ -242,6 +249,13 @@ class MaaSDiscountAndChargeHandlerTest {
 						}
 					}
 				}
+//				Set<Id<Person>> personToRemove = new HashSet<>();
+//				scenario.getPopulation().getPersons().values().stream().forEach(p->{
+//					if(PopulationUtils.getSubpopulation(p).equals(PersonFixed_NAME)||PopulationUtils.getSubpopulation(p).equals(GVFixed_NAME)) {
+//						personToRemove.add(p.getId());
+//					}
+//				});
+//				personToRemove.stream().forEach(p->scenario.getPopulation().getPersons().remove(p));
 				
 //				for(Link link:scenario.getNetwork().getLinks().values()) {
 //					link.setCapacity(link.getCapacity()*.14);
@@ -249,14 +263,22 @@ class MaaSDiscountAndChargeHandlerTest {
 				
 				MaaSPackages packages = new MaaSPackagesReader().readPackagesFile(scenario.getConfig().getModules().get(MaaSConfigGroup.GROUP_NAME).getParams().get(MaaSConfigGroup.INPUT_FILE)); //It has to be consistent with the config.
 				//RunUtils.scaleDownPopulation(scenario.getPopulation(), 0.1);
+				
+				
+				Set<String> varTypes = new HashSet<>();
+				varTypes.add(MaaSUtil.MaaSOperatorPacakgePriceVariableSubscript);
+				varTypes.add(MaaSUtil.MaaSOperatorTransitLinesDiscountVariableName);
 				Map<String,Map<String,Double>> variables  = new HashMap<>();
 				Map<String,Map<String,Tuple<Double,Double>>> variableLimits  = new HashMap<>();
-				variables.put("Govt", new HashMap<>());
-				variableLimits.put("Govt", new HashMap<>());
+				
+				
+				
+				variables.put(operatorID, new HashMap<>());
+				variableLimits.put(operatorID, new HashMap<>());
 				int i=0;
 				for(Set<Id<TransitLine>>sss:tlSets){
-					variables.get("Govt").put(MaaSUtil.generateMaaSTransitLinesDiscountKey("allPack", sss,"tl"+i),0.8);
-					variableLimits.get("Govt").put(MaaSUtil.generateMaaSTransitLinesDiscountKey("allPack", sss, "tl"+i),new Tuple<Double,Double>(0.01,1.));
+					variables.get(operatorID).put(MaaSUtil.generateMaaSTransitLinesDiscountKey("allPack", sss,"tl"+i),0.8);
+					variableLimits.get(operatorID).put(MaaSUtil.generateMaaSTransitLinesDiscountKey("allPack", sss, "tl"+i),new Tuple<Double,Double>(0.01,1.));
 					i++;
 				};
 //				variables.get("Govt").keySet().forEach(v->{
@@ -265,7 +287,7 @@ class MaaSDiscountAndChargeHandlerTest {
 //					}
 //				});
 				
-				Activity act = MaaSUtil.createMaaSOperator(packages, scenario.getPopulation(), "test/agentPop.xml",new Tuple<>(.5,4.5),variables,variableLimits,false);
+				Activity act = MaaSUtil.createMaaSOperator(packages, scenario.getPopulation(), "test/agentPop.xml",new Tuple<>(.5,4.5),null,null, true);
 				
 				ActivityParams param = new ActivityParams(act.getType());
 				param.setTypicalDuration(20*3600);
@@ -298,7 +320,7 @@ class MaaSDiscountAndChargeHandlerTest {
 				
 				scenario.addScenarioElement(SignalsData.ELEMENT_NAME, new SignalsDataLoader(config).loadSignalsData());	
 				Controler controler = new Controler(scenario);
-				controler.addOverridingModule(new MaaSDataLoaderV2(MaaSDataLoaderV2.typeGovtTT));
+				controler.addOverridingModule(new MaaSDataLoaderV2(MaaSDataLoaderV2.typeOperator));
 				//controler.addOverridingModule(new MaaSOperatorOptimizationModule("new Data/data/odNetwork.xml",5));
 				controler.addOverridingModule(new MaaSOperatorOptimizationModule());
 				ZonalFareXMLParserV2 busFareGetter = new ZonalFareXMLParserV2(scenario.getTransitSchedule());

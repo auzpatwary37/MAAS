@@ -382,6 +382,8 @@ public final class MaaSUtil {
         return plans; 
 	}
  
+	
+
 	public static void calcDetaourRatio(Plan plan) {
 		double distAct = 0;
 		double distLeg = 0;
