@@ -250,12 +250,12 @@ public class BobyqaObjective implements MultivariateFunction, MatlabObj,Calcfc{
 		pReader.setAllowUnkownParamaeterWhileScalingUp(true);
 		LinkedHashMap<String,Double> params = pReader.getInitialParam();
 		LinkedHashMap<String,Tuple<Double,Double>> paramLimits = pReader.getInitialParamLimit();
-		String popLoc = "test/GovtBreakEven/withoutMaaSPopulationMay27Allpac.xml";
-		String maasOwner = "Govt";
+		String popLoc = "test\\GovtBreakEven2\\withoutMaaSPopulationSp.xml";
+		String maasOwner = "sp";
 		String MaaSPacakgeFileLoc = "test/packages_July2020_20.xml";
 		String newMaaSWriteLoc = "test/packages_"+maasOwner+".xml";
 		String averageDurationMapFileLoc = "test/actAverageDurations.csv";
-		String resultWriteLoc = "test/GovtBreakEven2/Calibration/";
+		String resultWriteLoc = "test/GovtBreakEven2/calibration2/";
 		Config config = singlePlanAlgo.RunUtils.provideConfig();
 		config.plans().setInputFile(popLoc);
 		Scenario scenario = ScenarioUtils.loadScenario(config);
@@ -399,8 +399,8 @@ public class BobyqaObjective implements MultivariateFunction, MatlabObj,Calcfc{
 		
 		model.populateModel(scenario, fareCalculators, pacAll);
 		model.setCalculateGradient(false);
-//		params.putAll(model.getInternalParamters());
-//		paramLimits.putAll(model.getAnalyticalModelParamsLimit());
+		params.putAll(model.getInternalParamters());
+		paramLimits.putAll(model.getAnalyticalModelParamsLimit());
 		mm.applyFator(.1);
 		BobyqaObjective objective = new BobyqaObjective(params, pReader, model, mm, resultWriteLoc, scenario.getPopulation());
 		

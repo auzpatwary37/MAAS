@@ -141,4 +141,11 @@ public class MaaSPackages{
 	public void setAllOPeratorReimbursementRatio(double ratio) {
 		this.getMassPackages().values().forEach(m->m.setAllOPeratorReimbursementRatio(ratio));
 	}
+	public void makeFullyDiscounted() {
+		this.getMassPackages().entrySet().forEach(pac->{
+			pac.getValue().getDiscounts().entrySet().forEach(e->{
+				e.setValue(pac.getValue().getFullFare().get(e.getKey()));
+			});
+		});
+	}
 }

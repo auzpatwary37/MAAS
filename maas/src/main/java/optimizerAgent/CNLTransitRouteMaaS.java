@@ -34,20 +34,31 @@ public class CNLTransitRouteMaaS extends CNLTransitRoute{
 	@Override
 	public double getFare(TransitSchedule ts, Map<String, FareCalculator> farecalc, Map<String, Object>additionalDataContainer) {
 		this.routeFare=0;
+		double FullFare = 0;
 		for(FareLink s:super.FareEntryAndExit) {
+			double fullfare = 0; 
 			if(s.getType().equals(FareLink.NetworkWideFare)) {
-				this.routeFare+=farecalc.get(s.getMode()).getFares(null, null, s.getBoardingStopFacility(), s.getAlightingStopFacility()).get(0);
+				fullfare = farecalc.get(s.getMode()).getFares(null, null, s.getBoardingStopFacility(), s.getAlightingStopFacility()).get(0);
+				this.routeFare+=fullfare;
+				FullFare+= fullfare;
 			}else {
-				this.routeFare+=farecalc.get(s.getMode()).getFares(s.getTransitRoute(), s.getTransitLine(), s.getBoardingStopFacility(), s.getAlightingStopFacility()).get(0);
+				fullfare = farecalc.get(s.getMode()).getFares(s.getTransitRoute(), s.getTransitLine(), s.getBoardingStopFacility(), s.getAlightingStopFacility()).get(0);
+				this.routeFare+= fullfare;
+				FullFare +=fullfare;
 			}
 			MaaSPackage maas = (MaaSPackage)additionalDataContainer.get(MaaSUtil.CurrentSelectedMaaSPackageAttributeName);
 			//double discount = maas.getDiscounts().get(s.toString());
-			if(maas!=null && maas.getDiscounts().get(s.toString())!=null)this.routeFare-=maas.getDiscounts().get(s.toString());
+			double discount = 0;
+			if(maas!=null && maas.getDiscounts().get(s.toString())!=null) {
+				discount = maas.getDiscounts().get(s.toString());
+				this.routeFare-=discount;
+			}
 		}
 		//System.out.println();
 		if(Double.isNaN(routeFare)) {
 			System.out.println("Debug");
 		}
+		additionalDataContainer.put("fareSaved", FullFare-this.routeFare);
 		return this.routeFare;
 		
 	}

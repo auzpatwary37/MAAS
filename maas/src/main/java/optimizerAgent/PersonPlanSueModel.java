@@ -213,6 +213,10 @@ public class PersonPlanSueModel{
 	//3. Transfer Link to transferLinks and directLinks
 	
 	private Map<String,Map<Id<Link>,Map<String,Double>>> linkPlanIncidence = new ConcurrentHashMap<>();//done
+	public Map<Id<Person>, List<Plan>> getFeasibleplans() {
+		return feasibleplans;
+	}
+
 	private Map<String,Map<Id<TransitLink>,Map<String,Double>>> trLinkPlanIncidence = new ConcurrentHashMap<>();//done
 	//timeId-maasPacakge-fareLinkid-planid-numofUsage
 	private Map<String,Map<String,Map<String,Map<String,Double>>>> fareLinkPlanIncidence = new ConcurrentHashMap<>();//done
@@ -245,9 +249,10 @@ public class PersonPlanSueModel{
 	private MapToArray<String> gradArray;
 	
 	private Map<String,SimpleTranslatedPlan> plans = new HashMap<>();
+	private boolean usePathSizeConst = false;
 	//___________________________FrontEndFunctionality____________________________________
 	
-
+	
 	public Measurements performAssignment(Population population, LinkedHashMap<String,Double> params, Measurements originalMeasurements) {
 		MaaSUtil.updateMaaSVariables(this.maasPakages, params,ts,this.simpleVarKeys);
 		this.AnalyticalModelInternalParams.keySet().forEach(k->{
@@ -266,6 +271,14 @@ public class PersonPlanSueModel{
 		return m;
 	}
 	
+	public boolean isUsePathSizeConst() {
+		return usePathSizeConst;
+	}
+
+	public void setUsePathSizeConst(boolean usePathSizeConst) {
+		this.usePathSizeConst = usePathSizeConst;
+	}
+
 	public Config getConfig() {
 		return config;
 	}
@@ -472,6 +485,8 @@ public class PersonPlanSueModel{
 		this.AnalyticalModelInternalParams.put(pathSizeConstVarName, 30.0);
 		this.loadAnalyticalModelInternalPamamsLimit();
 		
+		
+
 //		//Loads the External default Parameters
 //		if(config==null) {
 //			config=ConfigUtils.createConfig();
@@ -584,6 +599,8 @@ public class PersonPlanSueModel{
 		if(c== null) c= scenario.getConfig();
 		LinkedHashMap<String,Double> params = this.handleBasicParams(Oparams, subpopulation, c);
 		t1 = System.currentTimeMillis()-t1;
+		boolean PersonHasMaas = false;
+		Map<String,Double> savedFare = new HashMap<>();
 		//Calculate the utility, Should we move the utility calculation part inside the simple translated plan itself? makes more sense. (April 2020)
 		for(Plan plan:this.feasibleplans.get(person.getId())) {
 			Map<String,Double> eleUtil = new HashMap<>();
@@ -594,7 +611,7 @@ public class PersonPlanSueModel{
 			//Add the MaaSPackage disutility
 			MaaSPackage maas = this.maasPakages.getMassPackages().get(trPlan.getMaasPacakgeId());
 			
-			
+			if(!PersonHasMaas && maas!=null)PersonHasMaas=true;
 			Map<String,Object> additionalInfo = new HashMap<>();
 			additionalInfo.put(MaaSUtil.CurrentSelectedMaaSPackageAttributeName, maas);
 			if(maas!=null)
@@ -621,9 +638,11 @@ public class PersonPlanSueModel{
 			
 			//System.out.println();
 			i=0;
+			double fareSaved = 0;
 			for(Entry<String, Map<Id<AnalyticalModelTransitRoute>, AnalyticalModelTransitRoute>> trRouteMap:trPlan.getTrroutes().entrySet()) {
 				for(AnalyticalModelTransitRoute trRoute : trRouteMap.getValue().values()) {
 					double d = trRoute.calcRouteUtility(params, anaParams, this.networks.get(trRouteMap.getKey()),this.transitLinks.get(trRouteMap.getKey()), this.farecalculators,additionalInfo, this.timeBeans.get(trRouteMap.getKey()));
+					fareSaved+=(Double)additionalInfo.get("fareSaved");
 					utility += d;
 					eleUtil.put("tr"+i, d);
 					i++;
@@ -632,6 +651,8 @@ public class PersonPlanSueModel{
 				if(Double.isNaN(utility)||!Double.isFinite(utility))
 					logger.debug("utility is nan or infinite. Debug!!!");
 			}
+			plan.getAttributes().putAttribute("fareSaved", fareSaved);
+			savedFare.put(trPlan.getPlanKey(), fareSaved);
 			i=0;
 			for(Entry<String, Map<Id<AnalyticalModelRoute>, AnalyticalModelRoute>> trRouteMap:trPlan.getRoutes().entrySet()) {
 				
@@ -645,12 +666,16 @@ public class PersonPlanSueModel{
 				if(Double.isNaN(utility)||!Double.isFinite(utility))
 					logger.debug("utility is nan or infinite. Debug!!!");
 			}
-			
+			if(this.usePathSizeConst) {
 			utilities.put(planKey,utility+anaParams.get(pathSizeConstVarName)*Math.log(trPlan.getPathSize()));
+			}else {
+				utilities.put(planKey,utility);
+			}
 			if(utility<-1000) {
 				logger.debug("Negative plan utility!!!");
 			}
 			this.planUtility.put(planKey, utility);
+			plan.getAttributes().putAttribute("ElelmentUtil", eleUtil.toString());
 		}
 		List<Plan> pls = this.feasibleplans.get(person.getId());
 		if(utilities.size()!=this.feasibleplans.get(person.getId()).size()) {
@@ -678,6 +703,10 @@ public class PersonPlanSueModel{
 		for(Entry<String, Double> d : utilities.entrySet()) {
 			p = planProb.get(d.getKey());
 			vv = p/utilSum;
+			if(PersonHasMaas && trPlans.get(d.getKey()).getMaasPacakgeId().equals(MaaSUtil.nullMaaSPacakgeKeyName) && vv>0.5 ) {
+				logger.debug("Why not choose maas!!!");
+			
+			}
 			//if(counter == 1) v = 1/utilities.size();
 			planProb.put(d.getKey(), vv);
 			trPlans.get(d.getKey()).setProbability(vv);
@@ -772,19 +801,28 @@ public class PersonPlanSueModel{
 					MaaSPackage maas = this.maasPakages.getMassPackages().get(plan.getAttributes().getAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName));
 					SimpleTranslatedPlan trPlan = (SimpleTranslatedPlan) plan.getAttributes().getAttribute(SimpleTranslatedPlan.SimplePlanAttributeName);
 					String planKey = new String(p.getId().toString()+"_^_"+planNo);
+					int fareLink = 0;
 					
 					
 					//if(trPlan==null) {
 						//System.out.println("I am currently just applying a patch. Please fix it asap.");
-						trPlan = new SimpleTranslatedPlan(timeBeans, plan, scenario);
-						
-						plan.getAttributes().putAttribute(SimpleTranslatedPlan.SimplePlanAttributeName, trPlan);
-					//}
+					trPlan = new SimpleTranslatedPlan(timeBeans, plan, scenario);
+					
+					for(Entry<String, List<FareLink>> flt:trPlan.getFareLinkUsage().entrySet()) {
+						fareLink+=flt.getValue().size();
+					}
+					if(fareLink==0 && maas!=null) {
+						maas = null;
+						plan.getAttributes().removeAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName);
+					}
+					
+					plan.getAttributes().putAttribute(SimpleTranslatedPlan.SimplePlanAttributeName, trPlan);
+				//}
 					//System.out.println(this.scenario.getNetwork().getLinks().get(this.scenario.getNetwork().getLinks().keySet().toArray()[0]).getClass());	
 					trPlan.setPlanKey(planKey);
 					this.plans.put(planKey, trPlan);
 					planNo++;
-					if(maas!=null && plan.getAttributes().getAttribute(MaaSUtil.projectedNullMaaS)==null) {
+					if(maas!=null && plan.getAttributes().getAttribute(MaaSUtil.projectedNullMaaS)==null ) {
 						trPlan.setMaasPacakgeId(maas.getId());
 						}
 					else {trPlan.setMaasPacakgeId(MaaSUtil.nullMaaSPacakgeKeyName);}
@@ -1144,6 +1182,8 @@ private void fixIncidenceMaps(Population population) {
 			}
 		}
 		double autoFlow = 0;
+		double transitFlow = 0;
+		double activities = 0;
 		
 		
 		for(Entry<String, SimpleTranslatedPlan> plan:this.plans.entrySet()) {
@@ -1151,8 +1191,14 @@ private void fixIncidenceMaps(Population population) {
 			for(Map<Id<AnalyticalModelRoute>, AnalyticalModelRoute> routes:plan.getValue().getRoutes().values()) {
 				autoFlow+=routes.size()*p;
 			}
+			for(Map<Id<AnalyticalModelTransitRoute>, AnalyticalModelTransitRoute> trRoutes:plan.getValue().getTrroutes().values()) {
+				transitFlow+=trRoutes.size()*p;
+			}
+			activities+=plan.getValue().getActivities().size()*p;
 		}
 		flow.setAutoFlow(autoFlow);
+		flow.setTransitFlow(transitFlow);
+		flow.setActivities(activities);
 		flow.setTransitDirectLinkTT(trDrlinkTT);
 		flow.setTransitTransferLinkTT(trTrlinkTT);
 		params.remove(CNLSUEModel.CapacityMultiplierName);

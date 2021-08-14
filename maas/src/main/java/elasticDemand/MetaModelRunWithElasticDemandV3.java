@@ -83,7 +83,7 @@ import ust.hk.praisehk.metamodelcalibration.calibrator.ParamReader;
 import ust.hk.praisehk.metamodelcalibration.matsimIntegration.SignalFlowReductionGenerator;
 import ust.hk.praisehk.metamodelcalibration.measurements.Measurements;
 
-public class MetaModelRunWithElasticDemandV2 {
+public class MetaModelRunWithElasticDemandV3 {
 	public final static String PriceVarType = "priceVar";
 	public final static String DiscountVarType = "discountVar";
 	public static final Logger logger = Logger.getLogger(MetaModelRunWithElasticDemand.class);
@@ -98,13 +98,11 @@ public class MetaModelRunWithElasticDemandV2 {
 		
 		
 		//parameters
-
-		String maasOwner = null;//"Govt";// MTR, bus, separate
+		String maasOwner = "Govt";//"Govt";// MTR, bus, separate
 		boolean optimizeForBreakEven = false;
 		boolean optimizeForCombinedBreakEven = false;
-		boolean optimizeForCombinedRevenue = false;
+		boolean optimizeForCombinedRevenue = true;
 		boolean logAllGradient = true;
-
 		
 		Double initialTotalSystemTravelTimeInMoney = 10.; 		
 
@@ -116,28 +114,26 @@ public class MetaModelRunWithElasticDemandV2 {
 		
 
 		
-		String refinedPopLoc ="test\\Results\\sp\\withMaaSPopulationMay27SP.xml";//"test\\populations\\withMaaSPopulationMay27Allpac.xml" ;
+		String refinedPopLoc ="test\\populations\\withMaaSPopulationMay27Allpac.xml";//"test\\populations\\extPopulation_allPackGovt.xml";//"test\\GovtBreakEven\\extPopulationMay25AllSP.xml";//"test\\populations\\withMaaSPopulationMay27Allpac.xml" ;
 		String MaaSPacakgeFileLoc = "test/packages_July2020_20.xml";
 		String newMaaSWriteLoc = "test/packages_"+maasOwner+".xml";
 		String averageDurationMapFileLoc = "test/actAverageDurations.csv";
 		//use null in the limits to avoid any variable
 		Tuple<Double,Double> discountVarLimits = null;//new Tuple<Double,Double>(0.5,1.0);
 		Tuple<Double,Double> priceVarLimits = new Tuple<Double,Double>(5.0,50.0);
-		Tuple<Double,Double> reimbursementVarLimits = null;//new Tuple<Double,Double>(0.5,1.0); // new Tuple<Double,Double>(0.5,1.0);
+		Tuple<Double,Double> reimbursementVarLimits = new Tuple<Double,Double>(0.5,1.0);//; // new Tuple<Double,Double>(0.5,1.0);
 		double initDiscount = 0.8;
-		double initReimbursement = 1.0;
-		Double packagePrice = 10.0;//Make it null to initiate from the original package price 
+		double initReimbursement = 0.95;
+		Double packagePrice = 25.;//take it null to initiate from the original package price 
 		
-
-		String type =  MaaSDataLoaderV2.typeOperator;
-		String fileLoc = "test/GovtBreakEven2/"+maasOwner+type+"_CPMaxRevOptimIterJul11_sp.csv";
-		String usageFileLoc = "test/GovtBreakEven2/"+maasOwner+type+"_CPUsageDetailsMaxRevJul11_sp.csv";
-		String varLocation = "test/GovtBreakEven2/variables"+maasOwner+type+"_CPMaxRevVarsJul11_sp.csv";
+		String type =  MaaSDataLoaderV2.typeGovtTU;
+		String fileLoc = "test/GovtBreakEven2/"+maasOwner+type+"_CPMaxRevOptimIterJul11_allPack.csv";
+		String usageFileLoc = "test/GovtBreakEven2/"+maasOwner+type+"_CPUsageDetailsMaxRevJul11_allPack.csv";
+		String varLocation = "test/GovtBreakEven2/variables"+maasOwner+type+"_CPMaxRevVarsJul11_allPack.csv";
 		String metaPopsub = "test/GovtBreakEven2/"+maasOwner+type+"Jul11";
-
 		double reimbursementRatio = 1.0;
 		String baseCaseLoc = "test/populations/extPopulation_NoMaaSMay17.xml";
-		String baseTTWriteLoc = "test/GovtBreakEven2/output_plans_WithoutMaaS_115_Calibrated_noMaasAndMaasspJul11.csv";
+		String baseTTWriteLoc = "test/GovtBreakEven2/output_plans_WithoutMaaS_115_Calibrated_noMaasAndMaaSAllPackJul11.csv";
 		String combinedPopWriteLoc = "test/GovtBreakEven2/CombinedPopGovtJun24.xml";
 		List<String> operatorsObjectiveToWrite = new ArrayList<>();
 		
@@ -149,15 +145,15 @@ public class MetaModelRunWithElasticDemandV2 {
 
 		//1.253876358	0.5	3.375044094	4.319654286	3.579674242	1.335409812	18.91137254
 
-		anaParams.put("LinkMiu", 1.253876358);
+		anaParams.put("LinkMiu", 1.818738825);
 		anaParams.put("ModeMiu", 0.5);
-		anaParams.put("BPRalpha", 3.375044094);
-		anaParams.put("BPRbeta",4.319654286);
-		anaParams.put("Transferalpha", 3.579674242);
-		anaParams.put("Transferbeta", 1.335409812);
-		anaParams.put("pathSizeConst", 18.91137254);
+		anaParams.put("BPRalpha", 1.675718742);
+		anaParams.put("BPRbeta",4.303474896);
+		anaParams.put("Transferalpha", 2.02842035);
+		anaParams.put("Transferbeta", 0.944423396);
+		anaParams.put("pathSizeConst", 44.00672215);
 		
-		ParamReader pReader = new ParamReader("test\\GovtBreakEven2\\Calibration2\\subPopParamAndLimit_Calibrated.csv");
+		ParamReader pReader = new ParamReader("test\\GovtBreakEven2\\Calibration\\subPopParamAndLimit_Calibrated.csv");
 		
 		
 		//Load the MaaS Packages
@@ -172,6 +168,7 @@ public class MetaModelRunWithElasticDemandV2 {
 			pac = null;
 			pacAll.setAllOPeratorReimbursementRatio(reimbursementRatio);//set reimbursement ratio
 			pacAll.getMassPackagesPerOperator().get(maasOwner).forEach(m->m.getOperatorReimburesementRatio().put(maasOwner, 1.0));
+			pacAll.makeFullyDiscounted();
 			new MaaSPackagesWriter(pacAll).write(newMaaSWriteLoc);//write down the modified packages
 		}else {
 			pacAll = pac;
@@ -396,13 +393,13 @@ public class MetaModelRunWithElasticDemandV2 {
 				
 			});
 			System.out.println(maasCount1);
-			new PopulationWriter(maasPopulation).write("test/GovtBreakEven/withMaaSPopulationMay27SP.xml");
+			new PopulationWriter(maasPopulation).write("test/GovtBreakEven/withMaaSPopulationMay27AllPack.xml");
 			
 			maasPopulation.getPersons().values().forEach(p->{
 				p.getPlans().forEach(pl->pl.getAttributes().removeAttribute(MaaSUtil.CurrentSelectedMaaSPackageAttributeName));
 				
 			});
-			new PopulationWriter(maasPopulation).write("test/GovtBreakEven/withoutMaaSPopulationMay27SP.xml");
+			new PopulationWriter(maasPopulation).write("test/GovtBreakEven/withoutMaaSPopulationMay27AllPack.xml");
 			
 			
 			//model.setPopulationCompressor(new SelectedPlanPopulationCompressor());
@@ -415,8 +412,8 @@ public class MetaModelRunWithElasticDemandV2 {
 			double vot_wait = scenario.getConfig().planCalcScore().getOrCreateScoringParameters(PersonChangeWithoutCar_NAME).getMarginalUtlOfWaitingPt_utils_hr()/3600;
 			double vom = scenario.getConfig().planCalcScore().getOrCreateScoringParameters(PersonChangeWithoutCar_NAME).getMarginalUtilityOfMoney();
 			initialTotalSystemTravelTimeInMoney = ObjectiveAndGradientCalculator.calcTotalSystemTravelTime(model, flow,vot_car,vot_transit, vot_wait, vom);
-			initialTotalSystemUtilityInMoney = ObjectiveAndGradientCalculator.calcTotalSystemUtilityGradientAndObjective(model).getSecond();
-			FileWriter fwTTBase = new FileWriter(new File(baseTTWriteLoc));
+			initialTotalSystemUtilityInMoney = ObjectiveAndGradientCalculator.calcTotalSystemEMUtilityGradientAndObjective(model).getSecond();
+			FileWriter fwTTBase = new FileWriter(new File(baseTTWriteLoc),true);
 			fwTTBase.append("totalSystemTTinMoney = ,"+initialTotalSystemTravelTimeInMoney+"\n");
 			fwTTBase.append("totalSystemUTinMoney = ,"+initialTotalSystemUtilityInMoney+"\n");
 			fwTTBase.flush();
@@ -520,7 +517,7 @@ public class MetaModelRunWithElasticDemandV2 {
 		double vot_wait = scenario.getConfig().planCalcScore().getOrCreateScoringParameters(PersonChangeWithoutCar_NAME).getMarginalUtlOfWaitingPt_utils_hr()/3600;
 		double vom = scenario.getConfig().planCalcScore().getOrCreateScoringParameters(PersonChangeWithoutCar_NAME).getMarginalUtilityOfMoney();
 		initialTotalSystemTravelTimeInMoney = ObjectiveAndGradientCalculator.calcTotalSystemTravelTime(modelHandler.getModel(), modelHandler.getFlow(),vot_car,vot_transit, vot_wait, vom);
-		initialTotalSystemUtilityInMoney = ObjectiveAndGradientCalculator.calcTotalSystemUtilityGradientAndObjective(modelHandler.getModel()).getSecond();
+		initialTotalSystemUtilityInMoney = ObjectiveAndGradientCalculator.calcTotalSystemEMUtilityGradientAndObjective(modelHandler.getModel()).getSecond();
 	
 		fwU.append("totalSystemTTinMoney = ,"+initialTotalSystemTravelTimeInMoney+"\n");
 		fwU.append("totalSystemUTinMoney = ,"+initialTotalSystemUtilityInMoney+"\n");
@@ -606,7 +603,7 @@ public class MetaModelRunWithElasticDemandV2 {
 		System.out.println("Used Memory in GB: " + (double) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024*1024*1024));
 		System.out.println("Time Required for iteratio "+counter+" = "+(System.currentTimeMillis()-t)/1000+" seconds.");
 		//if(gradNorm<10)break;
-		if(counter%25==0 ||counter == 99)new PopulationWriter(modelHandler.getModel().getPopulation()).write(metaPopsub+"metaModelPop"+counter+".xml");
+		if(counter%25==0 ||counter == 99)new PopulationWriter(modelHandler.getModel().getPopulation()).write(metaPopsub+"metaModelPopFUllDisc"+counter+".xml");
 	}
 	
 	}

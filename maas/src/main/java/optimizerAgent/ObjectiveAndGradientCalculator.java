@@ -1,7 +1,10 @@
 package optimizerAgent;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -11,6 +14,7 @@ import java.io.*;
 
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.network.Link;
+import org.matsim.api.core.v01.population.Plan;
 import org.matsim.core.utils.collections.Tuple;
 import org.matsim.pt.transitSchedule.api.*;
 
@@ -847,10 +851,9 @@ public class ObjectiveAndGradientCalculator {
 			for(Entry<String, Double> var:probGrad.getValue().entrySet()) {
 				double gc =model.getPlanProbability().get(probGrad.getKey())*model.getPlanUtilityGradient().get(probGrad.getKey()).get(var.getKey())
 						+var.getValue()*model.getPlanUtility().get(probGrad.getKey());
-				totalSystemUtilityGrad.compute(var.getKey(), (k,v)->v==null?gc:v+gc);
-				
-				
+				totalSystemUtilityGrad.compute(var.getKey(), (k,v)->v==null?gc:v+gc);	
 			}
+			
 			double p = model.getPlanProbability().get(probGrad.getKey());
 			double u = model.getPlanUtility().get(probGrad.getKey());
 //			if(p<0) {
@@ -860,6 +863,36 @@ public class ObjectiveAndGradientCalculator {
 //				System.out.println("Utility is negative!!!");
 //			}
 			tsU+=p*u;
+		}
+		
+		
+		
+		return new Tuple<Map<String,Double>,Double>(totalSystemUtilityGrad,tsU);
+	}
+	
+	public static Tuple<Map<String,Double>,Double> calcTotalSystemEMUtilityGradientAndObjective(PersonPlanSueModel model) {
+		Map<String,Double> totalSystemUtilityGrad = new HashMap<>();
+		double tsU = 0;	
+		for(Entry<String, Map<String, Double>> probGrad:model.getPlanProbabilityGradient().entrySet()){
+			for(Entry<String, Double> var:probGrad.getValue().entrySet()) {
+				double gc =model.getPlanProbability().get(probGrad.getKey())*model.getPlanUtilityGradient().get(probGrad.getKey()).get(var.getKey());
+				totalSystemUtilityGrad.compute(var.getKey(), (k,v)->v==null?gc:v+gc);
+			}
+		}
+		for(List<Plan> pls:model.getFeasibleplans().values()) {
+			double sum = 0;
+			List<Double> utils = new ArrayList<>();
+			for(Plan pl:pls) {
+				SimpleTranslatedPlan trPlan = (SimpleTranslatedPlan) pl.getAttributes().getAttribute(SimpleTranslatedPlan.SimplePlanAttributeName);
+				String planId = trPlan.getPlanKey();
+				utils.add(model.getPlanUtility().get(planId));
+			}
+			Double max = Collections.max(utils);
+			for(Double d:utils) {
+				sum+=Math.exp(d-max);
+			}
+			tsU+=max+Math.log(sum);
+
 		}
 		return new Tuple<Map<String,Double>,Double>(totalSystemUtilityGrad,tsU);
 	}
@@ -935,7 +968,7 @@ public class ObjectiveAndGradientCalculator {
 	public static Tuple<Map<String,Double>,Map<String,Double>> calcOptimizedBreakEvenGradient(Map<String,Map<String,Double>>gradients, Map<String,Double>objective,Map<String,Double>targets,String opToOptimize){
 		Map<String,Double> outGrad = new HashMap<>();
 		Map<String,Double> outObj = new HashMap<>();
-		double m = 100000;// a large number
+		double m = 1;// a large number
 		Set<String> gradKeys = new HashSet<>();
 		gradients.entrySet().forEach(g->gradKeys.addAll(g.getValue().keySet()));
 		objective.entrySet().forEach(o->{

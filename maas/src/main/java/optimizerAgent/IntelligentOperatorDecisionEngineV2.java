@@ -56,6 +56,7 @@ public class IntelligentOperatorDecisionEngineV2 {
 	private packUsageStat modelStat=null;
 	
 	private Map<String,Double> anaParams = null;
+	private boolean usePathSizeConst = true;
 	
 	private String type = null;
 	/**
@@ -84,6 +85,17 @@ public class IntelligentOperatorDecisionEngineV2 {
 
 	public SUEModelOutput getFlow() {
 		return flow;
+	}
+
+	
+	
+	public boolean isUsePathSizeConst() {
+		return usePathSizeConst;
+	}
+
+
+	public void setUsePathSizeConst(boolean usePathSizeConst) {
+		this.usePathSizeConst = usePathSizeConst;
 	}
 
 
@@ -115,6 +127,7 @@ public class IntelligentOperatorDecisionEngineV2 {
 		model.setPopulationCompressor(populationCompressor);
 		model.populateModel(scenario, fareCalculators, packages);
 		if(this.anaParams!=null)model.getInternalParamters().putAll(anaParams);
+		model.setUsePathSizeConst(this.usePathSizeConst);
 		this.flow = model.performAssignment(scenario.getPopulation(),variables);
 		this.model.setCreateLinkIncidence(false);
 	}
@@ -207,7 +220,7 @@ public class IntelligentOperatorDecisionEngineV2 {
 		}
 		Map<String,Map<String,Double>> tuGrad = new HashMap<>();
 		
-		Tuple<Map<String,Double>,Double> tuTuple = ObjectiveAndGradientCalculator.calcTotalSystemUtilityGradientAndObjective(model);
+		Tuple<Map<String,Double>,Double> tuTuple = ObjectiveAndGradientCalculator.calcTotalSystemEMUtilityGradientAndObjective(model);
 		tuGrad.put("Govt", tuTuple.getFirst());
 		if(this.modelStat!=null) {
 			this.modelStat.getObjective().compute("Govt", (k,v)->v=v+tuTuple.getSecond());
